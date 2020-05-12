@@ -10,6 +10,12 @@ namespace ITI.CEI40.Monitor.Entities
     [Table("Project")]
     public class Project
     {
+
+        public Project()
+        {
+            this.Tasks = new HashSet<Activity>();
+        }
+
         [Key]
         public int ID { get; set; }
 
@@ -50,6 +56,8 @@ namespace ITI.CEI40.Monitor.Entities
         public float ActualDuration { get; set; }
 
         public ICollection<DepartmentProjects> DepartmentProjects { get; set; }
+
+        public ICollection<Activity> Tasks { get; set; }
 
     }
 }
