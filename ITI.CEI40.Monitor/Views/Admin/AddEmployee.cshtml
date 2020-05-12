@@ -20,7 +20,7 @@
         <div class="form-group ">
             <label asp-for="FK_TeamId"></label>
             <select asp-for="FK_TeamId" asp-items="new SelectList (Model.teams,nameof(Team.Id),nameof(Team.Name))" class="form-control">
-                <option>Select Department</option>
+                <option>Select Team</option>
             </select>
             <span asp-validation-for="FK_TeamId" class="text-danger"></span>
         </div>
