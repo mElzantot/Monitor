@@ -14,7 +14,10 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         }
 
-
+        public List<Department> GetDeptWithTeamsandEmployees()
+        {
+            return set.Include(e => e.Teams).ToList();
+        }
 
     }
 }

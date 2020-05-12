@@ -8,5 +8,8 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 {
     public interface IDepartmentManager:IRepository<Department>
     {
+        List<Department> GetDeptWithTeamsandEmployees();
+
     }
+
 }
