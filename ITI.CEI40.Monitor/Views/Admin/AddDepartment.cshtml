@@ -1,0 +1,18 @@
+﻿@model  ITI.CEI40.Monitor.Entities.Department
+@{
+    ViewData["Title"] = "Admin | Department";
+}
+
+    <form method="post" >
+        <div class="row">
+
+        <div class="form-group col-4" >
+            <label asp-for="Name"> Department Name </label>
+            <input asp-for="Name" type="text" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        </div>
+        <input type="submit" value="Add Department" class="btn btn-primary"  />
+        <button type="reset" class="btn btn-danger">Cancel</button>
+
+    </form>
