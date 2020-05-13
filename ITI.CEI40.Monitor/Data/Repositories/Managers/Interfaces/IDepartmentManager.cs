@@ -10,6 +10,8 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
     {
         List<Department> GetDeptWithTeamsandEmployees();
 
+        Department GetDeptWithManager(int id);
+
     }
 
 }

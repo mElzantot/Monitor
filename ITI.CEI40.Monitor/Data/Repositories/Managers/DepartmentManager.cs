@@ -19,5 +19,11 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Include(e => e.Teams).ToList();
         }
 
+        public Department  GetDeptWithManager(int id)
+        {
+            return set.Where(d => d.Id == id).Include(d => d.Manager).FirstOrDefault();
+        }
+
+
     }
 }
