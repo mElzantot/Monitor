@@ -11,6 +11,8 @@ namespace ITI.CEI40.Monitor.Entities
     public class Project
     {
 
+        // Welcome to GitHub, From Farag
+
         public Project()
         {
             this.Tasks = new HashSet<Activity>();
