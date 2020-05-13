@@ -25,7 +25,13 @@ namespace ITI.CEI40.Monitor.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            AdminViewModel AdminVm = new AdminViewModel
+            {
+                Departments = unitofwork.Departments.GetDeptWithTeamsandEmployees()
+
+            };
+
+            return View(AdminVm);
         }
 
 
@@ -35,16 +41,25 @@ namespace ITI.CEI40.Monitor.Controllers
             return View();
         }
 
+
         [HttpPost]
         public IActionResult AddDepartment(Department department)
         {
             if (ModelState.IsValid)
             {
                 var dept = new Department { Name = department.Name };
-                unitofwork.Departments.Add(dept);
+                var Addeddept = unitofwork.Departments.Add(dept);
             }
 
             return RedirectToAction("Index", "Home");
+        }
+
+
+        public JsonResult GetDepartment(int id)
+        {
+            var department = unitofwork.Departments.GetDeptWithManager(id);
+            var manager = department.Manager;
+            return Json(department);
         }
 
 
