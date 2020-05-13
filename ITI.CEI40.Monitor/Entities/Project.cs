@@ -32,9 +32,14 @@ namespace ITI.CEI40.Monitor.Entities
         public string Owner { get; set; }
 
         [Required]
-        public float TotalBudget { get; set; }
-        public float Income { get; set; }
-        public float Outcome { get; set; }
+        public float TotalBudget { get; set; } //---1000
+
+        //----Estimated Budget
+        //public float? EstimatedBudget { get; set;}
+
+
+        public float Income { get; set; } //Invoices
+        public float Outcome { get; set; } //---Actual
 
         public float Progress { get; set; }
 
@@ -51,6 +56,8 @@ namespace ITI.CEI40.Monitor.Entities
 
         [Required]
         public float EstimatedDuration { get; set; }
+
+
 
         [NotMapped]
         public float ActualDuration { get; set; }
