@@ -25,5 +25,11 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         }
 
 
+        public Department FindByName(string name)
+        {
+            return set.Where(d => d.Name == name).FirstOrDefault();
+        }
+
+
     }
 }
