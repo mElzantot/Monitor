@@ -89,7 +89,7 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddTeam(Team team)
+        public bool AddTeam(Team team)
         {
             if (ModelState.IsValid)
             {
@@ -100,15 +100,11 @@ namespace ITI.CEI40.Monitor.Controllers
                 };
 
                 var entity = unitofwork.Teams.Add(newTeam);
-                return RedirectToAction("Index", "Home");
+                return true;
             }
             else
             {
-                TeamViewModel teamVm = new TeamViewModel
-                {
-                    Departments = unitofwork.Departments.GetAll().ToList()
-                };
-                return View(teamVm);
+                return false;
             }
 
         }
