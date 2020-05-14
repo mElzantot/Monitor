@@ -1,0 +1,14 @@
+﻿@model Department
+
+    <tr>
+        <td>@Model.Name</td>
+        <td>@Model.Teams.Count()</td>
+        <td>@Model.Manager</td>
+        <td>
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-secondary editDept" onclick="editDepartment(@Model.Id)">Edit Dep</button>
+                <button type="button" class="btn btn-secondary addTeam">Add Team</button>
+                <button type="button" class="btn btn-secondary displayTeam">Teams</button>
+            </div>
+        </td>
+    </tr>

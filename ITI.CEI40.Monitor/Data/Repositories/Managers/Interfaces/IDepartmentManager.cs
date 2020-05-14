@@ -8,10 +8,12 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 {
     public interface IDepartmentManager:IRepository<Department>
     {
-        List<Department> GetDeptWithTeamsandEmployees();
+        List<Department> GetAllDeptWithTeamsandManagers();
 
         Department GetDeptWithManager(int id);
         Department FindByName(string name);
+
+        Department GetDeptWithTeamsandManager(int id);
 
     }
 

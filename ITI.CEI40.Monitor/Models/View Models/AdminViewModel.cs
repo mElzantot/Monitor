@@ -8,6 +8,7 @@ namespace ITI.CEI40.Monitor.Models.View_Models
 {
     public class AdminViewModel
     {
-       public List<Department> Departments { get; set; }
+        public List<Department> Departments { get; set; }
+        public Department Dept { get; set; }
     }
 }

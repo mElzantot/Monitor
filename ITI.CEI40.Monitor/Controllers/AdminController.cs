@@ -16,7 +16,8 @@ namespace ITI.CEI40.Monitor.Controllers
         private readonly IUnitOfWork unitofwork;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public AdminController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager, IUnitOfWork unitofwork)
+        public AdminController(RoleManager<IdentityRole> roleManager,
+           UserManager<ApplicationUser> userManager, IUnitOfWork unitofwork)
         {
             this.roleManager = roleManager;
             this.unitofwork = unitofwork;
@@ -27,7 +28,7 @@ namespace ITI.CEI40.Monitor.Controllers
         {
             AdminViewModel AdminVm = new AdminViewModel
             {
-                Departments = unitofwork.Departments.GetDeptWithTeamsandEmployees()
+                Departments = unitofwork.Departments.GetAllDeptWithTeamsandManagers()
 
             };
 
@@ -43,15 +44,21 @@ namespace ITI.CEI40.Monitor.Controllers
 
 
         [HttpPost]
-        public IActionResult AddDepartment(Department department)
+        public IActionResult AddDepartment(string name)
         {
-            if (ModelState.IsValid)
+            if (name != null && unitofwork.Departments.FindByName(name) == null)
             {
-                var dept = new Department { Name = department.Name };
-                var Addeddept = unitofwork.Departments.Add(dept);
-            }
+                var newDept = new Department
+                {
+                    Name = name
 
-            return RedirectToAction("Index", "Home");
+                };
+                newDept = unitofwork.Departments.Add(newDept);
+                newDept = unitofwork.Departments.GetDeptWithTeamsandManager(newDept.Id);
+                return PartialView("_AdminIndexPartial", newDept);
+            }
+            return null;
+
         }
 
 
@@ -137,7 +144,7 @@ namespace ITI.CEI40.Monitor.Controllers
                 var result = await userManager.CreateAsync(newEmp, employee.Password);
                 if (result.Succeeded)
                 {
-                    await userManager.AddToRoleAsync(newEmp,employee.role);
+                    await userManager.AddToRoleAsync(newEmp, employee.role);
                 }
 
                 return RedirectToAction("Index", "Home");

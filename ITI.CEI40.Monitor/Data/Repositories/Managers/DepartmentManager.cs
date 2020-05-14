@@ -14,9 +14,9 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         }
 
-        public List<Department> GetDeptWithTeamsandEmployees()
+        public List<Department> GetAllDeptWithTeamsandManagers()
         {
-            return set.Include(e => e.Teams).ToList();
+            return set.Include(e => e.Teams).Include(d=>d.Manager).ToList();
         }
 
         public Department  GetDeptWithManager(int id)
@@ -30,6 +30,9 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Where(d => d.Name == name).FirstOrDefault();
         }
 
-
+        public Department GetDeptWithTeamsandManager(int id)
+        {
+            return set.Where(d => d.Id == id).Include(e => e.Teams).Include(d => d.Manager).FirstOrDefault();
+        }
     }
 }
