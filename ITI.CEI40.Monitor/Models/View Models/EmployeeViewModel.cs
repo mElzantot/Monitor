@@ -24,13 +24,18 @@ namespace ITI.CEI40.Monitor.Models.View_Models
         [Display(Name = "Team")]
         public int FK_TeamId { get; set; }
 
-        public List<Team> teams { get; set; }
+        public float TotalEvaluation { get; set; }
+
+        [Required]
+        public float SalaryRate { get; set; }
+
+        public List<ApplicationUser> Employees { get; set; }
 
         [Required]
         [Display(Name = "Employee Role")]
         public string role { get; set; }
 
-       public List<IdentityRole> Roles { get; set; }
+        public List<IdentityRole> Roles { get; set; }
 
 
         [Required]

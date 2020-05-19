@@ -34,5 +34,13 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         {
             return set.Where(d => d.Id == id).Include(e => e.Teams).Include(d => d.Manager).FirstOrDefault();
         }
+
+        public Department GetDeptWithTeamsAndProjects(int id)
+        {
+            return set.Where(d => d.Id == id).Include(e => e.Teams).Include(d => d.DepartmentProjects).FirstOrDefault();
+
+        }
+
+
     }
 }

@@ -11,7 +11,6 @@ namespace ITI.CEI40.Monitor.Entities
         public virtual SubTask SubTask { get; set; }
         public string EngineerID { get; set; }
         public int SubTaskID { get; set; }
-
         public virtual Status Status { get; set; }
         public float Evaluation { get; set; }
 

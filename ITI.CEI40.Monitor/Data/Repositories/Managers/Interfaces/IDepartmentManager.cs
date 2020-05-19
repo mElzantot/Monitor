@@ -15,6 +15,9 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         Department GetDeptWithTeamsandManager(int id);
 
+         Department GetDeptWithTeamsAndProjects(int id);
+
+
     }
 
 }

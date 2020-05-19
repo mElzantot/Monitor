@@ -16,9 +16,8 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         public List<Team> getTeamsinsideDept(int deptID)
         {
-            return set.Where(e => e.FK_DepartmentId == deptID).ToList();
+            return set.Where(e => e.FK_DepartmentId == deptID).Include(t=>t.TeamLeader).ToList();
         }
-
 
         public Team GetTeamWithAttributes(int id)
         {
@@ -26,10 +25,28 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
                .Include(t=>t.Engineers).Include(t=>t.Tasks).FirstOrDefault();
         }
 
-        public IEnumerable<Team> GetAllWithAttributes()
+
+        public IEnumerable<Team> GetAllWithAttributes(int id)
         {
-            return set.Include(t => t.Department).Include(t => t.TeamLeader)
+            return set.Where(t=>t.FK_DepartmentId == id).Include(t => t.Department).Include(t => t.TeamLeader)
                .Include(t => t.Engineers).Include(t => t.Tasks);
         }
+
+        public Team FindByName(string name)
+        {
+            return set.Where(t => t.Name == name).FirstOrDefault();
+        }
+
+        public Team GetTeamWithEngineersandLeader(int id)
+        {
+            return set.Where(t => t.Id == id).Include(t => t.TeamLeader).Include(t => t.Engineers).FirstOrDefault();
+        }
+
+        public Team GetTeamWithTasksAndEngineers(int id)
+        {
+            return set.Where(t => t.Id == id).Include(t => t.Engineers).Include(t => t.Tasks).FirstOrDefault();
+        }
+            
+
     }
 }

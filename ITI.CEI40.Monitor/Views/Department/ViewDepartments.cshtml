@@ -1,0 +1,168 @@
+﻿@model DepartmentViewModel
+@{
+    ViewData["Title"] = "Company Structure";
+}
+
+<h1>Departments</h1>
+<br />
+<button type="button" class="btn btn-primary mb-3" onclick="addDept()">Add Department</button>
+
+<div style="text-align:center">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Number of Teams</th>
+                <th scope="col">Department Manager</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            @for (int i = 0; i < Model.Departments.Count(); i++)
+            {
+                <tr id="@Model.Departments[i].Id">
+                    <td>@Model.Departments[i].Name</td>
+                    <td>@Model.Departments[i].Teams.Count()</td>
+                    <td>@Model.Departments[i].Manager</td>
+                    <td>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            @*<button type="button" class="btn btn-secondary editDept" onclick="editDepartment(@Model.Departments[i].Id)"><i class="fas fa-edit"></i></button>*@
+                            <a class="btn btn-outline-primary" asp-controller="Team" asp-action="viewTeams" asp-route-id="@Model.Departments[i].Id"><i class="fas fa-users"></i></a>
+                            <button type="button" class="btn btn-danger" onclick="deleteDept(@Model.Departments[i].Id)"><i class="far fa-trash-alt"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+
+
+<!-- Add Department Modal -->
+<div class="modal fade" id="addDeptModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add Department</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="test">
+                <div class="form-group">
+                    <label asp-for="Dept.Name"> </label>
+                    <input asp-for="Dept.Name" type="text" class="form-control" id="deptName" />
+                    <span asp-validation-for="Dept.Name" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="AddDeptBtn">Add</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Add Team Modal -->
+<div class="modal fade" id="addTeamModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add Team</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="test">
+                <div class="form-group">
+                    <label asp-for="teamName"> </label>
+                    <input asp-for="teamName" type="text" class="form-control" id="teamName" />
+                    <span asp-validation-for="teamName" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="AddTeamBtn">Add</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script>
+        //-------Add Department
+
+        function addDept() {
+            $('#addDeptModel').modal('show');
+        }
+
+        $('#AddDeptBtn').on("click",
+            function () {
+                var departmentName = $('#deptName').val();
+                $.post("/Department/addDepartment", { name: departmentName }, function (data, status) {
+                    if (status == "success") {
+                        var tbody = $("#tableBody");
+                        $('#addDeptModel').modal('hide');
+                        tbody.append(data);
+                        alert("Department Added Successfully")
+                    }
+                })
+            });
+
+        //-------Reset Modal When Closed
+        $('#addDeptModel').on('hidden.bs.modal', function (e) {
+            $('#deptName').val("");
+        })
+
+
+        //--------Delete Department
+
+        function deleteDept(deptid) {
+            let reponse = confirm("Are You Sure ? ");
+            if (reponse) {
+                $.ajax({
+                    url: "/Department/DeleteDepartment",
+                    type: "POST",
+                    data: { id: deptid },
+                    success: function (result) {
+                        if (result) {
+                            $("#" + deptid).remove();
+                            console.log($("#" + deptid));
+                            console.log($("#" + deptid));
+                        }
+                        else {
+                            alert("Check Department Dependecies First");
+                        }
+                    },
+                    error: function (x, y, err) {
+                        console.log(err);
+                    }
+                });
+            }
+        }
+
+        //----------View Teams
+        function viewTeams(id) {
+            $.ajax({
+                url: "/Team/ViewTeams/" + id,
+                type: "GET",
+                success: function (result) {
+                    console.log(result);
+                },
+                error: function (x, y, err) {
+                    console.log(err);
+                }
+            });
+        }
+
+
+
+    </script>
+}

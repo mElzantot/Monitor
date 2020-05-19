@@ -10,6 +10,7 @@ namespace ITI.CEI40.Monitor.Models.View_Models
 {
     public class TeamViewModel
     {
+        public List<Team> teams { get; set; }
 
         [Required]
         [MaxLength(50)]
@@ -19,7 +20,6 @@ namespace ITI.CEI40.Monitor.Models.View_Models
         [Display(Name ="Department")]
         public int FK_DepartmentId { get; set; }
 
-        public List<Department> Departments { get; set; }
 
     }
 }

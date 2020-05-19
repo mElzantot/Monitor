@@ -13,8 +13,6 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         {
 
         }
-
-
         public ApplicationUser GetWithAttriutes(string id)
         {
             return set.Where(e => e.Id == id).Include(e => e.Team).ThenInclude(e=>e.Department)
@@ -25,5 +23,11 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         {
             return set.Include(e => e.Team).ThenInclude(t=>t.Department);
         }
+
+        public IEnumerable<ApplicationUser> GetEngineersInsideTeam(int id)
+        {
+            return set.Where(e => e.FK_TeamID == id).ToList();
+        }
+
     }
 }

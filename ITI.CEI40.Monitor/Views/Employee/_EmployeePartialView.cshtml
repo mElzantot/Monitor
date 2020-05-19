@@ -1,0 +1,14 @@
+﻿@model ApplicationUser
+
+<tr id="@Model.Id">
+    <td>@Model.UserName</td>
+    <td>@Model.Email</td>
+    <td>@Model.SalaryRate</td>
+    <td>@Model.TotalEvaluation</td>
+    <td>
+        <div class="btn-group" role="group" aria-label="Basic example">
+            @*<a class="btn btn-outline-primary" asp-controller="Employee" asp-action="ViewEmployees" asp-route-id="@Model.Id"><i class="fas fa-users"></i></a>*@
+            <button type="button" class="btn btn-danger" onclick="deleteTeam(@Model.Id)"><i class="far fa-trash-alt"></i></button>
+        </div>
+    </td>
+</tr>

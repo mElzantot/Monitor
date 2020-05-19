@@ -1,0 +1,13 @@
+﻿@model Team
+
+<tr>
+    <td>@Model.Name</td>
+    <td>@Model.Engineers.Count()</td>
+    <td>@Model.TeamLeader</td>
+    <td>
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <a class="btn btn-outline-primary" asp-controller="Team" asp-action="viewEmployees" asp-route-id="@Model.Id"><i class="fas fa-users"></i></a>
+            <button type="button" class="btn btn-danger" onclick="deleteDept(@Model.Id)"><i class="far fa-trash-alt"></i></button>
+        </div>
+    </td>
+</tr>

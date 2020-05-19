@@ -1,0 +1,125 @@
+﻿@model TeamViewModel
+@{
+    ViewData["Title"] = "ViewTeams";
+}
+
+<h1>Teams</h1>
+<br />
+<button type="button" class="btn btn-primary mb-3" onclick="addTeam(@Model.FK_DepartmentId)">Add Team</button>
+
+<div style="text-align:center">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Number of Employees</th>
+                <th scope="col">Team Leader</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody id="tableBody">
+            @for (int i = 0; i < Model.teams.Count(); i++)
+            {
+                <tr id="@Model.teams[i].Id">
+                    <td>@Model.teams[i].Name</td>
+                    <td>@Model.teams[i].Engineers.Count()</td>
+                    <td>@Model.teams[i].TeamLeader</td>
+                    <td>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <a class="btn btn-outline-primary" asp-controller="Employee" asp-action="ViewEmployees" asp-route-id="@Model.teams[i].Id"><i class="fas fa-users"></i></a>
+                            <button type="button" class="btn btn-danger" onclick="deleteTeam(@Model.teams[i].Id)"><i class="far fa-trash-alt"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            }
+
+        </tbody>
+    </table>
+</div>
+
+
+
+<!-- Add Team Modal -->
+<div class="modal fade" id="addTeamModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add Team</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="test">
+                <div class="form-group">
+                    <label asp-for="Name"> </label>
+                    <input asp-for="Name" type="text" class="form-control" id="teamName" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="addTeamBtn">Add</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts{
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <script>
+        //-------Add Team
+
+        function addTeam(id) {
+            $('#addTeamModel').modal('show');
+        }
+        $('#addTeamBtn').on("click",
+            function () {
+                var teamName = $('#teamName').val();
+                $.post("/Team/addTeam", { name: teamName,FK_DepartmentId:@Model.FK_DepartmentId }, function (data, status) {
+                    if (status == "success") {
+                        var tbody = $("#tableBody");
+                        $('#addTeamModel').modal('hide');
+                        tbody.append(data);
+                        alert("Team Added succesfully");
+                    }
+                })
+            });
+
+
+        //-------Reset Modal When Closed
+        $('#addTeamModel').on('hidden.bs.modal', function (e) {
+            $('#teamName').val("");
+        })
+
+
+        //--------Delete Team
+
+        function deleteTeam(teamId) {
+            let reponse = confirm("Are You Sure ? ");
+            if (reponse) {
+                $.ajax({
+                    url: "/Team/DeleteTeam",
+                    type: "POST",
+                    data: { id: teamId },
+                    success: function (result) {
+                        if (result) {
+                            $("#" + teamId).remove();
+                            console.log($("#" + teamId));
+                        }
+                        else {
+                            alert("Check Team Dependecies First");
+                        }
+                    },
+                    error: function (x, y, err) {
+                        console.log(err);
+                    }
+                });
+            }
+        }
+
+
+    </script>
+}

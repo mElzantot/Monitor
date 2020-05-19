@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ITI.CEI40.Monitor.Models.View_Models
 {
-    public class AdminViewModel
+    public class DepartmentViewModel
     {
         public List<Department> Departments { get; set; }
 

@@ -1,0 +1,119 @@
+﻿@model EmployeeViewModel
+@{
+    ViewData["Title"] = "View Employees";
+    string roleName = "Name";
+
+}
+
+<h1>View Employees</h1>
+<br />
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#addEmployeeModal">
+    Add Employee
+</button>
+
+<div style="text-align:center">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">E-Mail</th>
+                <th scope="col">Salary</th>
+                <th scope="col">Evaluation</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+
+        <tbody id="tableBody">
+            @for (int i = 0; i < Model.Employees.Count(); i++)
+            {
+                <tr id="@Model.Employees[i].Id">
+                    <td>@Model.Employees[i].UserName</td>
+                    <td>@Model.Employees[i].Email</td>
+                    <td>@Model.Employees[i].SalaryRate</td>
+                    <td>@Model.Employees[i].TotalEvaluation</td>
+                    <td>
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            @*<a class="btn btn-outline-primary" asp-controller="Employee" asp-action="ViewEmployees" asp-route-id="@Model.Employees[i].Id"><i class="fas fa-users"></i></a>*@
+                            <button type="button" class="btn btn-danger" onclick="deleteTeam(@Model.Employees[i].Id)"><i class="far fa-trash-alt"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+
+
+
+<!-- Add Employee -->
+<div class="modal fade" id="addEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" data-ajax-url="/Employee/AddEmployee" data-ajax="true" data-ajax-method="Post" data-ajax-complete="addEmployee"
+                  data-ajax-update="#tableBody" data-ajax-mode="after" id="EmployeeForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add Employee</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input hidden type="text" asp-for="FK_TeamId" value="@Model.FK_TeamId" />
+                    <div class="form-group">
+                        <label asp-for="UserName"></label>
+                        <input asp-for="UserName" class="form-control" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Email"></label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="role"></label>
+                        <select asp-for="role" asp-items="new SelectList(Model.Roles,roleName,roleName)" class="form-control"></select>
+                        <span asp-validation-for="role" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <label asp-for="Password"></label>
+                        <input asp-for="Password" class="form-control" />
+                        <span asp-validation-for="Password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="ConfirmPassword"></label>
+                        <input asp-for="ConfirmPassword" class="form-control" />
+                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button type="reset" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/lib/jquery-validation-unobtrusive-ajax/dist/jquery.unobtrusive-ajax.js"></script>
+    <script>
+
+        function addEmployee(result, status) {
+            if (status == "success") {
+                $('#addEmployeeModal').modal('hide');
+                document.getElementById("EmployeeForm").reset();
+                alert("Employee added Successfully");
+            }
+            else {
+                alert("Error While Adding Employee");
+                document.getElementById("EmployeeForm").reset();
+            }
+        }
+
+    </script>
+}
+
