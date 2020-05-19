@@ -25,5 +25,10 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         {
             return set.Include(e => e.Team).ThenInclude(t=>t.Department);
         }
+
+        public IEnumerable<ApplicationUser> GetEngineers(int teamId)
+        {
+            return set.Where(a => a.FK_TeamID == teamId).ToList();
+        }
     }
 }

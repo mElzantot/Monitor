@@ -23,7 +23,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         public IEnumerable<EngineerSubTasks> GetSubTasksFromEngineerId(string EngId)
         {
-            return set.Where(e => e.EngineerID == EngId).Include(e => e.SubTask).ThenInclude(s => s.Task).ThenInclude(p => p.Project);
+            return set.Where(e => e.EngineerID == EngId).Include(s => s.Engineer).Include(e => e.SubTask).ThenInclude(s => s.Task).ThenInclude(p => p.Project);
         }
 
 

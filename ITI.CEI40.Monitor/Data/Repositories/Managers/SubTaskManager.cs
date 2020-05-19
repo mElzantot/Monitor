@@ -19,6 +19,13 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Where(st => st.Id == id).Include(st => st.Claims).FirstOrDefault();
         }
 
+        public IEnumerable<SubTask> GetEngineerSubTasksFromTask(int taskId)
+        {
+            return set.Where(st => st.FK_TaskId == taskId).Include(t => t.EngineerSubTasks).ToList();
+        }
+
+        
+
 
     }
 }

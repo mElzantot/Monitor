@@ -13,7 +13,7 @@ namespace ITI.CEI40.Monitor.Entities
 
         public static void Initialize(RoleManager<IdentityRole> roleManager)
         {
-        List<string> roles = new List<string> { "Admin", "Department Manager", "Project Manager" , "Engineer" };
+        List<string> roles = new List<string> { "Admin", "Department Manager", "Project Manager","Team Leader" , "Engineer" };
             foreach (var item in roles)
             {
                 if (!roleManager.RoleExistsAsync(item).Result)

@@ -10,6 +10,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
     {
 
         SubTask GetClaims(int id);
+        IEnumerable<SubTask> GetEngineerSubTasksFromTask(int taskId);
 
 
     }
