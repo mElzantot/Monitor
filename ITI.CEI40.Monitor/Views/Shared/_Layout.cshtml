@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ITI.CEI40.Monitor</title>
 
+
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     </environment>
@@ -15,45 +16,56 @@
               crossorigin="anonymous"
               integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
     </environment>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" />
+    @* Font-awesome *@
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
+    <link rel="stylesheet" href="~/css/style.css" />
+
+    @RenderSection("Style", required: false)
+
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ITI.CEI40.Monitor</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-                    <partial name="_LoginPartial" />
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
-                </div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+            <a class="navbar-brand" asp-action="Index" asp-controller="Home"><img src="~/img/Monitor.PNG" class="rounded-circle " alt="Monitor" width="40" height="40" />Monitor</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto ">
+
+                    @*<li class="nav-item active">
+                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                        </li>*@
+
+                    <li class="nav-item">
+                        <a class="nav-link px-3 py-3 " asp-area="" asp-controller="Home" asp-action="Index"><i id="i" class="fas fa-home"></i> Home</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link px-3 py-3  " asp-controller="Project" asp-action="Index"><i id="i" class="fas fa-tasks"></i> projects</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link px-3 py-3  " asp-controller="SubTask" asp-action="EngineerIndex"><i id="i" class="fas fa-id-badge"></i> Engineer</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link px-3 py-3  " asp-controller="" asp-action=""><i id="i" class="fas fa-chart-area"></i>  Charts</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link px-3 py-3  " asp-controller="Department" asp-action="ViewDepartments"><i id="i" class="fas fa-chart-area"></i> Admin</a>
+                    </li>
+                </ul>
             </div>
         </nav>
     </header>
     <div class="container">
         <partial name="_CookieConsentPartial" />
-        <main role="main" class="pb-3">
+        <main role="main" style="margin-top :70px;" class="pb-3">
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2020 - ITI.CEI40.Monitor - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
-
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
@@ -76,3 +88,5 @@
     @RenderSection("Scripts", required: false)
 </body>
 </html>
+
+
