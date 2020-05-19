@@ -1,0 +1,91 @@
+﻿@model List<ApplicationUser>
+@{
+    ViewData["Title"] = "EngineersView";
+}
+
+
+<div class="container ">
+    <div class="row">
+        <h3 class="text-muted m-3">Teams</h3>
+    </div>
+    <div class="row ">
+        <div class="col-6  ">
+            <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
+                <table class="table table-hover" id="teamTable">
+
+                    <thead class="tableh">
+                        <tr>
+                            <th scope="col">Engineer Name</th>
+                            <th scope="col">Work Load </th>
+                            <th scope="col">Salary Rate </th>
+                            <th scope="col">Total Evaluation </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Count(); i++)
+                        {
+                        <tr id="@Model[i].Id" onclick='displaySubTasks("@Model[i].Id")'>
+                            <td>@Model[i].UserName</td>
+
+                            <td>@Model[i].Workload</td>
+                            <td>@Model[i].SalaryRate</td>
+                            <td>@Model[i].TotalEvaluation</td>
+
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-6  ">
+            <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
+                <div class="righthead">
+                    <h5 calss="col-lg-12 ">Engineers Sub Tasks</h5>
+                    <div id="donut_single" style="width: 170px; height: 170px;"></div>
+                </div>
+                <hr />
+                <div class="row" id="tasks">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Priority</th>
+                                <th>Progress</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- #endregion -->
+@*<script src="script.js"></script>*@
+@section scripts{
+
+    <script>
+
+        function displaySubTasks(id) {
+        $.ajax({
+            url: "/TeamLeader/displaySubTasks",
+            type: "Get",
+            data: { engId: `${id}` },
+            success: function (result) {
+                console.log(result);
+                if (result) {
+                    $('#tableBody').empty();
+                    $('#tableBody').append(result);
+                }
+            }
+        })
+    }
+
+    </script>
+}
+

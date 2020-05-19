@@ -1,0 +1,93 @@
+﻿@model List<Team>
+@{
+    ViewData["Title"] = "TeamsView";
+}
+
+<h1>TeamsView</h1>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src="~/js/script.js"></script>
+
+
+<div class="container ">
+    <div class="row">
+        <h3 class="text-muted m-3">Teams</h3>
+    </div>
+    <div class="row ">
+        <div class="col-6  ">
+            <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
+                <table class="table table-hover" id="teamTable">
+
+                    <thead class="tableh">
+                        <tr>
+                            <th scope="col">Team Name</th>
+                            <th scope="col">Team Leader</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Count(); i++)
+                        {
+
+                            <tr id="@Model[i].Id" onclick="displayTasks(@Model[i].Id)">
+                                <td>@Model[i].Name</td>
+                                @if (Model[i].TeamLeader != null)
+                                {
+                                    <td>@Model[i].TeamLeader.UserName</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-6  ">
+            <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
+                <div class="righthead">
+                    <h5 calss="col-lg-12 ">Team Tasks</h5>
+                    @*<div id="donut_single" style="width: 170px; height: 170px;"></div>*@
+                    <div id="barchart_values" style="width: 300px; height: 100px;"></div>
+                </div>
+                <hr />
+                <div class="row" id="tasks">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Project</th>
+                                <th>Priority</th>
+                                <th>Progress</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- #endregion -->
+@*<script src="script.js"></script>*@
+@section scripts{
+
+    <script>
+
+        function displayTasks(id) {
+            $.ajax({
+                url: "/DepManager/displayTasks",
+                type: "Get",
+                data: { teamId: id },
+                success: function (result) {
+                    if (result) {
+                        $('#tableBody').empty();
+                        $('#tableBody').append(result);
+                    }
+                }
+            })
+        }
+
+    </script>
+}
+
