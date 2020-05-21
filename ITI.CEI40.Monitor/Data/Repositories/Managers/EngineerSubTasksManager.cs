@@ -26,7 +26,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Where(e => e.EngineerID == EngId).Include(s => s.Engineer).Include(e => e.SubTask).ThenInclude(s => s.Task).ThenInclude(p => p.Project);
         }
 
-
+        
 
 
         public void RemoveEngineerSubTask(int stId)

@@ -4,8 +4,7 @@
 }
 
 <h1>TeamsView</h1>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script src="~/js/script.js"></script>
+
 
 
 <div class="container ">
@@ -27,13 +26,14 @@
                         @for (int i = 0; i < Model.Count(); i++)
                         {
 
-                            <tr id="@Model[i].Id" onclick="displayTasks(@Model[i].Id)">
-                                <td>@Model[i].Name</td>
-                                @if (Model[i].TeamLeader != null)
-                                {
-                                    <td>@Model[i].TeamLeader.UserName</td>
-                                }
-                            </tr>
+                        <tr id="@Model[i].Id" onclick="displayTasks(@Model[i].Id)">
+                            <td>@Model[i].Name</td>
+                            @if (Model[i].TeamLeader != null)
+                            {
+                                <td>@Model[i].TeamLeader.UserName</td>
+                            }
+                            <td><button class="btn btn-info" onclick='displayCharts("@Model[i].Id")'>Charts</button></td>
+                        </tr>
                         }
                     </tbody>
                 </table>
@@ -43,8 +43,8 @@
             <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
                 <div class="righthead">
                     <h5 calss="col-lg-12 ">Team Tasks</h5>
-                    @*<div id="donut_single" style="width: 170px; height: 170px;"></div>*@
                     <div id="barchart_values" style="width: 300px; height: 100px;"></div>
+
                 </div>
                 <hr />
                 <div class="row" id="tasks">
@@ -68,21 +68,80 @@
 </div>
 
 
-<!-- #endregion -->
-@*<script src="script.js"></script>*@
+
 @section scripts{
 
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script>
+        google.charts.load('current', { 'packages': ['corechart'] });
+        //google.charts.setOnLoadCallback(drawChart);       
+        var ns = [];
+        var ps = [];
+        var flag = true;
+        function drawChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Name');
+            data.addColumn('number', 'Progress');        
+            data.addRows([
+                [`${ns[0]}`, parseInt(ps[0])], 
+            ]);
+
+            for (let j = 1; j < ns.length; j++) {
+                data.addRows([
+                    [`${ns[j]}`, parseInt(ps[j])],
+                ]);
+            }
+
+            var options = {
+                title: "Tasks in progress",
+                width: 200,
+                height: 150,
+                bar: { groupWidth: "70%"},
+                legend: { position: "none" },
+            };
+            var chart = new google.visualization.BarChart(document.getElementById("barchart_values"));
+            chart.draw(data, options);
+        }
+
+        function displayCharts(id) {
+            $.ajax({
+                url: "/DepManager/displayCharts",
+                type: "Get",
+                data: { teamId: id },
+                success: function (result) {
+                    if (flag) {
+                        $('#barchart_values').empty();
+                        $('#barchart_values').append(result);
+                        var names = $('.taskname')
+                        var progress = $('.taskprog')
+                        for (var i = 0; i < names.length; i++) {
+                            //console.log(names[i].defaultValue)
+                            ns.push(names[i].defaultValue)
+                        }
+                        for (var i = 0; i < progress.length; i++) {
+                            //console.log(progress[i].defaultValue)
+                            ps.push(progress[i].defaultValue)
+                        }                                                
+                        drawChart();
+                        
+                        flag = false;
+
+                    }
+                }
+            })
+        }
 
         function displayTasks(id) {
             $.ajax({
                 url: "/DepManager/displayTasks",
                 type: "Get",
                 data: { teamId: id },
-                success: function (result) {
-                    if (result) {
+                success: function (result) {                
+                    if (result) {                                            
                         $('#tableBody').empty();
                         $('#tableBody').append(result);
+
                     }
                 }
             })

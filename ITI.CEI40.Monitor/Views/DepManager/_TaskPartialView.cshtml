@@ -1,12 +1,14 @@
 ﻿@model List<Activity>
 
 @for (int i = 0; i < Model.Count(); i++)
-{
-    <tr>
-        <td>@Model[i].Name</td>
-        <td>@Model[i].Project.Name</td>
-        <td>@Model[i].Priority</td>
-        <td>@Model[i].Progress</td>
-        <td>@Model[i].EstDuration</td>
-    </tr>
-}
+    {
+        <tr>
+            <td>@Model[i].Name</td>
+            <td>@Model[i].Project.Name</td>
+            <td>@Model[i].Priority</td>
+            <td>@Model[i].Progress</td>
+            <td>@Model[i].EstDuration</td>
+        </tr>
+    }
+
+

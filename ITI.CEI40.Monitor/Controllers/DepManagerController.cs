@@ -31,5 +31,12 @@ namespace ITI.CEI40.Monitor.Controllers
             var task = unitofwork.Tasks.GetAllTaskWithProject(teamId);
             return PartialView("_TaskPartialView", task);
         }
+
+        [HttpGet]
+        public IActionResult displayCharts(int teamId)
+        {
+            var task = unitofwork.Tasks.GetAllTaskWithProject(teamId);
+            return PartialView("_ChartsPartialView", task);
+        }
     }
 }
