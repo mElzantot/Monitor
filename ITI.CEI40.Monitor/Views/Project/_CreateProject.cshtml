@@ -1,0 +1,191 @@
+﻿
+
+@model ProjectViewModel
+
+@{
+
+    ViewData["Title"] = "Create Project";
+}
+
+<!--#region body  -->
+<div class="container">
+
+    <h3 class="text-muted">Projects</h3>
+    <br>
+
+    <!--#region Add project  -->
+    <div class=" row mb-3 ">
+        <span class=" col-3 ">
+            <input class="form-control" type="search" placeholder="Search">
+        </span>
+        <span class="col-4">
+            <button class="btn btn-success " id="addproject">Add project</button>
+            <button class="btn btn-light "><i class="fas fa-filter"></i>Filter</button>
+            <button class="btn btn-light "><i class="fas fa-arrow-circle-up"></i> Archive</button>
+        </span>
+    </div>
+    <!--#endregion   -->
+
+    <div class="row">
+
+        <div class="col-6">
+            <!--#region Create Section  -->
+            <div class=" d-none  row mb-3" id="createsection">
+                <div class="col-6">
+                    <input asp-for="Project.Name" class="form-control"
+                           type="text" id="projectName" placeholder="Enter the name of new project">
+                </div>
+                <div col-6>
+                    <button class="btn btn-success " id="Createprojrct"> create new project </button>
+                    <button class="btn btn-light " id="cancel">Cancel</button>
+                </div>
+            </div>
+            <!--#endregion -->
+
+            <div style="border: 2px solid rgb(219, 219, 219) ; padding: 0px 5px;  border-radius: 8px;">
+
+
+                <!--#region Table Section  -->
+                @if (Model.Projects != null)
+                {
+                    <table class="table table-hover">
+                        <tbody id="tbody">
+                            @foreach (var item in Model.Projects)
+                            {
+                                <tr id="tbRow" class="tRow" onclick="EditImp(@item.ID)">
+                                    <td>@item.Name</td>
+                                    <td>
+                                        <div class="justify-content-end">
+
+                                            <span id="@item.ID" class="btn btn-info ganttChart"><i id="i" class="fas fa-chart-area"></i> Chart</span>
+                                            <span class="btn btn-danger "><i class="fas fa-trash-alt"></i></span>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                else
+                {
+                    <div class="alert  alert-info" id="noproject" role="alert">
+                        No Projects
+                    </div>
+                }
+                <!--#endregion -->
+            </div>
+        </div>
+
+
+
+
+        <div id="formSec" class="col-6">
+            <!--#region Form Section  -->
+            <div style="border: 2px solid rgb(219, 219, 219) ; padding: 50px 25px;  border-radius: 8px;">
+                <h4 class="text-muted text-center">Choose project to edit</h4>
+            </div>
+            <!--#endregion -->
+        </div>
+
+    </div>
+
+
+
+
+</div>
+
+
+
+
+
+
+    @section Scripts{
+
+        <script>
+
+            var btn = $('#addproject').click(function () {
+                $('#addproject').hide();
+                $('#createsection').addClass("d-flex");
+            })
+
+
+            var cancel = $('#cancel').click(function () {
+                $('#addproject').show();
+                $('#createsection').removeClass("d-flex");
+            })
+
+
+
+            //Edit AJAX
+            function EditImp(pId) {
+
+                $('#tbRow').click(function () {
+                    $.ajax({
+                        type: "GET",
+                        url: `/Project/Edit`,
+                        data: { id: pId },
+                        success: function (response) {
+                            $('#formSec').replaceWith(response)
+                        },
+                        error: function (x, y, err) {
+                            console.log(arguments)
+                        }
+                    })
+                })
+            }
+
+
+            //edit form ajax
+            $("#prjForm").submit(function (e) {
+
+                e.preventDefault(); // avoid to execute the actual submit of the form.
+
+                var form = $(this);
+
+                $.ajax({
+                    type: "POST",
+                    url: '/Project/Add',
+                    data: form.serialize(), // serializes the form's elements.
+                    success: function (data) {
+                        $('#formSec').replaceWith(response); // show response from the php script.
+                    }
+                });
+
+            });
+
+
+            //("#prjForm").ajaxForm({ url: `/Project/Edit`, type: 'post' })
+
+
+            //Add Ajax
+
+            $('#Createprojrct').click(function () {
+
+                var pName = $('#projectName').val();
+                if (pName) {
+                    $.ajax({
+                        type: "POST",
+                        url: `/Project/Add`,
+                        data: { Name: pName },
+                        success: function (response) {
+                            $('#tbody').append(`<tr class="tbRow" onclick="EditImp(${response.id})"><td>${response.name}</td><td><div class="justify-content-end">
+
+                                            <span id="${response.id}" class="btn btn-info ganttChart"><i id="i" class="fas fa-chart-area"></i> Chart</span>
+                                            <span class="btn btn-danger "><i class="fas fa-trash-alt"></i></span>
+                                        </div></td></tr>`);
+                            pName = "";
+                        },
+                        error: function (x, y, err) {
+                            console.log(arguments)
+                        }
+                    });
+                }
+            });
+
+
+            $("#tbody").on("click", ".ganttChart", function () {
+                location.href = "/Activity/Index/" + this.id;
+            });
+        </script>
+
+    }

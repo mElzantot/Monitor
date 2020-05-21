@@ -17,7 +17,7 @@ namespace ITI.CEI40.Monitor.Entities
         [MaxLength(50)]
         public string Name { get; set; }
 
-        [Required]
+        //[Required]
         [MaxLength(256)]
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
@@ -41,12 +41,15 @@ namespace ITI.CEI40.Monitor.Entities
         [Display(Name = "Start Date")]
         public DateTime StartDate { get; set; }
 
-
-
         [DataType(DataType.DateTime)]
+        [Column("End Date")]
+        [Display(Name = "End Date")]
+        public DateTime EndDate { get; set; }
+
+        //[DataType(DataType.DateTime)]
         [Column("Estimated Duration")]
         [Display(Name = "Estimated Duration")]
-        public DateTime EstDuration { get; set; }
+        public int EstDuration { get; set; }
 
         public float Progress { get; set; }
 

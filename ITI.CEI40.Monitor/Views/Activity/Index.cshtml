@@ -1,0 +1,162 @@
+﻿
+@model ActivityViwewModel
+
+@{
+    ViewData["Title"] = "Tasks";
+}
+
+@section Style{
+
+    <link rel="stylesheet" href="~/css/ganttStyle.css">
+    @*<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">*@
+    <link rel="stylesheet"
+          href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/themes/smoothness/jquery-ui.min.css" />
+    @*<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />*@
+
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+}
+
+
+<div>
+    <input type="button" class="btn btn-primary" onclick="submit()" value="submit project" />
+    <input type="button" class="btn btn-info" onclick="startEdit()" value="Edit project" />
+    <input id="proId" value="@Model.ProjectId" hidden="hidden" />
+</div>
+<div>
+
+    <table id="table" class="table table-bordered table-hover table-sm">
+        <thead calss="thead thead-dark">
+            <tr>
+                <th></th>
+                <th scope="col">Task Name</th>
+                <th scope="col">Start Date</th>
+                <th scope="col">End Date</th>
+                <th scope="col">Task Duration</th>
+                <th scope="col">Dependencie</th>
+                <th scope="col">Assignees</th>
+                <th scope="col">Progress</th>
+            </tr>
+        </thead>
+        <tbody class="tablebody" id="tbody">
+            @{
+                if (Model.Activities != null && Model.Activities.Count != 0)
+                {
+                    for (int i = 0; i < Model.Activities.Count(); i++)
+                    {
+                        <tr id="row-@i">
+                            <td><label id="l-@i">@(i + 1) </label></td>
+                            <td><input id="n-@i" asp-for="@Model.Activities[i].Name" type="text" class="Name no-outline" value="@Model.Activities[i].Name"></td>
+                            @{string sd = Model.Activities[i].StartDate.ToShortDateString();}
+                            <td><input id="s-@i" asp-for="@sd" type="text" class="datepicker no-outline" /></td>
+                            @{string ed = Model.Activities[i].EndDate.ToShortDateString();}
+                            <td><input id="e-@i" asp-for="@ed" type="text" class="datepicker no-outline" /></td>
+                            <td><input id="d-@i" asp-for="@Model.Activities[i].EstDuration" type="text" class="durations no-outline"></td>
+                            <td>
+                                <input type="text" id="dep-@i" class="no-outline" asp-for="@Model.Activities[i]">
+                            </td>
+                            <td><input type="text" class="no-outline"></td>
+                            <td><input asp-for="@Model.Activities[i].Progress" type="text" class="no-outline"></td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr hidden><td><input id="checkdata" value="false"  /></td></tr>
+                }
+            }
+        </tbody>
+    </table>
+
+    <div id="chart_div"></div>
+</div>
+
+@section Scripts{
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+            integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"
+            integrity="sha256-eGE6blurk5sHj+rmkfsGYeKyZx3M4bG+ZlFyA7Kns7E=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="~/js/ganttScript.js"></script>
+    <script>
+
+        var dataArray = [];
+        var editonec = true;
+        var noData = ($('#checkdata').val() === 'false');
+        console.log(noData);
+        function startEdit() {
+            if (editonec) {
+                editonec = false;
+                for (var i = 0; i < @Model.Activities.Count(); i++) {
+                var label = $(`#l-${i}`)[0].textContent;
+                label = parseInt(label) - 1;
+                var name = $(`#n-${i}`)[0].value;
+                var start = $(`#s-${i}`)[0].value;
+                start = parseDate(start);
+                var end = $(`#e-${i}`)[0].value;
+                end = parseDate(end);
+                var duration = $(`#d-${i}`)[0].value;
+                var depends = $(`#dep-${i}`)[0].value;
+                var taskObj = {
+                    id: `${label}`,
+                    name: `${name}`,
+                    start: `${start}`,
+                    end: `${end}`,
+                    duration: `${duration}`,
+                    depends: `${depends}`
+                };
+
+                dataArray.push(taskObj);
+            }
+                console.log(dataArray);
+                removeTableBody();
+                //noData = true;
+                document.addEventListener("DOMContentLoaded", table(dataArray, true), false);
+
+                //$('#table').load(document.URL + ' #table');
+            }
+        }
+
+
+        // remove the cshtml table body
+        function removeTableBody() {
+            for (var i = 0; i < @Model.Activities.Count(); i++) {
+                $(`#row-${i}`).remove();
+            }
+        }
+
+        // fill the data by array of tasks
+        function createRowTaskWithData(datArray) {
+            for (let i = 0; i < datArray.length; i++) {
+                createRowTask(1);
+                fillData(i, datArray[i]);
+            }
+        }
+
+        function fillData(rowId, task) {
+            var n = rowId;
+            $("td").children("label")[0].value = n + 1;
+            $(`#taskName${n}`)[0].value = task.name;
+            $(`#startDate${n}`)[0].value = formatDate(task.start);
+            $(`#endDate${n}`)[0].value = formatDate(task.end);
+            if (task.duration) {
+                $(`#Duration${n}`)[0].value = task.duration;
+            } else {
+                $(`#Duration${n}`)[0].value = computeDuration(task.start, task.end);
+            }
+            if (task.depends > 0) { $(`#Dependency${n}`)[0].value = task.depends; }
+
+
+        }
+        //////////////////////////////////////
+
+        document.addEventListener("DOMContentLoaded", table(dataArray, noData), false);
+    </script>
+}

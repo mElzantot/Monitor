@@ -9,7 +9,9 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
     public interface ITaskManager:IRepository<Activity>
     {
        IEnumerable<Activity> GetAllWithAttributes();
+       IEnumerable<Activity> GetByProjectId(int id);
+
     }
 
-    
+
 }
