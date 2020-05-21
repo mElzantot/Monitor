@@ -12,6 +12,11 @@ namespace ITI.CEI40.Monitor.Entities
     public class ApplicationUser : IdentityUser
     {
 
+        public ApplicationUser()
+        {
+            this.subTasks = new HashSet<SubTask>();
+        }
+
         public int? FK_TeamID { get; set; }
         public Team Team { get; set; }
 
@@ -28,7 +33,9 @@ namespace ITI.CEI40.Monitor.Entities
         public float SalaryRate { get; set; }
 
         //---------Many to Many Relation
-        public ICollection<EngineerSubTasks> EngineerSubTasks { get; set; }
+        //public ICollection<EngineerSubTasks> EngineerSubTasks { get; set; }
+
+        public ICollection<SubTask> subTasks { get; set; }
 
     }
 }
