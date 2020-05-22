@@ -19,12 +19,19 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Where(st => st.Id == id).Include(st => st.Claims).FirstOrDefault();
         }
 
+
+        ///Must Edit include engineering subtask
         public IEnumerable<SubTask> GetEngineerSubTasksFromTask(int taskId)
         {
-            return set.Where(st => st.FK_TaskId == taskId).Include(t => t.EngineerSubTasks).ToList();
+            return set.Where(st => st.FK_TaskId == taskId).Include(t=>t.SubTaskSession).ToList();
         }
 
-        
+        public IEnumerable<SubTask> GetSubTasksByEngineerId(string engineerId)
+        {
+            return set.Where(st => st.FK_EngineerID == engineerId).Include(s=>s.Engineer).Include(st => st.Task).ThenInclude(t => t.Project);
+        }
+
+
 
 
     }

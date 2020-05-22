@@ -12,7 +12,6 @@ namespace ITI.CEI40.Monitor.Data
         IDepartmentManager Departments { get; }
         IDepartmentProjectsManager DepartmentProjects { get; }
         IEngineerManager Engineers { get; }
-        IEngineerSubTasksManager EngineerSubTasks { get; }
         IProjectManager Projects { get; }
         ISubTaskManager SubTasks { get; }
         ITaskManager Tasks { get; }

@@ -31,13 +31,13 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpGet]
         public IActionResult displaySubTasks(string engId)
         {
-            var subtask = unitofwork.EngineerSubTasks.GetSubTasksFromEngineerId(engId).ToList();            
+            var subtask = unitofwork.SubTasks.GetSubTasksByEngineerId(engId).ToList();
             return PartialView("_SubTaskPartialView", subtask);
         }
         [HttpGet]
         public IActionResult displayCharts(string engId)
         {
-            var subtask = unitofwork.EngineerSubTasks.GetSubTasksFromEngineerId(engId).ToList();
+            var subtask = unitofwork.SubTasks.GetSubTasksByEngineerId(engId).ToList();
             return PartialView("_ChartsPartialView", subtask);
         }
     }
