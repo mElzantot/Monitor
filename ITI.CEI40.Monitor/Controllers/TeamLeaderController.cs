@@ -24,7 +24,7 @@ namespace ITI.CEI40.Monitor.Controllers
 
         public IActionResult EngineersView(int teamid)
         {
-            var engieers = unitofwork.Engineers.GetEngineers(teamid);
+            var engieers = unitofwork.Engineers.GetEngineersInsideTeam(teamid);
             return View(engieers);
         }
 

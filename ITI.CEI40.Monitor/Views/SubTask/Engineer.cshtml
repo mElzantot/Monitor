@@ -1,0 +1,275 @@
+﻿@model IEnumerable<SubTask>
+
+
+
+<div class="row">
+    <h3 class="text-muted m-3">Your Tasks</h3>
+</div>
+
+<div class="row ">
+
+
+    <div id="leftSec" class="col-12">
+
+        @if (Model != null && Model.Count() > 0)
+        {
+            <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
+                <table class="table table-hover" id="Tasktable">
+                    <thead class="tableh">
+                        <tr>
+                            <th>Working ON</th>
+                            <th>Name</th>
+                            <th>Project</th>
+                            <th>Status</th>
+                            <th>Remaining Time</th>
+                            <th>Progress</th>
+                        </tr>
+                    </thead>
+
+
+                    <tbody>
+
+                        @foreach (var item in Model)
+                        {
+
+                            <tr id="@item.Id" onclick="SelectRow(@item.Id)">
+
+                                <td>
+                                    <input asp-for="@item.IsUnderWork" type="checkbox" data-toggle="toggle" data-size="xs"
+                                           onchange="ChangeISUnderWork(@item.Id,this.checked)">
+                                </td>
+
+                                <td>@item.Name</td>
+                                <td>@item.Task.Project.Name</td>
+
+                                <td>
+                                    <select asp-for="@item.Status" asp-items="@Html.GetEnumSelectList<Status>()" class="form-control"></select>
+                                </td>
+
+                                @{
+                                    int remaining = (int)(item.EndDate - DateTime.Now).TotalHours;
+
+                                    if (remaining > 0)
+                                    {
+                                        <td>@remaining hour</td>
+                                    }
+                                    else
+                                    {
+                                        <td class="text-danger">Time Ended</td>
+                                    }
+                                }
+
+                                <td>
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" style="width: @item.Progress%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@item.Progress%</div>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        }
+        else
+        {
+            <div style="border: 2px solid rgb(219, 219, 219) ; padding: 50px 25px;  border-radius: 8px;">
+                <h4 class="text-muted text-center">You donot have tasks</h4>
+            </div>
+        }
+
+    </div>
+
+    <div id="rightSec">
+
+    </div>
+
+
+
+
+    <!-- Button trigger modal -->
+    <button type="button" id="togleBtn" class="btn btn-primary d-none" data-toggle="modal" data-target="#exampleModal">
+        Launch demo modal
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Write a reason for Holding</h5>
+
+                </div>
+                <div class="modal-body">
+                    Reason:
+                    <br />
+                    <input id="reason" type="text" class="form-control" />
+                </div>
+                <div class="modal-footer">
+                    <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
+                    <button id="send" type="button" class="btn btn-primary">Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+    <!-- #endregion -->
+
+    @section Scripts{
+
+        <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+        <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+        <script>
+            var rowID;
+
+            (function () {
+                var previous;
+
+                $("select").on('focus', function () {
+                    // Store the current value on focus and on change
+                    previous = this.value;
+
+                }).change(function () {
+
+                    var value = this.value;
+                    switch (value) {
+                        case '0': //Active
+                            break;
+
+                        case '1': //onhold
+
+                            $("#togleBtn").trigger("click");
+
+                            $('#send').click(function () {
+                                if ($('#reason').val()) { //validation for empty rason
+                                    console.log($('#reason').val())//send reason in notification
+                                    $("#exampleModal").modal('toggle');
+                                    ChangeStatus(rowID, value);
+                                }
+                            })
+
+                            $('#close').click(function () {
+                                $(`#${rowID} > td > select`)[0].value = previous
+                            })
+                            break;
+
+                        case '2': // completed
+                            if (confirm('Is the task finished?')) {
+                                $(`#${rowID}`).hide();
+                                ChangeStatus(rowID, value);
+                            }
+                            else {
+                                $(`#${rowID} > td > select`)[0].value = previous
+                            }
+                            break;
+
+                        case '3': //canceled
+                            if (confirm('Do you want to cancel this task?')) {
+                                $(`#${rowID}`).hide();
+                                ChangeStatus(rowID, value);
+                            }
+                            else {
+                                $(`#${rowID} > td > select`)[0].value = previous
+                            }
+                            break;
+                    }
+
+                });
+            })();
+
+            function ChangeStatus(id, value) {
+
+                $.ajax({
+                    type: "GET",
+                    url: `/Subtask/EditStatus`,
+                    data: {
+                        ID: id,
+                        status: value
+                    },
+                    success: function () {
+
+                    },
+                    error: function (x, y, err) {
+                        console.log(arguments)
+                    }
+                })
+            }
+
+
+            function SelectRow(id) {
+                rowID = id;
+                $.ajax({
+                    type: "GET",
+                    url: `/Subtask/DisplayRow`,
+                    data: { ID: id },
+                    success: function (response) {
+                        $('#rightSec').replaceWith(response)
+                        $('#leftSec').removeClass('col-12')
+                        $('#leftSec').addClass('col-7')
+                    },
+                    error: function (x, y, err) {
+                        console.log(arguments)
+                    }
+                })
+            }
+
+
+            function ChangeProgress(id, value) {
+                $.ajax({
+                    type: "GET",
+                    url: `/Subtask/EditProgress`,
+                    data: {
+                        ID: id,
+                        progress: value
+                    },
+                    success: function () {
+                        var progresspar = document.getElementById(id).lastElementChild.firstElementChild.firstElementChild;
+                        progresspar.style.width = `${value}%`;
+                        progresspar.innerHTML = `${value}%`;
+                    },
+                    error: function (x, y, err) {
+                        console.log(arguments)
+                    }
+                })
+            }
+
+
+            function ChangeISUnderWork(id, value) {
+                $.ajax({
+                    type: "GET",
+                    url: `/Subtask/EditIsUnderWork`,
+                    data: {
+                        ID: id,
+                        Is: value
+                    },
+                    success: function (response) {
+
+                    },
+                    error: function (x, y, err) {
+                        console.log(arguments)
+                    }
+                })
+            }
+
+
+
+            function toggleApiOnNotSilent() {
+                $('#toggle-silent').bootstrapToggle('on');
+            }
+            function toggleApiOffNotSilent() {
+                $('#toggle-silent').bootstrapToggle('off');
+            }
+        </script>
+    }
+
+
+    @section Style{
+        <link rel="stylesheet" href="~/css/progress.css" />
+    }
