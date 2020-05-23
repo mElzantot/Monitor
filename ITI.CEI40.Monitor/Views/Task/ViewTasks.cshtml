@@ -42,7 +42,7 @@
 
 
 <!-- Add SubTask -->
-<div class="modal fade" id="addSubTask" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="addSubTaskModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <form method="post" data-ajax-url="/SubTask/AddSubTask" data-ajax="true" data-ajax-method="Post" data-ajax-complete="addSubTask"
@@ -97,25 +97,40 @@
                 data: { taskId: TaskId, teamId: $('#teamId').val() },
                 success: function (res) {
                     $("#modalBody").append(res);
-                    $('#addSubTask').modal('show');
+                    $('#addSubTaskModal').modal('show');
                 }
             })
         }
 
-        $('#addSubTask').on('shown.bs.modal', function () {
+        function addSubTask(result ,status) {
+            if (status == "success") {
+                console.log(result);
+                $('#addSubTaskModal').modal('hide');
+                document.getElementById("SubTaskForm").reset();
+                alert("SubTask added Successfully");
+            }
+            else {
+                alert("Error While Adding SubTask");
+                document.getElementById("SubTaskForm").reset();
+            }
+
+        }
+
+
+        $('#addSubTaskModal').on('shown.bs.modal', function () {
             $('#startDate,#endDate').datepicker({
                 format: "dd/mm/yyyy",
                 daysOfWeekDisabled: "5,6",
                 todayHighlight: true,
                 autoclose: true,
                 startDate: new Date(),
-                container: '#addSubTask',
+                container: '#addSubTaskModal',
                 datesDisabled: []
             });
 
         });
 
-        $('#addSubTask').on('hidden.bs.modal', function () {
+        $('#addSubTaskModal').on('hidden.bs.modal', function () {
             $("#modalBody").empty();
         })
 

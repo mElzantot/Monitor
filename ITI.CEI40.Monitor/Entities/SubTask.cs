@@ -36,20 +36,20 @@ namespace ITI.CEI40.Monitor.Entities
         public ICollection<Claim> Claims { get; set; }
 
         [DataType(DataType.Date)]
-        [Column("Start Date")]
+        [Column("Start Date" ,TypeName = "Date")]
         [Display(Name = "Start Date")]
-        public DateTime StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
 
         [DataType(DataType.Date)]
-        [Column("End Date")]
+        [Column("End Date", TypeName = "Date")]
         [Display(Name = "End Date")]
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
 
         //public int EstDuration { get; set; }
 
 
-        public bool IsUnderWork { get; set; }
+        public bool? IsUnderWork { get; set; }
         public int Progress { get; set; }
         public Status Status { get; set; }
         public Priority Priority { get; set; }

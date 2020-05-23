@@ -11,6 +11,7 @@ namespace ITI.CEI40.Monitor.Models.View_Models
     public class SubTaskViewModel
     {
 
+        public int SubTaskId { get; set; }
 
         [Required]
         [MaxLength(50)]
@@ -37,8 +38,7 @@ namespace ITI.CEI40.Monitor.Models.View_Models
         public List<ApplicationUser> TeamMembers { get; set; }
 
         [Display(Name = "Assigned to")]
-        public string AssigneeId { get; set; }
-
+        public string Assignee { get; set; }
 
     }
 }

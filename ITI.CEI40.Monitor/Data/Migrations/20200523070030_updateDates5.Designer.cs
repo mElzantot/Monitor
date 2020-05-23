@@ -4,14 +4,16 @@ using ITI.CEI40.Monitor.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ITI.CEI40.Monitor.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200523070030_updateDates5")]
+    partial class updateDates5
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -221,7 +223,7 @@ namespace ITI.CEI40.Monitor.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(256);
 
-                    b.Property<DateTime?>("EndDate")
+                    b.Property<DateTime>("EndDate")
                         .HasColumnName("End Date")
                         .HasColumnType("Date");
 
@@ -231,7 +233,7 @@ namespace ITI.CEI40.Monitor.Data.Migrations
 
                     b.Property<int>("FK_TaskId");
 
-                    b.Property<bool?>("IsUnderWork");
+                    b.Property<bool>("IsUnderWork");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -241,7 +243,7 @@ namespace ITI.CEI40.Monitor.Data.Migrations
 
                     b.Property<int>("Progress");
 
-                    b.Property<DateTime?>("StartDate")
+                    b.Property<DateTime>("StartDate")
                         .HasColumnName("Start Date")
                         .HasColumnType("Date");
 
