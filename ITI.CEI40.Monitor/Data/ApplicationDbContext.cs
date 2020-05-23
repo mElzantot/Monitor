@@ -21,7 +21,7 @@ namespace ITI.CEI40.Monitor.Data
         public virtual DbSet<Activity> Tasks { get; set; }
         public virtual DbSet<SubTask> SubTasks { get; set; }
         public virtual DbSet<Claim> Claims { get; set; }
-
+        public virtual DbSet<SubTaskSession> SubTaskSessions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

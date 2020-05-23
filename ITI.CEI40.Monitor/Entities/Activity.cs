@@ -36,17 +36,16 @@ namespace ITI.CEI40.Monitor.Entities
         public int FK_ProjectId { get; set; }
 
 
-        [DataType(DataType.DateTime)]
+        [DataType(DataType.Date)]
         [Column("Start Date")]
         [Display(Name = "Start Date")]
         public DateTime StartDate { get; set; }
 
 
-
-        [DataType(DataType.DateTime)]
-        [Column("Estimated Duration")]
-        [Display(Name = "Estimated Duration")]
-        public DateTime EstDuration { get; set; }
+        [DataType(DataType.Date)]
+        [Column("End Date")]
+        [Display(Name = "End Date")]
+        public DateTime EndDate { get; set; }
 
         public float Progress { get; set; }
 

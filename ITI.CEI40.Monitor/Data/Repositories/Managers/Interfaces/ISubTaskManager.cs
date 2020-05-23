@@ -8,9 +8,9 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 {
     public interface ISubTaskManager : IRepository<SubTask>
     {
-
         SubTask GetClaims(int id);
 
+        List<SubTask> GetSubTasksByTaskId(int taskId);
 
     }
 

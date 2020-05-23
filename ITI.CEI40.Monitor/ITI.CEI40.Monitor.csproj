@@ -11,6 +11,8 @@
     <Compile Remove="Data\Migrations\20200508200232_createDataBaseFirstTrial.Designer.cs" />
     <Compile Remove="Data\Migrations\20200508200505_createDataBaseFirstTrial.cs" />
     <Compile Remove="Data\Migrations\20200508200505_createDataBaseFirstTrial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200522160829_updateDates.cs" />
+    <Compile Remove="Data\Migrations\20200522160829_updateDates.Designer.cs" />
   </ItemGroup>
 
 

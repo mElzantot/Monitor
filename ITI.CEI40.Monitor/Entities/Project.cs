@@ -46,18 +46,16 @@ namespace ITI.CEI40.Monitor.Entities
         public Status Status { get; set; }
         public Priority Priority { get; set; }
 
-        [DataType(DataType.DateTime)]
+        [DataType(DataType.Date)]
         [Required]
         public DateTime StartDate { get; set; }
 
-        [DataType(DataType.DateTime)]
+        [DataType(DataType.Date)]
         [Required]
         public DateTime EndDate { get; set; }
 
         [Required]
         public float EstimatedDuration { get; set; }
-
-
 
         [NotMapped]
         public float ActualDuration { get; set; }

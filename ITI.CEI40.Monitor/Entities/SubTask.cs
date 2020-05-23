@@ -35,12 +35,12 @@ namespace ITI.CEI40.Monitor.Entities
 
         public ICollection<Claim> Claims { get; set; }
 
-        [DataType(DataType.DateTime)]
+        [DataType(DataType.Date)]
         [Column("Start Date")]
         [Display(Name = "Start Date")]
         public DateTime StartDate { get; set; }
 
-        [DataType(DataType.DateTime)]
+        [DataType(DataType.Date)]
         [Column("End Date")]
         [Display(Name = "End Date")]
         public DateTime EndDate { get; set; }
@@ -60,7 +60,6 @@ namespace ITI.CEI40.Monitor.Entities
         public virtual ICollection<SubTaskSession> SubTaskSession { get; set; }
         public ApplicationUser Engineer { get; set; }
         [ForeignKey("Engineer")]
-        [Required]
         public string FK_EngineerID { get; set; }
 
     }

@@ -6,10 +6,11 @@ using ITI.CEI40.Monitor.Entities;
 
 namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 {
-    public interface ITaskManager:IRepository<Activity>
+    public interface ITaskManager : IRepository<Activity>
     {
-       IEnumerable<Activity> GetAllWithAttributes();
+        IEnumerable<Activity> GetAllWithAttributes();
+        IEnumerable<Activity> GetTasksByTeamID(int teamId);
+
     }
 
-    
 }

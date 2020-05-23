@@ -13,6 +13,7 @@ namespace ITI.CEI40.Monitor.Entities
         [Key]
         public int ID { get; set; }
         public SubTask SubTask { get; set; }
+
         [ForeignKey("SubTask")]
         public int FK_SubTaskID { get; set; }
 
