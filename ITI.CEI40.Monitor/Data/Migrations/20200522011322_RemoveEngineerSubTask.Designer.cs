@@ -4,14 +4,16 @@ using ITI.CEI40.Monitor.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ITI.CEI40.Monitor.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200522011322_RemoveEngineerSubTask")]
+    partial class RemoveEngineerSubTask
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -221,17 +223,10 @@ namespace ITI.CEI40.Monitor.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(256);
 
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnName("End Date");
-
-                    b.Property<int?>("Evaluation");
-
-                    b.Property<string>("FK_EngineerID")
-                        .IsRequired();
+                    b.Property<DateTime>("EstDuration")
+                        .HasColumnName("Estimated Duration");
 
                     b.Property<int>("FK_TaskId");
-
-                    b.Property<bool>("IsUnderWork");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -248,34 +243,9 @@ namespace ITI.CEI40.Monitor.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FK_EngineerID");
-
                     b.HasIndex("FK_TaskId");
 
                     b.ToTable("SubTask");
-                });
-
-            modelBuilder.Entity("ITI.CEI40.Monitor.Entities.SubTaskSession", b =>
-                {
-                    b.Property<int>("ID")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("FK_SubTaskID");
-
-                    b.Property<int?>("SessDuration");
-
-                    b.Property<DateTime?>("SessEndtDate")
-                        .HasColumnName("End Date");
-
-                    b.Property<DateTime>("SessStartDate")
-                        .HasColumnName("Start Date");
-
-                    b.HasKey("ID");
-
-                    b.HasIndex("FK_SubTaskID");
-
-                    b.ToTable("SubTaskSessions");
                 });
 
             modelBuilder.Entity("ITI.CEI40.Monitor.Entities.Team", b =>
@@ -467,22 +437,9 @@ namespace ITI.CEI40.Monitor.Data.Migrations
 
             modelBuilder.Entity("ITI.CEI40.Monitor.Entities.SubTask", b =>
                 {
-                    b.HasOne("ITI.CEI40.Monitor.Entities.ApplicationUser", "Engineer")
-                        .WithMany("SubTasks")
-                        .HasForeignKey("FK_EngineerID")
-                        .OnDelete(DeleteBehavior.Restrict);
-
                     b.HasOne("ITI.CEI40.Monitor.Entities.Activity", "Task")
                         .WithMany("SubTasks")
                         .HasForeignKey("FK_TaskId")
-                        .OnDelete(DeleteBehavior.Restrict);
-                });
-
-            modelBuilder.Entity("ITI.CEI40.Monitor.Entities.SubTaskSession", b =>
-                {
-                    b.HasOne("ITI.CEI40.Monitor.Entities.SubTask", "SubTask")
-                        .WithMany("SubTaskSession")
-                        .HasForeignKey("FK_SubTaskID")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

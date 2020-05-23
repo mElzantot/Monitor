@@ -18,7 +18,6 @@ namespace ITI.CEI40.Monitor.Data
             Departments = new DepartmentManager(context);
             DepartmentProjects = new DepartmentProjectsManager(context);
             Engineers = new EngineerManager(context);
-            EngineerSubTasks = new EngineerSubTasksManager(context);
             Projects = new ProjectManager(context);
             SubTasks = new SubTaskManager(context);
             Tasks = new TaskManager(context);
@@ -30,7 +29,6 @@ namespace ITI.CEI40.Monitor.Data
         public IDepartmentManager Departments { get; }
         public IDepartmentProjectsManager DepartmentProjects { get; }
         public IEngineerManager Engineers { get; }
-        public IEngineerSubTasksManager EngineerSubTasks { get; }
         public IProjectManager Projects { get; }
         public ISubTaskManager SubTasks { get; }
         public ITaskManager Tasks { get; }

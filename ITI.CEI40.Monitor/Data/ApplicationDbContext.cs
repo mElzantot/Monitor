@@ -21,6 +21,7 @@ namespace ITI.CEI40.Monitor.Data
         public virtual DbSet<Activity> Tasks { get; set; }
         public virtual DbSet<SubTask> SubTasks { get; set; }
         public virtual DbSet<Claim> Claims { get; set; }
+        public virtual DbSet<SubTaskSession> SubTaskSessions { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -77,26 +78,26 @@ namespace ITI.CEI40.Monitor.Data
 
             //Engineer SubTasks many to many Relship
 
-            modelBuilder.Entity<EngineerSubTasks>()
-                .HasKey(TT => new { TT.EngineerID, TT.SubTaskID });
+            //modelBuilder.Entity<EngineerSubTasks>()
+            //    .HasKey(TT => new { TT.EngineerID, TT.SubTaskID });
 
-            modelBuilder.Entity<EngineerSubTasks>()
-                .Property(es => es.Status)
-                .IsRequired();
+            //modelBuilder.Entity<EngineerSubTasks>()
+            //    .Property(es => es.Status)
+            //    .IsRequired();
 
-            modelBuilder.Entity<EngineerSubTasks>()
-                .Property(es => es.Evaluation)
-                .IsRequired();
+            //modelBuilder.Entity<EngineerSubTasks>()
+            //    .Property(es => es.Evaluation)
+            //    .IsRequired();
 
-            modelBuilder.Entity<EngineerSubTasks>()
-                .HasOne(t => t.Engineer)
-                .WithMany(tt => tt.EngineerSubTasks)
-                .HasForeignKey(pt => pt.EngineerID);
+            //modelBuilder.Entity<EngineerSubTasks>()
+            //    .HasOne(t => t.Engineer)
+            //    .WithMany(tt => tt.EngineerSubTasks)
+            //    .HasForeignKey(pt => pt.EngineerID);
 
-            modelBuilder.Entity<EngineerSubTasks>()
-             .HasOne(pt => pt.SubTask)
-             .WithMany(t => t.EngineerSubTasks)
-             .HasForeignKey(pt => pt.SubTaskID);
+            //modelBuilder.Entity<EngineerSubTasks>()
+            // .HasOne(pt => pt.SubTask)
+            // .WithMany(t => t.EngineerSubTasks)
+            // .HasForeignKey(pt => pt.SubTaskID);
 
             //--------On Delete  options 
 

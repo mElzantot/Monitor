@@ -1,0 +1,15 @@
+﻿
+@model List<SubTask>
+
+
+@for (int i = 0; i < Model.Count; i++)
+    {
+        <input class="staskname" id="n-@i" value="@Model[i].Name" hidden="hidden" />
+        <input class="staskprog" id="p-@i" value="@Model[i].Progress" hidden="hidden" />
+    }
+
+
+
+@section scripts{
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+}
