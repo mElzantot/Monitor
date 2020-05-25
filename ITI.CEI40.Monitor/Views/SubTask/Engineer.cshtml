@@ -32,26 +32,40 @@
                         @foreach (var item in Model)
                         {
 
-                            <tr id="@item.Id" onclick="SelectRow(@item.Id)">
+                        <tr id="@item.Id" onclick="SelectRow(@item.Id)">
 
-                                <td>
-                                    <input asp-for="@item.IsUnderWork" type="checkbox" data-toggle="toggle" data-size="xs"
-                                           onchange="ChangeISUnderWork(@item.Id,this.checked)">
-                                </td>
+                            <td>
+                                <input class="chBox" asp-for="@item.IsUnderWork" type="checkbox" data-toggle="toggle" data-size="xs"
+                                       onclick="ChangeISUnderWork()">
+                            </td>
 
-                                <td>@item.Name</td>
-                                <td>@item.Task.Project.Name</td>
+                            <td>@item.Name</td>
+                            <td>@item.Task.Project.Name</td>
 
-                                <td>
-                                    <select asp-for="@item.Status" asp-items="@Html.GetEnumSelectList<Status>()" class="form-control"></select>
-                                </td>
+                            <td>
+                                <select asp-for="@item.Status" asp-items="@Html.GetEnumSelectList<Status>()" class="form-control"></select>
+                            </td>
 
-                                <td>
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" style="width: @item.Progress%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@item.Progress%</div>
-                                    </div>
-                                </td>
-                            </tr>
+                            @{
+                                int remaining = (int)(item.EndDate - DateTime.Now).Value.TotalDays;
+
+
+                                if (remaining > 0)
+                                {
+                                    <td>@remaining day</td>
+                                }
+                                else
+                                {
+                                    <td class="text-danger">Time Ended</td>
+                                }
+                            }
+
+                            <td>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: @item.Progress%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@item.Progress%</div>
+                                </div>
+                            </td>
+                        </tr>
                         }
                     </tbody>
                 </table>
@@ -99,7 +113,7 @@
         </div>
     </div>
 
-
+</div>    
 
 
 
@@ -227,23 +241,25 @@
                 })
             }
 
+       
+            
 
-            function ChangeISUnderWork(id, value) {
-                $.ajax({
-                    type: "GET",
-                    url: `/Subtask/EditIsUnderWork`,
-                    data: {
-                        ID: id,
-                        Is: value
-                    },
-                    success: function (response) {
+            //function ChangeISUnderWork(id, value) {
+            //    $.ajax({
+            //        type: "GET",
+            //        url: `/Subtask/EditIsUnderWork`,
+            //        data: {
+            //            ID: id,
+            //            Is: value
+            //        },
+            //        success: function (response) {
 
-                    },
-                    error: function (x, y, err) {
-                        console.log(arguments)
-                    }
-                })
-            }
+            //        },
+            //        error: function (x, y, err) {
+            //            console.log(arguments)
+            //        }
+            //    })
+            //}
 
 
 
