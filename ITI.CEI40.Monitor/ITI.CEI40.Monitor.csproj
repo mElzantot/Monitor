@@ -7,12 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Data\Migrations\20200508200232_createDataBaseFirstTrial.cs" />
-    <Compile Remove="Data\Migrations\20200508200232_createDataBaseFirstTrial.Designer.cs" />
-    <Compile Remove="Data\Migrations\20200508200505_createDataBaseFirstTrial.cs" />
-    <Compile Remove="Data\Migrations\20200508200505_createDataBaseFirstTrial.Designer.cs" />
-    <Compile Remove="Data\Migrations\20200522160829_updateDates.cs" />
-    <Compile Remove="Data\Migrations\20200522160829_updateDates.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200525161434_intial.cs" />
+    <Compile Remove="Data\Migrations\20200525161434_intial.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200525163422_ProjectEdit.cs" />
+    <Compile Remove="Data\Migrations\20200525163422_ProjectEdit.Designer.cs" />
   </ItemGroup>
 
 

@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace ITI.CEI40.Monitor.Data.Migrations
+namespace ITI.CEI40.Monitor.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200523065238_updateDates4")]
-    partial class updateDates4
+    [Migration("20200525163731_editproject")]
+    partial class editproject
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -182,31 +182,30 @@ namespace ITI.CEI40.Monitor.Data.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<DateTime>("EndDate");
+                    b.Property<DateTime?>("EndDate");
 
-                    b.Property<float>("EstimatedDuration");
+                    b.Property<float?>("EstimatedDuration");
 
-                    b.Property<float>("Income");
+                    b.Property<float?>("Income");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(30);
 
-                    b.Property<float>("Outcome");
+                    b.Property<float?>("Outcome");
 
                     b.Property<string>("Owner")
-                        .IsRequired()
                         .HasMaxLength(30);
 
-                    b.Property<int>("Priority");
+                    b.Property<int?>("Priority");
 
-                    b.Property<float>("Progress");
+                    b.Property<float?>("Progress");
 
-                    b.Property<DateTime>("StartDate");
+                    b.Property<DateTime?>("StartDate");
 
-                    b.Property<int>("Status");
+                    b.Property<int?>("Status");
 
-                    b.Property<float>("TotalBudget");
+                    b.Property<float?>("TotalBudget");
 
                     b.HasKey("ID");
 
@@ -223,8 +222,9 @@ namespace ITI.CEI40.Monitor.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(256);
 
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnName("End Date");
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnName("End Date")
+                        .HasColumnType("Date");
 
                     b.Property<int?>("Evaluation");
 
@@ -232,7 +232,7 @@ namespace ITI.CEI40.Monitor.Data.Migrations
 
                     b.Property<int>("FK_TaskId");
 
-                    b.Property<bool>("IsUnderWork");
+                    b.Property<bool?>("IsUnderWork");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -242,8 +242,9 @@ namespace ITI.CEI40.Monitor.Data.Migrations
 
                     b.Property<int>("Progress");
 
-                    b.Property<DateTime>("StartDate")
-                        .HasColumnName("Start Date");
+                    b.Property<DateTime?>("StartDate")
+                        .HasColumnName("Start Date")
+                        .HasColumnType("Date");
 
                     b.Property<int>("Status");
 
@@ -419,7 +420,7 @@ namespace ITI.CEI40.Monitor.Data.Migrations
             modelBuilder.Entity("ITI.CEI40.Monitor.Entities.Activity", b =>
                 {
                     b.HasOne("ITI.CEI40.Monitor.Entities.Project", "Project")
-                        .WithMany("Tasks")
+                        .WithMany("Task")
                         .HasForeignKey("FK_ProjectId")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -469,7 +470,7 @@ namespace ITI.CEI40.Monitor.Data.Migrations
             modelBuilder.Entity("ITI.CEI40.Monitor.Entities.SubTask", b =>
                 {
                     b.HasOne("ITI.CEI40.Monitor.Entities.ApplicationUser", "Engineer")
-                        .WithMany("subTasks")
+                        .WithMany("SubTasks")
                         .HasForeignKey("FK_EngineerID")
                         .OnDelete(DeleteBehavior.Restrict);
 
