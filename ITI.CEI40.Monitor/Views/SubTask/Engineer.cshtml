@@ -46,19 +46,6 @@
                                     <select asp-for="@item.Status" asp-items="@Html.GetEnumSelectList<Status>()" class="form-control"></select>
                                 </td>
 
-                                @{
-                                    int remaining = (int)(item.EndDate - DateTime.Now).TotalHours;
-
-                                    if (remaining > 0)
-                                    {
-                                        <td>@remaining hour</td>
-                                    }
-                                    else
-                                    {
-                                        <td class="text-danger">Time Ended</td>
-                                    }
-                                }
-
                                 <td>
                                     <div class="progress">
                                         <div class="progress-bar" role="progressbar" style="width: @item.Progress%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@item.Progress%</div>
