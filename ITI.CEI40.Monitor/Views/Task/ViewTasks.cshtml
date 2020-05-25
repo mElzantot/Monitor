@@ -1,0 +1,155 @@
+﻿@model List<Activity>
+@{
+    ViewData["Title"] = "Team Leader";
+}
+
+
+<div class="container " id="mainPage">
+    @*<input id="startDate"  type="text" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>*@
+    <div class="row">
+        <h3 class="text-muted m-3">Tasks</h3>
+    </div>
+    <input type="number" hidden id="teamId" value="@ViewBag.TeamId" />
+    <div class="col-12" id="tasksView">
+        <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
+            <table class="table table-hover" id="teamTable">
+                <thead class="tableh">
+                    <tr>
+                        <th scope="col">Task Name</th>
+                        <th scope="col">Project Name </th>
+                        <th scope="col">Priority </th>
+                        <th scope="col">Start Date </th>
+                        <th scope="col">Due Date </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Count(); i++)
+                    {
+                        <tr id="@Model[i].Id" onclick='displaySubTasks("@Model[i].Id")'>
+                            <td>@Model[i].Name</td>
+
+                            <td>@Model[i].Project.Name</td>
+                            <td>@Model[i].Priority</td>
+                            <td>@Model[i].StartDate.ToString("dd/MM/yyyy")</td>
+                            <td>@Model[i].EndDate.ToString("dd/MM/yyyy")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- Add SubTask -->
+<div class="modal fade" id="addSubTaskModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" data-ajax-url="/SubTask/AddSubTask" data-ajax="true" data-ajax-method="Post" data-ajax-complete="addSubTask"
+                  data-ajax-update="#tableBody" data-ajax-mode="after" id="SubTaskForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add SubTask</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button type="reset" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- #endregion -->
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive-ajax/dist/jquery.unobtrusive-ajax.js"></script>
+    <script>
+        function displaySubTasks(id) {
+            $.ajax({
+                url: "/SubTask/displaySubTasks",
+                type: "Get",
+                data: { taskId: `${id}` },
+                success: function (result) {
+                    if (result) {
+                        $('#tasksView').hide();
+                        $('#mainPage').append(result);
+                    }
+                }
+            })
+        }
+
+        function BacktoList() {
+            $('#subTaskView').remove();
+            $('#tasksView').show();
+        }
+
+        function getSubTaskModal(TaskId) {
+            $.ajax({
+                url: "/SubTask/AddSubTask",
+                type: "GET",
+                data: { taskId: TaskId, teamId: $('#teamId').val() },
+                success: function (res) {
+                    $("#modalBody").append(res);
+                    $('#addSubTaskModal').modal('show');
+                }
+            })
+        }
+
+        function addSubTask(result, status) {
+            if (status == "success") {
+                console.log(result);
+                $('#addSubTaskModal').modal('hide');
+                document.getElementById("SubTaskForm").reset();
+                alert("SubTask added Successfully");
+            }
+            else {
+                alert("Error While Adding SubTask");
+                document.getElementById("SubTaskForm").reset();
+            }
+        }
+
+
+        $('#addSubTaskModal').on('shown.bs.modal', function () {
+
+            $('#startDate').datepicker({
+                format: "dd/mm/yyyy",
+                daysOfWeekDisabled: "5,6",
+                todayHighlight: true,
+                autoclose: true,
+                clearBtn: true,
+                startDate: new Date(),
+                container: '#addSubTaskModal',
+                datesDisabled: []
+            }).on('changeDate', function (selected) {
+                var minDate = new Date(selected.date.valueOf());
+                $('#endDate').datepicker('setStartDate', minDate);
+            });
+
+            $('#endDate').datepicker({
+                format: "dd/mm/yyyy",
+                daysOfWeekDisabled: "5,6",
+                todayHighlight: true,
+                autoclose: true,
+                clearBtn: true,
+                startDate: $("#startDate").val(),
+                container: '#addSubTaskModal',
+                datesDisabled: []
+            }).on('changeDate', function (selected) {
+                var maxDate = new Date(selected.date.valueOf());
+                $('#startDate').datepicker('setEndDate', maxDate);
+            });
+        });
+
+        $('#addSubTaskModal').on('hidden.bs.modal', function () {
+            $("#modalBody").empty();
+        })
+
+    </script>
+}

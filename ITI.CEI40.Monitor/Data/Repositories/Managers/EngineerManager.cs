@@ -1,4 +1,5 @@
 ﻿using ITI.CEI40.Monitor.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,7 +12,6 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
     {
         public EngineerManager(ApplicationDbContext context):base(context)
         {
-
         }
         public ApplicationUser GetWithAttriutes(string id)
         {
@@ -26,7 +26,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         public IEnumerable<ApplicationUser> GetEngineersInsideTeam(int teamId)
         {
-            return set.Where(e => e.FK_TeamID == teamId).ToList();
+            return set.Where(e => e.FK_TeamID == id).ToList();
         }
 
     }

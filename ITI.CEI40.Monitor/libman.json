@@ -5,6 +5,16 @@
     {
       "library": "jquery-ajax-unobtrusive@3.2.6",
       "destination": "wwwroot/js/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "frappe-gantt@0.3.0",
+      "destination": "wwwroot/lib/frappe-gantt/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "moment.js@2.25.3",
+      "destination": "wwwroot/lib/moment.js/"
     }
   ]
 }

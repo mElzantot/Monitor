@@ -1,0 +1,54 @@
+﻿@model TaskViewModel
+
+<div class="col-12" id="subTaskView">
+    <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
+        <div class="righthead">
+            <div>
+                <input type="text" value="@Model.TaskId" id="taskID" hidden />
+                <h5>
+                    Task Description
+                </h5>
+                @Model.taskDescription
+            </div>
+            <hr />
+            <div class="row" id="tasks">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Priority</th>
+                            <th>start</th>
+                            <th>Due</th>
+                            <th>Status</th>
+                            <th>Progress</th>
+                            <th>Assigned to</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        @for (int i = 0; i < Model.SubTasks.Count(); i++)
+                        {
+                            <tr id="@Model.SubTasks[i].Id">
+                                <td>@Model.SubTasks[i].Name</td>
+                                <td>@Model.SubTasks[i].Priority</td>
+                                <td>@Model.SubTasks[i].StartDate.ToString()</td>
+                                <td>@Model.SubTasks[i].EndDate.ToString()</td>
+                                <td>@Model.SubTasks[i].Status</td>
+                                <td>@Model.SubTasks[i].Progress</td>
+                                @if (@Model.SubTasks[i].Engineer != null)
+                                {
+                                    <td>@Model.SubTasks[i].Engineer.UserName</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <hr />
+            <button onclick="getSubTaskModal(@Model.TaskId)" type="button" class="btn btn-outline-success" >
+                Add SubTask
+            </button>
+            <button type="button" class="btn btn-outline-primary" onclick="BacktoList()">Back to Tasks</button>
+        </div>
+    </div>
+</div>
+

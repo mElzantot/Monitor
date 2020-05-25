@@ -12,9 +12,6 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         IEnumerable<ApplicationUser> GetAllWithAttributes();
         IEnumerable<ApplicationUser> GetEngineersInsideTeam(int id);
 
-        //IEnumerable<ApplicationUser> GetEngineers(int teamId);
-
-        //IEnumerable<ApplicationUser> GetEngineersInsideTeam(int teamId);
     }
 
 }

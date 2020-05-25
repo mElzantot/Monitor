@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data.Repositories.Managers;
 
-
 namespace ITI.CEI40.Monitor.Data
 {
     public class UnitOfWork:IUnitOfWork
@@ -18,6 +17,8 @@ namespace ITI.CEI40.Monitor.Data
             Departments = new DepartmentManager(context);
             DepartmentProjects = new DepartmentProjectsManager(context);
             Engineers = new EngineerManager(context);
+            //EngineerSubTasks = new EngineerSubTasksManager(context);
+            SubTaskSessions = new SubTaskSessionManager(context);
             Projects = new ProjectManager(context);
             SubTasks = new SubTaskManager(context);
             Tasks = new TaskManager(context);
@@ -29,6 +30,8 @@ namespace ITI.CEI40.Monitor.Data
         public IDepartmentManager Departments { get; }
         public IDepartmentProjectsManager DepartmentProjects { get; }
         public IEngineerManager Engineers { get; }
+        //public IEngineerSubTasksManager EngineerSubTasks { get; }
+        public ISubTaskSessionManager SubTaskSessions { get; }
         public IProjectManager Projects { get; }
         public ISubTaskManager SubTasks { get; }
         public ITaskManager Tasks { get; }

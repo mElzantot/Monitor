@@ -20,14 +20,20 @@ namespace ITI.CEI40.Monitor.Data.Repositories
         public TEntity Add(TEntity entity)
         {
             context.Add(entity);
-            if (context.SaveChanges() > 0)
+            try
             {
+                context.SaveChanges();
                 return entity;
             }
-            else
+            catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 return null;
             }
+            //if (context.SaveChanges() > 0)
+            //{
+            //    return entity;
+            //}
         }
 
         public bool Delete(params object[] id)
