@@ -9,8 +9,8 @@
     </div>
     <div class="form-group col-6">
         <label asp-for="Assignee"></label>
-        <select asp-for="Assignee" asp-items="new SelectList(Model.TeamMembers, nameof(ApplicationUser.Id), nameof(ApplicationUser.UserName))" class="form-control">
-            <option>--- Select Assignee ---</option>
+        <select asp-for="Assignee" asp-items="new SelectList(Model.TeamMembers ,nameof(ApplicationUser.Id), nameof(ApplicationUser.UserName))" class="form-control">
+            <option value=@null>--- Select Assignee ---</option>
         </select>
         <span asp-validation-for="Assignee" class="text-danger"></span>
     </div>
@@ -47,3 +47,4 @@
         <span asp-validation-for="EndDate" class="text-danger"></span>
     </div>
 </div>
+<partial name="_ValidationScriptsPartial" />

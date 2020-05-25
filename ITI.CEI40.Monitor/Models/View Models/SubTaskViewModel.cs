@@ -31,7 +31,9 @@ namespace ITI.CEI40.Monitor.Models.View_Models
         [Display(Name ="Due Date") ]
         public string EndDate { get; set; }
         public int Progress { get; set; }
+
         public Status Status { get; set; }
+
         [Required]
         public Priority Priority { get; set; }
 

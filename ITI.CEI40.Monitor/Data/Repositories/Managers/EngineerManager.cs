@@ -1,4 +1,5 @@
 ﻿using ITI.CEI40.Monitor.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,9 +10,10 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 {
     public class EngineerManager: Reposiotry<ApplicationDbContext,ApplicationUser>,IEngineerManager
     {
+        private readonly UserManager<ApplicationUser> userManager;
+
         public EngineerManager(ApplicationDbContext context):base(context)
         {
-
         }
         public ApplicationUser GetWithAttriutes(string id)
         {
@@ -26,6 +28,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         public IEnumerable<ApplicationUser> GetEngineersInsideTeam(int id)
         {
+            //var teamLeader = await userManager.GetUsersInRoleAsync("Team Leader");        
             return set.Where(e => e.FK_TeamID == id).ToList();
         }
 
