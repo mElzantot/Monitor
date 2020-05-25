@@ -22,7 +22,7 @@ namespace ITI.CEI40.Monitor.Entities
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
-
+        //hello
         public Team Team { get; set; }
         [ForeignKey(nameof(Team))]
         public int FK_TeamId { get; set; }
