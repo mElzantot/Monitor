@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
+using ITI.CEI40.Monitor.Entities;
 using ITI.CEI40.Monitor.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis;
 
 namespace ITI.CEI40.Monitor.Controllers
 {
@@ -18,12 +18,11 @@ namespace ITI.CEI40.Monitor.Controllers
             this.unitofwork = unitOfWork;
         }
 
-
         public IActionResult Index()
         {
             ProjectViewModel projectView = new ProjectViewModel
             {
-                Projects = unitofwork.Projects.GetAll(),
+                Projects = unitofwork.Projects.GetRunningProjects(),
             };
             
             return View("_CreateProject", projectView);
@@ -31,11 +30,11 @@ namespace ITI.CEI40.Monitor.Controllers
 
 
         [HttpPost]
-        public JsonResult Add(ITI.CEI40.Monitor.Entities.Project project)
+        public JsonResult Add(Project project)
         {
             if (ModelState.IsValid)
             {
-                unitofwork.Projects.Add(project);
+                project = unitofwork.Projects.Add(project);
                 return Json(project);
             }
             else
@@ -47,7 +46,7 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            ITI.CEI40.Monitor.Entities.Project project = unitofwork.Projects.GetById(id);
+            Project project = unitofwork.Projects.GetById(id);
             if (project != null)
             {
                 return PartialView("_FormPartial", project);
@@ -59,7 +58,7 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [HttpPost]
-        public JsonResult Edit(ITI.CEI40.Monitor.Entities.Project project)
+        public JsonResult Edit(Project project)
         {
             if (ModelState.IsValid)
             {

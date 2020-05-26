@@ -10,9 +10,6 @@ namespace ITI.CEI40.Monitor.Entities
     [Table("Project")]
     public class Project
     {
-
-        // Welcome to GitHub, From Farag
-
         public Project()
         {
             this.Tasks = new HashSet<Activity>();
@@ -25,42 +22,38 @@ namespace ITI.CEI40.Monitor.Entities
         [MaxLength(30)]
         public string Name { get; set; }
 
+        [ForeignKey("ProjectManager")]
+        public string FK_Manager { get; set; }
+        public ApplicationUser Manager { get; set; }
 
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
-        [Required]
         [MaxLength(30)]
         public string Owner { get; set; }
 
-        [Required]
-        public float TotalBudget { get; set; } //---1000
+        public float? TotalBudget { get; set; } //---1000
 
         //----Estimated Budget
         //public float? EstimatedBudget { get; set;}
 
+        public float? Income { get; set; }      //--Invoices
+        public float? Outcome { get; set; }     //---Actual
 
-        public float Income { get; set; } //Invoices
-        public float Outcome { get; set; } //---Actual
-
-        public float Progress { get; set; }
-
-        public Status Status { get; set; }
-        public Priority Priority { get; set; }
+        public float? Progress { get; set; }
+        public Status? Status { get; set; }
+        public Priority? Priority { get; set; }
 
         [DataType(DataType.Date)]
-        [Required]
-        public DateTime StartDate { get; set; }
+        public DateTime? StartDate { get; set; }
 
         [DataType(DataType.Date)]
-        [Required]
-        public DateTime EndDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
-        [Required]
-        public float EstimatedDuration { get; set; }
+        public int? EstimatedDuration { get; set; }
 
         [NotMapped]
-        public float ActualDuration { get; set; }
+        public int ActualDuration { get; set; }
 
         public ICollection<DepartmentProjects> DepartmentProjects { get; set; }
 

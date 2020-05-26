@@ -41,7 +41,6 @@ namespace ITI.CEI40.Monitor.Entities
         [Display(Name = "Start Date")]
         public DateTime StartDate { get; set; }
 
-
         [DataType(DataType.Date)]
         [Column("End Date")]
         [Display(Name = "End Date")]

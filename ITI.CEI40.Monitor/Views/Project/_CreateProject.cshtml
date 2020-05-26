@@ -1,16 +1,12 @@
 ﻿
-
 @model ProjectViewModel
 @{
     ViewData["Title"] = "Create Project";
 }
 
-
 <div class="container">
-
     <h3 class="text-muted">Projects</h3>
     <br>
-
     <!--#region Add project  -->
     <div class=" row mb-3 ">
         <span class=" col-3 ">
@@ -31,7 +27,7 @@
                 <div class="col-6">
                     <input asp-for="@Model.Project.Name" class="form-control"
                            type="text" id="projectName" placeholder="Enter the name of new project">
-                    @Html.ValidationMessageFor(m =>m.Project.Name , null, new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(m => m.Project.Name, null, new { @class = "text-danger" })
 
                 </div>
                 <div col-6>
@@ -123,11 +119,11 @@
                     success: function (response) {
                         $('#tablebody').append(
                             `<tr id="${response.id}" onclick="Edit(${response.id})">
-                                                                            <td>${response.name}</td>
-                                                                            <td>
-                                                                                <span class="btn btn-info "><i id="i" class="fas fa-chart-area"></i> Chart</span>
-                                                                            </td>
-                                                                        </tr>`
+                                                                                <td>${response.name}</td>
+                                                                                <td>
+                                                                                    <span class="btn btn-info "><i id="i" class="fas fa-chart-area"></i> Chart</span>
+                                                                                </td>
+                                                                            </tr>`
                         );
                         //For first time if there is no project in the table (Hide the sec of No Project is created)
                         $('#noProject').hide();

@@ -11,14 +11,30 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
     {
         public ProjectManager(ApplicationDbContext context):base(context)
         {
-
         }
 
         public IEnumerable<Project> GetSearchName(string name)
         {
-            return set.Where(pr => pr.Name.Contains(name)); 
+            return set.Where(pr => pr.Name.Contains(name));
         }
 
-        
+
+        public IEnumerable<Project> GetCompletedProjects()
+        {
+            return set.Where(pr =>  pr.Status == Status.Completed);
+        }
+
+        public IEnumerable<Project> GetCancelledProjects( )
+        {
+            return set.Where(pr => pr.Status == Status.Canceled);
+        }
+
+        public IEnumerable<Project> GetRunningProjects()
+        {
+            return set.Where(pr => pr.Status != Status.Canceled && pr.Status != Status.Completed);
+        }
+
+
+
     }
 }
