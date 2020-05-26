@@ -7,11 +7,11 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace ITI.CEI40.Monitor.Data.Migrations
+namespace ITI.CEI40.Monitor.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20200523070030_updateDates5")]
-    partial class updateDates5
+    [Migration("20200526193813_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -182,33 +182,38 @@ namespace ITI.CEI40.Monitor.Data.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<DateTime>("EndDate");
+                    b.Property<DateTime?>("EndDate");
 
-                    b.Property<float>("EstimatedDuration");
+                    b.Property<int?>("EstimatedDuration");
 
-                    b.Property<float>("Income");
+                    b.Property<string>("FK_Manager");
+
+                    b.Property<float?>("Income");
+
+                    b.Property<string>("ManagerId");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(30);
 
-                    b.Property<float>("Outcome");
+                    b.Property<float?>("Outcome");
 
                     b.Property<string>("Owner")
-                        .IsRequired()
                         .HasMaxLength(30);
 
-                    b.Property<int>("Priority");
+                    b.Property<int?>("Priority");
 
-                    b.Property<float>("Progress");
+                    b.Property<float?>("Progress");
 
-                    b.Property<DateTime>("StartDate");
+                    b.Property<DateTime?>("StartDate");
 
-                    b.Property<int>("Status");
+                    b.Property<int?>("Status");
 
-                    b.Property<float>("TotalBudget");
+                    b.Property<float?>("TotalBudget");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("ManagerId");
 
                     b.ToTable("Project");
                 });
@@ -223,7 +228,7 @@ namespace ITI.CEI40.Monitor.Data.Migrations
                         .IsRequired()
                         .HasMaxLength(256);
 
-                    b.Property<DateTime>("EndDate")
+                    b.Property<DateTime?>("EndDate")
                         .HasColumnName("End Date")
                         .HasColumnType("Date");
 
@@ -243,7 +248,7 @@ namespace ITI.CEI40.Monitor.Data.Migrations
 
                     b.Property<int>("Progress");
 
-                    b.Property<DateTime>("StartDate")
+                    b.Property<DateTime?>("StartDate")
                         .HasColumnName("Start Date")
                         .HasColumnType("Date");
 
@@ -468,10 +473,18 @@ namespace ITI.CEI40.Monitor.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("ITI.CEI40.Monitor.Entities.Project", b =>
+                {
+                    b.HasOne("ITI.CEI40.Monitor.Entities.ApplicationUser", "Manager")
+                        .WithMany("ManagedProjects")
+                        .HasForeignKey("ManagerId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("ITI.CEI40.Monitor.Entities.SubTask", b =>
                 {
                     b.HasOne("ITI.CEI40.Monitor.Entities.ApplicationUser", "Engineer")
-                        .WithMany("subTasks")
+                        .WithMany("SubTasks")
                         .HasForeignKey("FK_EngineerID")
                         .OnDelete(DeleteBehavior.Restrict);
 
