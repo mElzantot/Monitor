@@ -9,6 +9,10 @@ namespace ITI.CEI40.Monitor.Entities
 {
     public class SubTaskSession
     {
+        public SubTaskSession()
+        {
+            this.SessDuration = 0;
+        }
 
         [Key]
         public int ID { get; set; }
@@ -27,7 +31,7 @@ namespace ITI.CEI40.Monitor.Entities
         [Display(Name = "End Date")]
         public DateTime? SessEndtDate { get; set; }
 
-        public int? SessDuration { get; set; }
+        public int SessDuration { get; set; }
 
     }
 }

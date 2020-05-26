@@ -1,4 +1,5 @@
 ﻿using ITI.CEI40.Monitor.Entities;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -25,5 +26,10 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Include(p => p.Status).Include(p => p.Task);
         }
 
+        [HttpPost]
+        public Project Getproject(int prjId)
+        {
+            return set.Where(pr => pr.ID == prjId).Include(p => p.Task).FirstOrDefault();
+        }
     }
 }

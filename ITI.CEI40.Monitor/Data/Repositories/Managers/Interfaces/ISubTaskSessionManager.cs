@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 {
     public interface ISubTaskSessionManager:IRepository<SubTaskSession>
-    { 
-
+    {
+        SubTaskSession GetLastSessBySubTaskID(int subTaskId);
     }
 }

@@ -14,6 +14,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         IEnumerable<Activity> GetTasksByTeamID(int teamId);
         IEnumerable<Activity> GetActivitiesFromProject(int projId);
 
+        IEnumerable<Activity> GetActivitiesFromProject(int projId);
     }
 
 }

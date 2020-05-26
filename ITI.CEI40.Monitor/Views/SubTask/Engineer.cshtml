@@ -243,6 +243,11 @@
 
 
         function ChangeISUnderWork(id, value) {
+            //if (false) {
+
+            //        $('#toggle-silent').bootstrapToggle('off');         
+            //}
+
             $.ajax({
                 type: "GET",
                 url: `/Subtask/EditIsUnderWork`,
@@ -259,14 +264,6 @@
             })
         }
 
-
-
-        function toggleApiOnNotSilent() {
-            $('#toggle-silent').bootstrapToggle('on');
-        }
-        function toggleApiOffNotSilent() {
-            $('#toggle-silent').bootstrapToggle('off');
-        }
     </script>
 }
 

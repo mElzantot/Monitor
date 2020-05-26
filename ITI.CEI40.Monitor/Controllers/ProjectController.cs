@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
+using ITI.CEI40.Monitor.Entities;
 using ITI.CEI40.Monitor.Models;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace ITI.CEI40.Monitor.Controllers
 {
@@ -24,13 +26,13 @@ namespace ITI.CEI40.Monitor.Controllers
             {
                 Projects = unitofwork.Projects.GetAll(),
             };
-            
+
             return View("_CreateProject", projectView);
         }
 
 
         [HttpPost]
-        public JsonResult Add(ITI.CEI40.Monitor.Entities.Project project)
+        public JsonResult Add(Project project)
         {
             if (ModelState.IsValid)
             {
@@ -58,7 +60,7 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [HttpPost]
-        public JsonResult Edit(ITI.CEI40.Monitor.Entities.Project project)
+        public JsonResult Edit(Project project)
         {
             if (ModelState.IsValid)
             {
@@ -84,5 +86,6 @@ namespace ITI.CEI40.Monitor.Controllers
             var project = unitofwork.Projects.GetAllProjects().ToList();
             return View("_Dashboard",project);
         }
+
     }
 }
