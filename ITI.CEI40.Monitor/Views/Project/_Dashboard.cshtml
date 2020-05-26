@@ -1,5 +1,5 @@
 ﻿
-@model Project
+@model List<Project>
     @{
         ViewData["Title"] = "Dashboard";
     }
@@ -21,7 +21,7 @@
             </tr>
             
                 <tr>
-                    <td>@Model.Name</td>
+                    <td>@Model.FirstOrDefault().Name</td>
                     <td><button class="btn btn-info">Charts</button></td>
 
                 </tr>

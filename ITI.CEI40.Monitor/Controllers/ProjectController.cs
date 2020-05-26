@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.CodeAnalysis;
 
 namespace ITI.CEI40.Monitor.Controllers
 {
@@ -73,9 +72,16 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [HttpGet]
-        public IActionResult Dashboard()
+        public IActionResult DisplayProjects()
         {
-            var project = unitofwork.Projects.GetAll().ToList();
+            var project = unitofwork.Projects.GetAllProjects().ToList();
+            return View(project);
+        }
+
+        [HttpGet]
+        public IActionResult Dashboard(int projId)
+        {
+            var project = unitofwork.Projects.GetAllProjects().ToList();
             return View("_Dashboard",project);
         }
     }
