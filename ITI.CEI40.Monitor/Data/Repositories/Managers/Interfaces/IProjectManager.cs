@@ -11,7 +11,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         IEnumerable<Project> GetSearchName(string name);
 
-        
+        IEnumerable<Project> GetAllProjects();
 
     }
 }

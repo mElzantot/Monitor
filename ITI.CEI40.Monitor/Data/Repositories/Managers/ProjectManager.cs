@@ -19,6 +19,11 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Where(pr => pr.Name.Contains(name)); 
         }
 
-        
+        public IEnumerable<Project> GetAllProjects()
+        {
+            return set.Include(p => p.Task).ToList();
+        }
+
+
     }
 }

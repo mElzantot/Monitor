@@ -31,7 +31,7 @@
                 <div class="col-6">
                     <input asp-for="@Model.Project.Name" class="form-control"
                            type="text" id="projectName" placeholder="Enter the name of new project">
-                    @Html.ValidationMessageFor(m =>m.Project.Name , null, new { @class = "text-danger" })
+                    @Html.ValidationMessageFor(m => m.Project.Name, null, new { @class = "text-danger" })
 
                 </div>
                 <div col-6>
@@ -55,6 +55,9 @@
                                 <td>
                                     <span class="btn btn-info "><i id="i" class="fas fa-chart-area"></i> Chart</span>
                                 </td>
+                                <td>
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal"/>
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -72,6 +75,31 @@
             <!--#endregion -->
         </div>
 
+    </div>
+
+    <!-- The Modal -->
+    <div class="modal fade" id="myModal">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Modal Heading</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <partial name="_Dashboard" />
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+
+            </div>
+        </div>
     </div>
 
 </div>
