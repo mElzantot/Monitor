@@ -9,6 +9,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
     public interface IProjectManager:IRepository<Project>
     {
         IEnumerable<Project> GetSearchName(string name);
+        IEnumerable<Project> GetAllProjects();
         IEnumerable<Project> GetCompletedProjects();
         IEnumerable<Project> GetCancelledProjects();
         IEnumerable<Project> GetRunningProjects();

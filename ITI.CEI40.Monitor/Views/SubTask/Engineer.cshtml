@@ -84,34 +84,34 @@
 
     </div>
 
+</div>
 
 
+<!-- Button trigger modal -->
+<button type="button" id="togleBtn" class="btn btn-primary d-none" data-toggle="modal" data-target="#exampleModal">
+    Launch demo modal
+</button>
 
-    <!-- Button trigger modal -->
-    <button type="button" id="togleBtn" class="btn btn-primary d-none" data-toggle="modal" data-target="#exampleModal">
-        Launch demo modal
-    </button>
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Write a reason for Holding</h5>
 
-    <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Write a reason for Holding</h5>
-
-                </div>
-                <div class="modal-body">
-                    Reason:
-                    <br />
-                    <input id="reason" type="text" class="form-control" />
-                </div>
-                <div class="modal-footer">
-                    <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
-                    <button id="send" type="button" class="btn btn-primary">Send</button>
-                </div>
+            </div>
+            <div class="modal-body">
+                Reason:
+                <br />
+                <input id="reason" type="text" class="form-control" />
+            </div>
+            <div class="modal-footer">
+                <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
+                <button id="send" type="button" class="btn btn-primary">Send</button>
             </div>
         </div>
     </div>
+</div>
 
 </div>    
 
@@ -121,158 +121,157 @@
 
 
 
-    <!-- #endregion -->
 
-    @section Scripts{
+<!-- #endregion -->
 
-        <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
-        <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
-        <script>
-            var rowID;
+@section Scripts{
 
-            (function () {
-                var previous;
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+    <script>
+        var rowID;
 
-                $("select").on('focus', function () {
-                    // Store the current value on focus and on change
-                    previous = this.value;
+        (function () {
+            var previous;
 
-                }).change(function () {
+            $("select").on('focus', function () {
+                // Store the current value on focus and on change
+                previous = this.value;
 
-                    var value = this.value;
-                    switch (value) {
-                        case '0': //Active
-                            break;
+            }).change(function () {
 
-                        case '1': //onhold
+                var value = this.value;
+                switch (value) {
+                    case '0': //Active
+                        break;
 
-                            $("#togleBtn").trigger("click");
+                    case '1': //onhold
 
-                            $('#send').click(function () {
-                                if ($('#reason').val()) { //validation for empty rason
-                                    console.log($('#reason').val())//send reason in notification
-                                    $("#exampleModal").modal('toggle');
-                                    ChangeStatus(rowID, value);
-                                }
-                            })
+                        $("#togleBtn").trigger("click");
 
-                            $('#close').click(function () {
-                                $(`#${rowID} > td > select`)[0].value = previous
-                            })
-                            break;
-
-                        case '2': // completed
-                            if (confirm('Is the task finished?')) {
-                                $(`#${rowID}`).hide();
+                        $('#send').click(function () {
+                            if ($('#reason').val()) { //validation for empty rason
+                                console.log($('#reason').val())//send reason in notification
+                                $("#exampleModal").modal('toggle');
                                 ChangeStatus(rowID, value);
                             }
-                            else {
-                                $(`#${rowID} > td > select`)[0].value = previous
-                            }
-                            break;
+                        })
 
-                        case '3': //canceled
-                            if (confirm('Do you want to cancel this task?')) {
-                                $(`#${rowID}`).hide();
-                                ChangeStatus(rowID, value);
-                            }
-                            else {
-                                $(`#${rowID} > td > select`)[0].value = previous
-                            }
-                            break;
-                    }
+                        $('#close').click(function () {
+                            $(`#${rowID} > td > select`)[0].value = previous
+                        })
+                        break;
 
-                });
-            })();
+                    case '2': // completed
+                        if (confirm('Is the task finished?')) {
+                            $(`#${rowID}`).hide();
+                            ChangeStatus(rowID, value);
+                        }
+                        else {
+                            $(`#${rowID} > td > select`)[0].value = previous
+                        }
+                        break;
 
-            function ChangeStatus(id, value) {
+                    case '3': //canceled
+                        if (confirm('Do you want to cancel this task?')) {
+                            $(`#${rowID}`).hide();
+                            ChangeStatus(rowID, value);
+                        }
+                        else {
+                            $(`#${rowID} > td > select`)[0].value = previous
+                        }
+                        break;
+                }
 
-                $.ajax({
-                    type: "GET",
-                    url: `/Subtask/EditStatus`,
-                    data: {
-                        ID: id,
-                        status: value
-                    },
-                    success: function () {
+            });
+        })();
 
-                    },
-                    error: function (x, y, err) {
-                        console.log(arguments)
-                    }
-                })
-            }
+        function ChangeStatus(id, value) {
 
+            $.ajax({
+                type: "GET",
+                url: `/Subtask/EditStatus`,
+                data: {
+                    ID: id,
+                    status: value
+                },
+                success: function () {
 
-            function SelectRow(id) {
-                rowID = id;
-                $.ajax({
-                    type: "GET",
-                    url: `/Subtask/DisplayRow`,
-                    data: { ID: id },
-                    success: function (response) {
-                        $('#rightSec').replaceWith(response)
-                        $('#leftSec').removeClass('col-12')
-                        $('#leftSec').addClass('col-7')
-                    },
-                    error: function (x, y, err) {
-                        console.log(arguments)
-                    }
-                })
-            }
+                },
+                error: function (x, y, err) {
+                    console.log(arguments)
+                }
+            })
+        }
 
 
-            function ChangeProgress(id, value) {
-                $.ajax({
-                    type: "GET",
-                    url: `/Subtask/EditProgress`,
-                    data: {
-                        ID: id,
-                        progress: value
-                    },
-                    success: function () {
-                        var progresspar = document.getElementById(id).lastElementChild.firstElementChild.firstElementChild;
-                        progresspar.style.width = `${value}%`;
-                        progresspar.innerHTML = `${value}%`;
-                    },
-                    error: function (x, y, err) {
-                        console.log(arguments)
-                    }
-                })
-            }
-
-       
-            
-
-            //function ChangeISUnderWork(id, value) {
-            //    $.ajax({
-            //        type: "GET",
-            //        url: `/Subtask/EditIsUnderWork`,
-            //        data: {
-            //            ID: id,
-            //            Is: value
-            //        },
-            //        success: function (response) {
-
-            //        },
-            //        error: function (x, y, err) {
-            //            console.log(arguments)
-            //        }
-            //    })
-            //}
+        function SelectRow(id) {
+            rowID = id;
+            $.ajax({
+                type: "GET",
+                url: `/Subtask/DisplayRow`,
+                data: { ID: id },
+                success: function (response) {
+                    $('#rightSec').replaceWith(response)
+                    $('#leftSec').removeClass('col-12')
+                    $('#leftSec').addClass('col-7')
+                },
+                error: function (x, y, err) {
+                    console.log(arguments)
+                }
+            })
+        }
 
 
+        function ChangeProgress(id, value) {
+            $.ajax({
+                type: "GET",
+                url: `/Subtask/EditProgress`,
+                data: {
+                    ID: id,
+                    progress: value
+                },
+                success: function () {
+                    var progresspar = document.getElementById(id).lastElementChild.firstElementChild.firstElementChild;
+                    progresspar.style.width = `${value}%`;
+                    progresspar.innerHTML = `${value}%`;
+                },
+                error: function (x, y, err) {
+                    console.log(arguments)
+                }
+            })
+        }
 
-            function toggleApiOnNotSilent() {
-                $('#toggle-silent').bootstrapToggle('on');
-            }
-            function toggleApiOffNotSilent() {
-                $('#toggle-silent').bootstrapToggle('off');
-            }
-        </script>
-    }
+
+        function ChangeISUnderWork(id, value) {
+            $.ajax({
+                type: "GET",
+                url: `/Subtask/EditIsUnderWork`,
+                data: {
+                    ID: id,
+                    Is: value
+                },
+                success: function (response) {
+
+                },
+                error: function (x, y, err) {
+                    console.log(arguments)
+                }
+            })
+        }
 
 
-    @section Style{
-        <link rel="stylesheet" href="~/css/progress.css" />
-    }
+
+        function toggleApiOnNotSilent() {
+            $('#toggle-silent').bootstrapToggle('on');
+        }
+        function toggleApiOffNotSilent() {
+            $('#toggle-silent').bootstrapToggle('off');
+        }
+    </script>
+}
+
+
+@section Style{
+    <link rel="stylesheet" href="~/css/progress.css" />
+}

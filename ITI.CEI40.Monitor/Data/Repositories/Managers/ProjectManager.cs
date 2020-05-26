@@ -34,6 +34,10 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Where(pr => pr.Status != Status.Canceled && pr.Status != Status.Completed);
         }
 
+        public IEnumerable<Project> GetAllProjects()
+        {
+            return set.Include(p => p.Task).ToList();
+        }
 
 
     }

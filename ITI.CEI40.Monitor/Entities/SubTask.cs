@@ -49,7 +49,7 @@ namespace ITI.CEI40.Monitor.Entities
         //public int EstDuration { get; set; }
 
 
-        public bool? IsUnderWork { get; set; }
+        public bool IsUnderWork { get; set; }
         public int Progress { get; set; }
         public Status Status { get; set; }
         public Priority Priority { get; set; }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace ITI.CEI40.Monitor.Migrations
+namespace ITI.CEI40.Monitor.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     partial class ApplicationDbContextModelSnapshot : ModelSnapshot
@@ -29,8 +29,8 @@ namespace ITI.CEI40.Monitor.Migrations
                         .IsRequired()
                         .HasMaxLength(256);
 
-                    b.Property<DateTime>("EndDate")
-                        .HasColumnName("End Date");
+                    b.Property<DateTime>("EstDuration")
+                        .HasColumnName("Estimated Duration");
 
                     b.Property<int>("FK_ProjectId");
 
@@ -180,7 +180,7 @@ namespace ITI.CEI40.Monitor.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<DateTime?>("EndDate");
+                    b.Property<DateTime>("EndDate");
 
                     b.Property<int?>("EstimatedDuration");
 
@@ -194,20 +194,21 @@ namespace ITI.CEI40.Monitor.Migrations
                         .IsRequired()
                         .HasMaxLength(30);
 
-                    b.Property<float?>("Outcome");
+                    b.Property<float>("Outcome");
 
                     b.Property<string>("Owner")
+                        .IsRequired()
                         .HasMaxLength(30);
 
-                    b.Property<int?>("Priority");
+                    b.Property<int>("Priority");
 
-                    b.Property<float?>("Progress");
+                    b.Property<float>("Progress");
 
-                    b.Property<DateTime?>("StartDate");
+                    b.Property<DateTime>("StartDate");
 
-                    b.Property<int?>("Status");
+                    b.Property<int>("Status");
 
-                    b.Property<float?>("TotalBudget");
+                    b.Property<float>("TotalBudget");
 
                     b.HasKey("ID");
 
@@ -226,13 +227,13 @@ namespace ITI.CEI40.Monitor.Migrations
                         .IsRequired()
                         .HasMaxLength(256);
 
-                    b.Property<DateTime?>("EndDate")
-                        .HasColumnName("End Date")
-                        .HasColumnType("Date");
+                    b.Property<DateTime>("EndDate")
+                        .HasColumnName("End Date");
 
                     b.Property<int?>("Evaluation");
 
-                    b.Property<string>("FK_EngineerID");
+                    b.Property<string>("FK_EngineerID")
+                        .IsRequired();
 
                     b.Property<int>("FK_TaskId");
 
@@ -244,11 +245,10 @@ namespace ITI.CEI40.Monitor.Migrations
 
                     b.Property<int>("Priority");
 
-                    b.Property<int>("Progress");
+                    b.Property<float>("Progress");
 
-                    b.Property<DateTime?>("StartDate")
-                        .HasColumnName("Start Date")
-                        .HasColumnType("Date");
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnName("Start Date");
 
                     b.Property<int>("Status");
 

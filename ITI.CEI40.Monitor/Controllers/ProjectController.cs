@@ -70,5 +70,12 @@ namespace ITI.CEI40.Monitor.Controllers
                 return Json(project);
             }
         }
+
+        [HttpGet]
+        public IActionResult Dashboard()
+        {
+            var project = unitofwork.Projects.GetAll().ToList();
+            return View("_Dashboard",project);
+        }
     }
 }
