@@ -54,14 +54,14 @@
                 <h5>End Data</h5>
                 <h5 class="text-muted">@Model.EndDate</h5>
                 @{
-                    int duration = (int)(Model.EndDate - Model.StartDate).Value.TotalDays;
+                    int duration = (int)(Model.EndDate - Model.StartDate).Value.TotalDays * 8;
                 }
                 <h5>Task Duration</h5>
-                <h5 class="text-muted">@duration day</h5>
+                <h5 class="text-muted">@duration hour</h5>
 
                 <div>
                     <h5>Actual Duration</h5>
-                    <h5 class="text-muted">@duration  day</h5>
+                    <h5 class="text-muted"> @Model.ActualDuration hour</h5>
                 </div>
             </div>
         </div>

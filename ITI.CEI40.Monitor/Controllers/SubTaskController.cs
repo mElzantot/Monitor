@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+
 using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
@@ -21,8 +21,8 @@ namespace ITI.CEI40.Monitor.Controllers
 
         public IActionResult Index(string engineerID)
         {
-            IEnumerable<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByEngineerId(engineerID);    
-            return View("Engineer",subTasks);
+            IEnumerable<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByEngineerId(engineerID);
+            return View("Engineer", subTasks);
         }
 
         public IActionResult DisplayRow(int ID)
@@ -31,27 +31,55 @@ namespace ITI.CEI40.Monitor.Controllers
             return PartialView("_SubTaskDataPartial", subTask);
         }
 
-        public void EditProgress(int ID,int progress)
+
+        public void EditProgress(int ID, int progress)
         {
             SubTask subTask = unitOfWork.SubTasks.GetById(ID);
             subTask.Progress = progress;
             unitOfWork.SubTasks.Edit(subTask);
-           // return Json(progress);
+            // return Json(progress);
         }
 
         public void EditIsUnderWork(int ID, bool Is)
         {
             SubTask subTask = unitOfWork.SubTasks.GetById(ID);
-            subTask.IsUnderWork=Is;
-            unitOfWork.SubTasks.Edit(subTask);
+            subTask.IsUnderWork = Is;
+           
+            if (Is)
+            {
+                SubTaskSession subTaskSession = new SubTaskSession()
+                {
+                    FK_SubTaskID = ID,
+                    SessStartDate = DateTime.Now
+                };
+                subTaskSession = unitOfWork.SubTaskSessions.Add(subTaskSession);
+            }
+            else
+            {
+                SubTaskSession subTaskSession = unitOfWork.SubTaskSessions.GetLastSessBySubTaskID(ID);
+                subTaskSession.SessEndtDate = DateTime.Now;
+                double hourDuration = (double)(subTaskSession.SessEndtDate - subTaskSession.SessStartDate).Value.TotalHours;
+                subTaskSession.SessDuration = (int)Math.Round(hourDuration, 0);
+                subTaskSession = unitOfWork.SubTaskSessions.Edit(subTaskSession);
+
+                subTask.ActualDuration += subTaskSession.SessDuration;
+
+                Activity task = unitOfWork.Tasks.GetById(subTask.FK_TaskId);
+                task.ActualDuratin += subTask.ActualDuration;
+                task = unitOfWork.Tasks.Edit(task);
+            }
+            subTask = unitOfWork.SubTasks.Edit(subTask);
         }
 
-        public void EditStatus(int ID,Status status)
+        public void EditStatus(int ID, Status status)
         {
             SubTask subTask = unitOfWork.SubTasks.GetById(ID);
             subTask.Status = status;
             unitOfWork.SubTasks.Edit(subTask);
         }
+
+
+
 
         [HttpGet]
         public IActionResult displaySubTasks(int taskID)
@@ -63,7 +91,6 @@ namespace ITI.CEI40.Monitor.Controllers
                 SubTasks = unitOfWork.SubTasks.GetSubTasksByTaskId(taskID),
             };
             return PartialView("_SubTaskDisplayPartial", taskVM);
-
         }
 
         [HttpGet]

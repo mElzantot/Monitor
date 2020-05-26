@@ -56,10 +56,10 @@
                                     <span class="btn btn-info "><i id="i" class="fas fa-chart-area"></i> Chart</span>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal"/>
+                                    <button  type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Board</button>
                                 </td>
                             </tr>
-                        }
+                                  }
                     </tbody>
                 </table>
             </div>
@@ -77,6 +77,7 @@
 
     </div>
 
+
     <!-- The Modal -->
     <div class="modal fade" id="myModal">
         <div class="modal-dialog modal-xl">
@@ -90,7 +91,9 @@
 
                 <!-- Modal body -->
                 <div class="modal-body">
-                    <partial name="_Dashboard" />
+
+                    <div id="piechart" style="width: 900px; height: 500px;"></div>
+
                 </div>
 
                 <!-- Modal footer -->
@@ -108,14 +111,12 @@
 
 
 
-
-
-
-
 @section Scripts{
     <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
 
     <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script>
 
         //open form for add name of project
@@ -151,11 +152,11 @@
                     success: function (response) {
                         $('#tablebody').append(
                             `<tr id="${response.id}" onclick="Edit(${response.id})">
-                                                                            <td>${response.name}</td>
-                                                                            <td>
-                                                                                <span class="btn btn-info "><i id="i" class="fas fa-chart-area"></i> Chart</span>
-                                                                            </td>
-                                                                        </tr>`
+                                                                                                        <td>${response.name}</td>
+                                                                                                        <td>
+                                                                                                            <span class="btn btn-info "><i id="i" class="fas fa-chart-area"></i> Chart</span>
+                                                                                                        </td>
+                                                                                                    </tr>`
                         );
                         //For first time if there is no project in the table (Hide the sec of No Project is created)
                         $('#noProject').hide();
@@ -179,10 +180,13 @@
                 case 'I':
                     location.href = "/Activity/Index/" + projectId;
                     break;
+                case 'BUTTON':
+                    Dashboard(projectId)
                 default:
                     OpenEditSec(projectId);
             }
         }
+
 
         //Open the right window which contain the form
         //this function is called from (Edit function , Add function)
@@ -201,7 +205,7 @@
         };
 
 
-
+          
         //Submit form ajax
         function SubmitForm(event) {
             event.preventDefault();
@@ -217,6 +221,54 @@
                 },
             });
         };
+
+
+
+        function Dashboard(id) {
+            $.ajax({
+                type: "POST",
+                url: `/Project/Dashboard`,
+                data: { projId: id },
+                dataType: "json",
+                complete: function (response) {             
+                    console.log(response); 
+                },
+
+                error: function (x, y, err) {
+                    console.log(arguments)
+                }
+            })
+        }
+
+
+
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Name');
+            data.addColumn('number', 'Progress');
+
+            
+            
+            data.addRows([
+                ["CEI", 5], ["GIS", 8], ["UI", 2], ["Java", 9]
+            ]);
+
+
+            var options = {
+                title: 'My Daily Activities'
+            };
+
+
+            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+
+            chart.draw(data, options);
+
+        }
+
     </script>
 
 }

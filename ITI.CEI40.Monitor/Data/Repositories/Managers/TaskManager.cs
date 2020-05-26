@@ -29,9 +29,16 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Where(t => t.Id == taskId).Include(t => t.Project).FirstOrDefault();
         }
 
-        public IEnumerable<Activity> GetAllTaskWithProject(int teamId)
+        public IEnumerable<Activity> GetAllTaskWithTheirProject(int teamId)
         {
             return set.Where(t => t.FK_TeamId == teamId).Include(t => t.Project).ToList();
         }
+
+        public IEnumerable<Activity> GetActivitiesFromProject(int projId)
+        {
+            return set.Where(p => p.FK_ProjectId == projId).Include(a => a.Project)
+                .Include(p => p.SubTasks);
+        }
+
     }
 }
