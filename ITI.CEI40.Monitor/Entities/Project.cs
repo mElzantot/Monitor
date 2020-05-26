@@ -40,7 +40,6 @@ namespace ITI.CEI40.Monitor.Entities
         public float? Income { get; set; }      //--Invoices
         public float? Outcome { get; set; }     //---Actual
 
-        public float? Progress { get; set; }
         public Status? Status { get; set; }
         public Priority? Priority { get; set; }
 

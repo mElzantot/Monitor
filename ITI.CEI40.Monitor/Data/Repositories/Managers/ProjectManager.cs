@@ -36,7 +36,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         public IEnumerable<Project> GetAllProjects()
         {
-            return set.Include(p => p.Task).ToList();
+            return set.Include(p => p.Tasks).ToList();
         }
 
 
