@@ -20,15 +20,12 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Where(pr => pr.Name.Contains(name)); 
         }
 
+        
         public IEnumerable<Project> GetAllProjects()
         {
-            return set.Include(p => p.Task).ToList();
+            return set.Include(p => p.Status).Include(p => p.Task);
         }
 
-        [HttpPost]
-        public Project Getproject(int prjId)
-        {
-            return set.Where(pr => pr.ID == prjId).Include(p => p.Task).FirstOrDefault();
-        }
+        
     }
 }

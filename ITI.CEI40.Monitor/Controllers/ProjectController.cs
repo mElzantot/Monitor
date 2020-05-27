@@ -74,12 +74,14 @@ namespace ITI.CEI40.Monitor.Controllers
             }
         }
 
-        [HttpGet] 
-        public JsonResult Dashboard(int projId)
+        [HttpGet]
+        public IActionResult DisplayProjects()
         {
-            List<Activity> tasks = unitofwork.Tasks.GetActivitiesFromProject(projId).ToList();
-            return Json(tasks);
+            var project = unitofwork.Projects.GetAllProjects().ToList();
+            return View(project);
         }
+
+        
 
     }
 }
