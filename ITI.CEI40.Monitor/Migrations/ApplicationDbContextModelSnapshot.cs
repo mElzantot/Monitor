@@ -25,6 +25,8 @@ namespace ITI.CEI40.Monitor.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("ActualDuration");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(256);
@@ -182,11 +184,9 @@ namespace ITI.CEI40.Monitor.Migrations
 
                     b.Property<DateTime?>("EndDate");
 
-                    b.Property<int?>("EstimatedDuration");
-
                     b.Property<string>("FK_Manager");
 
-                    b.Property<float?>("Income");
+                    b.Property<float>("Income");
 
                     b.Property<string>("ManagerId");
 
@@ -194,7 +194,7 @@ namespace ITI.CEI40.Monitor.Migrations
                         .IsRequired()
                         .HasMaxLength(30);
 
-                    b.Property<float?>("Outcome");
+                    b.Property<float>("Outcome");
 
                     b.Property<string>("Owner")
                         .HasMaxLength(30);
@@ -205,7 +205,7 @@ namespace ITI.CEI40.Monitor.Migrations
 
                     b.Property<int?>("Status");
 
-                    b.Property<float?>("TotalBudget");
+                    b.Property<int>("WorkingHrs");
 
                     b.HasKey("ID");
 

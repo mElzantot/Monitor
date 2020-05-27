@@ -26,12 +26,12 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         public IEnumerable<Project> GetCancelledProjects( )
         {
-            return set.Where(pr => pr.Status == Status.Canceled);
+            return set.Where(pr => pr.Status == Status.Cancelled);
         }
 
         public IEnumerable<Project> GetRunningProjects()
         {
-            return set.Where(pr => pr.Status != Status.Canceled && pr.Status != Status.Completed);
+            return set.Where(pr => pr.Status != Status.Cancelled && pr.Status != Status.Completed);
         }
 
         public IEnumerable<Project> GetAllProjects()

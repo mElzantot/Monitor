@@ -59,7 +59,5 @@ namespace ITI.CEI40.Monitor.Controllers
 
         }
 
-
-
     }
 }

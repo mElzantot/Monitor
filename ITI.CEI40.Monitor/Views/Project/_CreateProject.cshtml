@@ -19,7 +19,6 @@
         </span>
     </div>
     <!--#endregion   -->
-
     <div class="row">
         <div class="col-6">
             <!--#region Create Section  -->
@@ -28,7 +27,6 @@
                     <input asp-for="@Model.Project.Name" class="form-control"
                            type="text" id="projectName" placeholder="Enter the name of new project">
                     @Html.ValidationMessageFor(m => m.Project.Name, null, new { @class = "text-danger" })
-
                 </div>
                 <div col-6>
                     <button class="btn btn-success " id="Createprojrct"> create new project </button>
@@ -51,9 +49,6 @@
                                 <td>
                                     <span class="btn btn-info "><i id="i" class="fas fa-chart-area"></i> Chart</span>
                                 </td>
-                                <td>
-                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal"/>
-                                </td>
                             </tr>
                         }
                     </tbody>
@@ -70,40 +65,8 @@
             </div>
             <!--#endregion -->
         </div>
-
     </div>
-
-    <!-- The Modal -->
-    <div class="modal fade" id="myModal">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-
-                <!-- Modal Header -->
-                <div class="modal-header">
-                    <h4 class="modal-title">Modal Heading</h4>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-
-                <!-- Modal body -->
-                <div class="modal-body">
-                    <partial name="_Dashboard" />
-                </div>
-
-                <!-- Modal footer -->
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
 </div>
-
-
-
-
-
 
 
 
@@ -147,11 +110,11 @@
                     success: function (response) {
                         $('#tablebody').append(
                             `<tr id="${response.id}" onclick="Edit(${response.id})">
-                                                                                <td>${response.name}</td>
-                                                                                <td>
-                                                                                    <span class="btn btn-info "><i id="i" class="fas fa-chart-area"></i> Chart</span>
-                                                                                </td>
-                                                                            </tr>`
+                                                    <td>${response.name}</td>
+                                                         <td>
+                                                             <span class="btn btn-info "><i id="i" class="fas fa-chart-area"></i> Chart</span>
+                                                         </td>
+                                                           </tr>`
                         );
                         //For first time if there is no project in the table (Hide the sec of No Project is created)
                         $('#noProject').hide();
@@ -165,7 +128,6 @@
                 });
             }
         }
-
 
 
         //Edit AJAX
@@ -201,17 +163,39 @@
         //Submit form ajax
         function SubmitForm(event) {
             event.preventDefault();
-            $.ajax({
-                type: 'POST',
-                url: `/project/Edit/`,
-                data: $('#projectForm').serialize(),
-                success: function (data) {
-                    document.getElementById(`${data.id}`).firstElementChild.innerHTML = data.name;
-                },
-                error: function (x, y, err) {
-                    alert("Project name must be entered")
-                },
-            });
+            var status = $("#status").val();
+            console.log(status);
+            if (status == "Completed" || status == "Cancelled") {
+                var result = confirm(`This Project Will be Transfered to ${status} Projects Sections.\n Are You Sure ? `)
+                if (result) {
+                    $.ajax({
+                        type: 'POST',
+                        url: `/project/Edit/`,
+                        data: $('#projectForm').serialize(),
+                        success: function (data) {
+                            document.getElementById(`${data.id}`).firstElementChild.innerHTML = data.name;
+                        },
+                        error: function (x, y, err) {
+                            alert("Project name must be entered")
+                        },
+                    });
+                }
+                else {
+                    $.ajax({
+                        type: 'POST',
+                        url: `/project/Edit/`,
+                        data: $('#projectForm').serialize(),
+                        success: function (data) {
+                            document.getElementById(`${data.id}`).firstElementChild.innerHTML = data.name;
+                        },
+                        error: function (x, y, err) {
+                            alert("Project name must be entered")
+                        },
+                    });
+                }
+            }
+
+
         };
     </script>
 

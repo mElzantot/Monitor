@@ -10,6 +10,12 @@ namespace ITI.CEI40.Monitor.Entities
     [Table("Task")]
     public class Activity
     {
+
+        public Activity()
+        {
+            this.ActualDuration = 0;
+        }
+
         [Key]
         public int Id { get; set; }
 
@@ -47,6 +53,8 @@ namespace ITI.CEI40.Monitor.Entities
         public DateTime EndDate { get; set; }
 
         public float Progress { get; set; }
+        public int ActualDuration { get; set; }
+
 
         public Status Status { get; set; }
         public Priority Priority { get; set; }

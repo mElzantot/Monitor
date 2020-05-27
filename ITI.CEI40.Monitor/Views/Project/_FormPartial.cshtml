@@ -31,7 +31,7 @@
                     @Html.DropDownList("Status",
                     new SelectList(Enum.GetValues(typeof(Status))),
                     "Select Status",
-                    new { @class = "form-control" })
+                    new { @class = "form-control" , @id="status" })
                 </div>
                 <span asp-validation-for="@Model.Status" class="text-danger"></span>
             </div>
@@ -47,10 +47,6 @@
                     <h4>@Model.Outcome</h4>
                 </div>
             </div>
-            <div class="form-group ">
-                <label asp-for="@Model.TotalBudget">TotalBudget</label>
-                <h4>@Model.TotalBudget</h4>
-            </div>
             <hr />
             <div class="row">
                 <div class="form-group col-lg-6">
@@ -62,12 +58,8 @@
                     <h4>@Model.EndDate</h4>
                 </div>
                 <div class="form-group col-lg-6">
-                    <label asp-for="@Model.ActualDuration">ActualDuration</label>
-                    <h4>@Model.ActualDuration</h4>
-                </div>
-                <div class="form-group col-lg-6">
-                    <label asp-for="@Model.EstimatedDuration">EstimatedDuration</label>
-                    <h4>@Model.EstimatedDuration</h4>
+                    <label asp-for="@Model.WorkingHrs">ActualDuration</label>
+                    <h4>@Model.WorkingHrs</h4>
                 </div>
             </div>
             <button class="btn btn-primary">Update</button>

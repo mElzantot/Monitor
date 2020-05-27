@@ -13,6 +13,9 @@ namespace ITI.CEI40.Monitor.Entities
         public Project()
         {
             this.Tasks = new HashSet<Activity>();
+            this.WorkingHrs = 0;
+            this.Income = 0;
+            this.Outcome = 0;
         }
 
         [Key]
@@ -32,13 +35,8 @@ namespace ITI.CEI40.Monitor.Entities
         [MaxLength(30)]
         public string Owner { get; set; }
 
-        public float? TotalBudget { get; set; } //---1000
-
-        //----Estimated Budget
-        //public float? EstimatedBudget { get; set;}
-
-        public float? Income { get; set; }      //--Invoices
-        public float? Outcome { get; set; }     //---Actual
+        public float Income { get; set; }      //--Invoices
+        public float Outcome { get; set; }     //---Actual
 
         public Status? Status { get; set; }
         public Priority? Priority { get; set; }
@@ -49,10 +47,7 @@ namespace ITI.CEI40.Monitor.Entities
         [DataType(DataType.Date)]
         public DateTime? EndDate { get; set; }
 
-        public int? EstimatedDuration { get; set; }
-
-        [NotMapped]
-        public int ActualDuration { get; set; }
+        public int WorkingHrs { get; set; }
 
         public ICollection<DepartmentProjects> DepartmentProjects { get; set; }
 

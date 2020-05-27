@@ -1,0 +1,42 @@
+﻿@model List<CompletedProjectsViewModel>
+@{
+    ViewData["Title"] = "Completed Projects";
+}
+
+<div class="container pt-md-5 " id="mainPage">
+    <div class="col-12">
+        <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
+            <table class="table table-hover" id="teamTable">
+                <thead class="tableh">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Owner</th>
+                        <th scope="col">Start Date</th>
+                        <th scope="col">End Date</th>
+                        <th scope="col">Working Hours</th>
+                        <th scope="col">Income</th>
+                        <th scope="col">Outcome</th>
+                        <th scope="col">Profit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Count(); i++)
+                    {
+                        <tr id="@Model[i].ProjectId">
+                            <td>@Model[i].Name</td>
+                            <td>@Model[i].Owner</td>
+                            <td>@Model[i]?.StartDate</td>
+                            <td>@Model[i]?.EndDate</td>
+                            <td>@Model[i].WorkingHours</td>
+                            <td>@Model[i].Income</td>
+                            <td>@Model[i].Outcome</td>
+                            <td>@Model[i].Profit %</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
