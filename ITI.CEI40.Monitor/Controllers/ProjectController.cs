@@ -80,12 +80,7 @@ namespace ITI.CEI40.Monitor.Controllers
             return View(project);
         }
 
-        [HttpGet]
-        public IActionResult Dashboard(int projId)
-        {
-            var project = unitofwork.Projects.GetAllProjects().ToList();
-            return View("_Dashboard",project);
-        }
+        
 
     }
 }

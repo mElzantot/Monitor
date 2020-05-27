@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
+using ITI.CEI40.Monitor.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITI.CEI40.Monitor.Controllers
@@ -21,6 +22,22 @@ namespace ITI.CEI40.Monitor.Controllers
             var tasks = unitOfWork.Tasks.GetTasksByTeamID(teamID);
             ViewBag.TeamId = teamID;
             return View(tasks);
+        }
+
+
+
+        //[HttpGet]
+        //public IActionResult Details(int projId)
+        //{
+        //    var project = unitOfWork.Projects.GetById(projId);
+        //    return View(project);
+        //}
+
+        [HttpGet]
+        public IActionResult Details(int projId)
+        {
+            List<Activity> tasks = unitOfWork.Tasks.GetActivitiesFromProject(projId).ToList();
+            return View("Details",tasks);
         }
     }
 }
