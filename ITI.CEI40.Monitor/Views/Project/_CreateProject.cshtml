@@ -47,20 +47,23 @@
                     {
                         <h4 id="noProject" style="padding:45px 20px " class="text-muted text-center">Create your first project </h4>
                     }
-                    <tbody id="tablebody">
-                        @foreach (var item in Model.Projects)
-                        {
-                            <tr id="@item.ID" onclick="Edit(@item.ID)">
-                                <td>@item.Name</td>
-                                <td>
-                                    <span class="btn btn-info "><i id="i" class="fas fa-chart-area"></i> Chart</span>
-                                </td>
-                                <td>
-                                    <button  type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Board</button>
-                                </td>
-                            </tr>
-                                  }
-                    </tbody>
+                    else
+                    {
+                        <tbody id="tablebody">
+                            @foreach (var item in Model.Projects)
+                            {
+                                <tr id="@item.ID" onclick="Edit(@item.ID)">
+                                    <td>@item.Name</td>
+                                    <td>
+                                        <span class="btn btn-info "><i id="i" class="fas fa-chart-area"></i> Chart</span>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Board</button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    }
                 </table>
             </div>
             <!--#endregion -->
@@ -92,7 +95,7 @@
                 <!-- Modal body -->
                 <div class="modal-body">
 
-                    <div id="piechart" style="width: 900px; height: 500px;"></div>
+                    <div id="columnchart_values" style="width: 900px; height: 300px;"></div>
 
                 </div>
 
@@ -152,11 +155,11 @@
                     success: function (response) {
                         $('#tablebody').append(
                             `<tr id="${response.id}" onclick="Edit(${response.id})">
-                                                                                                        <td>${response.name}</td>
-                                                                                                        <td>
-                                                                                                            <span class="btn btn-info "><i id="i" class="fas fa-chart-area"></i> Chart</span>
-                                                                                                        </td>
-                                                                                                    </tr>`
+                                <td>${response.name}</td>
+                                <td>
+                                <span class="btn btn-info "><i id="i" class="fas fa-chart-area"></i> Chart</span>
+                            </td>
+                        </tr>`
                         );
                         //For first time if there is no project in the table (Hide the sec of No Project is created)
                         $('#noProject').hide();
@@ -205,7 +208,7 @@
         };
 
 
-          
+
         //Submit form ajax
         function SubmitForm(event) {
             event.preventDefault();
@@ -224,14 +227,29 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+        var taskArr = new Array();
         function Dashboard(id) {
             $.ajax({
-                type: "POST",
+                type: "GeT",
                 url: `/Project/Dashboard`,
                 data: { projId: id },
-                dataType: "json",
-                complete: function (response) {             
-                    console.log(response); 
+                success: function (response) {
+                    console.log(response);
+                    taskArr = response;
+                    console.log(taskArr);
+                    $('#columnchart_values').append(taskArr);
+                    drawChart();
                 },
 
                 error: function (x, y, err) {
@@ -241,32 +259,34 @@
         }
 
 
+        //----------------DashBoard------------------//
+        //------------------------------------------//
 
-        google.charts.load('current', { 'packages': ['corechart'] });
-        google.charts.setOnLoadCallback(drawChart);
-
+        google.charts.load("current", { packages: ['corechart'] });
+        //google.charts.setOnLoadCallback(drawChart);
         function drawChart() {
-
             var data = new google.visualization.DataTable();
-            data.addColumn('string', 'Name');
+            data.addColumn('string', 'Task');
             data.addColumn('number', 'Progress');
-
-            
-            
             data.addRows([
-                ["CEI", 5], ["GIS", 8], ["UI", 2], ["Java", 9]
+                [taskArr[0].name, taskArr[0].progress],
             ]);
-
+            for (let index = 1; index < taskArr.length; index++) {
+                data.addRows([
+                    [taskArr[index].name, taskArr[index].progress],
+                ]);
+            }
 
             var options = {
-                title: 'My Daily Activities'
+                title: "Density of Precious Metals, in g/cm^3",
+                width: 600,
+                height: 400,
+                bar: { groupWidth: "95%" },
+                legend: { position: "none" },
             };
 
-
-            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
-
-            chart.draw(data, options);
-
+            var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
+            chart.draw(view, options);
         }
 
     </script>

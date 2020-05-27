@@ -15,7 +15,7 @@ namespace ITI.CEI40.Monitor.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.0-rtm-35687")
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -25,12 +25,15 @@ namespace ITI.CEI40.Monitor.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("ActualDuratin");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(256);
 
                     b.Property<DateTime>("EndDate")
-                        .HasColumnName("End Date");
+                        .HasColumnName("End Date")
+                        .HasColumnType("Date");
 
                     b.Property<int>("FK_ProjectId");
 
@@ -42,10 +45,11 @@ namespace ITI.CEI40.Monitor.Migrations
 
                     b.Property<int>("Priority");
 
-                    b.Property<float>("Progress");
+                    b.Property<int>("Progress");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnName("Start Date");
+                        .HasColumnName("Start Date")
+                        .HasColumnType("Date");
 
                     b.Property<int>("Status");
 
@@ -243,6 +247,8 @@ namespace ITI.CEI40.Monitor.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("ActualDuration");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(256);
@@ -290,7 +296,7 @@ namespace ITI.CEI40.Monitor.Migrations
 
                     b.Property<int>("FK_SubTaskID");
 
-                    b.Property<int?>("SessDuration");
+                    b.Property<int>("SessDuration");
 
                     b.Property<DateTime?>("SessEndtDate")
                         .HasColumnName("End Date");

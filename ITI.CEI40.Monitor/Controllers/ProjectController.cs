@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
 using ITI.CEI40.Monitor.Models;
 using Microsoft.AspNetCore.Mvc;
-
+using Newtonsoft.Json;
 
 namespace ITI.CEI40.Monitor.Controllers
 {
@@ -73,15 +74,11 @@ namespace ITI.CEI40.Monitor.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpGet] 
         public JsonResult Dashboard(int projId)
         {
-            //Calculate Task Actual Duration
-
-
-
-            Project project = unitofwork.Projects.Getproject(projId);
-            return Json(project);
+            List<Activity> tasks = unitofwork.Tasks.GetActivitiesFromProject(projId).ToList();
+            return Json(tasks);
         }
 
     }
