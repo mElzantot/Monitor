@@ -16,6 +16,7 @@ namespace ITI.CEI40.Monitor.Entities
         {
             this.SubTasks = new HashSet<SubTask>();
             this.ManagedProjects = new HashSet<Project>();
+            this.SubTaskSessions = new HashSet<SubTaskSession>();
         }
 
         public int? FK_TeamID { get; set; }
@@ -36,6 +37,7 @@ namespace ITI.CEI40.Monitor.Entities
         //---------Many to Many Relation
         public ICollection<SubTask> SubTasks { get; set; }
         public ICollection<Project> ManagedProjects { get; set; }
+        public ICollection<SubTaskSession> SubTaskSessions { get; set; }
 
     }
 }

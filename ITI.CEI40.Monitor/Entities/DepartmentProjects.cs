@@ -7,6 +7,7 @@ namespace ITI.CEI40.Monitor.Entities
 {
     public class DepartmentProjects
     {
+
         public Department Department { get; set; }
 
         public Project Project { get; set; }
@@ -14,5 +15,6 @@ namespace ITI.CEI40.Monitor.Entities
         public int DepartmentID { get; set; }
 
         public int ProjectID { get; set; }
+
     }
 }

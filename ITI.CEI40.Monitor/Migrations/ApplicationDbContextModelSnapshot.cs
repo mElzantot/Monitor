@@ -265,6 +265,9 @@ namespace ITI.CEI40.Monitor.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("EmpId")
+                        .IsRequired();
+
                     b.Property<int>("FK_SubTaskID");
 
                     b.Property<int?>("SessDuration");
@@ -276,6 +279,8 @@ namespace ITI.CEI40.Monitor.Migrations
                         .HasColumnName("Start Date");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("EmpId");
 
                     b.HasIndex("FK_SubTaskID");
 
@@ -492,6 +497,11 @@ namespace ITI.CEI40.Monitor.Migrations
 
             modelBuilder.Entity("ITI.CEI40.Monitor.Entities.SubTaskSession", b =>
                 {
+                    b.HasOne("ITI.CEI40.Monitor.Entities.ApplicationUser", "Employee")
+                        .WithMany("SubTaskSessions")
+                        .HasForeignKey("EmpId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("ITI.CEI40.Monitor.Entities.SubTask", "SubTask")
                         .WithMany("SubTaskSession")
                         .HasForeignKey("FK_SubTaskID")

@@ -10,19 +10,15 @@ namespace ITI.CEI40.Monitor.Entities
 {
     public class Department
     {
+
         [Key]
         public int Id { get; set; }
-
         [Required]
         [MaxLength(30)]
         public string Name { get; set; }
-
         public string FK_ManagerID { get; set; }
         public ApplicationUser Manager { get; set; }
-
-
         public ICollection<Team> Teams { get; set; }
-
         public ICollection<DepartmentProjects> DepartmentProjects { get; set; }
 
     }

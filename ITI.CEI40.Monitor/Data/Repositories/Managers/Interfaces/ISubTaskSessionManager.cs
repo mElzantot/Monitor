@@ -7,7 +7,8 @@ using System.Threading.Tasks;
 namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 {
     public interface ISubTaskSessionManager:IRepository<SubTaskSession>
-    { 
+    {
+        IEnumerable<SubTaskSession> GetTimeSheetForEmp(string empId);
 
     }
 }
