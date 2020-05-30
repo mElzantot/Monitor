@@ -41,7 +41,6 @@ namespace ITI.CEI40.Monitor.Entities
         [ForeignKey(nameof(Project))]
         public int FK_ProjectId { get; set; }
 
-
         [DataType(DataType.Date)]
         [Column("Start Date")]
         [Display(Name = "Start Date")]
@@ -60,7 +59,6 @@ namespace ITI.CEI40.Monitor.Entities
         public Priority Priority { get; set; }
 
         //public ICollection<TeamTasks> TeamTasks { get; set; }
-
 
     }
 }

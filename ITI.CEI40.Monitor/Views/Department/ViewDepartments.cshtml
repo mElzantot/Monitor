@@ -12,7 +12,7 @@
         <thead>
             <tr>
                 <th scope="col">Name</th>
-                <th scope="col">Number of Teams</th>
+                @*<th scope="col">Number of Teams</th>*@
                 <th scope="col">Department Manager</th>
                 <th scope="col"></th>
             </tr>
@@ -22,7 +22,7 @@
             {
                 <tr id="@Model.Departments[i].Id">
                     <td>@Model.Departments[i].Name</td>
-                    <td>@Model.Departments[i].Teams.Count()</td>
+                    @*<td>@Model.Departments[i].Teams.Count()</td>*@
                     <td>@Model.Departments[i].Manager</td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Basic example">
@@ -94,8 +94,8 @@
 
 
 @section scripts{
-    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/lib/jquery-validation-unobtrusive-ajax/dist/jquery.unobtrusive-ajax.js"></script>
     <script>
         //-------Add Department
 
@@ -106,22 +106,27 @@
         $('#AddDeptBtn').on("click",
             function () {
                 var departmentName = $('#deptName').val();
-                $.post("/Department/addDepartment", { name: departmentName }, function (data, status) {
-                    if (status == "success") {
-                        var tbody = $("#tableBody");
-                        $('#addDeptModel').modal('hide');
-                        tbody.append(data);
-                        alert("Department Added Successfully")
-                    }
-                })
+                if (!departmentName) {
+                    alert("Please Enter Department Name First")
+                }
+                else {
+                    $.post("/Department/addDepartment", { name: departmentName }, function (data, status) {
+                        if (status == "success") {
+                            console.log(data);
+                            var tbody = $("#tableBody");
+                            $('#addDeptModel').modal('hide');
+                            tbody.empty();
+                            tbody.append(data);
+                            alert("Department Added Successfully")
+                        }
+                    });
+                }
             });
 
         //-------Reset Modal When Closed
         $('#addDeptModel').on('hidden.bs.modal', function (e) {
             $('#deptName').val("");
         })
-
-
         //--------Delete Department
 
         function deleteDept(deptid) {
@@ -161,8 +166,6 @@
                 }
             });
         }
-
-
-
     </script>
 }
+

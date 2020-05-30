@@ -39,6 +39,11 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Include(p => p.Tasks).ToList();
         }
 
+        public Project GetProjectForReport(int Projid)
+        {
+            return set.Where(pr => pr.ID == Projid).Include(pr => pr.ProjectManager).Include(pr => pr.Tasks).FirstOrDefault();
+        }
+
 
     }
 }

@@ -1,0 +1,14 @@
+﻿@model EmpRolesViewModel
+@{
+    ViewData["Title"] = "ViewRolesOfEmployee";
+}
+
+Employee Group :
+@for (int i = 0; i < Model.EmpRoles.Count; i++)
+{
+    @Html.DisplayFor(m => m.EmpRoles[i].role);
+    @Html.CheckBoxFor(m => m.EmpRoles[i].IsSelected);
+    @Html.HiddenFor(m => m.EmpRoles[i].role);
+}
+@Html.ValidationMessageFor(model => model.EmpRoles, "", new { @class = "text-danger" })
+

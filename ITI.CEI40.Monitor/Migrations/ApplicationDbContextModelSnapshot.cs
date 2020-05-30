@@ -184,11 +184,9 @@ namespace ITI.CEI40.Monitor.Migrations
 
                     b.Property<DateTime?>("EndDate");
 
-                    b.Property<string>("FK_Manager");
+                    b.Property<string>("FK_ManagerId");
 
                     b.Property<float>("Income");
-
-                    b.Property<string>("ManagerId");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -209,7 +207,7 @@ namespace ITI.CEI40.Monitor.Migrations
 
                     b.HasKey("ID");
 
-                    b.HasIndex("ManagerId");
+                    b.HasIndex("FK_ManagerId");
 
                     b.ToTable("Project");
                 });
@@ -476,9 +474,9 @@ namespace ITI.CEI40.Monitor.Migrations
 
             modelBuilder.Entity("ITI.CEI40.Monitor.Entities.Project", b =>
                 {
-                    b.HasOne("ITI.CEI40.Monitor.Entities.ApplicationUser", "Manager")
+                    b.HasOne("ITI.CEI40.Monitor.Entities.ApplicationUser", "ProjectManager")
                         .WithMany("ManagedProjects")
-                        .HasForeignKey("ManagerId")
+                        .HasForeignKey("FK_ManagerId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

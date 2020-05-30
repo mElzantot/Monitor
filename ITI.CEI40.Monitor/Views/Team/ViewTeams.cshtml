@@ -65,8 +65,8 @@
 
 
 @section scripts{
-    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/lib/jquery-validation-unobtrusive-ajax/dist/jquery.unobtrusive-ajax.js"></script>
     <script>
         //-------Add Team
 
@@ -76,14 +76,20 @@
         $('#addTeamBtn').on("click",
             function () {
                 var teamName = $('#teamName').val();
-                $.post("/Team/addTeam", { name: teamName,FK_DepartmentId:@Model.FK_DepartmentId }, function (data, status) {
-                    if (status == "success") {
-                        var tbody = $("#tableBody");
-                        $('#addTeamModel').modal('hide');
-                        tbody.append(data);
-                        alert("Team Added succesfully");
-                    }
-                })
+                if (!teamName) {
+                    alert("Please Enter Team Name ")
+                }
+                else {
+
+                    $.post("/Team/addTeam", { name: teamName, FK_DepartmentId:@Model.FK_DepartmentId }, function (data, status) {
+                        if (status == "success") {
+                            var tbody = $("#tableBody");
+                            $('#addTeamModel').modal('hide');
+                            tbody.append(data);
+                            alert("Team Added succesfully");
+                        }
+                    });
+                }
             });
 
 
@@ -117,7 +123,6 @@
                 });
             }
         }
-
 
     </script>
 }

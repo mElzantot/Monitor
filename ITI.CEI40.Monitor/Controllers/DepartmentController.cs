@@ -44,7 +44,8 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpPost]
         public IActionResult AddDepartment(string name)
         {
-            if (name != null && unitOfWork.Departments.FindByName(name) == null)
+            Department ExistingDept = unitOfWork.Departments.FindByName(name);
+            if (ExistingDept == null)
             {
                 var newDept = new Department
                 {
@@ -52,8 +53,8 @@ namespace ITI.CEI40.Monitor.Controllers
 
                 };
                 newDept = unitOfWork.Departments.Add(newDept);
-                newDept = unitOfWork.Departments.GetDeptWithTeamsandManager(newDept.Id);
-                return PartialView("_DepartmentPartial", newDept);
+                List<Department> depts = unitOfWork.Departments.GetAllDeptWithManagers().ToList();
+                return PartialView("_DepartmentPartial", depts);
             }
             return null;
 

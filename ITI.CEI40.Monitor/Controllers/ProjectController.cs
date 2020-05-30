@@ -99,5 +99,13 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
 
+        public IActionResult ProjectDailyReport(int Id)
+        {
+            Project project = unitofwork.Projects.GetProjectForReport(Id);
+            return View(project);
+        }
+
+
+
     }
 }

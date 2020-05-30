@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
+using ITI.CEI40.Monitor.Entities.Enums;
 using ITI.CEI40.Monitor.Models.View_Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -65,6 +66,64 @@ namespace ITI.CEI40.Monitor.Controllers
             return null;
 
         }
+
+        [HttpGet]
+        public async Task<IActionResult> EditEmployeeRoles(string id)
+        {
+            if (ModelState.IsValid)
+            {
+                ApplicationUser Emp = await userManager.FindByIdAsync(id);
+                var EmpCurrentRoles = await userManager.GetRolesAsync(Emp);
+                List<IdentityRole> ExistingRoles = roleManager.Roles.ToList();
+                EmpRolesViewModel EmpRolVM = new EmpRolesViewModel() { EmpId = id  };
+                bool checkFlag = false;
+                foreach (IdentityRole item in ExistingRoles)
+                {
+                    checkFlag = false;
+                    for (int i = 0  ; i < EmpCurrentRoles.Count && !checkFlag; i++)
+                    {
+                        if (item.ToString() == EmpCurrentRoles[i])
+                        {
+                            checkFlag = true;
+                            EmpRolVM.EmpRoles.Add(new RolesModel() { role = item, IsSelected = true });
+                        }
+                    }
+                    if (!checkFlag)
+                    {
+                        EmpRolVM.EmpRoles.Add(new RolesModel() { role = item, IsSelected = false });
+                    }
+                }
+                return PartialView("_EmploeeRolesPartialView", EmpRolVM);
+            }
+            return null;
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> EditEmployeeRoles(EmpRolesViewModel EmpRolVM)
+        {
+            ApplicationUser Emp = await userManager.FindByIdAsync(EmpRolVM.EmpId);
+            var EmpCurrentRoles = await userManager.GetRolesAsync(Emp);
+            if (EmpCurrentRoles != null && EmpCurrentRoles.Count>0)
+            {
+                var removeFromRoles = await userManager.RemoveFromRolesAsync(Emp, EmpCurrentRoles);
+            }
+
+
+            foreach (var item in EmpRolVM.EmpRoles)
+            {
+                string roleName = item.role.ToString();
+                if (item.IsSelected)
+                {
+                    var addedToRoles = await userManager.AddToRoleAsync(Emp, item.role.ToString());
+                }
+            }
+            return null;
+
+        }
+
+
+
 
     }
 }

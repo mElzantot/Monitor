@@ -34,8 +34,9 @@
                     <td>@Model.Employees[i].TotalEvaluation</td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-info btn-sm" onclick='UpdateEmpRoles("@Model.Employees[i].Id")'>Employee Roles</button>
                             @*<a class="btn btn-outline-primary" asp-controller="Employee" asp-action="ViewEmployees" asp-route-id="@Model.Employees[i].Id"><i class="fas fa-users"></i></a>*@
-                            <button type="button" class="btn btn-danger" onclick="deleteTeam(@Model.Employees[i].Id)"><i class="far fa-trash-alt"></i></button>
+                            <button type="button" class="btn btn-danger" onclick='deleteTeam("@Model.Employees[i].Id")'><i class="far fa-trash-alt"></i></button>
                         </div>
                     </td>
                 </tr>
@@ -97,6 +98,32 @@
     </div>
 </div>
 
+
+<!-- Edit Roles -->
+<div class="modal fade" id="EditRolesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" data-ajax-url="/Employee/EditEmployeeRoles" data-ajax="true" data-ajax-method="Post" data-ajax-complete="EditRoles"
+                  id="RolesForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Employee Roles</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="RolesModalBody">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="reset" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
 @section scripts{
     <partial name="_ValidationScriptsPartial" />
     <script src="~/lib/jquery-validation-unobtrusive-ajax/dist/jquery.unobtrusive-ajax.js"></script>
@@ -113,6 +140,39 @@
                 document.getElementById("EmployeeForm").reset();
             }
         }
+
+        function UpdateEmpRoles(id) {
+            console.log("Test")
+            $.ajax({
+                url: "/Employee/EditEmployeeRoles/" + id,
+                type: "GET",
+                //dataType: "json",
+                success: function (result, status) {
+                    console.log(result);
+                    $("#RolesModalBody").append(result);
+                    $('#EditRolesModal').modal('show');
+                }
+            });
+        }
+
+        function EditRoles(result, status) {
+            if (status == "success") {
+                $('#EditRolesModal').modal('hide');
+                document.getElementById("RolesForm").reset();
+                alert("Employee Roles Updated Successfully");
+            }
+            else {
+                alert("Error While Updating Roles");
+                document.getElementById("RolesForm").reset();
+            }
+        }
+
+
+        $('#EditRolesModal').on('hidden.bs.modal', function (e) {
+            console.log(e);
+            $("#RolesModalBody").empty();
+        })
+
 
     </script>
 }

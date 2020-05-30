@@ -26,8 +26,8 @@ namespace ITI.CEI40.Monitor.Entities
         public string Name { get; set; }
 
         [ForeignKey("ProjectManager")]
-        public string FK_Manager { get; set; }
-        public ApplicationUser Manager { get; set; }
+        public string FK_ManagerId { get; set; }
+        public ApplicationUser ProjectManager { get; set; }
 
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }

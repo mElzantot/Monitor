@@ -1,0 +1,72 @@
+﻿@model Project
+@{
+    ViewData["Title"] = "ProjectDailyReport";
+    List<Activity> ProjectTasks = Model.Tasks.ToList();
+
+}
+
+<style>
+    .table {
+        border: solid black 2px ;
+    }
+</style>
+
+<div class="pt-5">
+    <h6 style="text-decoration:underline">Project Details</h6>
+    <table class="table  table-sm col-6 mb-5">
+        <tbody>
+            <tr>
+                <td style="background-color:beige">Report Date  </td>
+                <td>@DateTime.Today.AddDays(-1).ToLongDateString()</td>
+            </tr>
+            <tr>
+                <td style="background-color:beige">Project Name  </td>
+                <td>@Model.Name</td>
+            </tr>
+            <tr>
+                <td style="background-color:beige">Project Owner  </td>
+                <td>@Model.Owner</td>
+            </tr>
+            <tr>
+                <td style="background-color:beige">Project Manager </td>
+                <td>@Model.ProjectManager.UserName</td>
+            </tr>
+            <tr>
+                <td style="background-color:beige">Project Status  </td>
+                <td>@Model.Status</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h6 style="text-decoration:underline">Work Status</h6>
+    <table class="table  col-6 table-sm" style="text-align:center">
+        <thead class="thead-dark">
+            <tr>
+                <th scope="col">Task Name</th>
+                <th scope="col">Status</th>
+                <th scope="col">Progress</th>
+                <th scope="col">Due Date</th>
+                <th scope="col">Working Hrs</th>
+            </tr>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < ProjectTasks.Count; i++)
+            {
+                <tr>
+                    <td>@ProjectTasks[i].Name</td>
+                    <td>@ProjectTasks[i].Status</td>
+                    <td>@ProjectTasks[i].Progress</td>
+                    <td>@ProjectTasks[i].EndDate.Date.ToShortDateString()</td>
+                    <td>@ProjectTasks[i].ActualDuration</td>
+                </tr>
+            }
+            <tr class="table-success">
+                <td colspan="3"> Total Working Hours till Now</td>
+                <td colspan="2">@Model.WorkingHrs</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
