@@ -25,9 +25,9 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         }
 
         ///Must Edit include engineering subtask
-        public IEnumerable<SubTask> GetEngineerSubTasksFromTask(int taskId)
+        public IEnumerable<SubTask> GetSubTasksFromTask(int taskId)
         {
-            return set.Where(st => st.FK_TaskId == taskId).Include(t=>t.SubTaskSession).ToList();
+            return set.Where(st => st.FK_TaskId == taskId).Include(s=>s.Task).Include(t=>t.SubTaskSession).ToList();
         }
 
         public IEnumerable<SubTask> GetSubTasksByEngineerId(string engineerId)

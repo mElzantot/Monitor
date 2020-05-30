@@ -33,11 +33,13 @@ namespace ITI.CEI40.Monitor.Controllers
         //    return View(project);
         //}
 
+        
+
         [HttpGet]
-        public IActionResult Details(int projId)
+        public IActionResult Dashboard(int taskId)
         {
-            List<Activity> tasks = unitOfWork.Tasks.GetActivitiesFromProject(projId).ToList();
-            return View("Details",tasks);
+            var subtask = unitOfWork.SubTasks.GetSubTasksFromTask(taskId);
+            return View("Dashboard", subtask);
         }
     }
 }

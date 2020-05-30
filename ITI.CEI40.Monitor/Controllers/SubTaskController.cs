@@ -42,6 +42,8 @@ namespace ITI.CEI40.Monitor.Controllers
 
             subTask.Progress = progress;            subTask = unitOfWork.SubTasks.Edit(subTask);        }
 
+        
+
 
         public void EditIsUnderWork(int ID, bool Is)
         {
@@ -68,8 +70,13 @@ namespace ITI.CEI40.Monitor.Controllers
                 subTask.ActualDuration += subTaskSession.SessDuration;
 
                 Activity task = unitOfWork.Tasks.GetById(subTask.FK_TaskId);
+                int LastTaskDuaration = task.ActualDuratin;
                 task.ActualDuratin += subTask.ActualDuration;
                 task = unitOfWork.Tasks.Edit(task);
+                Project project = unitOfWork.Projects.GetById(task.FK_ProjectId);
+                project.ActualDuration += task.ActualDuratin-LastTaskDuaration;
+                unitOfWork.Projects.Edit(project);
+                
             }
             subTask = unitOfWork.SubTasks.Edit(subTask);
         }
@@ -79,6 +86,12 @@ namespace ITI.CEI40.Monitor.Controllers
             SubTask subTask = unitOfWork.SubTasks.GetById(ID);
             subTask.Status = status;
             unitOfWork.SubTasks.Edit(subTask);
+        }
+        public void EditPriority(int ID, Priority priority)
+        {
+            Activity task = unitOfWork.Tasks.GetById(ID);
+            task.Priority = priority;
+            unitOfWork.Tasks.Edit(task);
         }
 
 
