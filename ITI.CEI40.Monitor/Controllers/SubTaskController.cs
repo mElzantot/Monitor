@@ -35,7 +35,7 @@ namespace ITI.CEI40.Monitor.Controllers
         public void EditProgress(int ID, int progress)        {            SubTask subTask = unitOfWork.SubTasks.GetById(ID);
 
             int subTaskLastProgress = subTask.Progress;
-
+            
             Activity task = unitOfWork.Tasks.GetById(subTask.FK_TaskId);
 
             List<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByTaskId(subTask.FK_TaskId);            int totalSubTaskDuration = 0;            foreach (var item in subTasks)            {                totalSubTaskDuration += (int)(item.EndDate - item.StartDate).Value.TotalDays;            }            int subtaskDuration = (int)(subTask.EndDate - subTask.StartDate).Value.TotalDays;            task.Progress += ((progress - subTaskLastProgress) * (subtaskDuration)) / (totalSubTaskDuration);            task = unitOfWork.Tasks.Edit(task);

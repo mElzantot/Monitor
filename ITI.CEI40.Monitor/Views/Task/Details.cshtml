@@ -46,13 +46,19 @@
                             </li>
                         }
                     }
-
                 </ul>
             </div>
         </div>
 
-        
 
+        <div class="row col-8">
+            <div class="col-4 text-center ">Dead Line</div>
+            <div class="col-8 text-center alert alert-danger">@Model.FirstOrDefault().EndDate.Date</div>
+            <div class="col-4 text-center ">Remaining Time</div>
+            <div class="col-8 text-center alert alert-warning">3 days</div>
+        </div>
+        
+        
 
 
     </div>
@@ -112,6 +118,11 @@
             };
             var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
             chart.draw(data, options);
+        }
+
+
+        function ViewStatus(value) {
+
         }
     </script>
 

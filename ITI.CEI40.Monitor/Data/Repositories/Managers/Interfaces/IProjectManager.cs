@@ -13,5 +13,6 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         IEnumerable<Project> GetAllProjects();
 
+        Project GetProjectWithTasks(int projectId);
     }
 }
