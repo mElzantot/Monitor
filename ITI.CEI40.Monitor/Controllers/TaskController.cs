@@ -26,12 +26,7 @@ namespace ITI.CEI40.Monitor.Controllers
 
 
 
-        //[HttpGet]
-        //public IActionResult Details(int projId)
-        //{
-        //    var project = unitOfWork.Projects.GetById(projId);
-        //    return View(project);
-        //}
+        
 
         
 

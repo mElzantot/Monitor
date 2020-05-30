@@ -68,4 +68,6 @@ body {
   /*#endregion*/
 
 
- 
+.dropdown-menu clock {
+    min-width: 25rem;
+}

@@ -1,0 +1,129 @@
+﻿@model List<Activity>
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div class="row">
+    @*Left Bar (Projects Names)*@
+
+    @for (int i = 0; i < Model.Count; i++)
+    {
+        <input class="staskname" id="n-@i" value="@Model[i].Name" hidden="hidden" />
+        <input class="staskprog" id="p-@i" value="@Model[i].Progress" hidden="hidden" />
+    }
+    <div id="columnchart_values" class="col-4"></div>
+
+    <div class="col-6 row">
+        <div class="col-4">
+            <button class="btn btn-primary my-1" type="button" data-toggle="collapse" data-target="#collapseExample1" aria-expanded="false" aria-controls="collapseExample">
+                Active Tasks  @Model.Count(t => t.Status == Status.Active)
+            </button>
+            <button class="btn btn-warning my-1" type="button" data-toggle="collapse" data-target="#collapseExample2" aria-expanded="false" aria-controls="collapseExample">
+                On Hold Tasks  @Model.Count(t => t.Status == Status.OnHold)
+            </button>
+            <button class="btn btn-success my-1" type="button" data-toggle="collapse" data-target="#collapseExample3" aria-expanded="false" aria-controls="collapseExample">
+                Completed tasks  @Model.Count(t => t.Status == Status.Completed)
+            </button>
+            <button class="btn btn-danger my-1" type="button" data-toggle="collapse" data-target="#collapseExample4" aria-expanded="false" aria-controls="collapseExample">
+                Canceled Tasks  @Model.Count(t => t.Status == Status.Canceled)
+            </button>
+
+        </div>
+        <div class="collapse col-8" id="collapseExample1">
+            <div class="card card-body">
+                <ul class="list-group">
+
+                    @for (int i = 0; i < Model.Count; i++)
+                    {
+                        if (Model[i].Status == Status.Active)
+                        {
+
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                @Model[i].Name
+                                <span class="badge badge-primary badge-pill">@Model[i].SubTasks.Count Sub Task </span>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="row col-8">
+            <div class="col-4 text-center ">Dead Line</div>
+            <div class="col-8 text-center alert alert-danger">@Model.FirstOrDefault().EndDate.Date</div>
+            <div class="col-4 text-center ">Remaining Time</div>
+            <div class="col-8 text-center alert alert-warning">3 days</div>
+        </div>
+        
+        
+
+
+    </div>
+</div>
+
+@section scripts{ 
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+    <script type="text/javascript">
+
+        var ns = [];
+        var ps = [];
+        var names = $('.staskname')
+        var progress = $('.staskprog')
+        for (var i = 0; i < names.length; i++) {
+            //console.log(names[i].defaultValue)
+            ns.push(names[i].defaultValue)
+        }
+        for (var i = 0; i < progress.length; i++) {
+            //console.log(progress[i].defaultValue)
+            ps.push(progress[i].defaultValue)
+        }
+        console.log(ns);
+        console.log(ps);
+
+        //$('#columnchart_values').append(ns,ps);
+
+
+        google.charts.load("current", { packages: ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Name');
+            data.addColumn('number', 'Progress');
+            data.addColumn({role:"style"});
+            data.addRows([
+                [`${ns[0]}`, parseInt(ps[0]),"green"],
+            ]);
+
+            for (let j = 1; j < ns.length; j++) {
+                data.addRows([
+                    [`${ns[j]}`, parseInt(ps[j]),"green"],
+                ]);
+            }
+
+            var options = {
+                title: "Progress of each Task inside the Project",
+                //width: 600,
+                //height: 400,
+                bar: { groupWidth: "70%" },
+                legend: { position: "none" },
+                annotations: {startup:true}
+
+            };
+            var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
+            chart.draw(data, options);
+        }
+
+
+        function ViewStatus(value) {
+
+        }
+    </script>
+
+    }

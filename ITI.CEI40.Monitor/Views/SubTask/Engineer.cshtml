@@ -14,61 +14,62 @@
         @if (Model != null && Model.Count() > 0)
         {
             <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
-                <table class="table table-hover" id="Tasktable">
-                    <thead class="tableh">
-                        <tr>
-                            <th>Working ON</th>
-                            <th>Name</th>
-                            <th>Project</th>
-                            <th>Status</th>
-                            <th>Remaining Time</th>
-                            <th>Progress</th>
-                        </tr>
-                    </thead>
-
-
-                    <tbody>
-
-                        @foreach (var item in Model)
-                        {
-
-                            <tr id="@item.Id" onclick="SelectRow(@item.Id)">
-
-                                <td>
-                                    <input asp-for="@item.IsUnderWork" type="checkbox" data-toggle="toggle" data-size="xs"
-                                           onchange="ChangeISUnderWork(@item.Id,this.checked)">
-                                </td>
-
-                                <td>@item.Name</td>
-                                <td>@item.Task.Project.Name</td>
-
-                                <td>
-                                    <select asp-for="@item.Status" asp-items="@Html.GetEnumSelectList<Status>()" class="form-control"></select>
-                                </td>
-
-                                @{
-                                    int remaining = (int)(item.EndDate - DateTime.Now).Value.TotalDays;
-
-
-                                    if (remaining > 0)
-                                    {
-                                        <td>@remaining day</td>
-                                    }
-                                    else
-                                    {
-                                        <td class="text-danger">Time Ended</td>
-                                    }
-                                }
-
-                                <td>
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" style="width: @item.Progress%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@item.Progress%</div>
-                                    </div>
-                                </td>
+                <div class="table-responsive">
+                    <table class="table table-hover text-center" id="Tasktable"  style="width:100%;">
+                        <thead class="tableh alert-primary">
+                            <tr >
+                                <th></th>
+                                <th>Name</th>
+                                <th>Project</th>
+                                <th width="26%">Status</th>
+                                <th >Remaining Time</th>
+                                <th>Progress</th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+
+
+                        <tbody >
+
+                            @foreach (var item in Model)
+                            {
+                                <tr id="@item.Id" onclick="SelectRow(@item.Id)">
+
+                                    <td>
+                                        <input asp-for="@item.IsUnderWork" type="checkbox" data-toggle="toggle" data-size="xs"
+                                               onchange="ChangeISUnderWork(@item.Id,this.checked)">
+                                    </td>
+
+                                    <td>@item.Name</td>
+                                    <td>@item.Task.Project.Name</td>
+
+                                    <td >
+                                        <select asp-for="@item.Status" asp-items="@Html.GetEnumSelectList<Status>()" class="form-control"></select>
+                                    </td>
+
+                                    @{
+                                        int remaining = (int)(item.EndDate - DateTime.Now).Value.TotalDays;
+
+
+                                        if (remaining > 0)
+                                        {
+                                            <td>@remaining day</td>
+                                        }
+                                        else
+                                        {
+                                            <td class="text-danger">Time Ended</td>
+                                        }
+                                    }
+
+                                    <td>
+                                        <div  class="progress">
+                                            <div class="progress-bar" role="progressbar" style="width: @item.Progress%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@item.Progress%</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         }
         else
@@ -91,6 +92,7 @@
 <button type="button" id="togleBtn" class="btn btn-primary d-none" data-toggle="modal" data-target="#exampleModal">
     Launch demo modal
 </button>
+
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -131,8 +133,8 @@
         var rowID;
 
         (function () {
-            var previous;
 
+            var previous;
             $("select").on('focus', function () {
                 // Store the current value on focus and on change
                 previous = this.value;
@@ -142,6 +144,9 @@
                 var value = this.value;
                 switch (value) {
                     case '0': //Active
+                        if (confirm('Is the task Active?')) {
+                            ChangeStatus(rowID, value);
+                        }
                         break;
 
                     case '1': //onhold
@@ -159,6 +164,7 @@
                         $('#close').click(function () {
                             $(`#${rowID} > td > select`)[0].value = previous
                         })
+
                         break;
 
                     case '2': // completed
@@ -245,7 +251,7 @@
         function ChangeISUnderWork(id, value) {
             //if (false) {
 
-            //        $('#toggle-silent').bootstrapToggle('off');         
+            //        $('#toggle-silent').bootstrapToggle('off');
             //}
 
             $.ajax({

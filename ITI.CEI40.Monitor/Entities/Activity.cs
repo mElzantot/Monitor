@@ -41,17 +41,17 @@ namespace ITI.CEI40.Monitor.Entities
 
 
         [DataType(DataType.Date)]
-        [Column("Start Date")]
+        [Column("Start Date", TypeName = "Date")]
         [Display(Name = "Start Date")]
         public DateTime StartDate { get; set; }
 
 
         [DataType(DataType.Date)]
-        [Column("End Date")]
+        [Column("End Date", TypeName = "Date")]
         [Display(Name = "End Date")]
         public DateTime EndDate { get; set; }
 
-        public float Progress { get; set; }
+        public int Progress { get; set; }
         public int ActualDuratin { get; set; }
 
         public Status Status { get; set; }

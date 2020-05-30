@@ -4,14 +4,16 @@ using ITI.CEI40.Monitor.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ITI.CEI40.Monitor.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200526162706_EditTask")]
+    partial class EditTask
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,8 +34,7 @@ namespace ITI.CEI40.Monitor.Migrations
                         .HasMaxLength(256);
 
                     b.Property<DateTime>("EndDate")
-                        .HasColumnName("End Date")
-                        .HasColumnType("Date");
+                        .HasColumnName("End Date");
 
                     b.Property<int>("FK_ProjectId");
 
@@ -45,11 +46,10 @@ namespace ITI.CEI40.Monitor.Migrations
 
                     b.Property<int>("Priority");
 
-                    b.Property<int>("Progress");
+                    b.Property<float>("Progress");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnName("Start Date")
-                        .HasColumnType("Date");
+                        .HasColumnName("Start Date");
 
                     b.Property<int>("Status");
 

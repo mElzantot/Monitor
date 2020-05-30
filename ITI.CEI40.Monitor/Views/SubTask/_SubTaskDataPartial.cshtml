@@ -3,14 +3,19 @@
 <div class="col-5 rightcont" id="rightSec">
     <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
         <div class="righthead">
-            <h5 calss="col-12 ">@Model.Name</h5>
+            <h5 calss="col-12 mb-2 ">@Model.Name</h5>
         </div>
+
+
+        @*<div class="font-weight-bold mb-2"> Discription </div>*@
+        <div class="text-muted mb-2">@Model.Description</div>
+
         <hr />
 
         <div class="row">
             <div class="col-lg-7 innerleft" style="border-right:2px solid rgb(219, 219, 219)">
                 <div class="prog">
-                    <h5>Progress</h5>
+                    <div class="font-weight-bold">Progress</div>
 
 
                     <div class="cont">
@@ -21,12 +26,9 @@
 
 
 
-                <h5 calss="item"> Discription </h5>
-                <div class="card card-body">@Model.Description</div>
 
-
-                <h5 calss="item"> Files <span class="caret"></span> </h5>
-                <table class="table table-striped">
+                <div class="font-weight-bold mb-2 "> Files <span class="caret"></span> </div>
+                <table class="table table-striped table-sm">
                     <tbody>
                         <tr>
                             <td>file1.html</td>
@@ -47,22 +49,21 @@
 
             <div class="col-lg-5 innerright ">
 
-                <h5>Start Data</h5>
-                <h5 class="text-muted">@Model.StartDate</h5>
+                <div class="font-weight-bold">Start Data</div>
+                <div class="text-muted mb-2">@Model.StartDate.Value.Date.ToShortDateString()</div>
 
 
-                <h5>End Data</h5>
-                <h5 class="text-muted">@Model.EndDate</h5>
+                <div class="font-weight-bold">End Data</div>
+                <div class="text-muted mb-2">@Model.EndDate.Value.Date.ToShortDateString()</div>
                 @{
                     int duration = (int)(Model.EndDate - Model.StartDate).Value.TotalDays * 8;
                 }
-                <h5>Task Duration</h5>
-                <h5 class="text-muted">@duration hour</h5>
+                <div class="font-weight-bold">Task Duration</div>
+                <div class="text-muted mb-2">@duration hour</div>
 
-                <div>
-                    <h5>Actual Duration</h5>
-                    <h5 class="text-muted"> @Model.ActualDuration hour</h5>
-                </div>
+                <div class="font-weight-bold">Actual Duration</div>
+                <div class="text-muted"> @Model.ActualDuration hour</div>
+
             </div>
         </div>
     </div>
