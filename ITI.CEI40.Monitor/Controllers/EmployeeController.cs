@@ -179,7 +179,7 @@ namespace ITI.CEI40.Monitor.Controllers
                 ApplicationUser emp = await userManager.FindByIdAsync(EmpVM.EmpId);
                 if (EmpVM.TeamId != 0)
                 {
-                emp.FK_TeamID = EmpVM.TeamId;
+                    emp.FK_TeamID = EmpVM.TeamId;
                 }
 
                 emp.Email = EmpVM.EMail;
@@ -197,6 +197,42 @@ namespace ITI.CEI40.Monitor.Controllers
 
         #endregion
 
+        [HttpGet]
+        public async Task<JsonResult> AssignManager(string role)
+        {
+            var Employees = await userManager.GetUsersInRoleAsync(role);
+            return Json(Employees);
+        }
+
+
+        [HttpPost]
+        //------Id ----> the Department or team Id 
+        //-------EmpID is ---> Manager or Leader Id
+        //----Bool is to differ between Department and Team 
+        //------True == Department & False == Team
+        public async Task<JsonResult> AssignManager(int id, string EmpId, bool IsDept)
+        {
+            if (ModelState.IsValid)
+            {
+                ApplicationUser Employee = await userManager.FindByIdAsync(EmpId);
+                if (IsDept)
+                {
+                    Department dept = unitofwork.Departments.GetById(id);
+                    dept.FK_ManagerID = EmpId;
+                    unitofwork.Complete();
+                    return Json(new { complete = true, DeptId = id, ManagerName = Employee.UserName });
+                }
+                else
+                {
+                    Team team = unitofwork.Teams.GetById(id);
+                    team.FK_TeamLeaderId = EmpId;
+                    int NoOfRows = unitofwork.Complete();
+                    return Json(new { complete = true, teamtId = id, ManagerName = Employee.UserName });
+
+                }
+            }
+            return Json(new { Complete = false });
+        }
 
     }
 }
