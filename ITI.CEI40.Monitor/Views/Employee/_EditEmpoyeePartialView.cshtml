@@ -1,0 +1,39 @@
+﻿@model EditEmpViewModel
+
+<div class="modal-header">
+    <h5 class="modal-title" id="exampleModalLabel">"@Model.EmpName"</h5>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <input hidden type="text" asp-for="EmpId" value="@Model.EmpId" />
+    <div class="form-group">
+        <label asp-for="EMail"></label>
+        <input asp-for="EMail" class="form-control" />
+        <span asp-validation-for="EMail" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Salary"></label>
+        <input asp-for="Salary" class="form-control" type="number" />
+        <span asp-validation-for="Salary" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="DepName"></label>
+        <select class="form-control" id="DepartmentId" asp-for="DepId" asp-items="new SelectList(Model.Departments,nameof(Department.Id),nameof(Department.Name))" onchange="getTeams()">
+            <option value="0">Select Department</option>
+        </select>
+        <span asp-validation-for="DepId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="TeamName"></label>
+        <select id="teams" class="form-control" asp-for="TeamId" asp-items="new SelectList(string.Empty,nameof(Team.Id),nameof(Team.Name))">
+        </select>
+        <span asp-validation-for="TeamId" class="text-danger"></span>
+    </div>
+
+</div>
+<div class="modal-footer">
+    <button type="submit" class="btn btn-primary">Update</button>
+    <button type="reset" class="btn btn-secondary" data-dismiss="modal">Close</button>
+</div>
