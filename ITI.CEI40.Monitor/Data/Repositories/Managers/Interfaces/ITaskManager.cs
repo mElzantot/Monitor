@@ -10,8 +10,10 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
     {
         IEnumerable<Activity> GetAllWithAttributes();
         Activity GetTaskWithProject(int taskId);
-        IEnumerable<Activity> GetAllTaskWithProject(int teamId);
+        IEnumerable<Activity> GetAllTaskWithTheirProject(int teamId);
         IEnumerable<Activity> GetTasksByTeamID(int teamId);
+        IEnumerable<Activity> GetActivitiesFromProject(int projId);
+
 
     }
 

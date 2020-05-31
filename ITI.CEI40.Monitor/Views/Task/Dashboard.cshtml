@@ -1,0 +1,541 @@
+﻿@model List<SubTask>
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h1>TaskDetails</h1>
+
+@if (Model.Count == 0)
+{
+    <div class="alert alert-info" style="width:50%; margin:auto; text-align: center;">No Sub Tasks Inside this Task !!</div>
+}
+else
+{
+
+    <div id="DashBoard">
+
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            <input class="staskname" id="n-@i" value="@Model[i].Name" hidden="hidden" />
+            <input class="staskprog" id="p-@i" value="@Model[i].Progress" hidden="hidden" />
+            <input class="staskdur" id="d-@i" value="@(Model[i].ActualDuration)" hidden="hidden" />
+        }
+
+        @{
+            List<SubTask> behind = new List<SubTask>();
+            foreach (var item in Model)
+            {
+                if (item.ActualDuration > (item.EndDate - item.StartDate).Value.Days)
+                {
+                    behind.Add(item);
+                }
+            }
+        }
+
+
+        <br />
+
+        <div class="d-flex">
+            <div class="dropdown">
+                <a href="#" class="dropdown-toggle nav-link px-2 py-2 btn btn-outline-info mr-2" data-toggle="dropdown" role="button"
+                   aria-haspopup="true" aria-expanded="false"><i class="fas fa-clock"></i></a>
+
+                <table class="dropdown-menu px-3 " style="min-width:23rem ;  border-collapse: separate; border-spacing: 5px 10px;">
+                    <tbody>
+                        <tr>
+                            <td class="  text-center alert alert-danger"><i class="far fa-hourglass"></i> Dead Line</td>
+                            <td class=" text-center alert alert-danger"> @Model[0].Task.EndDate.Date.ToShortDateString()</td>
+                        </tr>
+                        <tr>
+                            <td class=" text-center alert alert-warning"><i class="far fa-hourglass"></i> Remaining Time</td>
+                            @{
+                                int remaining = (int)(@Model[0].Task.EndDate - DateTime.Now).TotalDays;
+                                if (remaining > 0)
+                                {
+                                    <td class="text-center alert alert-warning">@remaining day</td>
+                                }
+                                else
+                                {
+                                    <td class="text-center alert alert-warning">Time Ended</td>
+                                }
+                            }
+                        </tr>
+                        <tr class="m-1">
+                            <td class=" text-center alert alert-info"><i class="fas fa-stopwatch"></i> Planned Duration</td>
+                            <td class=" text-center alert alert-info"> @Model[0].Task.EndDate-@Model[0].Task.StartDate day</td>
+                        </tr>
+                        <tr>
+                            <td class=" text-center alert alert-info "><i class="fas fa-stopwatch"></i> Actual Duration</td>
+                            <td class=" text-center alert alert-info">@Model[0].Task.ActualDuratin</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            <button class="font-weight-bold  alert alert-info mr-2" onclick="BackToList()">Back To List</button>
+            <div class="font-weight-bold text-center text-muted alert alert-info">@Model[0].Task.Name</div>
+        </div>
+
+
+
+        <div class="d-flex mb-4">
+            @* Bar Chart *@
+            <div class="w-50" style="border :.5px solid  rgb(219, 219, 219);" id="columnchart_values"></div>
+
+            @* Donut Chart *@
+            <div class="w-50" id="donutchart" style="border :.5px solid  rgb(219, 219, 219); height:300px"></div>
+        </div>
+
+
+        <div class="d-flex">
+            @*Tasks Status*@
+            <div class="justify-content-center py-4 pl-3" style="border :.5px solid  rgb(219, 219, 219); width:20%">
+                <table style=" border-collapse: separate; border-spacing: 5px 10px;">
+                    <tbod>
+                        <tr onmouseover="Show('active')" onmouseout="Hide('active')">
+                            <td class="text-center alert alert-success">
+                                Active (@Model.Count(t => t.Status == Status.Active))
+                            </td>
+                        </tr>
+                        <tr onmouseover="Show('hold')" onmouseout="Hide('hold')">
+                            <td class="text-center alert alert-success">
+                                On Hold (@Model.Count(t => t.Status == Status.OnHold))
+                            </td>
+                        </tr>
+                        <tr onmouseover="Show('complete')" onmouseout="Hide('complete')">
+                            <td class="text-center alert alert-success">
+                                Completed (@Model.Count(t => t.Status == Status.Completed))
+                            </td>
+                        </tr>
+                        <tr onmouseover="Show('behind')" onmouseout="Hide('behind')">
+                            <td class="text-center alert alert-danger">
+                                Behind Schdule (@behind.Count())
+                            </td>
+                        </tr>
+                    </tbod>
+                </table>
+            </div>
+
+
+
+            <div id="active" class="d-none" style="position:absolute;margin-top:45px;border-radius:5px; background:rgb(250, 250, 250); left:23%;  z-index:1; box-shadow: 0 6px 12px rgba(0,0,0,.3); padding:10px;">
+                @{
+                    List<SubTask> Active = Model.Where(t => t.Status == Status.Active).ToList();
+
+                    if (Active.Count() > 0)
+                    {
+                        <table style="border-collapse: separate; border-spacing: 25px 8px;">
+                            <thead>
+                                <tr class="font-weight-bold">
+                                    <td>Task</td>
+                                    <td>Start</td>
+                                    <td>End</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Active)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>@item.StartDate.Value.Date.ToShortDateString()</td>
+                                        <td>@item.EndDate.Value.Date.ToShortDateString()</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                }
+            </div>
+
+
+            <div id="hold" class="d-none" style="position:absolute; margin-top:45px; border-radius:5px; background:rgb(250, 250, 250); left:23%;z-index:1; box-shadow: 0 6px 12px rgba(0,0,0,.3);padding:10px;">
+                @{
+                    List<SubTask> hold = Model.Where(t => t.Status == Status.OnHold).ToList();
+
+                    if (hold.Count() > 0)
+                    {
+                        <table style="border-collapse: separate; border-spacing: 25px 8px;">
+                            <thead>
+                                <tr class="font-weight-bold">
+                                    <td>Task</td>
+                                    <td>Start</td>
+                                    <td>End</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in hold)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>@item.StartDate.Value.Date.ToShortDateString()</td>
+                                        <td>@item.EndDate.Value.Date.ToShortDateString()</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                }
+            </div>
+
+            <div id="complete" class="d-none " style="position:absolute;border-radius:5px; margin-top:45px;background:rgb(250, 250, 250); left:23%;z-index:1; box-shadow: 0 6px 12px rgba(0,0,0,.3);padding:10px;">
+                @{
+                    List<SubTask> comlete = Model.Where(t => t.Status == Status.Completed).ToList();
+
+                    if (comlete.Count() > 0)
+                    {
+                        <table style="border-collapse: separate; border-spacing: 25px 8px;">
+                            <thead>
+                                <tr class="font-weight-bold">
+                                    <td>Task</td>
+                                    <td>Start</td>
+                                    <td>End</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in comlete)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>@item.StartDate.Value.Date.ToShortDateString()</td>
+                                        <td>@item.EndDate.Value.Date.ToShortDateString()</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                }
+            </div>
+
+            <div id="behind" class="d-none " style="position:absolute;border-radius:5px; margin-top:45px;background:rgb(250, 250, 250);left:23%; z-index:1; box-shadow: 0 6px 12px rgba(0,0,0,.3);padding:10px;">
+                @{
+
+                    if (behind.Count() > 0)
+                    {
+                        <table style="border-collapse: separate; border-spacing: 25px 8px;">
+                            <thead>
+                                <tr class="font-weight-bold">
+                                    <td>Task</td>
+                                    <td>Start</td>
+                                    <td>End</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in behind)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>@item.StartDate.Value.Date.ToShortDateString()</td>
+                                        <td>@item.EndDate.Value.Date.ToShortDateString()</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                }
+            </div>
+
+
+
+
+            @* Cost Chart *@
+            <div style="border :.5px solid  rgb(219, 219, 219); width:80%">
+                <div id="chart_div" style="height:300px"></div>
+            </div>
+        </div>
+
+    </div>
+
+
+    @*<div class="row">
+
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <input class="staskname" id="n-@i" value="@Model[i].Name" hidden="hidden" />
+                <input class="staskprog" id="p-@i" value="@Model[i].Progress" hidden="hidden" />
+                <input class="staskdur" id="d-@i" value="@(Model[i].ActualDuration)" hidden="hidden" />
+            }
+            <div id="columnchart_values" class="col-4"></div>
+
+            <div class="col-6 row">
+                <div  class="col-4 row">
+
+                    <button class="btn btn-primary my-1" type="button" onclick="btnOne()"  data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample ">
+                        Active Sub Tasks  @Model.Count(t => t.Status == Status.Active)
+                    </button>
+                    <button class="btn btn-warning my-1" type="button" onclick="btnTwo()" data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample">
+                        On Hold Sub Tasks  @Model.Count(t => t.Status == Status.OnHold)
+                    </button>
+                    <button class="btn btn-success my-1" type="button" onclick="btnThree()" data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample">
+                        Completed Sub Tasks  @Model.Count(t => t.Status == Status.Completed)
+                    </button>
+                    <button class="btn btn-danger my-1" type="button" onclick="btnFour()" data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample">
+                        Canceled Sub Tasks  @Model.Count(t => t.Status == Status.Canceled)
+                    </button>
+
+                </div>
+                <div class=" collapse div1 col-8" id="collapseExample1">
+                    <div class="card card-body">
+                        <ul class="list-group">
+                            @if (Model.Count(t => t.Status == Status.Active) == 0)
+                            {
+                                <li class="cla list-group-item d-flex justify-content-between align-items-center">
+                                    No Active Sub Tasks !
+                                </li>
+                            }
+                            else
+                            {
+
+                                for (int i = 0; i < Model.Count(); i++)
+                                {
+                                    if (Model[i].Status == Status.Active)
+                                    {
+
+                                        <li class="cla list-group-item d-flex justify-content-between align-items-center">
+                                            @Model[i].Name
+                                        </li>
+                                    }
+                                }
+
+                            }
+
+
+
+                        </ul>
+                    </div>
+                </div>
+                <div class=" collapse div2 col-8" id="collapseExample2">
+                    <div class="card card-body">
+                        <ul class="list-group">
+
+                            @if (Model.Count(t => t.Status == Status.OnHold) == 0)
+                            {
+                            <li class="cla list-group-item d-flex justify-content-between align-items-center">
+                                No On Hold Sub Tasks !
+                            </li>
+
+                            }
+                            else
+                            {
+                                for (int i = 0; i < Model.Count(); i++)
+                                {
+                                    if (Model[i].Status == Status.OnHold)
+                                    {
+
+                                        <li class="cla list-group-item d-flex justify-content-between align-items-center">
+                                            @Model[i].Name
+                                        </li>
+                                    }
+                                }
+                            }
+
+
+
+
+                        </ul>
+                    </div>
+                </div>
+                <div class=" collapse div3 col-8" id="collapseExample3">
+                    <div class="card card-body">
+                        <ul class="list-group">
+
+                            @if (Model.Count(t => t.Status == Status.Completed) == 0)
+                            {
+                                <li class="cla list-group-item d-flex justify-content-between align-items-center">
+                                    No Completed Sub Tasks !
+                                </li>
+
+                            }
+                            else
+                            {
+                                for (int i = 0; i < Model.Count(); i++)
+                                {
+                                    if (Model[i].Status == Status.Completed)
+                                    {
+
+                                        <li class="cla list-group-item d-flex justify-content-between align-items-center">
+                                            @Model[i].Name
+                                        </li>
+                                    }
+                                }
+                            }
+
+                        </ul>
+                    </div>
+                </div>
+                <div class="collapse div4 col-8" id="collapseExample4">
+                    <div class="card card-body">
+                        <ul class="list-group">
+
+                            @if (Model.Count(t => t.Status == Status.Canceled) == 0)
+                            {
+                                <li class="cla list-group-item d-flex justify-content-between align-items-center">
+                                    No Canceled Sub Tasks !
+                                </li>
+
+                            }
+                            else
+                            {
+                                for (int i = 0; i < Model.Count(); i++)
+                                {
+                                    if (Model[i].Status == Status.Canceled)
+                                    {
+
+                                        <li class="cla list-group-item d-flex justify-content-between align-items-center">
+                                            @Model[i].Name
+                                        </li>
+                                    }
+                                }
+                            }
+
+                        </ul>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="row col-8">
+                <div class="col-4 text-center alert alert-danger">Dead Line</div>
+                <div class="col-8 text-center alert alert-danger">@Model.FirstOrDefault().Task.EndDate</div>
+                <div class="col-4 text-center alert alert-warning ">Remaining Time</div>
+                @{
+                    int remaining = (int)(@Model[0].Task.EndDate - DateTime.Now).TotalDays;
+                    if (remaining > 0)
+                    {
+                        <div class="text-center alert alert-warning">@remaining day</div>
+                    }
+                    else
+                    {
+                        <div class="text-center alert alert-warning">Time Ended</div>
+                    }
+                }
+            </div>
+
+            <div id="donutchart" style="width: 900px; height: 500px;  "></div>
+
+        </div>*@
+
+    @section scripts{
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script>
+            function btnOne() {
+                $('.div2').hide();
+                $('.div3').hide();
+                $('.div4').hide();
+                $('.div1').show();
+            }
+
+            function btnTwo() {
+                $('.div1').hide();
+                $('.div3').hide();
+                $('.div4').hide();
+                $('.div2').show();
+            }
+            function btnThree() {
+                $('.div2').hide();
+                $('.div1').hide();
+                $('.div4').hide();
+                $('.div3').show();
+            }
+            function btnFour() {
+                $('.div2').hide();
+                $('.div3').hide();
+                $('.div1').hide();
+                $('.div4').show();
+            }
+
+        </script>
+        <script type="text/javascript">
+
+            var ns = [];
+            var ps = [];
+            var dur = [];
+            var names = $('.staskname')
+            var progress = $('.staskprog')
+            var durations = $('.staskdur')
+            for (var i = 0; i < names.length; i++) {
+                //console.log(names[i].defaultValue)
+                ns.push(names[i].defaultValue)
+            }
+            for (var i = 0; i < progress.length; i++) {
+                //console.log(progress[i].defaultValue)
+                ps.push(progress[i].defaultValue)
+            }
+            for (var i = 0; i < durations.length; i++) {
+                //console.log(progress[i].defaultValue)
+                dur.push(durations[i].defaultValue)
+            }
+            console.log(ns);
+            console.log(ps);
+            console.log(dur);
+            //$('#columnchart_values').append(ns,ps);
+
+
+            google.charts.load("current", { packages: ['corechart'] });
+            google.charts.setOnLoadCallback(drawChart);
+            google.charts.setOnLoadCallback(drawChart2);
+            function drawChart() {
+
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Name');
+                data.addColumn('number', 'Progress');
+                data.addColumn({ role: "style" });
+                data.addRows([
+                    [`${ns[0]}`, parseInt(ps[0]), "forestgreen"],
+                ]);
+
+                for (let j = 1; j < ns.length; j++) {
+                    data.addRows([
+                        [`${ns[j]}`, parseInt(ps[j]), "forestgreen"],
+                    ]);
+                }
+
+                var options = {
+                    title: "Progress of each Sub Task inside the Project",
+                    //width: 600,
+                    //height: 400,
+                    bar: { groupWidth: "70%" },
+                    legend: { position: "none" },
+                    hAxis: { textStyle: { bold: true } },
+                    vAxis: { minValue: 0, maxValue: 100 },
+                    animation: {
+                        startup: true,
+                        duration: 2500,
+                        easing: 'in',
+                    },
+
+                };
+                var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
+                chart.draw(data, options);
+            }
+
+            function drawChart2() {
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Name');
+                data.addColumn('number', 'Time Spent');
+
+                data.addRows([
+                    [`${ns[0]}`, parseInt(dur[0])],
+                ]);
+
+                for (let j = 1; j < ns.length; j++) {
+                    data.addRows([
+                        [`${ns[j]}`, parseInt(dur[j])],
+                    ]);
+                }
+
+                var options = {
+                    title: 'Sub Tasks Actual Durations',
+                    pieHole: 0.4,
+                    chartArea: { left: 20, top: 0 }
+
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+                chart.draw(data, options);
+            }
+        </script>
+
+    }
+}

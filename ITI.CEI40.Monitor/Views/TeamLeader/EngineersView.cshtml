@@ -6,16 +6,15 @@
 
 <div class="container ">
     <div class="row">
-        <h3 class="text-muted m-3">Teams</h3>
+        <h3 class="text-muted m-3">Engineers</h3>
     </div>
-    <div class="row ">
-        <div class="col-6  ">
-            <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
+    <div class="row " style="border: 2px solid rgb(219, 219, 219) ; border-radius: 8px;">
+        <div class="col-4  innerleft " style="border-right:2px solid rgb(219, 219, 219);">
+            <div style=" padding: 20px; border-radius: 8px;">
                 <table class="table table-hover" id="teamTable">
-
-                    <thead class="tableh">
+                    <thead class="table-hover">
                         <tr>
-                            <th scope="col">Engineer Name</th>
+                            <th scope="col">Name</th>
                             <th scope="col">Work Load </th>
                             <th scope="col">Salary Rate </th>
                             <th scope="col">Total Evaluation </th>
@@ -24,41 +23,31 @@
                     <tbody>
                         @for (int i = 0; i < Model.Count(); i++)
                         {
-                        <tr id="@Model[i].Id" onclick='displaySubTasks("@Model[i].Id")'>
-                            <td>@Model[i].UserName</td>
+                           
+                            <tr id="@Model[i].Id" onclick='displaySubTasks("@Model[i].Id")'>
+                                <td>@Model[i].UserName</td>
 
-                            <td>@Model[i].Workload</td>
-                            <td>@Model[i].SalaryRate</td>
-                            <td>@Model[i].TotalEvaluation</td>
-                            <td><button class="btn btn-info" onclick='displayCharts("@Model[i].Id")'>Charts</button></td>
+                                <td>@Model[i].Workload</td>
+                                <td>@Model[i].SalaryRate</td>
+                                <td>@Model[i].TotalEvaluation</td>
+                                @*<td><button class="btn btn-info" onclick='displayCharts("@Model[i].Id")'>Charts</button></td>*@
 
 
-                        </tr>
+                            </tr>
                         }
                     </tbody>
                 </table>
             </div>
         </div>
-        <div class="col-6  ">
-            <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
-                <div class="righthead">
-                    <h5 calss="col-lg-12 ">Engineers Sub Tasks</h5>
-                    <div id="barchart_values" style="width: 300px; height: 100px;"></div>
-                </div>
+        <div class="col-8 innerright ">
+            <div style=" padding: 15px; border-radius: 8px;">
                 <hr />
-                <div class="row" id="tasks">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Description</th>
-                                <th>Priority</th>
-                                <th>Progress</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableBody"></tbody>
-                    </table>
+                <div class="row" style="margin:auto;" id="tasks">
+                    <div id="alertdiv" class="alert alert-info" style=" margin:auto; text-align: center;">Click on Engineers to Show Sub Tasks</div>
 
+                    <div id="tableBody" class="table table-hover">
+
+                    </div>
                 </div>
                 @*<button onclick="deletesvg()"> delete</button>*@
             </div>
@@ -141,13 +130,16 @@
             })
         }
 
+
+
         function displaySubTasks(id) {
             $.ajax({
                 url: "/TeamLeader/displaySubTasks",
                 type: "Get",
                 data: { engId: `${id}` },
                 success: function (result) {
-                    if (result) {                       
+                    if (result) {
+                        $('#alertdiv').hide();
                         $('#tableBody').empty();
                         $('#tableBody').append(result);
                     }

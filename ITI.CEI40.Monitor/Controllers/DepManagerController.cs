@@ -28,15 +28,10 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpGet]
         public IActionResult displayTasks(int teamId)
         {
-            var task = unitofwork.Tasks.GetAllTaskWithProject(teamId);
+            var task = unitofwork.Tasks.GetAllTaskWithTheirProject(teamId);
             return PartialView("_TaskPartialView", task);
         }
 
-        [HttpGet]
-        public IActionResult displayCharts(int teamId)
-        {
-            var task = unitofwork.Tasks.GetAllTaskWithProject(teamId);
-            return PartialView("_ChartsPartialView", task);
-        }
+       
     }
 }
