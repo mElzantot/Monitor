@@ -2,12 +2,24 @@
 
 <div id="formSec" class="col-6">
     <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
-        <form id="projectForm" onsubmit="SubmitForm(event)">
+        @*
+        <form method="post" data-ajax-url="/Employee/AddEmployee" data-ajax="true" data-ajax-method="Post" data-ajax-complete="addEmployee"
+                 data-ajax-update="#tableBody" data-ajax-mode="after" id="EmployeeForm">
+        *@
+
+
+        @*<form id="projectForm" onsubmit="SubmitForm(event)">*@
+
+        <form method="post" data-ajax-url="/project/Edit" data-ajax="true" data-ajax-method="Post" data-ajax-complete="EditName"
+              data-ajax-update="#prjName" data-ajax-mode="replace" id="ProjectForm">
             <div class="row">
                 <input hidden asp-for="@Model.ID" />
+                <input hidden asp-for="@Model.StartDate" value="@Model.StartDate" />
+                <input hidden asp-for="@Model.EndDate" value="@Model.EndDate" />
+
                 <div class="form-group col-lg-6">
-                    <label asp-for="@Model.Name">Project Name</label>
-                    <input asp-for="@Model.Name" class="form-control" placeholder="Project Name" />
+                    <label  asp-for="@Model.Name">Project Name</label>
+                    <input id="prjName" asp-for="@Model.Name" class="form-control" placeholder="Project Name" />
                     <span asp-validation-for="@Model.Name" class="text-danger"></span>
                 </div>
                 <div class="form-group col-lg-6">
@@ -35,46 +47,39 @@
                 </div>
                 <span asp-validation-for="@Model.Status" class="text-danger"></span>
             </div>
-            <div class="form-group ">
-                <label asp-for="@Model.Progress">Progress</label>
-                <h4>@Model.Progress</h4>
-            </div>
+
             <hr />
             <div class="row">
                 <div class="form-group col-lg-6">
                     <label asp-for="@Model.Income">Income</label>
-                    <h4>@Model.Income</h4>
+                    @if (Model.Income > 0)
+                    {
+                        <h5>@Model.Income LE</h5>
+                    }
+                    else
+                    {
+                        <h5>0 LE</h5>
+                    }
                 </div>
 
                 <div class="form-group col-lg-6">
                     <label asp-for="@Model.Outcome">Outcome</label>
-                    <h4>@Model.Outcome</h4>
+                    @if (Model.Income > 0)
+                    {
+                        <h5>@Model.Outcome LE</h5>
+                    }
+                    else
+                    {
+                        <h5>0 LE</h5>
+                    }
                 </div>
             </div>
             <div class="form-group ">
                 <label asp-for="@Model.TotalBudget">TotalBudget</label>
                 <h4>@Model.TotalBudget</h4>
             </div>
-            <hr />
-            <div class="row">
-                <div class="form-group col-lg-6">
-                    <label asp-for="@Model.StartDate">StartDate</label>
-                    <h4>@Model.StartDate</h4>
-                </div>
-                <div class="form-group col-lg-6">
-                    <label asp-for="@Model.EndDate">EndDate</label>
-                    <h4>@Model.EndDate</h4>
-                </div>
-                <div class="form-group col-lg-6">
-                    <label asp-for="@Model.ActualDuration">ActualDuration</label>
-                    <h4>@Model.ActualDuration</h4>
-                </div>
-                <div class="form-group col-lg-6">
-                    <label asp-for="@Model.EstimatedDuration">EstimatedDuration</label>
-                    <h4>@Model.EstimatedDuration</h4>
-                </div>
-            </div>
-            <button class="btn btn-primary">Update</button>
+
+            <button type="submit" class="btn btn-primary">Update</button>
         </form>
     </div>
 

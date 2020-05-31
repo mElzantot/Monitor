@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
@@ -24,7 +25,7 @@ namespace ITI.CEI40.Monitor.Controllers
             {
                 Projects = unitofwork.Projects.GetRunningProjects(),
             };
-            
+
             return View("_CreateProject", projectView);
         }
 
@@ -70,5 +71,22 @@ namespace ITI.CEI40.Monitor.Controllers
                 return Json(project);
             }
         }
+
+        [HttpGet]
+        public IActionResult DisplayProjects()
+        {
+            var project = unitofwork.Projects.GetAllProjects().ToList();
+            return View(project);
+        }
+
+        [HttpGet]
+        public IActionResult DashBoard(int projId)
+        {
+            //Project project = unitofwork.Projects.GetProjectWithTasks(projId);
+            List<Activity> tasks = unitofwork.Tasks.GetActivitiesFromProject(projId).ToList();
+            return PartialView("_DashBoardPartial", tasks);
+        }
+
+
     }
 }

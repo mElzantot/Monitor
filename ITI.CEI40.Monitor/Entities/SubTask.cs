@@ -14,6 +14,7 @@ namespace ITI.CEI40.Monitor.Entities
         {
             this.Progress = 0;
             this.SubTaskSession = new HashSet<SubTaskSession>();
+            this.ActualDuration = 0;
         }
 
         [Key]
@@ -46,10 +47,9 @@ namespace ITI.CEI40.Monitor.Entities
         public DateTime? EndDate { get; set; }
 
 
-        //public int EstDuration { get; set; }
+        public int ActualDuration { get; set; }
 
-
-        public bool? IsUnderWork { get; set; }
+        public bool IsUnderWork { get; set; }
         public int Progress { get; set; }
         public Status Status { get; set; }
         public Priority Priority { get; set; }

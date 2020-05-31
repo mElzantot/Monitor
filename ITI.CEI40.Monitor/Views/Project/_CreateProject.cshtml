@@ -4,15 +4,17 @@
     ViewData["Title"] = "Create Project";
 }
 
-<div class="container">
+
+<div id="MainView">
+
     <h3 class="text-muted">Projects</h3>
     <br>
     <!--#region Add project  -->
-    <div class=" row mb-3 ">
-        <span class=" col-3 ">
+    <div class="d-flex mb-3">
+        <span id="search" style="width:20% ; margin-right:1%;">
             <input class="form-control" type="search" placeholder="Search">
         </span>
-        <span class="col-4">
+        <span>
             <button class="btn btn-success " id="addproject">Add project</button>
             <button class="btn btn-light "><i class="fas fa-filter"></i>Filter</button>
             <button class="btn btn-light "><i class="fas fa-arrow-circle-up"></i> Archive</button>
@@ -22,39 +24,60 @@
 
     <div class="row">
         <div class="col-6">
+
             <!--#region Create Section  -->
-            <div class=" d-none  row mb-3" id="createsection">
-                <div class="col-6">
+            <div class=" d-none mb-3" id="createsection">
+                <div style="width:50%; margin-right:2%">
                     <input asp-for="@Model.Project.Name" class="form-control"
                            type="text" id="projectName" placeholder="Enter the name of new project">
-                    @Html.ValidationMessageFor(m => m.Project.Name, null, new { @class = "text-danger" })
-
+                    <span asp-validation-for="@Model.Project.Name" class="text-danger"></span>
                 </div>
-                <div col-6>
-                    <button class="btn btn-success " id="Createprojrct"> create new project </button>
-                    <button class="btn btn-light " id="cancel">Cancel</button>
+
+                <div>
+                    <button class="btn btn-success" id="Createprojrct"> create new project </button>
+                    <button class="btn alert-danger" id="cancel">Cancel</button>
                 </div>
             </div>
             <!--#endregion -->
             <!--#region Table Section  -->
             <div id="projectsTable" style="border: 2px solid rgb(219, 219, 219) ;   border-radius: 8px;">
-                <table class="table table-hover">
-                    @if (Model.Projects.Count<Project>() <= 0)
-                    {
-                        <h4 id="noProject" style="padding:45px 20px " class="text-muted text-center">Create your first project </h4>
-                    }
-                    <tbody id="tablebody">
-                        @foreach (var item in Model.Projects)
-                        {
-                            <tr id="@item.ID" onclick="Edit(@item.ID)">
-                                <td>@item.Name</td>
-                                <td>
-                                    <span class="btn btn-info "><i id="i" class="fas fa-chart-area"></i> Chart</span>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+
+                @if (Model.Projects.Count<Project>() <= 0)
+                {
+                    <h4 id="noProject" style="padding:45px 20px " class="text-muted text-center">Create your first project </h4>
+                }
+                else
+                {
+                    <table class="table table-hover">
+                        <tbody id="tablebody">
+                            @foreach (var item in Model.Projects)
+                            {
+                                <tr id="@item.ID" onclick="OpenEditSec(@item.ID)">
+                                    <td class="text-center font-weight-bold">@item.Name</td>
+                                    <td style="text-align:right">
+                                        <button @*asp-controller="Activity" asp-action="Index/@item.ID"*@ onclick="" class="btn alert-info "><i id="i" class="fas fa-chart-area"></i> Chart</button>
+
+                                        @if (item.EndDate != null)
+                                        {
+                                            <button onclick="Dashboard(@item.ID)" type="button" class="btn alert-warning">Dashboard</button>
+                                        }
+                                        else
+                                        {
+                                            <div class="btn-group dropleft">
+                                                <button type="button" class="btn alert-warning " data-toggle="dropdown">
+                                                    Dashboard
+                                                </button>
+                                                <div class="dropdown-menu px-2 mx-1 alert-danger">
+                                                    Lets goto charts and create tasks
+                                                </div>
+                                            </div>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
             </div>
             <!--#endregion -->
         </div>
@@ -67,35 +90,39 @@
             </div>
             <!--#endregion -->
         </div>
-
     </div>
+</div>
 
+
+<div id="Board">
 </div>
 
 
 
 
-
-
-
-
-
 @section Scripts{
-    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
 
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/lib/jquery-validation-unobtrusive-ajax/dist/jquery.unobtrusive-ajax.js"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+
     <script>
 
         //open form for add name of project
         var btn = $('#addproject').click(function () {
             $('#addproject').hide();
             $('#createsection').addClass("d-flex");
+            $('#search').css('width', '30%');
         })
 
         //this function is called after add new project also
         function CloseProjrctNameSec() {
             $('#addproject').show();
             $('#createsection').removeClass("d-flex");
+            $('#search').css('width', '20%');
         }
         $('#cancel').click(CloseProjrctNameSec)
 
@@ -119,10 +146,17 @@
                     success: function (response) {
                         $('#tablebody').append(
                             `<tr id="${response.id}" onclick="Edit(${response.id})">
-                                                                                <td>${response.name}</td>
-                                                                                <td>
-                                                                                    <span class="btn btn-info "><i id="i" class="fas fa-chart-area"></i> Chart</span>
-                                                                                </td>
+                                                                                    <td class="text-center font-weight-bold">${response.name}</td>
+                                                                                    <td class="text-center">
+                                                                                    <span class="btn alert-info "><i id="i" class="fas fa-chart-area"></i> Chart</span>
+                                                                                    <div class="btn-group dropleft">
+                                                        <button type="button" class="btn alert-warning " data-toggle="dropdown" >
+                                                            Dashboard
+                                                        </button>
+                                                        <div class="dropdown-menu px-2 alert-danger">
+                                                            Lets goto charts and create tasks
+                                                        </div>
+                                                    </div>
                                                                             </tr>`
                         );
                         //For first time if there is no project in the table (Hide the sec of No Project is created)
@@ -140,17 +174,21 @@
 
 
 
-        //Edit AJAX
-        function Edit(projectId) {
-            switch (event.target.tagName) {
-                case 'SPAN':
-                case 'I':
-                    location.href = "/Activity/Index/" + projectId;
-                    break;
-                default:
-                    OpenEditSec(projectId);
-            }
-        }
+        ////Edit AJAX
+        //function Edit(projectId) {
+        //    switch (event.target.tagName) {
+        //        case 'SPAN':
+        //        case 'I':
+        //            location.href = "/Activity/Index/" + projectId;
+        //            break;
+        //            case 'BUTTON':
+        //               Dashboard(projectId);
+        //            break;
+        //        default:
+        //            OpenEditSec(projectId);
+        //    }
+        //}
+
 
         //Open the right window which contain the form
         //this function is called from (Edit function , Add function)
@@ -185,6 +223,164 @@
                 },
             });
         };
-    </script>
 
+        function EditName(result) {
+            console.log(result)
+            //document.getElementById(`${data.id}`).firstElementChild.innerHTML = data.name;
+        }
+
+
+
+        //-----------Dash-------------//
+
+
+
+        function Dashboard(id) {
+            $.ajax({
+                type: "GET",
+                url: `/Project/DashBoard`,
+                data: { projId: id },
+                success: function (response) {
+                    $('#MainView').hide();
+                    $('#Board').prepend(response);
+                    LoadData();
+
+                    //$('#Board').show();
+                },
+                error: function (x, y, err) {
+                    console.log(arguments)
+                }
+            })
+        }
+
+        function BackToList() {
+            $('#DashBoard').remove();
+            //$('#Board').hide();
+            $('#MainView').show();
+        }
+
+        ////
+        function LoadData() {
+            debugger;
+            var ns = [];
+            var ps = [];
+            var dur = [];
+            var names = $('.staskname')
+            var progress = $('.staskprog')
+            var durations = $('.staskdur')
+            for (var i = 0; i < names.length; i++) {
+                //console.log(names[i].defaultValue)
+                ns.push(names[i].defaultValue)
+            }
+            for (var i = 0; i < progress.length; i++) {
+                //console.log(progress[i].defaultValue)
+                ps.push(progress[i].defaultValue)
+            }
+            for (var i = 0; i < durations.length; i++) {
+                //console.log(progress[i].defaultValue)
+                dur.push(durations[i].defaultValue)
+            }
+            console.log(ns);
+            console.log(ps);
+            console.log(dur);
+
+
+
+            google.charts.load("current", { packages: ['corechart'] });
+            google.charts.setOnLoadCallback(drawChart);
+            google.charts.setOnLoadCallback(drawChart2);
+            google.charts.setOnLoadCallback(drawChart3);
+
+
+            function drawChart() {
+
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Name');
+                data.addColumn('number', 'Progress');
+                data.addColumn({ role: "style" });
+                data.addRows([
+                    [`${ns[0]}`, parseInt(ps[0]), "#4da76b"],
+                ]);
+
+                for (let j = 1; j < ns.length; j++) {
+                    data.addRows([
+                        [`${ns[j]}`, parseInt(ps[j]), "#4da76b"],
+                    ]);
+                }
+
+                var options = {
+                    title: "Tasks Progress",
+                    hAxis: { textStyle: { bold: true } },
+                    vAxis: { minValue: 0, maxValue: 100 },
+                    animation: {
+                        startup: true,
+                        duration: 2500,
+                        easing: 'in',
+                    },
+                    bar: { groupWidth: "70%" },
+                    legend: { position: "none" },
+                };
+                var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
+                chart.draw(data, options);
+            }
+
+            function drawChart2() {
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Name');
+                data.addColumn('number', 'Time Spent');
+
+                data.addRows([
+                    [`${ns[0]}`, parseInt(dur[0])],
+                ]);
+
+                for (let j = 1; j < ns.length; j++) {
+                    data.addRows([
+                        [`${ns[j]}`, parseInt(dur[j])],
+                    ]);
+                }
+
+                var options = {
+                    title: 'Tasks Actual Durations',
+                    pieHole: 0.4,
+                    //chartArea: { left: 20, top: 0, width: '50%', height: '75%' }
+                    chartArea: { left: 150, height: '80%' }
+
+                };
+
+                var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+                chart.draw(data, options);
+            }
+
+
+            function drawChart3() {
+                var data = google.visualization.arrayToDataTable([
+                    ['Year', 'Sales', 'Expenses'],
+                    ['2013', 1000, 400],
+                    ['2014', 1170, 460],
+                    ['2015', 660, 1120],
+                    ['2016', 1030, 540]
+                ]);
+
+                var options = {
+                    title: 'Company Performance',
+                    hAxis: { title: 'Year', titleTextStyle: { color: 'green' } },
+                    vAxis: { minValue: 0 }
+                };
+
+                var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+                chart.draw(data, options);
+            }
+        }
+
+
+
+        function Show(divName) {
+            $(`#${divName}`).removeClass('d-none');
+        }
+        function Hide(divName) {
+            $(`#${divName}`).addClass('d-none');
+        }
+    </script>
 }
+
+

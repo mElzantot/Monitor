@@ -31,40 +31,43 @@ body {
     }
 
 
-#i {
-    font-size: 1.1rem;
-}
+    #i{
+        font-size:1.1rem;
+    }
 
 
 
 
-/*nav bar dropdown list*/
-.dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover {
+    /*nav bar dropdown list*/
+.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
     background-color: var(--green);
-    border-radius: 8px;
-}
-
-
-.dropdown-menu > li > a {
+    border-radius: 8px;   
+  }
+  
+  
+  .dropdown-menu>li>a{
     margin: 0 8px;
-}
-
-
-.dropdown-menu {
+  }
+  
+  
+  .dropdown-menu{
     border-width: 0.0px;
     border-bottom-left-radius: 7px;
     border-bottom-right-radius: 7px;
     box-shadow: 0 6px 12px rgba(0,0,0,.175);
-}
-
-.navbar-brand {
+  }
+  
+  .navbar-brand{
     font-size: 35px;
     line-height: 30px;
+  }
+  
+   .dropdown-item{
+      width: 90%;
+  } 
+  /*#endregion*/
+
+
+.dropdown-menu clock {
+    min-width: 25rem;
 }
-
-.dropdown-item {
-    width: 90%;
-}
-/*#endregion*/
-
-

@@ -25,12 +25,15 @@ namespace ITI.CEI40.Monitor.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("ActualDuratin");
+
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasMaxLength(256);
 
                     b.Property<DateTime>("EndDate")
-                        .HasColumnName("End Date");
+                        .HasColumnName("End Date")
+                        .HasColumnType("Date");
 
                     b.Property<int>("FK_ProjectId");
 
@@ -42,10 +45,11 @@ namespace ITI.CEI40.Monitor.Migrations
 
                     b.Property<int>("Priority");
 
-                    b.Property<float>("Progress");
+                    b.Property<int>("Progress");
 
                     b.Property<DateTime>("StartDate")
-                        .HasColumnName("Start Date");
+                        .HasColumnName("Start Date")
+                        .HasColumnType("Date");
 
                     b.Property<int>("Status");
 
@@ -172,6 +176,33 @@ namespace ITI.CEI40.Monitor.Migrations
                     b.ToTable("DepartmentProjects");
                 });
 
+            modelBuilder.Entity("ITI.CEI40.Monitor.Entities.Invoices", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Discription")
+                        .IsRequired()
+                        .HasMaxLength(256);
+
+                    b.Property<int>("FK_ProjectId");
+
+                    b.Property<int>("InvoicesType");
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnName("Payment Date")
+                        .HasColumnType("Date");
+
+                    b.Property<float>("Value");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FK_ProjectId");
+
+                    b.ToTable("Invoices");
+                });
+
             modelBuilder.Entity("ITI.CEI40.Monitor.Entities.Project", b =>
                 {
                     b.Property<int>("ID")
@@ -182,8 +213,9 @@ namespace ITI.CEI40.Monitor.Migrations
 
                     b.Property<DateTime?>("EndDate");
 
-                    b.Property<int?>("EstimatedDuration");
+                    b.Property<float?>("EstimatedDuration");
 
+                    b.Property<float?>("Income");
                     b.Property<string>("FK_Manager");
 
                     b.Property<float?>("Income");
@@ -221,6 +253,8 @@ namespace ITI.CEI40.Monitor.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ActualDuration");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -269,7 +303,7 @@ namespace ITI.CEI40.Monitor.Migrations
 
                     b.Property<int>("FK_SubTaskID");
 
-                    b.Property<int?>("SessDuration");
+                    b.Property<int>("SessDuration");
 
                     b.Property<DateTime?>("SessEndtDate")
                         .HasColumnName("End Date");
@@ -424,7 +458,7 @@ namespace ITI.CEI40.Monitor.Migrations
             modelBuilder.Entity("ITI.CEI40.Monitor.Entities.Activity", b =>
                 {
                     b.HasOne("ITI.CEI40.Monitor.Entities.Project", "Project")
-                        .WithMany("Tasks")
+                        .WithMany("Task")
                         .HasForeignKey("FK_ProjectId")
                         .OnDelete(DeleteBehavior.Restrict);
 
@@ -468,6 +502,14 @@ namespace ITI.CEI40.Monitor.Migrations
                     b.HasOne("ITI.CEI40.Monitor.Entities.Project", "Project")
                         .WithMany("DepartmentProjects")
                         .HasForeignKey("ProjectID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("ITI.CEI40.Monitor.Entities.Invoices", b =>
+                {
+                    b.HasOne("ITI.CEI40.Monitor.Entities.Project", "Project")
+                        .WithMany("Invoices")
+                        .HasForeignKey("FK_ProjectId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

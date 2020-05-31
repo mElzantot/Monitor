@@ -11,6 +11,11 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         public SubTaskSessionManager(ApplicationDbContext context) : base(context)
         {
 
+
+        }
+        public SubTaskSession GetLastSessBySubTaskID(int subTaskId)
+        {
+            return set.Where(se => se.FK_SubTaskID == subTaskId).LastOrDefault();
         }
     }
 }

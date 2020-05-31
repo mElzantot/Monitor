@@ -1,14 +1,128 @@
 ﻿@model List<Activity>
 
-@for (int i = 0; i < Model.Count(); i++)
-    {
+
+
+<div class="d-flex">
+    <h4 class="mr-3 pt-2" style="">
+        @Model.FirstOrDefault().Team.Name
+    </h4>
+    <span class="alert alert-danger">@Model.Count Tasks</span>
+</div>
+
+<hr/>
+<table class="table table-hover">
+    <thead>
         <tr>
+            <th>Name</th>
+            <th>Project</th>
+            <th>Progress</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Priority</th>
+            <th>Actual Duration</th>
+            <th>Description</th>
+
+            @*<th></th>*@
+        </tr>
+    </thead>
+
+
+    @for (int i = 0; i < Model.Count(); i++)
+    {
+        <tr id="@Model[i].Id" onclick="getid(this.id)">
             <td>@Model[i].Name</td>
             <td>@Model[i].Project.Name</td>
-            <td>@Model[i].Priority</td>
-            <td>@Model[i].Progress</td>
-            @*<td>@Model[i].EstDuration</td>*@
+            <td><div class="progress"><div class="progress-bar" role="progressbar" style="width: @Model[i].Progress%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@Model[i].Progress%</div></div></td>
+            <td>@Model[i].StartDate.Date.ToShortDateString()</td>
+            <td>@Model[i].EndDate.Date.ToShortDateString()</td>
+            <td style="width:30%"><select asp-for="@Model[i].Priority" asp-items="@Html.GetEnumSelectList<Priority>()" class="form-control"></select></td>
+            <td>@Model[i].ActualDuratin Days</td>
+            <td>
+                <div class="btn-group dropleft">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <i class="fas fa-info"></i>
+                    </button>
+                    <div class="dropdown-menu">
+                        @Model[i].Description
+                    </div>
+                </div>
+
+            </td>
         </tr>
     }
 
 
+</table>
+
+
+    <script>
+        var id;
+        function getid(value) {
+            //debugger;
+            id = value;
+        }
+
+        (function () {
+            var previous;
+
+
+            $("select").on('focus', function () {
+                // Store the current value on focus and on change
+
+                previous = this.value;
+
+                // console.log(previous);
+
+            }).change(function () {
+
+                var value = this.value;
+
+                console.log(value);
+                //console.log(id);
+                switch (value) {
+                    case '0': //critial
+                        if (confirm('Do you want to change priority to critical?')) {
+                            EditPriority(id, value);
+                        }
+                        else {
+                            $(`#${id} > td > select`)[0].value = previous
+                        }
+                        break;
+
+
+                    case '1': //high
+                        if (confirm('Do you want to change priority to High?')) {
+                            EditPriority(id, value);
+                        }
+                        else {
+                            $(`#${id} > td > select`)[0].value = previous
+                        }
+                        break;
+
+
+                    case '2': // medium
+                        if (confirm('Do you want to change priority to Medium?')) {
+                            EditPriority(id, value);
+                        }
+                        else {
+                            $(`#${id} > td > select`)[0].value = previous
+                        }
+                        break;
+                        break;
+
+                    case '3': //low
+                        if (confirm('Do you want to change priority to Low?')) {
+                            EditPriority(id, value);
+                        }
+                        else {
+                            $(`#${id} > td > select`)[0].value = previous
+                        }
+                        break;
+                        break;
+                }
+
+            });
+        })();
+
+        
+    </script>

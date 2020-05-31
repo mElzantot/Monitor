@@ -10,6 +10,10 @@ namespace ITI.CEI40.Monitor.Entities
     [Table("Task")]
     public class Activity
     {
+        public Activity()
+        {
+            this.ActualDuratin = 0;
+        }
         [Key]
         public int Id { get; set; }
 
@@ -22,7 +26,7 @@ namespace ITI.CEI40.Monitor.Entities
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
-
+        
         public Team Team { get; set; }
         [ForeignKey(nameof(Team))]
         public int FK_TeamId { get; set; }
@@ -37,16 +41,17 @@ namespace ITI.CEI40.Monitor.Entities
 
 
         [DataType(DataType.Date)]
-        [Column("Start Date")]
+        [Column("Start Date", TypeName = "Date")]
         [Display(Name = "Start Date")]
         public DateTime StartDate { get; set; }
 
         [DataType(DataType.Date)]
-        [Column("End Date")]
+        [Column("End Date", TypeName = "Date")]
         [Display(Name = "End Date")]
         public DateTime EndDate { get; set; }
 
-        public float Progress { get; set; }
+        public int Progress { get; set; }
+        public int ActualDuratin { get; set; }
 
         public Status Status { get; set; }
         public Priority Priority { get; set; }

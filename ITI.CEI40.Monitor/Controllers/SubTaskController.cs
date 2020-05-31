@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+
 using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
@@ -31,27 +31,71 @@ namespace ITI.CEI40.Monitor.Controllers
             return PartialView("_SubTaskDataPartial", subTask);
         }
 
-        public void EditProgress(int ID,int progress)
-        {
-            SubTask subTask = unitOfWork.SubTasks.GetById(ID);
-            subTask.Progress = progress;
-            unitOfWork.SubTasks.Edit(subTask);
-           // return Json(progress);
-        }
+
+        public void EditProgress(int ID, int progress)        {            SubTask subTask = unitOfWork.SubTasks.GetById(ID);
+
+            int subTaskLastProgress = subTask.Progress;
+            
+            Activity task = unitOfWork.Tasks.GetById(subTask.FK_TaskId);
+
+            List<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByTaskId(subTask.FK_TaskId);            int totalSubTaskDuration = 0;            foreach (var item in subTasks)            {                totalSubTaskDuration += (int)(item.EndDate - item.StartDate).Value.TotalDays;            }            int subtaskDuration = (int)(subTask.EndDate - subTask.StartDate).Value.TotalDays;            task.Progress += ((progress - subTaskLastProgress) * (subtaskDuration)) / (totalSubTaskDuration);            task = unitOfWork.Tasks.Edit(task);
+
+            subTask.Progress = progress;            subTask = unitOfWork.SubTasks.Edit(subTask);        }
+
+        
+
 
         public void EditIsUnderWork(int ID, bool Is)
         {
             SubTask subTask = unitOfWork.SubTasks.GetById(ID);
-            subTask.IsUnderWork=Is;
-            unitOfWork.SubTasks.Edit(subTask);
+            subTask.IsUnderWork = Is;
+           
+            if (Is)
+            {
+                SubTaskSession subTaskSession = new SubTaskSession()
+                {
+                    FK_SubTaskID = ID,
+                    SessStartDate = DateTime.Now
+                };
+                subTaskSession = unitOfWork.SubTaskSessions.Add(subTaskSession);
+            }
+            else
+            {
+                SubTaskSession subTaskSession = unitOfWork.SubTaskSessions.GetLastSessBySubTaskID(ID);
+                subTaskSession.SessEndtDate = DateTime.Now;
+                double hourDuration = (double)(subTaskSession.SessEndtDate - subTaskSession.SessStartDate).Value.TotalHours;
+                subTaskSession.SessDuration = (int)Math.Round(hourDuration, 0);
+                subTaskSession = unitOfWork.SubTaskSessions.Edit(subTaskSession);
+
+                subTask.ActualDuration += subTaskSession.SessDuration;
+
+                Activity task = unitOfWork.Tasks.GetById(subTask.FK_TaskId);
+                int LastTaskDuaration = task.ActualDuratin;
+                task.ActualDuratin += subTask.ActualDuration;
+                task = unitOfWork.Tasks.Edit(task);
+                Project project = unitOfWork.Projects.GetById(task.FK_ProjectId);
+                project.ActualDuration += task.ActualDuratin - LastTaskDuaration;
+                unitOfWork.Projects.Edit(project);
+
+            }
+            subTask = unitOfWork.SubTasks.Edit(subTask);
         }
 
-        public void EditStatus(int ID,Status status)
+        public void EditStatus(int ID, Status status)
         {
             SubTask subTask = unitOfWork.SubTasks.GetById(ID);
             subTask.Status = status;
             unitOfWork.SubTasks.Edit(subTask);
         }
+        public void EditPriority(int ID, Priority priority)
+        {
+            Activity task = unitOfWork.Tasks.GetById(ID);
+            task.Priority = priority;
+            unitOfWork.Tasks.Edit(task);
+        }
+
+
+
 
         [HttpGet]
         public IActionResult displaySubTasks(int taskID)
@@ -63,7 +107,6 @@ namespace ITI.CEI40.Monitor.Controllers
                 SubTasks = unitOfWork.SubTasks.GetSubTasksByTaskId(taskID),
             };
             return PartialView("_SubTaskDisplayPartial", taskVM);
-
         }
 
         [HttpGet]
