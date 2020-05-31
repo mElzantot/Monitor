@@ -338,3 +338,15 @@ ASALocalRun/
 
 # BeatPulse healthcheck temp database
 healthchecksdb
+/ITI.CEI40.Monitor/Migrations/20200528181700_updateProject.Designer.cs
+/ITI.CEI40.Monitor/Migrations/20200528181700_updateProject.cs
+/ITI.CEI40.Monitor/Migrations/20200527174021_EmpSessionRel.Designer.cs
+/ITI.CEI40.Monitor/Migrations/20200527174021_EmpSessionRel.cs
+/ITI.CEI40.Monitor/Migrations/20200527011221_updateProjectDb2.Designer.cs
+/ITI.CEI40.Monitor/Migrations/20200527011221_updateProjectDb2.cs
+/ITI.CEI40.Monitor/Migrations/20200527010756_updateProjectDb.Designer.cs
+/ITI.CEI40.Monitor/Migrations/20200527010756_updateProjectDb.cs
+/ITI.CEI40.Monitor/Migrations/20200526230504_addTaskDurarion.Designer.cs
+/ITI.CEI40.Monitor/Migrations/20200526230504_addTaskDurarion.cs
+/ITI.CEI40.Monitor/Migrations/20200526225557_projectupdates.Designer.cs
+/ITI.CEI40.Monitor/Migrations/20200526225557_projectupdates.cs
