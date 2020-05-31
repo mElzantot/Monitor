@@ -5,7 +5,7 @@
 
 #migration FolderMigrations/
 
-
+**/migrations/*
 
 # User-specific files
 *.rsuser
