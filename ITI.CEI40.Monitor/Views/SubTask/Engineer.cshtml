@@ -22,7 +22,7 @@
                                 <th>Name</th>
                                 <th>Project</th>
                                 <th width="26%">Status</th>
-                                <th >Remaining Time</th>
+                                <th class="remaining">Remaining Time</th>
                                 <th>Progress</th>
                             </tr>
                         </thead>
@@ -52,11 +52,11 @@
 
                                         if (remaining > 0)
                                         {
-                                            <td>@remaining day</td>
+                                            <td class="remaining">@remaining day</td>
                                         }
                                         else
                                         {
-                                            <td class="text-danger">Time Ended</td>
+                                            <td class="text-danger remaining">Time Ended</td>
                                         }
                                     }
 
@@ -219,6 +219,7 @@
                 success: function (response) {
                     $('#rightSec').replaceWith(response)
                     $('#leftSec').removeClass('col-12')
+                    $('.remaining').hide();
                     $('#leftSec').addClass('col-7')
                 },
                 error: function (x, y, err) {
