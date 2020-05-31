@@ -1,8 +1,6 @@
 ﻿@model EmployeeViewModel
 @{
     ViewData["Title"] = "View Employees";
-    string roleName = "Name";
-
 }
 
 <h1>View Employees</h1>
@@ -11,14 +9,13 @@
 <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#addEmployeeModal">
     Add Employee
 </button>
-
 <div style="text-align:center">
     <table class="table table-striped">
         <thead>
             <tr>
                 <th scope="col">Name</th>
                 <th scope="col">E-Mail</th>
-                <th scope="col">Salary</th>
+                <th scope="col">Salary "LE" </th>
                 <th scope="col">Evaluation</th>
                 <th scope="col"></th>
             </tr>
@@ -29,13 +26,14 @@
             {
                 <tr id="@Model.Employees[i].Id">
                     <td>@Model.Employees[i].UserName</td>
-                    <td>@Model.Employees[i].Email</td>
-                    <td>@Model.Employees[i].SalaryRate</td>
+                    <td class="email">@Model.Employees[i].Email</td>
+                    <td class="salary">@(Model.Employees[i].SalaryRate * 30 * 8)</td>
                     <td>@Model.Employees[i].TotalEvaluation</td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Basic example">
-                            @*<a class="btn btn-outline-primary" asp-controller="Employee" asp-action="ViewEmployees" asp-route-id="@Model.Employees[i].Id"><i class="fas fa-users"></i></a>*@
-                            <button type="button" class="btn btn-danger" onclick="deleteTeam(@Model.Employees[i].Id)"><i class="far fa-trash-alt"></i></button>
+                            <button type="button" class="btn btn-info btn-sm" onclick='UpdateEmpRoles("@Model.Employees[i].Id")'>Employee Roles</button>
+                            <button type="button" class="btn btn-light btn-sm" onclick='EditEmployeeInfo("@Model.Employees[i].Id")'>Edit Employee</button>
+                            <button type="button" class="btn btn-danger" onclick='deleteTeam("@Model.Employees[i].Id")'><i class="far fa-trash-alt"></i></button>
                         </div>
                     </td>
                 </tr>
@@ -43,7 +41,6 @@
         </tbody>
     </table>
 </div>
-
 
 
 
@@ -72,9 +69,9 @@
                         <span asp-validation-for="Email" class="text-danger"></span>
                     </div>
                     <div class="form-group">
-                        <label asp-for="role"></label>
-                        <select asp-for="role" asp-items="new SelectList(Model.Roles,roleName,roleName)" class="form-control"></select>
-                        <span asp-validation-for="role" class="text-danger"></span>
+                        <label asp-for="Salary"></label>
+                        <input asp-for="Salary" class="form-control" type="number" />
+                        <span asp-validation-for="Salary" class="text-danger"></span>
                     </div>
                     <br />
                     <div class="form-group">
@@ -97,6 +94,46 @@
     </div>
 </div>
 
+<!-- Edit Employee Info -->
+<div class="modal fade" id="EditEmployeeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" data-ajax-url="/Employee/EditEmployee" data-ajax="true" data-ajax-method="Post"
+                  data-ajax-success="SuccessEdit" data-ajax-complete="EditEmployee" id="EditEmployeeForm">
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- Edit Roles -->
+<div class="modal fade  " id="EditRolesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <form method="post" data-ajax-url="/Employee/EditEmployeeRoles" data-ajax="true" data-ajax-method="Post" data-ajax-complete="EditRoles"
+                  id="RolesForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Employee Roles</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body mt-0 pt-0" id="RolesModalBody">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                    <button type="reset" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
 @section scripts{
     <partial name="_ValidationScriptsPartial" />
     <script src="~/lib/jquery-validation-unobtrusive-ajax/dist/jquery.unobtrusive-ajax.js"></script>
@@ -113,6 +150,105 @@
                 document.getElementById("EmployeeForm").reset();
             }
         }
+
+        //-------Edit Roles----//
+
+        function UpdateEmpRoles(id) {
+            $.ajax({
+                url: "/Employee/EditEmployeeRoles/" + id,
+                type: "GET",
+                //dataType: "json",
+                success: function (result, status) {
+                    $("#RolesModalBody").append(result);
+                    $('#EditRolesModal').modal('show');
+                }
+            });
+        }
+
+        function EditRoles(result, status) {
+            if (status == "success") {
+                $('#EditRolesModal').modal('hide');
+                document.getElementById("RolesForm").reset();
+                alert("Employee Roles Updated Successfully");
+            }
+            else {
+                $('#EditRolesModal').modal('hide');
+                alert("Error While Updating Roles");
+                document.getElementById("RolesForm").reset();
+            }
+        }
+
+        $('#EditRolesModal').on('hidden.bs.modal', function (e) {
+            console.log(e);
+            $("#RolesModalBody").empty();
+        })
+
+        //-----------------------------------------//
+
+
+        //-------------Edit Employee---------------//
+
+        function EditEmployeeInfo(id) {
+            $.ajax({
+                url: "/Employee/EditEmployee/" + id,
+                type: "GET",
+                success: function (result, status) {
+                    if (status == "success") {
+                        $("#EditEmployeeForm").prepend(result);
+                        $('#EditEmployeeForm').attr("data-ajax-update", id);
+                        $('#EditEmployeeModal').modal('show');
+                    }
+                }
+            });
+        }
+
+
+        $('#EditEmployeeModal').on('hidden.bs.modal', function (e) {
+            $("#EditEmployeeForm").empty();
+        })
+
+
+        //----------Get Teams after Selecting Department
+        function getTeams() {
+            var DepId = $("#DepartmentId").val();
+            console.log(DepId);
+            $.ajax({
+                url: "/Employee/GetTeamsforEdit/" + DepId,
+                type: "GET",
+                success: function (result, status) {
+                    if (result && status == "success") {
+                        console.log(result);
+                        $("#teams").empty();
+                        $("#teams").append("<option value='0'>Select Team</option>");
+                        for (var i = 0; i < result.length; i++) {
+                            $("#teams").append(`<option value='${result[i].id}'>${result[i].name}</option>`);
+                        }
+                    }
+                }
+            })
+        }
+
+        function EditEmployee() {
+            $('#EditEmployeeModal').modal('hide');
+            alert("Updated Successfully !");
+        }
+
+        function SuccessEdit(result, status) {
+            console.log("Hi")
+            console.log(result);
+            if (result && status == "success") {
+                console.log(result);
+                if (result.teamId == 0) {
+                    $(`#${result.empId} .email`).html(result.eMail);
+                    $(`#${result.empId} .salary`).html(result.salary);
+                }
+                else {
+                    $(`#${result.empId}`).remove();
+                }
+            }
+
+        }
+
 
     </script>
 }

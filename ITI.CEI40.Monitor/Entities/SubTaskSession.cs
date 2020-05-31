@@ -20,6 +20,12 @@ namespace ITI.CEI40.Monitor.Entities
         [ForeignKey("SubTask")]
         public int FK_SubTaskID { get; set; }
 
+        public ApplicationUser Employee { get; set; }
+        [ForeignKey("Employee")]
+        [Required]
+        public string EmpId { get; set; }
+
+
         [DataType(DataType.DateTime)]
         [Column("Start Date")]
         [Display(Name = "Start Date")]

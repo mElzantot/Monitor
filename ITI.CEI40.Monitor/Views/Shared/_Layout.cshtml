@@ -4,6 +4,8 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - ITI.CEI40.Monitor</title>
+
+
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     </environment>
@@ -18,7 +20,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css" />
     <link rel="stylesheet" href="~/css/style.css" />
+
     @RenderSection("Style", required: false)
+
 </head>
 <body>
     <header>
@@ -36,6 +40,7 @@
                         <a class="nav-link px-3 py-3 " asp-area="" asp-controller="Home" asp-action="Index"><i id="i" class="fas fa-home"></i> Home</a>
                     </li>
 
+
                     <li class="nav-item">
                         <a class="nav-link px-3 py-3  " asp-controller="Project" asp-action="Index"><i id="i" class="fas fa-tasks"></i> projects</a>
                     </li>
@@ -43,9 +48,11 @@
                     <li class="nav-item">
                         <a class="nav-link px-3 py-3  " asp-controller="SubTask" asp-action="Index"><i id="i" class="fas fa-id-badge"></i> Engineer</a>
                     </li>
+
                     <li class="nav-item">
                         <a class="nav-link px-3 py-3  " asp-controller="" asp-action=""><i id="i" class="fas fa-chart-area"></i>  Charts</a>
                     </li>
+
                     <li class="nav-item">
                         <a class="nav-link px-3 py-3  " asp-controller="Department" asp-action="ViewDepartments"><i id="i" class="fas fa-chart-area"></i> Admin</a>
                     </li>
@@ -54,7 +61,7 @@
                            aria-haspopup="true" aria-expanded="false"><i id="i" class="fas fa-tasks"></i> Projects <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" asp-controller="Project" asp-action="Index">Active</a></li>
-                            <li><a class="dropdown-item" asp-controller="Project" asp-action="Index">Completed</a></li>
+                            <li><a class="dropdown-item" asp-controller="Project" asp-action="CompletedProjects">Completed</a></li>
                             <li><a class="dropdown-item" asp-controller="Project" asp-action="Index">Canceled</a></li>
                         </ul>
                     </li>

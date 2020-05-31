@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
 using ITI.CEI40.Monitor.Models.View_Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITI.CEI40.Monitor.Controllers
@@ -12,10 +13,12 @@ namespace ITI.CEI40.Monitor.Controllers
     public class TeamController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly UserManager<ApplicationUser> userManager;
 
-        public TeamController(IUnitOfWork unitOfWork)
+        public TeamController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
         {
             this.unitOfWork = unitOfWork;
+            this.userManager = userManager;
         }
 
         [HttpGet]

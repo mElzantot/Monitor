@@ -27,16 +27,10 @@ namespace ITI.CEI40.Monitor.Models.View_Models
         public float TotalEvaluation { get; set; }
 
         [Required]
-        public float SalaryRate { get; set; }
+        [Range(0, 60000)]
+        public float Salary { get; set; }
 
         public List<ApplicationUser> Employees { get; set; }
-
-        [Required]
-        [Display(Name = "Employee Role")]
-        public string role { get; set; }
-
-        public List<IdentityRole> Roles { get; set; }
-
 
         [Required]
         [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]

@@ -41,6 +41,12 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         }
 
+        public IEnumerable<Department> GetAllDeptWithManagers()
+        {
+            return set.Include(e => e.Manager);
+        }
+
+
 
     }
 }

@@ -107,6 +107,7 @@ namespace ITI.CEI40.Monitor.Controllers
                 SubTasks = unitOfWork.SubTasks.GetSubTasksByTaskId(taskID),
             };
             return PartialView("_SubTaskDisplayPartial", taskVM);
+
         }
 
         [HttpGet]
@@ -119,7 +120,6 @@ namespace ITI.CEI40.Monitor.Controllers
             };
             return PartialView("_SubTaskModal", subTask);
         }
-
 
         [HttpPost]
         public IActionResult AddSubTask(SubTaskViewModel subTask)
@@ -150,8 +150,6 @@ namespace ITI.CEI40.Monitor.Controllers
                 return null;
             }
         }
-
-
 
     }
 }

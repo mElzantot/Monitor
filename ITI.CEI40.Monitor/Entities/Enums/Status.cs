@@ -10,6 +10,6 @@ namespace ITI.CEI40.Monitor.Entities
         Active,
         OnHold,
         Completed,
-        Canceled
+        Cancelled
     }
 }

@@ -12,7 +12,7 @@
         <thead>
             <tr>
                 <th scope="col">Name</th>
-                <th scope="col">Number of Teams</th>
+                @*<th scope="col">Number of Teams</th>*@
                 <th scope="col">Department Manager</th>
                 <th scope="col"></th>
             </tr>
@@ -22,12 +22,12 @@
             {
                 <tr id="@Model.Departments[i].Id">
                     <td>@Model.Departments[i].Name</td>
-                    <td>@Model.Departments[i].Teams.Count()</td>
-                    <td>@Model.Departments[i].Manager</td>
+                    @*<td>@Model.Departments[i].Teams.Count()</td>*@
+                    <td class="ManagerName">@Model.Departments[i].Manager</td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Basic example">
-                            @*<button type="button" class="btn btn-secondary editDept" onclick="editDepartment(@Model.Departments[i].Id)"><i class="fas fa-edit"></i></button>*@
-                            <a class="btn btn-outline-primary" asp-controller="Team" asp-action="viewTeams" asp-route-id="@Model.Departments[i].Id"><i class="fas fa-users"></i></a>
+                            <a class="btn btn-outline-primary btn-sm" asp-controller="Team" asp-action="viewTeams" asp-route-id="@Model.Departments[i].Id"><i class="fas fa-users"></i></a>
+                            <button type="button" class="btn btn-outline-success " onclick="AssignManager(@Model.Departments[i].Id)"><i class="fas fa-male"></i></button>
                             <button type="button" class="btn btn-danger" onclick="deleteDept(@Model.Departments[i].Id)"><i class="far fa-trash-alt"></i></button>
                         </div>
                     </td>
@@ -66,6 +66,36 @@
 
 
 
+<!-- Assign Manager -->
+<div class="modal fade" id="AssignManagerModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add Team</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="managersList">
+                <div class="form-group">
+                    <label asp-for="Dept.FK_ManagerID"></label>
+                    <select id="managers" class="form-control" asp-for="Dept.FK_ManagerID" 
+                            asp-items="new SelectList(string.Empty,nameof(ApplicationUser.Id),nameof(ApplicationUser.UserName))">
+                    </select>
+                    <span asp-validation-for="Dept.FK_ManagerID" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="AssignManagerBtn">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
 <!-- Add Team Modal -->
 <div class="modal fade" id="addTeamModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -94,9 +124,10 @@
 
 
 @section scripts{
-    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
-    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/lib/jquery-validation-unobtrusive-ajax/dist/jquery.unobtrusive-ajax.js"></script>
     <script>
+        var DepaermentID;
         //-------Add Department
 
         function addDept() {
@@ -106,22 +137,27 @@
         $('#AddDeptBtn').on("click",
             function () {
                 var departmentName = $('#deptName').val();
-                $.post("/Department/addDepartment", { name: departmentName }, function (data, status) {
-                    if (status == "success") {
-                        var tbody = $("#tableBody");
-                        $('#addDeptModel').modal('hide');
-                        tbody.append(data);
-                        alert("Department Added Successfully")
-                    }
-                })
+                if (!departmentName) {
+                    alert("Please Enter Department Name First")
+                }
+                else {
+                    $.post("/Department/addDepartment", { name: departmentName }, function (data, status) {
+                        if (status == "success") {
+                            console.log(data);
+                            var tbody = $("#tableBody");
+                            $('#addDeptModel').modal('hide');
+                            tbody.empty();
+                            tbody.append(data);
+                            alert("Department Added Successfully")
+                        }
+                    });
+                }
             });
 
         //-------Reset Modal When Closed
         $('#addDeptModel').on('hidden.bs.modal', function (e) {
             $('#deptName').val("");
         })
-
-
         //--------Delete Department
 
         function deleteDept(deptid) {
@@ -163,6 +199,48 @@
         }
 
 
+        //-------Assign Dept Manager
+        function AssignManager(id) {
+            DepaermentID = id;
+            $.ajax({
+                url: "/Employee/AssignManager",
+                type: "GET",
+                data: { role: "Department Manager" },
+                success: function (result, status) {
+                    if (result && status == "success") {
+                        $("#managers").empty();
+                        $("#managers").append("<option value='0'>Select Manager</option>");
+                        for (var i = 0; i < result.length; i++) {
+                            $("#managers").append(`<option value='${result[i].id}'>${result[i].userName}</option>`);
+                        }
+                        $('#AssignManagerModal').modal('show');
+                    }
+                }
+            })
+        }
+
+
+        $("#AssignManagerBtn").on('click', function () {
+            console.log("Hello")
+            var EmpID = $("#managers").val();
+            if (EmpID) {
+                $.ajax({
+                    url: "/Employee/AssignManager",
+                    type: "Post",
+                    data: { id: DepaermentID, EmpId: EmpID, IsDept: true },
+                    success: function (result, status) {
+                        if (result && status == "success") {
+                            console.log(result);
+                            $("#managers").val("");
+                            $(`#${result.deptId} .ManagerName`).html(`${result.managerName}`);
+                            $('#AssignManagerModal').modal('hide');
+                            setTimeout(function () { alert("Updated Successfully") }, 500);
+                        }
+                    }
+                })
+            }
+        })
 
     </script>
 }
+

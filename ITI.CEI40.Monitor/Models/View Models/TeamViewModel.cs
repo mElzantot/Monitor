@@ -16,6 +16,8 @@ namespace ITI.CEI40.Monitor.Models.View_Models
         [MaxLength(50)]
         public string Name { get; set; }
 
+        public int TeamLeaderId { get; set; }
+
         [Required]
         [Display(Name ="Department")]
         public int FK_DepartmentId { get; set; }

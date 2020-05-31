@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
 using ITI.CEI40.Monitor.Models;
+using ITI.CEI40.Monitor.Models.View_Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITI.CEI40.Monitor.Controllers
@@ -63,6 +64,16 @@ namespace ITI.CEI40.Monitor.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (project.Status == Status.Completed)
+                {
+                    project.EndDate = DateTime.Now;
+                    var projectTasks =  unitofwork.Tasks.GetAllTaskWithProject(project.ID);
+                    foreach(var task in projectTasks)
+                    {
+                        project.WorkingHrs += task.ActualDuration;
+                    }
+                }
+
                 unitofwork.Projects.Edit(project);
                 return Json(project);
             }
@@ -73,11 +84,26 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [HttpGet]
+        public IActionResult CompletedProjects()
+        {
+            //--------Start Date will be the start date of first task of project
+            var compProjects = unitofwork.Projects.GetCompletedProjects().ToList();
+            List<CompletedProjectsViewModel> CompletedProjectsVM = new List<CompletedProjectsViewModel>();
+            foreach (var item in compProjects)
+            {
+                CompletedProjectsViewModel compProject = new CompletedProjectsViewModel(item);
+                CompletedProjectsVM.Add(compProject);
+            }
+
+            return View(CompletedProjectsVM);
+        }
+
         public IActionResult DisplayProjects()
         {
             var project = unitofwork.Projects.GetAllProjects().ToList();
             return View(project);
         }
+
 
         [HttpGet]
         public IActionResult DashBoard(int projId)
@@ -86,6 +112,13 @@ namespace ITI.CEI40.Monitor.Controllers
             List<Activity> tasks = unitofwork.Tasks.GetActivitiesFromProject(projId).ToList();
             return PartialView("_DashBoardPartial", tasks);
         }
+
+        public IActionResult ProjectDailyReport(int Id)
+        {
+            Project project = unitofwork.Projects.GetProjectForReport(Id);
+            return View(project);
+        }
+
 
 
     }

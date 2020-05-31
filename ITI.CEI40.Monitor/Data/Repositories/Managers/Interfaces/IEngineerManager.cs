@@ -1,4 +1,5 @@
 ﻿using ITI.CEI40.Monitor.Entities;
+using ITI.CEI40.Monitor.Entities.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -27,7 +27,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         public IEnumerable<Project> GetCancelledProjects( )
         {
-            return set.Where(pr => pr.Status == Status.Canceled);
+            return set.Where(pr => pr.Status == Status.Cancelled);
         }
 
         
@@ -43,9 +43,18 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         }
         public IEnumerable<Project> GetRunningProjects()
         {
-            return set.Where(pr => pr.Status != Status.Canceled && pr.Status != Status.Completed);
+            return set.Where(pr => pr.Status != Status.Cancelled && pr.Status != Status.Completed);
         }
 
+        public IEnumerable<Project> GetAllProjects()
+        {
+            return set.Include(p => p.Tasks).ToList();
+        }
+
+        public Project GetProjectForReport(int Projid)
+        {
+            return set.Where(pr => pr.ID == Projid).Include(pr => pr.ProjectManager).Include(pr => pr.Tasks).FirstOrDefault();
+        }
 
 
     }
