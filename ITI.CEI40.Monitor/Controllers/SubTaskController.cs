@@ -74,9 +74,9 @@ namespace ITI.CEI40.Monitor.Controllers
                 task.ActualDuratin += subTask.ActualDuration;
                 task = unitOfWork.Tasks.Edit(task);
                 Project project = unitOfWork.Projects.GetById(task.FK_ProjectId);
-                project.ActualDuration += task.ActualDuratin-LastTaskDuaration;
+                project.ActualDuration += task.ActualDuratin - LastTaskDuaration;
                 unitOfWork.Projects.Edit(project);
-                
+
             }
             subTask = unitOfWork.SubTasks.Edit(subTask);
         }
