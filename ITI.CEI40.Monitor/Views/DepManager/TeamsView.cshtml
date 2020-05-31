@@ -3,63 +3,48 @@
     ViewData["Title"] = "TeamsView";
 }
 
-<h1>TeamsView</h1>
-
-
 
 <div class="container ">
     <div class="row">
         <h3 class="text-muted m-3">Teams</h3>
     </div>
-    <div class="row ">
-        <div class="col-6  ">
-            <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
+    <div class="row " style="border: 2px solid rgb(219, 219, 219) ; border-radius: 8px;">
+        <div class="col-3 innerleft " style="border-right:2px solid rgb(219, 219, 219);">
+            <div style=" padding: 15px; border-radius: 8px;">
                 <table class="table table-hover" id="teamTable">
 
-                    <thead class="tableh">
+                    <thead class="table-hover">
                         <tr>
-                            <th scope="col">Team Name</th>
-                            <th scope="col">Team Leader</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Leader</th>
                         </tr>
                     </thead>
                     <tbody>
                         @for (int i = 0; i < Model.Count(); i++)
                         {
 
-                        <tr id="@Model[i].Id" onclick="displayTasks(@Model[i].Id)">
-                            <td>@Model[i].Name</td>
-                            @if (Model[i].TeamLeader != null)
-                            {
-                                <td>@Model[i].TeamLeader.UserName</td>
-                            }
-                            <td><button class="btn btn-info" onclick='displayCharts("@Model[i].Id")'>Charts</button></td>
-                        </tr>
+                            <tr id="@Model[i].Id" onclick="displayTasks(@Model[i].Id)">
+                                <td>@Model[i].Name</td>
+                                @if (Model[i].TeamLeader != null)
+                                {
+                                    <td>@Model[i].TeamLeader.UserName</td>
+                                }
+                                @*<td><button class="btn btn-info" onclick='displayCharts("@Model[i].Id")'>Charts</button></td>*@
+                            </tr>
                         }
                     </tbody>
                 </table>
             </div>
         </div>
-        <div class="col-6  ">
-            <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
-                <div class="righthead">
-                    <h5 calss="col-lg-12 ">Team Tasks</h5>
-                    <div id="barchart_values" style="width: 300px; height: 100px;"></div>
-
-                </div>
+        
+        <div class="col-9 innerright " >
+            <div  padding: 15px; border-radius: 8px;">               
                 <hr />
-                <div class="row" id="tasks">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Project</th>
-                                <th>Priority</th>
-                                <th>Progress</th>
-                                <th>Duration</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tableBody"></tbody>
-                    </table>
+                <div class="row" id="tasks" style="margin:auto">
+                    <div id="alertdiv" class="alert alert-info" style=" margin:auto; text-align: center;">Click on Teams to Show Data</div>
+                    <div id="tableBody" class="table table-hover">
+
+                    </div>
 
                 </div>
             </div>
@@ -67,81 +52,94 @@
     </div>
 </div>
 
+<button type="button" id="togleBtn" class="btn btn-primary d-none" data-toggle="modal" data-target="#exampleModal">
+    Launch demo modal
+</button>
 
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Write a reason for Holding</h5>
+
+            </div>
+            <div class="modal-body">
+                Reason:
+                <br />
+                <input id="reason" type="text" class="form-control" />
+            </div>
+            <div class="modal-footer">
+                <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
+                <button id="send" type="button" class="btn btn-primary">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 @section scripts{
 
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+
     <script>
-        google.charts.load('current', { 'packages': ['corechart'] });
-        //google.charts.setOnLoadCallback(drawChart);       
-        var ns = [];
-        var ps = [];
-        var flag = true;
-        function drawChart() {
-            var data = new google.visualization.DataTable();
-            data.addColumn('string', 'Name');
-            data.addColumn('number', 'Progress');        
-            data.addRows([
-                [`${ns[0]}`, parseInt(ps[0])], 
-            ]);
+        function EditPriority(id, value) {
 
-            for (let j = 1; j < ns.length; j++) {
-                data.addRows([
-                    [`${ns[j]}`, parseInt(ps[j])],
-                ]);
-            }
-
-            var options = {
-                title: "Tasks in progress",
-                width: 200,
-                height: 150,
-                bar: { groupWidth: "70%"},
-                legend: { position: "none" },
-            };
-            var chart = new google.visualization.BarChart(document.getElementById("barchart_values"));
-            chart.draw(data, options);
-        }
-
-        function displayCharts(id) {
             $.ajax({
-                url: "/DepManager/displayCharts",
-                type: "Get",
-                data: { teamId: id },
-                success: function (result) {
-                    if (flag) {
-                        $('#barchart_values').empty();
-                        $('#barchart_values').append(result);
-                        var names = $('.taskname')
-                        var progress = $('.taskprog')
-                        for (var i = 0; i < names.length; i++) {
-                            //console.log(names[i].defaultValue)
-                            ns.push(names[i].defaultValue)
-                        }
-                        for (var i = 0; i < progress.length; i++) {
-                            //console.log(progress[i].defaultValue)
-                            ps.push(progress[i].defaultValue)
-                        }                                                
-                        drawChart();
-                        
-                        flag = false;
+                type: "GET",
+                url: `/Subtask/EditPriority`,
+                data: {
+                    ID: id,
+                    priority: value
+                },
+                success: function () {
 
-                    }
+                },
+                error: function (x, y, err) {
+                    console.log(arguments)
                 }
             })
         }
+
+        //function displayCharts(id) {
+        //    $.ajax({
+        //        url: "/DepManager/displayCharts",
+        //        type: "Get",
+        //        data: { teamId: id },
+        //        success: function (result) {
+        //            if (flag) {
+        //                $('#barchart_values').empty();
+        //                $('#barchart_values').append(result);
+        //                var names = $('.taskname')
+        //                var progress = $('.taskprog')
+        //                for (var i = 0; i < names.length; i++) {
+        //                    //console.log(names[i].defaultValue)
+        //                    ns.push(names[i].defaultValue)
+        //                }
+        //                for (var i = 0; i < progress.length; i++) {
+        //                    //console.log(progress[i].defaultValue)
+        //                    ps.push(progress[i].defaultValue)
+        //                }
+        //                drawChart();
+
+        //                flag = false;
+
+        //            }
+        //        }
+        //    })
+        //}
 
         function displayTasks(id) {
             $.ajax({
                 url: "/DepManager/displayTasks",
                 type: "Get",
                 data: { teamId: id },
-                success: function (result) {                
-                    if (result) {                                            
+                success: function (result) {
+                    if (result) {
+                        $('#alertdiv').hide();
                         $('#tableBody').empty();
                         $('#tableBody').append(result);
-
                     }
                 }
             })

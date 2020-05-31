@@ -28,8 +28,8 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         public Project GetProjectWithTasks(int projectId)
         {
-            return set.Include(p => p.Task).FirstOrDefault(p=>p.ID==projectId); 
+            return set.Include(p => p.Task).FirstOrDefault(p => p.ID == projectId);
+
         }
-        
     }
 }

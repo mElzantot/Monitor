@@ -81,7 +81,6 @@ namespace ITI.CEI40.Monitor.Controllers
             return View(project);
         }
 
-
         [HttpGet]
         public IActionResult DashBoard(int projId)
         {
@@ -89,5 +88,7 @@ namespace ITI.CEI40.Monitor.Controllers
             List<Activity> tasks = unitofwork.Tasks.GetActivitiesFromProject(projId).ToList();
             return PartialView("_DashBoardPartial", tasks);
         }
+
+
     }
 }

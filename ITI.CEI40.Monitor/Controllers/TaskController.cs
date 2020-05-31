@@ -22,6 +22,19 @@ namespace ITI.CEI40.Monitor.Controllers
             var tasks = unitOfWork.Tasks.GetTasksByTeamID(teamID);
             ViewBag.TeamId = teamID;
             return View(tasks);
-        }       
+        }
+
+
+
+        
+
+        
+
+        [HttpGet]
+        public IActionResult Dashboard(int taskId)
+        {
+            var subtask = unitOfWork.SubTasks.GetSubTasksFromTask(taskId);
+            return View("Dashboard", subtask);
+        }
     }
 }

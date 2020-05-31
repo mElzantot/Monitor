@@ -34,7 +34,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         public IEnumerable<Activity> GetAllTaskWithTheirProject(int teamId)
         {
-            return set.Where(t => t.FK_TeamId == teamId).Include(t => t.Project).ToList();
+            return set.Where(t => t.FK_TeamId == teamId).Include(t => t.Project).Include(t=>t.Team).ToList();
         }
 
 
