@@ -14,6 +14,7 @@ using ITI.CEI40.Monitor.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ITI.CEI40.Monitor.Entities;
+using Microsoft.AspNetCore.Internal;
 
 namespace ITI.CEI40.Monitor
 {
@@ -63,7 +64,7 @@ namespace ITI.CEI40.Monitor
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env,RoleManager<IdentityRole> roleManager)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, RoleManager<IdentityRole> roleManager)
         {
             if (env.IsDevelopment())
             {
@@ -89,6 +90,7 @@ namespace ITI.CEI40.Monitor
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
         }
     }
 }
