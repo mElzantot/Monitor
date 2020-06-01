@@ -10,11 +10,12 @@
         }
         else
         {
-        <td>@Model[i].Manager.UserName</td>
+            <td>@Model[i].Manager.UserName</td>
         }
         <td>
             <div class="btn-group" role="group" aria-label="Basic example">
                 <a class="btn btn-outline-primary" asp-controller="Department" asp-action="viewTeams" asp-route-id="@Model[i].Id"><i class="fas fa-users"></i></a>
+                <button type="button" class="btn btn-outline-success " onclick="AssignManager(@Model[i].Id)"><i class="fas fa-male"></i></button>
                 <button type="button" class="btn btn-danger" onclick="deleteDept(@Model[i].Id)"><i class="far fa-trash-alt"></i></button>
             </div>
         </td>

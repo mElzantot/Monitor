@@ -12,7 +12,7 @@ namespace ITI.CEI40.Monitor.Entities
     {
         public Activity()
         {
-            this.ActualDuratin = 0;
+            this.ActualDuratoin = 0;
         }
         [Key]
         public int Id { get; set; }
@@ -50,7 +50,7 @@ namespace ITI.CEI40.Monitor.Entities
         public DateTime EndDate { get; set; }
 
         public int Progress { get; set; }
-        public int ActualDuratin { get; set; }
+        public int ActualDuratoin { get; set; }
 
         public Status Status { get; set; }
         public Priority Priority { get; set; }

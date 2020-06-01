@@ -36,7 +36,7 @@
             <td>@Model[i].StartDate.Date.ToShortDateString()</td>
             <td>@Model[i].EndDate.Date.ToShortDateString()</td>
             <td style="width:30%"><select asp-for="@Model[i].Priority" asp-items="@Html.GetEnumSelectList<Priority>()" class="form-control"></select></td>
-            <td>@Model[i].ActualDuratin Days</td>
+            <td>@Model[i].ActualDuratoin Days</td>
             <td>
                 <div class="btn-group dropleft">
                     <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

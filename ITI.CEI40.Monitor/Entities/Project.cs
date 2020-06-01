@@ -28,7 +28,7 @@ namespace ITI.CEI40.Monitor.Entities
 
         [ForeignKey("ProjectManager")]
         public string FK_Manager { get; set; }
-        public ApplicationUser Manager { get; set; }
+        public ApplicationUser ProjectManager { get; set; }
 
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
@@ -37,13 +37,8 @@ namespace ITI.CEI40.Monitor.Entities
         public string Owner { get; set; }
 
 
-        [MaxLength(30)]
-        public string Owner { get; set; }
-
-
-
-        public float Income { get; set; }      //--Invoices
-        public float Outcome { get; set; }     //---Actual
+        public float Income { get; set; }    
+        public float Outcome { get; set; }     
 
         public float Progress { get; set; }
         public Status? Status { get; set; }
@@ -60,8 +55,10 @@ namespace ITI.CEI40.Monitor.Entities
         [NotMapped]
         public int ActualDuration { get; set; }
 
+        public int WorkingHrs { get; set; }
 
-        public ICollection<Activity> Task { get; set; }
+
+        public ICollection<Activity> Tasks { get; set; }
 
         public ICollection<DepartmentProjects> DepartmentProjects { get; set; }
 

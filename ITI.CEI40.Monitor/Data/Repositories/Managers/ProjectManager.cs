@@ -33,12 +33,12 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         
         public IEnumerable<Project> GetAllProjects()
         {
-            return set.Include(p => p.Status).Include(p => p.Task);
+            return set.Include(p => p.Status).Include(p => p.Tasks);
         }
 
         public Project GetProjectWithTasks(int projectId)
         {
-            return set.Include(p => p.Task).FirstOrDefault(p => p.ID == projectId);
+            return set.Include(p => p.Tasks).FirstOrDefault(p => p.ID == projectId);
 
         }
         public IEnumerable<Project> GetRunningProjects()
@@ -46,10 +46,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Where(pr => pr.Status != Status.Cancelled && pr.Status != Status.Completed);
         }
 
-        public IEnumerable<Project> GetAllProjects()
-        {
-            return set.Include(p => p.Tasks).ToList();
-        }
+
 
         public Project GetProjectForReport(int Projid)
         {

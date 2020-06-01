@@ -7,14 +7,14 @@
     {
         <input class="staskname" id="n-@i" value="@Model[i].Name" hidden="hidden" />
         <input class="staskprog" id="p-@i" value="@Model[i].Progress" hidden="hidden" />
-        <input class="staskdur" id="d-@i" value="@(Model[i].ActualDuratin)" hidden="hidden" />
+        <input class="staskdur" id="d-@i" value="@(Model[i].ActualDuratoin)" hidden="hidden" />
     }
 
     @{
         List<Activity> behind = new List<Activity>();
         foreach (var item in Model)
         {
-            if (item.ActualDuratin > (item.EndDate - item.StartDate).TotalDays)
+            if (item.ActualDuratoin > (item.EndDate - item.StartDate).TotalDays)
             {
                 behind.Add(item);
             }

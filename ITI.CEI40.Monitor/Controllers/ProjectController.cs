@@ -59,29 +59,29 @@ namespace ITI.CEI40.Monitor.Controllers
             }
         }
 
-        [HttpPost]
-        public JsonResult Edit(Project project)
-        {
-            if (ModelState.IsValid)
-            {
-                if (project.Status == Status.Completed)
-                {
-                    project.EndDate = DateTime.Now;
-                    var projectTasks =  unitofwork.Tasks.GetAllTaskWithProject(project.ID);
-                    foreach(var task in projectTasks)
-                    {
-                        project.WorkingHrs += task.ActualDuration;
-                    }
-                }
+        //[HttpPost]
+        //public JsonResult Edit(Project project)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        if (project.Status == Status.Completed)
+        //        {
+        //            project.EndDate = DateTime.Now;
+        //            var projectTasks = unitofwork.Tasks.GetAllTaskWithProject(project.ID);
+        //            foreach (var task in projectTasks)
+        //            {
+        //                project.WorkingHrs += task.ActualDuration;
+        //            }
+        //        }
 
-                unitofwork.Projects.Edit(project);
-                return Json(project);
-            }
-            else
-            {
-                return Json(project);
-            }
-        }
+        //        unitofwork.Projects.Edit(project);
+        //        return Json(project);
+        //    }
+        //    else
+        //    {
+        //        return Json(project);
+        //    }
+        //}
 
         [HttpGet]
         public IActionResult CompletedProjects()
