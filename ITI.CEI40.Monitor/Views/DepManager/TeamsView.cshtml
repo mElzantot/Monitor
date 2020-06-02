@@ -4,15 +4,13 @@
 }
 
 
-<div class="container ">
+<div>
     <div class="row">
         <h3 class="text-muted m-3">Teams</h3>
     </div>
     <div class="row " style="border: 2px solid rgb(219, 219, 219) ; border-radius: 8px;">
-        <div class="col-3 innerleft " style="border-right:2px solid rgb(219, 219, 219);">
-            <div style=" padding: 15px; border-radius: 8px;">
-                <table class="table table-hover" id="teamTable">
-
+        <div class="col-3 innerleft pt-4 " style="border-right:2px solid rgb(219, 219, 219);">
+                <table class="table table-hover text-center " id="teamTable">
                     <thead class="table-hover">
                         <tr>
                             <th scope="col">Name</th>
@@ -29,24 +27,24 @@
                                 {
                                     <td>@Model[i].TeamLeader.UserName</td>
                                 }
-                               <td></td>
+                                else
+                                {
+                                    <td></td>
+                                }
                                 @*<td><button class="btn btn-info" onclick='displayCharts("@Model[i].Id")'>Charts</button></td>*@
                             </tr>
                         }
                     </tbody>
                 </table>
-            </div>
         </div>
         
         <div class="col-9 innerright " >
-            <div  padding: 15px; border-radius: 8px;">               
-                <hr />
+            <div  padding: 15px; border-radius: 8px;" class="mt-4">               
+                
                 <div class="row" id="tasks" style="margin:auto">
-                    <div id="alertdiv" class="alert alert-info" style=" margin:auto; text-align: center;">Click on Teams to Show Data</div>
+                    <h4 id="alertdiv" class="text-muted text-center mt-4" style= "margin:auto;">Select Team to Show Data</h4>
                     <div id="tableBody" class="table table-hover">
-
                     </div>
-
                 </div>
             </div>
         </div>
