@@ -78,7 +78,7 @@ else
                                             </select>
 
                                         </td>*@
-                                    <td id="chId" class="change"><button onclick="viewModal(@item.Id)" class="btn btn-secondary" type="submit">Assign</button></td>
+                                    <td id="chId"><button onclick="viewModal(@item.Id)" class="btn btn-secondary" type="submit">Assign</button></td>
                                 }
                                 else
                                 {
@@ -125,6 +125,7 @@ else
 @section Scripts{
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    
 
 
     <script>
@@ -150,8 +151,10 @@ else
 
                 success: function (result) {
                     alert('Task assigned Successfully !');
-                    $('#chId.change').empty();
-                    $('#chId.change').append(result.teamName);
+                    //$(`ch-${result.taskid}`).empty();
+                    //$(`ch-${result.taskid}`).append(result.teamName);
+                    $('#chId').empty();
+                    $('#chId').append(result.teamName);
                     $('#AssignTeamModal').modal('hide');
                 },
                 error: function (x, y, err) {

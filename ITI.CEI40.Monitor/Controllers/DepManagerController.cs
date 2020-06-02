@@ -58,7 +58,7 @@ namespace ITI.CEI40.Monitor.Controllers
                 task.FK_TeamId = teamId;
                 var team = unitofwork.Teams.GetById(teamId);
                 unitofwork.Complete();
-                return Json(new { teamName=team.Name });
+                return Json(new { teamName=team.Name});
             }
             return Json(new {  });
         }
