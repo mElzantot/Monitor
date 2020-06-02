@@ -35,9 +35,11 @@ namespace ITI.CEI40.Monitor.Migrations
                         .HasColumnName("End Date")
                         .HasColumnType("Date");
 
+                    b.Property<int?>("FK_DepID");
+
                     b.Property<int>("FK_ProjectId");
 
-                    b.Property<int>("FK_TeamId");
+                    b.Property<int?>("FK_TeamId");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -54,6 +56,8 @@ namespace ITI.CEI40.Monitor.Migrations
                     b.Property<int>("Status");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("FK_DepID");
 
                     b.HasIndex("FK_ProjectId");
 
@@ -450,6 +454,11 @@ namespace ITI.CEI40.Monitor.Migrations
 
             modelBuilder.Entity("ITI.CEI40.Monitor.Entities.Activity", b =>
                 {
+                    b.HasOne("ITI.CEI40.Monitor.Entities.Department", "Department")
+                        .WithMany("Activities")
+                        .HasForeignKey("FK_DepID")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("ITI.CEI40.Monitor.Entities.Project", "Project")
                         .WithMany("Task")
                         .HasForeignKey("FK_ProjectId")
