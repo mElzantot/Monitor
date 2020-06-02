@@ -40,6 +40,12 @@ namespace ITI.CEI40.Monitor.Entities
         public float Income { get; set; }    
         public float Outcome { get; set; }     
 
+
+        public ICollection<Invoice> Invoices { get; set; }
+
+        public float Income { get; set; } //Invoices
+        public float Outcome { get; set; } //---Actual
+
         public float Progress { get; set; }
         public Status? Status { get; set; }
         public Priority? Priority { get; set; }
@@ -62,6 +68,6 @@ namespace ITI.CEI40.Monitor.Entities
 
         public ICollection<DepartmentProjects> DepartmentProjects { get; set; }
 
-        public ICollection<Invoices> Invoices { get; set; }
+        
     }
 }

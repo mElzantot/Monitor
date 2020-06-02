@@ -1,0 +1,22 @@
+﻿@model InvoiceItem
+
+<div class="row">
+    <table class="table-condensed">
+        <thead>
+            <tr>
+                <td>Qunatity</td>
+                <td>Description</td>
+                <td>Unit Price</td>
+                <td>Total Price</td>
+            </tr>
+        </thead>
+        <tbody id="itemtbody">
+            <tr>
+                <td><input asp-for="@Model.Quantity" type="number" /></td>
+                <td><input asp-for="@Model.Description" class="descripe" type="text" /></td>
+                <td><input asp-for="@Model.UnitPrice" type="number" /></td>
+                <td><input class="totalprice" readonly /></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

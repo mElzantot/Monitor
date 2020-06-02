@@ -1,0 +1,14 @@
+﻿@model Invoice
+
+<tr id="@Model.Id">
+    <td>@Model.Name</td>
+    <td><input asp-for="@Model.Value" value="@Model.Value" class="invoValues" style="border:none;" readonly /></td>
+    <td>@Model.InvoiceDate.Date.ToShortDateString()</td>
+    <td>@Model.PaymentDate.Date.ToShortDateString()</td>
+    <td>
+        <div class="btn-group" role="group" aria-label="Basic example">
+            <button type="button" class="btn btn-outline-primary" onclick="showInvoice(@Model.Id)"><i class="fas fa-info-circle"></i></button>
+            <button type="button" class="btn btn-danger" onclick="deleteInvoice(@Model.Id)"><i class="far fa-trash-alt"></i></button>
+        </div>
+    </td>
+</tr>

@@ -1,0 +1,99 @@
+body{
+    margin: 0;
+    padding: 0;
+    font-size: 100%;
+}
+
+
+table {
+    text-align     : center;
+    /* border-collapse: collapse; */
+}
+
+.tablebody {
+    background-color: #eee;
+}
+
+
+input {
+    border-top-style   : hidden;
+    border-right-style : hidden;
+    border-left-style  : hidden;
+    border-bottom-style: groove;
+    background-color   : transparent;
+    box-sizing         : border-box;
+    width              : 100%;
+}
+
+.no-outline {
+    outline: none;
+    border: 1px;
+}
+
+
+/* split screen */
+
+
+#table {
+    background-color: #dde;
+    width: 90%;
+    height: 100%;
+    min-width: 10px;
+    overflow: auto;
+}
+
+.errprogress{
+    border: 1px solid red;
+}
+
+
+/* modal ?? */
+
+.dep-modal-bg {
+    position        : fixed;
+    width           : 100%;
+    height          : 100hv;
+    top             : 0;
+    left            : 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display         : flex;
+    justify-content : center;
+    align-items     : center;
+    visibility      : hidden;
+    opacity         : 0;
+    transition      : visibility 0s, opacity 0.5s;
+}
+
+.dep-bg-active {
+    visibility: visible;
+    opacity   : 1;
+}
+
+.dep-modal {
+    position: relative;
+    font-family     : 'Montserrat', sans-serif;
+    background-color: white;
+    width           : 30%;
+    height          : 30%;
+    display         : flex;
+    justify-content : space-around;
+    align-items     : center;
+    flex-direction  : column;
+}
+
+.dep-modal button {
+    padding         : 10px 10px;
+    background-color: rgb(9, 72, 80);
+    color           : white;
+    border          : none;
+    font-family     : 'Montserrat', sans-serif;
+    cursor          : pointer;
+}
+.dep-modal span{
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+/*modal ???*/
