@@ -15,6 +15,10 @@
     <Compile Remove="Data\Migrations\20200601032338_DepTaskRel.Designer.cs" />
     <Compile Remove="Data\Migrations\20200601033131_AddRelDepTask.cs" />
     <Compile Remove="Data\Migrations\20200601033131_AddRelDepTask.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200602125422_edit.cs" />
+    <Compile Remove="Data\Migrations\20200602125422_edit.Designer.cs" />
+    <Compile Remove="Data\Migrations\20200602130853_editagain.cs" />
+    <Compile Remove="Data\Migrations\20200602130853_editagain.Designer.cs" />
   </ItemGroup>
 
 

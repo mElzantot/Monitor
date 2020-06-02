@@ -16,7 +16,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         IEnumerable<Activity> GetDepartmentTasks(int depid);
 
-
+ 
     }
 
 }
