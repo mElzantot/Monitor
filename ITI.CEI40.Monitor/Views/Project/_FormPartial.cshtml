@@ -49,7 +49,9 @@
             </div>
 
             <hr />
-            <div class="row">
+
+
+            <div class="row mb-3">
                 <div class="form-group col-lg-6">
                     <label asp-for="@Model.Income">Income</label>
                     @if (Model.Income > 0)
@@ -74,6 +76,8 @@
                     }
                 </div>
             </div>
+
+            
             <button type="submit" class="btn btn-primary">Update</button>
         </form>
     </div>

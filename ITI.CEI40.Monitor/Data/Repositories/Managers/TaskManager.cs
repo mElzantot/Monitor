@@ -43,5 +43,10 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Where(p => p.FK_ProjectId == projId).Include(a => a.Project)
                 .Include(p => p.SubTasks);
         }
+
+        public IEnumerable<Activity> GetDepartmentTasks(int depid)
+        {
+            return set.Where(a => a.FK_DepID == depid).Include(a => a.Team).Include(a=>a.Project).ToList();
+        }
     }
 }

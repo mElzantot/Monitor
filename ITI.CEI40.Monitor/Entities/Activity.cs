@@ -29,7 +29,7 @@ namespace ITI.CEI40.Monitor.Entities
         
         public Team Team { get; set; }
         [ForeignKey(nameof(Team))]
-        public int FK_TeamId { get; set; }
+        public int? FK_TeamId { get; set; }
 
 
         public ICollection<SubTask> SubTasks { get; set; }
@@ -56,6 +56,11 @@ namespace ITI.CEI40.Monitor.Entities
         public Priority Priority { get; set; }
 
         //public ICollection<TeamTasks> TeamTasks { get; set; }
+
+        [ForeignKey(nameof(Department))]
+        public int? FK_DepID { get; set; }
+
+        public Department Department { get; set; }
 
     }
 }
