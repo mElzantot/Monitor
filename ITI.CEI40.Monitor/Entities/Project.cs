@@ -37,10 +37,6 @@ namespace ITI.CEI40.Monitor.Entities
         public string Owner { get; set; }
 
 
-        public float Income { get; set; }    
-        public float Outcome { get; set; }     
-
-
         public ICollection<Invoice> Invoices { get; set; }
 
         public float Income { get; set; } //Invoices

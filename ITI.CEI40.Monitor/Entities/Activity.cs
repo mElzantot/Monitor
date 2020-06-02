@@ -52,7 +52,7 @@ namespace ITI.CEI40.Monitor.Entities
         public DateTime EndDate { get; set; }
 
         //[DataType(DataType.DateTime)]
-        [Column("Estimated Duration")]
+        //[Column("Estimated Duration")]
         [Display(Name = "Estimated Duration")]
         public int EstDuration { get; set; }
 

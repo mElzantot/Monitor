@@ -118,7 +118,6 @@ namespace ITI.CEI40.Monitor.Controllers
                     unitOfWork.Dependency.Delete(oldDep.ActivityToFollowId, oldDep.FollowingActivityId);
                 }
             }
-
             // deleting the deleted activities
             foreach (var actId in reDbId)
             {
