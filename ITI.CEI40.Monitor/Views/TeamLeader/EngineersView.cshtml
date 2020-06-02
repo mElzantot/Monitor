@@ -4,19 +4,16 @@
 }
 
 
-<div class="container ">
-    <div class="row">
+<div>
+    <div >
         <h3 class="text-muted m-3">Engineers</h3>
     </div>
     <div class="row " style="border: 2px solid rgb(219, 219, 219) ; border-radius: 8px;">
-        <div class="col-4  innerleft " style="border-right:2px solid rgb(219, 219, 219);">
-            <div style=" padding: 20px; border-radius: 8px;">
-                <table class="table table-hover" id="teamTable">
+        <div class="col-3  innerleft pt-4" style="border-right:2px solid rgb(219, 219, 219);">
+                <table class="table table-hover text-center" id="teamTable">
                     <thead class="table-hover">
                         <tr>
                             <th scope="col">Name</th>
-                            <th scope="col">Work Load </th>
-                            <th scope="col">Salary Rate </th>
                             <th scope="col">Total Evaluation </th>
                         </tr>
                     </thead>
@@ -26,9 +23,6 @@
                            
                             <tr id="@Model[i].Id" onclick='displaySubTasks("@Model[i].Id")'>
                                 <td>@Model[i].UserName</td>
-
-                                <td>@Model[i].Workload</td>
-                                <td>@Model[i].SalaryRate</td>
                                 <td>@Model[i].TotalEvaluation</td>
                                 @*<td><button class="btn btn-info" onclick='displayCharts("@Model[i].Id")'>Charts</button></td>*@
 
@@ -37,19 +31,14 @@
                         }
                     </tbody>
                 </table>
-            </div>
         </div>
-        <div class="col-8 innerright ">
+        <div class="col-9 innerright ">
             <div style=" padding: 15px; border-radius: 8px;">
-                <hr />
                 <div class="row" style="margin:auto;" id="tasks">
-                    <div id="alertdiv" class="alert alert-info" style=" margin:auto; text-align: center;">Click on Engineers to Show Sub Tasks</div>
-
+                    <h4 id="alertdiv" class="text-muted text-center mt-5" style="margin:auto;">Select Engineer to Show Data</h4>
                     <div id="tableBody" class="table table-hover">
-
                     </div>
                 </div>
-                @*<button onclick="deletesvg()"> delete</button>*@
             </div>
         </div>
     </div>

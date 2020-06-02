@@ -23,10 +23,7 @@ namespace ITI.CEI40.Monitor.Entities
                     role.NormalizedName = item.ToUpper();
                     IdentityResult roleResult = roleManager.CreateAsync(role).Result;
                 }
-
             }
-
         }
-
     }
 }
