@@ -123,7 +123,7 @@ namespace ITI.CEI40.Monitor.Controllers
             {
                 unitOfWork.Tasks.Delete(actId);
             }
-
+            
             return RedirectToAction(nameof(Index),id);
         }
 
