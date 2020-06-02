@@ -1,0 +1,212 @@
+﻿@model ActivityViewModel
+@{
+    ViewData["Title"] = "AssignTasks";
+}
+
+
+@if (Model.Tasks.Count() == 0)
+{
+    <div class="row " style="border: 2px solid rgb(219, 219, 219) ; border-radius: 8px;">
+        <h4>No Tasks Assigned to this Department</h4>
+    </div>
+}
+else
+{
+    <div>
+        <div class="row">
+            <h3 class="text-muted m-3">Tasks</h3>
+        </div>
+        <div class="row " style="border: 2px solid rgb(219, 219, 219) ; border-radius: 8px;">
+            <div class="col-12 " style="border-right:2px solid rgb(219, 219, 219);">
+                <table class="table table-hover" id="teamTable">
+
+                    <thead class="table-hover">
+                        <tr>
+                            <th>Name</th>
+                            <th>Project</th>
+                            <th>Progress</th>
+                            <th>From </th>
+                            <th>To </th>
+                            <th>Priority</th>
+                            <th>Working Hours</th>
+                            <th>Description</th>
+                            <th>Dashboard</th>
+                            <th>Assigned To</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var item in Model.Tasks)
+                        {
+                            <tr id="@item.Id">
+                                <td>@item.Name</td>
+                                <td>@item.Project.Name</td>
+                                <td><div class="progress"><div class="progress-bar" role="progressbar" style="width: @item%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@item.Progress%</div></div></td>
+                                <td>@item.StartDate.Date.ToShortDateString()</td>
+                                <td>@item.EndDate.Date.ToShortDateString()</td>
+                                <td>@item.Priority</td>
+                                <td>@item.ActualDuratin Hours</td>
+                                <td>
+                                    <div class="btn-group dropleft">
+                                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-info"></i>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            @item.Description
+                                            @item.Id
+                                        </div>
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <a asp-action="Dashboard" asp-controller="Task" asp-route-taskid="@item.Id" class="font-weight-bold  alert alert-info ">
+                                        <i class="fas fa-chart-area"></i>
+                                    </a>
+                                </td>
+                                @if (item.FK_TeamId == null)
+                                {
+
+                                    @*<td>
+                                            <select id="teamlist" asp-for="FK_TeamId" asp-items="new SelectList(Model.Teams,nameof(Model.Team.Id),nameof(Model.Team.Name)) ">
+                                                <option value="">--  Select Team  --</option>
+                                            </select>
+
+                                        </td>*@
+                                    <td id="chId" class="change"><button onclick="viewModal(@item.Id)" class="btn btn-secondary" type="submit">Assign</button></td>
+                                }
+                                else
+                                {
+                                    <td>@item.Team.Name</td>
+                                }
+                            </tr>
+                        }
+
+                        @*@for (int i = 0; i < Model.Tasks.Count(); i++)
+                            {
+
+                                <tr id="@Model.Tasks" onclick="getid(this.id)">
+                                    <td>@Model[i].Tasks.Name</td>
+                                    <td>@Model[i].Project.Name</td>
+                                    <td><div class="progress"><div class="progress-bar" role="progressbar" style="width: @Model[i].Progress%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@Model[i].Progress%</div></div></td>
+                                    <td>@Model[i].StartDate.Date.ToShortDateString()</td>
+                                    <td>@Model[i].EndDate.Date.ToShortDateString()</td>
+                                    <td>@Model[i].Priority</td>
+                                    <td>@Model[i].ActualDuratin Hours</td>
+                                    <td>
+                                        <div class="btn-group dropleft">
+                                            <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fas fa-info"></i>
+                                            </button>
+                                            <div class="dropdown-menu">
+                                                @Model[i].Description
+                                            </div>
+                                        </div>
+
+                                    </td>
+
+                                    <td>
+                                        <select asp-for="@Model[i].FK_TeamId" asp-items="new SelectList(Model[i].Team,Model.FirstOrDefault().Team.Id,Model.FirstOrDefault().Team.Name))" class="form-control">
+                                            <option value="">--  Select Department  --</option>
+                                        </select>
+                                    </td>
+
+
+
+                                </tr>
+                            }*/*@
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Assign Team -->
+    <div class="modal fade" id="AssignTeamModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Add Team</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="teamList">
+                    <div class="form-group">
+                        <label asp-for="Team.Name"></label>
+                        <select id="teams" class="form-control" asp-for="Team.Id"
+                                asp-items="new SelectList(Model.Teams,nameof(Team.Id),nameof(Team.Name))"></select>
+                        <span asp-validation-for="Team.Id" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="assignTeams()">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    @* <select asp-for="@Model[i].Priority" asp-items="@Html.GetEnumSelectList<Priority>()" class="form-control"></select>  *@
+}
+@section Scripts{
+
+    <script>
+
+
+        var taskID;
+        function viewModal(id) {
+            taskID = id;
+            $('#AssignTeamModal').modal('show');
+
+        }
+
+        function assignTeams() {
+            var team= $('#teams').val();
+
+            $.post({
+                type: "POST",
+                url: `/DepManager/AssignTasks`,
+                data: {
+                    taskId: taskID,
+                    teamId: team
+                },
+
+                success: function (result) {
+                    alert('Task assigned Successfully !');
+                    $('#chId.change').empty();
+                    $('#chId.change').append(result.teamName);
+                    $('#AssignTeamModal').modal('hide');
+                },
+                error: function (x, y, err) {
+                    console.log(arguments)
+                }
+            })
+        }
+        //function assignTeam(taskid) {
+        //    var responce = alert('Are you sure you want to assign this Task ?');
+        //    if (responce) {
+
+        //        $.post({
+        //            type: "POST",
+        //            url: `/DepManager/AssignTasks`,
+        //            data: {
+        //                taskId: taskid,
+        //                teamId: teamid
+        //            },
+
+        //            success: function (result) {
+        //                alert('Task assigned Successfully !');
+        //                $('#chId.change').empty();
+        //                $('#chId.change').append(result.teamName);
+        //                $('#AssignTeamModal').modal('show');
+        //            },
+        //            error: function (x, y, err) {
+        //                console.log(arguments)
+        //            }
+        //        })
+        //    }
+        //}
+    </script>
+}

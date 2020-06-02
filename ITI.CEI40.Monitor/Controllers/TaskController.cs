@@ -24,12 +24,6 @@ namespace ITI.CEI40.Monitor.Controllers
             return View(tasks);
         }
 
-
-
-        
-
-        
-
         [HttpGet]
         public IActionResult Dashboard(int taskId)
         {

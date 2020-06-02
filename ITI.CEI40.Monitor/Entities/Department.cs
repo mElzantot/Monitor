@@ -25,5 +25,7 @@ namespace ITI.CEI40.Monitor.Entities
 
         public ICollection<DepartmentProjects> DepartmentProjects { get; set; }
 
+        public ICollection<Activity> Activities { get; set; }
+
     }
 }

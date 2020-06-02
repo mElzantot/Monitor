@@ -72,7 +72,10 @@ else
                 </table>
 
             </div>
-            <button class="font-weight-bold  alert alert-info mr-2" onclick="BackToList()">Back To List</button>
+            
+            <a asp-action="TeamsView" asp-controller="DepManager" asp-route-depid="@Model.FirstOrDefault().Task.FK_DepID" class="font-weight-bold  alert alert-info mr-2">
+                Back To List
+            </a>
             <div class="font-weight-bold text-center text-muted alert alert-info">@Model[0].Task.Name</div>
         </div>
 
@@ -246,208 +249,44 @@ else
     </div>
 
 
-    @*<div class="row">
 
-            @for (int i = 0; i < Model.Count; i++)
-            {
-                <input class="staskname" id="n-@i" value="@Model[i].Name" hidden="hidden" />
-                <input class="staskprog" id="p-@i" value="@Model[i].Progress" hidden="hidden" />
-                <input class="staskdur" id="d-@i" value="@(Model[i].ActualDuration)" hidden="hidden" />
-            }
-            <div id="columnchart_values" class="col-4"></div>
+}
 
-            <div class="col-6 row">
-                <div  class="col-4 row">
+@section scripts{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-                    <button class="btn btn-primary my-1" type="button" onclick="btnOne()"  data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample ">
-                        Active Sub Tasks  @Model.Count(t => t.Status == Status.Active)
-                    </button>
-                    <button class="btn btn-warning my-1" type="button" onclick="btnTwo()" data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample">
-                        On Hold Sub Tasks  @Model.Count(t => t.Status == Status.OnHold)
-                    </button>
-                    <button class="btn btn-success my-1" type="button" onclick="btnThree()" data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample">
-                        Completed Sub Tasks  @Model.Count(t => t.Status == Status.Completed)
-                    </button>
-                    <button class="btn btn-danger my-1" type="button" onclick="btnFour()" data-toggle="collapse" aria-expanded="false" aria-controls="collapseExample">
-                        Canceled Sub Tasks  @Model.Count(t => t.Status == Status.Canceled)
-                    </button>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 
-                </div>
-                <div class=" collapse div1 col-8" id="collapseExample1">
-                    <div class="card card-body">
-                        <ul class="list-group">
-                            @if (Model.Count(t => t.Status == Status.Active) == 0)
-                            {
-                                <li class="cla list-group-item d-flex justify-content-between align-items-center">
-                                    No Active Sub Tasks !
-                                </li>
-                            }
-                            else
-                            {
-
-                                for (int i = 0; i < Model.Count(); i++)
-                                {
-                                    if (Model[i].Status == Status.Active)
-                                    {
-
-                                        <li class="cla list-group-item d-flex justify-content-between align-items-center">
-                                            @Model[i].Name
-                                        </li>
-                                    }
-                                }
-
-                            }
+    <script>
 
 
+        //function Dashboard(id) {
+        //    $.ajax({
+        //        type: "GET",
+        //        url: `/Project/DashBoard`,
+        //        data: { projId: id },
+        //        success: function (response) {
+        //            $('#MainView').hide();
+        //            $('#Board').prepend(response);
+        //            LoadData();
 
-                        </ul>
-                    </div>
-                </div>
-                <div class=" collapse div2 col-8" id="collapseExample2">
-                    <div class="card card-body">
-                        <ul class="list-group">
+        //            //$('#Board').show();
+        //        },
+        //        error: function (x, y, err) {
+        //            console.log(arguments)
+        //        }
+        //    })
+        //}
 
-                            @if (Model.Count(t => t.Status == Status.OnHold) == 0)
-                            {
-                            <li class="cla list-group-item d-flex justify-content-between align-items-center">
-                                No On Hold Sub Tasks !
-                            </li>
+        //function BackToList() {
+        //    $('#DashBoard').remove();
+        //    //$('#Board').hide();
+        //    $('#MainView').show();
+        //}
 
-                            }
-                            else
-                            {
-                                for (int i = 0; i < Model.Count(); i++)
-                                {
-                                    if (Model[i].Status == Status.OnHold)
-                                    {
-
-                                        <li class="cla list-group-item d-flex justify-content-between align-items-center">
-                                            @Model[i].Name
-                                        </li>
-                                    }
-                                }
-                            }
-
-
-
-
-                        </ul>
-                    </div>
-                </div>
-                <div class=" collapse div3 col-8" id="collapseExample3">
-                    <div class="card card-body">
-                        <ul class="list-group">
-
-                            @if (Model.Count(t => t.Status == Status.Completed) == 0)
-                            {
-                                <li class="cla list-group-item d-flex justify-content-between align-items-center">
-                                    No Completed Sub Tasks !
-                                </li>
-
-                            }
-                            else
-                            {
-                                for (int i = 0; i < Model.Count(); i++)
-                                {
-                                    if (Model[i].Status == Status.Completed)
-                                    {
-
-                                        <li class="cla list-group-item d-flex justify-content-between align-items-center">
-                                            @Model[i].Name
-                                        </li>
-                                    }
-                                }
-                            }
-
-                        </ul>
-                    </div>
-                </div>
-                <div class="collapse div4 col-8" id="collapseExample4">
-                    <div class="card card-body">
-                        <ul class="list-group">
-
-                            @if (Model.Count(t => t.Status == Status.Canceled) == 0)
-                            {
-                                <li class="cla list-group-item d-flex justify-content-between align-items-center">
-                                    No Canceled Sub Tasks !
-                                </li>
-
-                            }
-                            else
-                            {
-                                for (int i = 0; i < Model.Count(); i++)
-                                {
-                                    if (Model[i].Status == Status.Canceled)
-                                    {
-
-                                        <li class="cla list-group-item d-flex justify-content-between align-items-center">
-                                            @Model[i].Name
-                                        </li>
-                                    }
-                                }
-                            }
-
-                        </ul>
-                    </div>
-                </div>
-
-
-            </div>
-            <div class="row col-8">
-                <div class="col-4 text-center alert alert-danger">Dead Line</div>
-                <div class="col-8 text-center alert alert-danger">@Model.FirstOrDefault().Task.EndDate</div>
-                <div class="col-4 text-center alert alert-warning ">Remaining Time</div>
-                @{
-                    int remaining = (int)(@Model[0].Task.EndDate - DateTime.Now).TotalDays;
-                    if (remaining > 0)
-                    {
-                        <div class="text-center alert alert-warning">@remaining day</div>
-                    }
-                    else
-                    {
-                        <div class="text-center alert alert-warning">Time Ended</div>
-                    }
-                }
-            </div>
-
-            <div id="donutchart" style="width: 900px; height: 500px;  "></div>
-
-        </div>*@
-
-    @section scripts{
-
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-        <script>
-            function btnOne() {
-                $('.div2').hide();
-                $('.div3').hide();
-                $('.div4').hide();
-                $('.div1').show();
-            }
-
-            function btnTwo() {
-                $('.div1').hide();
-                $('.div3').hide();
-                $('.div4').hide();
-                $('.div2').show();
-            }
-            function btnThree() {
-                $('.div2').hide();
-                $('.div1').hide();
-                $('.div4').hide();
-                $('.div3').show();
-            }
-            function btnFour() {
-                $('.div2').hide();
-                $('.div3').hide();
-                $('.div1').hide();
-                $('.div4').show();
-            }
-
-        </script>
-        <script type="text/javascript">
-
+        ////
+        function LoadData() {
+            //debugger;
             var ns = [];
             var ps = [];
             var dur = [];
@@ -469,12 +308,15 @@ else
             console.log(ns);
             console.log(ps);
             console.log(dur);
-            //$('#columnchart_values').append(ns,ps);
+
 
 
             google.charts.load("current", { packages: ['corechart'] });
             google.charts.setOnLoadCallback(drawChart);
             google.charts.setOnLoadCallback(drawChart2);
+            google.charts.setOnLoadCallback(drawChart3);
+
+
             function drawChart() {
 
                 var data = new google.visualization.DataTable();
@@ -482,21 +324,17 @@ else
                 data.addColumn('number', 'Progress');
                 data.addColumn({ role: "style" });
                 data.addRows([
-                    [`${ns[0]}`, parseInt(ps[0]), "forestgreen"],
+                    [`${ns[0]}`, parseInt(ps[0]), "#4da76b"],
                 ]);
 
                 for (let j = 1; j < ns.length; j++) {
                     data.addRows([
-                        [`${ns[j]}`, parseInt(ps[j]), "forestgreen"],
+                        [`${ns[j]}`, parseInt(ps[j]), "#4da76b"],
                     ]);
                 }
 
                 var options = {
-                    title: "Progress of each Sub Task inside the Project",
-                    //width: 600,
-                    //height: 400,
-                    bar: { groupWidth: "70%" },
-                    legend: { position: "none" },
+                    title: "Tasks Progress",
                     hAxis: { textStyle: { bold: true } },
                     vAxis: { minValue: 0, maxValue: 100 },
                     animation: {
@@ -504,7 +342,8 @@ else
                         duration: 2500,
                         easing: 'in',
                     },
-
+                    bar: { groupWidth: "70%" },
+                    legend: { position: "none" },
                 };
                 var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
                 chart.draw(data, options);
@@ -526,16 +365,47 @@ else
                 }
 
                 var options = {
-                    title: 'Sub Tasks Actual Durations',
+                    title: 'Tasks Actual Durations',
                     pieHole: 0.4,
-                    chartArea: { left: 20, top: 0 }
+                    //chartArea: { left: 20, top: 0, width: '50%', height: '75%' }
+                    chartArea: { left: 150, height: '80%' }
 
                 };
 
                 var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
                 chart.draw(data, options);
             }
-        </script>
 
-    }
+
+            function drawChart3() {
+                var data = google.visualization.arrayToDataTable([
+                    ['Year', 'Sales', 'Expenses'],
+                    ['2013', 1000, 400],
+                    ['2014', 1170, 460],
+                    ['2015', 660, 1120],
+                    ['2016', 1030, 540]
+                ]);
+
+                var options = {
+                    title: 'Company Performance',
+                    hAxis: { title: 'Year', titleTextStyle: { color: 'green' } },
+                    vAxis: { minValue: 0 }
+                };
+
+                var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+                chart.draw(data, options);
+            }
+        }
+
+
+
+        function Show(divName) {
+            $(`#${divName}`).removeClass('d-none');
+        }
+        function Hide(divName) {
+            $(`#${divName}`).addClass('d-none');
+        }
+
+        LoadData()
+    </script>
 }
