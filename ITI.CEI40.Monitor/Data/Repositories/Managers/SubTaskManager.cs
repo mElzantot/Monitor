@@ -35,5 +35,15 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Where(st => st.FK_EngineerID == engineerId).Include(s=>s.Engineer).Include(st => st.Task).ThenInclude(t => t.Project);
         }
 
+        public SubTask GetSubTaskIncludingTask(int subTaskId)
+        {
+            return set.Where(sub => sub.Id == subTaskId).Include(sub => sub.Task).FirstOrDefault();
+        }
+
+        public SubTask GetSubTaskIncludingProject(int subTaskId)
+        {
+            return set.Where(sub => sub.Id == subTaskId).Include(sub => sub.Task).ThenInclude(t => t.Project).FirstOrDefault();
+        }
+
     }
 }
