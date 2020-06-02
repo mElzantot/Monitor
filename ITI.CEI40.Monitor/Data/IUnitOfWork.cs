@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data.Repositories.Managers;
+using ITI.CEI40.Monitor.Data.Repositories.Managers.Interfaces;
 
 namespace ITI.CEI40.Monitor.Data
 {
@@ -18,7 +19,9 @@ namespace ITI.CEI40.Monitor.Data
         ITaskManager Tasks { get; }
         ITeamManager Teams { get; }
         ITeamTasksManager TeamTasks { get; }
-
+        IInvoicesManager Invoices { get; }
+        IInoviceItemManger InoviceItems { get; }
+        IDependencyManager Dependency { get; }
         int Complete();
 
     }

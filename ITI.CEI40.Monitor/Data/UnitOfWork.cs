@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data.Repositories.Managers;
-
+using ITI.CEI40.Monitor.Data.Repositories.Managers.Interfaces;
 
 namespace ITI.CEI40.Monitor.Data
 {
@@ -24,6 +24,9 @@ namespace ITI.CEI40.Monitor.Data
             Tasks = new TaskManager(context);
             Teams = new TeamManager(context);
             TeamTasks = new TeamTasksManager(context);
+            Invoices = new InvoicesManager(context);
+            InoviceItems = new InvoiceItemManager(context);
+            Dependency = new DependencyManager(context);
 
         }
         public IClaimManager Claims { get; }
@@ -36,6 +39,10 @@ namespace ITI.CEI40.Monitor.Data
         public ITaskManager Tasks { get; }
         public ITeamManager Teams { get; }
         public ITeamTasksManager TeamTasks { get; }
+        public IInvoicesManager Invoices { get; }
+        public IInoviceItemManger InoviceItems { get; }
+        public IDependencyManager Dependency { get; }
+
 
 
 

@@ -38,6 +38,8 @@ namespace ITI.CEI40.Monitor.Entities
         //public float? EstimatedBudget { get; set;}
 
 
+        public ICollection<Invoice> Invoices { get; set; }
+
         public float Income { get; set; } //Invoices
         public float Outcome { get; set; } //---Actual
 
@@ -65,6 +67,8 @@ namespace ITI.CEI40.Monitor.Entities
         public ICollection<DepartmentProjects> DepartmentProjects { get; set; }
 
         public ICollection<Activity> Tasks { get; set; }
+
+
 
     }
 }

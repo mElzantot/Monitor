@@ -13,6 +13,8 @@ namespace ITI.CEI40.Monitor.Entities
         [Key]
         public int Id { get; set; }
 
+        public int ViewOrder { get; set; }
+
         [Required]
         [MaxLength(50)]
         public string Name { get; set; }
@@ -25,11 +27,14 @@ namespace ITI.CEI40.Monitor.Entities
 
         public Team Team { get; set; }
         [ForeignKey(nameof(Team))]
-        public int FK_TeamId { get; set; }
+        public int? FK_TeamId { get; set; }
 
 
         public ICollection<SubTask> SubTasks { get; set; }
 
+        public Department Department { get; set; }
+        [ForeignKey(nameof(Department))]
+        public int? FK_DepartmentId { get; set; }
 
         public Project Project { get; set; }
         [ForeignKey(nameof(Project))]
@@ -50,6 +55,9 @@ namespace ITI.CEI40.Monitor.Entities
         [Column("Estimated Duration")]
         [Display(Name = "Estimated Duration")]
         public int EstDuration { get; set; }
+
+        public ICollection<Dependencies> ActivitiesToFollow { set; get; }
+        public ICollection<Dependencies> FollowingActivities { set; get; }
 
         public float Progress { get; set; }
 

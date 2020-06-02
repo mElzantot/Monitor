@@ -19,7 +19,11 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         }
         public IEnumerable<Activity> GetByProjectId(int id)
         {
-            return set.Where(t => t.FK_ProjectId == id);
+            return set.Where(t => t.FK_ProjectId == id).Include(t=>t.FollowingActivities).Include(t => t.ActivitiesToFollow);
+        }
+        public Activity GetByProIdAndViewOrder(int proId, int viewOrder)
+        {
+            return set.Where(t => t.FK_ProjectId == proId).Where(t => t.ViewOrder == viewOrder).FirstOrDefault();
         }
     }
 }

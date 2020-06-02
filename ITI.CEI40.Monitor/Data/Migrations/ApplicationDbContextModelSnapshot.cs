@@ -34,6 +34,8 @@ namespace ITI.CEI40.Monitor.Data.Migrations
                     b.Property<int>("EstDuration")
                         .HasColumnName("Estimated Duration");
 
+                    b.Property<int?>("FK_DepartmentId");
+
                     b.Property<int>("FK_ProjectId");
 
                     b.Property<int>("FK_TeamId");
@@ -51,7 +53,11 @@ namespace ITI.CEI40.Monitor.Data.Migrations
 
                     b.Property<int>("Status");
 
+                    b.Property<int>("ViewOrder");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("FK_DepartmentId");
 
                     b.HasIndex("FK_ProjectId");
 
@@ -174,6 +180,21 @@ namespace ITI.CEI40.Monitor.Data.Migrations
                     b.ToTable("DepartmentProjects");
                 });
 
+            modelBuilder.Entity("ITI.CEI40.Monitor.Entities.Dependencies", b =>
+                {
+                    b.Property<int>("ActivityToFollowId");
+
+                    b.Property<int>("FollowingActivityId");
+
+                    b.Property<int>("Lag");
+
+                    b.HasKey("ActivityToFollowId", "FollowingActivityId");
+
+                    b.HasIndex("FollowingActivityId");
+
+                    b.ToTable("Dependencies");
+                });
+
             modelBuilder.Entity("ITI.CEI40.Monitor.Entities.EngineerSubTasks", b =>
                 {
                     b.Property<string>("EngineerID");
@@ -189,6 +210,58 @@ namespace ITI.CEI40.Monitor.Data.Migrations
                     b.HasIndex("SubTaskID");
 
                     b.ToTable("EngineerSubTasks");
+                });
+
+            modelBuilder.Entity("ITI.CEI40.Monitor.Entities.Invoice", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("FK_ProjectId");
+
+                    b.Property<DateTime>("InvoiceDate")
+                        .HasColumnName("Invoice Date")
+                        .HasColumnType("Date");
+
+                    b.Property<int>("InvoicesType");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100);
+
+                    b.Property<DateTime>("PaymentDate")
+                        .HasColumnName("Payment Date")
+                        .HasColumnType("Date");
+
+                    b.Property<float>("Value");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FK_ProjectId");
+
+                    b.ToTable("Invoices");
+                });
+
+            modelBuilder.Entity("ITI.CEI40.Monitor.Entities.InvoiceItem", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Description");
+
+                    b.Property<int>("FK_InvoiceId");
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<int>("UnitPrice");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FK_InvoiceId");
+
+                    b.ToTable("InvoiceItems");
                 });
 
             modelBuilder.Entity("ITI.CEI40.Monitor.Entities.Project", b =>
@@ -404,6 +477,11 @@ namespace ITI.CEI40.Monitor.Data.Migrations
 
             modelBuilder.Entity("ITI.CEI40.Monitor.Entities.Activity", b =>
                 {
+                    b.HasOne("ITI.CEI40.Monitor.Entities.Department", "Department")
+                        .WithMany()
+                        .HasForeignKey("FK_DepartmentId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
                     b.HasOne("ITI.CEI40.Monitor.Entities.Project", "Project")
                         .WithMany("Tasks")
                         .HasForeignKey("FK_ProjectId")
@@ -452,6 +530,19 @@ namespace ITI.CEI40.Monitor.Data.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
+            modelBuilder.Entity("ITI.CEI40.Monitor.Entities.Dependencies", b =>
+                {
+                    b.HasOne("ITI.CEI40.Monitor.Entities.Activity", "ActivityToFollow")
+                        .WithMany("FollowingActivities")
+                        .HasForeignKey("ActivityToFollowId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("ITI.CEI40.Monitor.Entities.Activity", "FollowingActivity")
+                        .WithMany("ActivitiesToFollow")
+                        .HasForeignKey("FollowingActivityId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
             modelBuilder.Entity("ITI.CEI40.Monitor.Entities.EngineerSubTasks", b =>
                 {
                     b.HasOne("ITI.CEI40.Monitor.Entities.ApplicationUser", "Engineer")
@@ -462,6 +553,22 @@ namespace ITI.CEI40.Monitor.Data.Migrations
                     b.HasOne("ITI.CEI40.Monitor.Entities.SubTask", "SubTask")
                         .WithMany("EngineerSubTasks")
                         .HasForeignKey("SubTaskID")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("ITI.CEI40.Monitor.Entities.Invoice", b =>
+                {
+                    b.HasOne("ITI.CEI40.Monitor.Entities.Project", "Project")
+                        .WithMany("Invoices")
+                        .HasForeignKey("FK_ProjectId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("ITI.CEI40.Monitor.Entities.InvoiceItem", b =>
+                {
+                    b.HasOne("ITI.CEI40.Monitor.Entities.Invoice", "Invoice")
+                        .WithMany("invoiceItems")
+                        .HasForeignKey("FK_InvoiceId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 

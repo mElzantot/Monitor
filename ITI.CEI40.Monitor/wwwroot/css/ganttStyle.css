@@ -1,6 +1,13 @@
+body{
+    margin: 0;
+    padding: 0;
+    font-size: 100%;
+}
+
+
 table {
     text-align     : center;
-    border-collapse: collapse;
+    /* border-collapse: collapse; */
 }
 
 .tablebody {
@@ -22,6 +29,25 @@ input {
     outline: none;
     border: 1px;
 }
+
+
+/* split screen */
+
+
+#table {
+    background-color: #dde;
+    width: 90%;
+    height: 100%;
+    min-width: 10px;
+    overflow: auto;
+}
+
+.errprogress{
+    border: 1px solid red;
+}
+
+
+/* modal ?? */
 
 .dep-modal-bg {
     position        : fixed;
@@ -70,3 +96,4 @@ input {
     font-weight: bold;
     cursor: pointer;
 }
+/*modal ???*/

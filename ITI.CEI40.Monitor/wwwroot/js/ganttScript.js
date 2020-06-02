@@ -1,59 +1,57 @@
 
 var preRowsNo = 0;
-google.charts.load('current', {'packages':['gantt']});
-//google.charts.setOnLoadCallback(drawChart);
+var createdRowsIds = [];
+var deletedDep = [];
+var tasksIdOrder = [0];
+var tasks = [];
+var assigneeTeams = ["1", "2", "3", "4", "5"];
+
+class Id {
+    constructor(id) {
+        this.id = id
+    }
+}
 
 class Dependency {
-    constructor(id, dep, lag) {
-        this.id = id;
-        this.Dependency = dep;
+    constructor(depId, lag) {
+        this.depId = depId;
         this.lag = lag;
     }
 }
 
 class Task {
-    constructor(id, name, start, end, duration) {
+    constructor(id, name, start, end, duration, assignee, progress) {
         this.id = id;
         this.name = name;
-        //this.progress = 0;
-        //this.status = "STATUS_UNDEFINED";
-        //this.depends = "";
-
-        this.start = start.getTime();
-        this.end = end.getTime();
+        this.start = start;
+        this.end = end;
         this.duration = duration;
+        this.depends;
+        this.dependencies = [];
+        this.progress = progress;
+        this.assignee = assignee;
+        this.dbId = "";
+        this.status = "STATUS_UNDEFINED";
 
-        //permissions
-        // by default all true, but must be inherited from parent
-        //this.canWrite = true;
-        //this.canAdd = true;
-        //this.canDelete = true;
-        //this.canAddIssue = true;
-
-        //this.rowElement; //row editor html element
-        //this.ganttElement; //gantt html element
-        //this.master;
-
-
-        //this.dependencies = [];
-        //this.assignees = [];
     }
 }
 
 var dep = new Dependency("Dependency0", 2, 2);
 
-//document.onload = table(edit);
-function table(dataArray,noData) {
+var trydata = [{ id: "0", name: "p1", depends: -1, start: new Date(), end: new Date(2020, 0, 1) }];
+
+
+//document.onload = table();
+function table(dataArray, noData) {
     if (noData) {
         if (!dataArray.length > 0) {
-            createRowTask(10);
+            createRowTask(1);
         } else {
             createRowTaskWithData(dataArray);
             createRowTask(1);
         }
     }
 }
-
 
 
 // s is format y-m-d
@@ -98,6 +96,18 @@ function computeEndFromDuration(date1, Duration) {
     return d;
 }
 
+function computeEndFromDurationVal(date1, Duration) {
+    var d = new Date(date1);
+    var duration = Duration - 1;
+    while (duration > 0) {
+        if (!isHoliday(d)) {
+            duration--;
+        }
+        d.setDate(d.getDate() + 1);
+    }
+    return d;
+}
+
 function formatDate(date) {
     var d = new Date(date),
         month = '' + (d.getMonth() + 1),
@@ -112,147 +122,184 @@ function formatDate(date) {
     return [day, month, year].join('/');
 }
 
-pickedCells = [];
-/* #region  previous function */
-
-
 // the body
 function createRowTask(num) {
     num = num + preRowsNo;
     for (let n = preRowsNo; n < num; n++) {
-        var datapt1 = `<td><label>${n + 1}</label></td>
-        <td><input type="text" id="taskName${n}" style="background-color: transparent; border: none;" class="Name test no-outline"></td>`;
-
-        var td1 = $('<td></td>');
-        var datepicker1 = $(`<input type="text"  id="startDate${n}" class="datepicker test no-outline" readonly>`);
-        datepicker1.datepicker({
-            disabled: true,
-            changeMonth: true,
-            changeYear: true,
-            dateFormat: 'dd/mm/yy',
-            firstDay: 0,   //---Set The First Day in the Week ( Saturday)
-            beforeShowDay: function(dt){
-                return [dt.getDay() == 5 || dt.getDay() == 6 ? false : true];
-            }, //----   (Disable The Week Ends in Datepicker  )
-            minDate: 0, //-----Disable the previous Days 
-            onSelect: function () {
-                var startDate = $(`#startDate${n}`).datepicker('getDate');
-                var endDate = $(`#endDate${n}`).datepicker('getDate');
-                var Duration = $(`#Duration${n}`)
-                if (startDate && endDate) {
-                    Duration.val(computeDuration(startDate, endDate));
-                    // var selectedId = tasks.findIndex(x => x.id === `${n}`);
-                    // console.log(selectedId);
-                }
-            }
-        });
-        td1.append(datepicker1);
-
-        var td2 = $('<td></td>');
-        var datepicker2 = $(`<input type="text"  id="endDate${n}" class="datepicker test no-outline" readonly>`);
-        datepicker2.datepicker({
-            disabled: true,
-            changeMonth: true,
-            changeYear: true,
-            dateFormat: 'dd/mm/yy',
-            firstDay: 0,   //---Set The First Day in the Week ( Saturday)
-            beforeShowDay: function(dt){
-                return [dt.getDay() == 5 || dt.getDay() == 6 ? false : true];
-            }, //----   (Disable The Week Ends in Datepicker  )
-            minDate: 0, //-----Disable the previous Days 
-            onSelect: function () {
-                var startDate = $(`#startDate${n}`).datepicker('getDate');
-                var endDate = $(`#endDate${n}`).datepicker('getDate');
-                var Duration = $(`#Duration${n}`)
-                if (startDate && endDate) {
-                    Duration.val(computeDuration(startDate, endDate));
-                    // var selectedId = tasks.findIndex(x => x.id === `${n}`);
-                    // console.log(selectedId);
-                }
-            }
-        });
-        td2.append(datepicker2);
-
-        var datapt2 = `<td><input type="text" id="Duration${n}" class="durations test no-outline" readonly></td>
-        <td><input type="text" id ="Dependency${n}" onchange="dependency(this.id,this.value)"
-            class="test no-outline" onkeyup="wirteDependency(this)" readonly>
-        </td>
-        <td><input type="text" class="test no-outline" readonly></td>
-        <td><input type="text" class="test no-outline" readonly></td>`;
-
-        var tr = $(`<tr></tr>`)
-        tr.attr("id", `tempT-${n}`);
-        tr.append(datapt1);
-        tr.append(td1);
-        tr.append(td2);
-        tr.append(datapt2);
+        var tr = tableRow(n);
         $('#tbody').append(tr);
+        createdRowsIds.push(parseInt(n));
     }
     preRowsNo = num;
 }
 
-var tasks = [];
-function createTaskObj(n) {
-    var taskId = n;
-    var taskName = $(`#taskName${n}`)[0].value;
-    var Sdate = $(`#startDate${n}`)[0].value;
-    Sdate = parseDate(Sdate);
-    var Edate = $(`#endDate${n}`)[0].value;
-    Edate = parseDate(Edate);
-    var Duration = $(`#Duration${n}`)[0].value;
+function tableRow(n) {
+    var datapt1 = `<td style="display: flex;" ><label>${n + 1}</label>
+        <input type="button" onclick="deleteRow(this.parentElement.parentElement.id)" value="x" />
+        <input type="button" onclick="addRow(this.parentElement.parentElement.id)" value="+" />
+        </td>
+        <td><input type="text" id="taskName${n}" class="Name test no-outline"></td>`;
 
-    var task = new Task(taskId, taskName, Sdate, Edate, Duration);
-    //console.log(task);
-    return task;
-}
-
-function replaceTask(n) {
-    var newTask = createTaskObj(n);
-    var index = tasks.findIndex(t => t.id == n);
-    tasks.splice(index, 1, newTask);
-    //console.log(tasks);
-}
-
-var tasksId = [];
-function assignTasks() {
-    $('.Name').each(function () {
-        if (this.value) {
-            var taskId = this.id.toString().split('taskName')[1];
-            if (!tasksId.includes(taskId)) {
-                tasksId.push(taskId);
-                var task = createTaskObj(taskId);
-                tasks.push(task);
-                //console.log(tasks);
-            } else {
-                replaceTask(taskId);
+    var td1 = $('<td></td>');
+    var datepicker1 = $(`<input type="text" id="startDate${n}" class="datepicker no-outline" readonly>`);
+    datepicker1.datepicker({
+        disabled: true,
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'dd/mm/yy',
+        firstDay: 0,   //---Set The First Day in the Week ( Saturday)
+        beforeShowDay: function (dt) {
+            return [dt.getDay() == 5 || dt.getDay() == 6 ? false : true];
+        }, //----   (Disable The Week Ends in Datepicker  )
+        minDate: 0, //-----Disable the previous Days 
+        onSelect: function () {
+            var startDate = $(`#startDate${n}`).datepicker('getDate');
+            var endDate = $(`#endDate${n}`).datepicker('getDate');
+            var Duration = $(`#Duration${n}`)
+            if (startDate && endDate) {
+                Duration.val(computeDuration(startDate, endDate));
+                // var selectedId = tasks.findIndex(x => x.id === `${n}`);
+                // console.log(selectedId);
             }
+            assignTask(parseInt(n));
         }
     });
-    //console.log(tasksId);
-    var finalTasks = tasks;
-    return finalTasks;
+    td1.append(datepicker1);
+
+    var td2 = $('<td></td>');
+    var datepicker2 = $(`<input type="text"  id="endDate${n}" class="datepicker no-outline" readonly>`);
+    datepicker2.datepicker({
+        disabled: true,
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: 'dd/mm/yy',
+        firstDay: 0,   //---Set The First Day in the Week ( Saturday)
+        beforeShowDay: function (dt) {
+            return [dt.getDay() == 5 || dt.getDay() == 6 ? false : true];
+        }, //----   (Disable The Week Ends in Datepicker  )
+        minDate: 0, //-----Disable the previous Days 
+        onSelect: function () {
+            var startDate = $(`#startDate${n}`).datepicker('getDate');
+            var endDate = $(`#endDate${n}`).datepicker('getDate');
+            var Duration = $(`#Duration${n}`)
+            if (startDate && endDate) {
+                Duration.val(computeDuration(startDate, endDate));
+            }
+            var selectedTask = tasks.find(x => x.id.id === n);
+            if (selectedTask.dependencies.length > 0) {
+                var arr = tasksToUpdate(selectedTask); //selectedTask.dependencies;
+                arr.forEach(function (x) {
+                    //var idNum = tasks[x].id;
+                    var targetTask = tasks.find(t => t.id.id == x.id);
+                    var idNum = targetTask.id.id;
+                    var oldEndDate = tasks.find(t => t.id.id == n);
+                    var lag = computeLag(oldEndDate.end, endDate);
+                    shiftTaskDate(targetTask.start, targetTask.duration, lag, idNum);
+                    assignTask(idNum);
+                });
+            }
+            assignTask(parseInt(n));
+        }
+    });
+    td2.append(datepicker2);
+
+    var datapt2 = `<td><input type="text" id="Duration${n}" class="durations no-outline" readonly></td>
+        <td><input type="text" id ="Dependency${n}" onchange="dependency(this)"
+            class="no-outline" onkeyup="wirteDependency(this)" readonly>
+        </td>`
+    var assigneeList =
+        `<td><input list="assign" name="assignees" class="no-outline" id = "assign${n}" readonly />
+            <datalist id="assign">
+            </datalist></td>`
+    var progress =
+        `<td><input type="number" min="0" max="100" value="0" class="no-outline progress" id = "progress${n}" readonly></td>`;
+
+    var tr = $(`<tr></tr>`)
+    tr.attr("id", `tempT-${n}`);
+    tr.append(datapt1);
+    tr.append(td1);
+    tr.append(td2);
+    tr.append(datapt2);
+    tr.append(assigneeList);
+    tr.append(progress);
+
+    return tr;
 }
 
+//options for assignees
+function addAssignOpts() {
+    assigneeTeams.forEach(function (ass) {
+        var select = document.getElementById("assign");
+        var el = document.createElement("option");
+        el.value = ass;
+        if (select) { select.appendChild(el); }
+    });
+}
 
-var preTaskName = "";
+// validation for progress
+$('tbody').on('input', '.progress', function (e) {
+    if (e.target.value > 100 || e.target.value < 0) {
+        e.target.classList.add('errprogress');
+    } else {
+        e.target.classList.remove("errprogress");
+    }
+
+});
+
+function tasksToUpdate(rootTask) {
+    var arrayOfDeps = [];
+    traverse(rootTask, arrayOfDeps);
+    return arrayOfDeps;
+}
+function traverse(rootTask, arrayOfDeps) {
+    if (rootTask.dependencies.length == 0) { return; }
+    for (let i = 0; i < rootTask.dependencies.length; i++) {
+        arrayOfDeps.push(rootTask.dependencies[i].depId);
+        traverse(tasks.find(t => t.id.id == rootTask.dependencies[i].depId.id), arrayOfDeps);
+    }
+}
+
 filledRows = [];
+// var preTaskName = "";
+// console.log(preTaskName);
+// $('tbody').on('focus keydown', '.Name', function (e) {
+//     if (e.keyCode == 13) {
+//         preTaskName = e.target.value;
+//         console.log(preTaskName);
+//     }
+// });
+
 $('tbody').on('change', '.Name', function (e) {
     e.preventDefault();
-    if (!preTaskName) {
-        var id = e.target.id;
-        var n = id.toString().split("taskName")[1];
-        n = parseInt(n);
-        openRow(n);
+    var rowid = e.target.id;
+    var id = rowid.toString().split("taskName")[1];
+    id = parseInt(id);
+    var rowValue = e.target.value;
+    if (rowValue) {
+        openRow(id);
         fillRowTask(e);
-        if (!filledRows.includes(n)) { createRowTask(1); }
-        filledRows.push(n);
+        if (!filledRows.includes(parseInt(id))) {
+            filledRows.push(parseInt(id));
+            createRowTask(1);
+        }
+        // console.log(filledRows);
+        // console.log(preTaskName);
     } else {
-        var id = e.target.id;
-        var n = id.toString().split("taskName")[1];
-        var name = $(`#taskName${n}`)[0].value;
-        var selectedId = tasks.findIndex(x => x.id === `${n}`);
+        var rowid = e.target.id;
+        var id = rowid.toString().split("taskName")[1];
+        var name = $(`#taskName${id}`)[0].value;
+        var selectedId = tasks.findIndex(x => x.id === `${id}`);
         console.log(selectedId);
     }
+});
+
+$('tbody').on('change', function (e) {
+    var row = e.target.parentElement.parentElement;
+    var rowNumber = row.id.split('tempT-')[1];
+    //console.log($(`#endDate${rowNumber}`)[0].value)
+    assignTask(parseInt(rowNumber));
+    //draw();
+    document.getElementById("submitBtn").style.display = "block";
 });
 
 function fillRowTask(e) {
@@ -269,8 +316,9 @@ function fillRowTask(e) {
         var endDate = parseDate($(`#endDate${n}`)[0].value);
         Duration.val(computeDuration(startDate, endDate));
     }
-    //assignTask(n);
+    assignTask(parseInt(n));
 }
+
 
 $('tbody').on('change', '.durations', function (e) {
     var id = e.target.id;
@@ -324,25 +372,240 @@ function openRow(id) {
     $(`#endDate${id}`).datepicker("option", "disabled", false);
 }
 
+var removeFromDB = [];  // an array to store dbids to delete from DB
+// we have a check here
+function deleteRow(rowid) {
+    var id = rowid.toString().split('-')[1];
+    //remove the dependency objects from the two ways
+    removeDependency(parseInt(id));
+    // delete row
+    var row = document.getElementById(rowid);
+    row.parentNode.removeChild(row);
+
+
+    // shifting the ids 
+    var remainingElements = preRowsNo - (parseInt(id) + 1);
+    for (let i = 0; i < remainingElements; i++) {
+        var n = parseInt(id) + i + 1;
+        var nextRow = document.getElementById(`tempT-${n}`);
+        nextRow.id = `tempT-${n - 1}`;
+        var label = nextRow.firstChild.firstChild;
+        label.innerText = n;
+        var name = document.getElementById(`taskName${n}`);
+        name.id = `taskName${n - 1}`;
+        var Start = document.getElementById(`startDate${n}`);
+        Start.id = `startDate${n - 1}`;
+        var end = document.getElementById(`endDate${n}`);
+        end.id = `endDate${n - 1}`;
+        var duration = document.getElementById(`Duration${n}`);
+        duration.id = `Duration${n - 1}`;
+        var dependency = document.getElementById(`Dependency${n}`);
+        dependency.id = `Dependency${n - 1}`;
+        var assign = document.getElementById(`assign${n}`);
+        assign.id = `assign${n - 1}`;
+        var progress = document.getElementById(`progress${n}`);
+        progress.id = `progress${n - 1}`;
+
+        // shifting the tasks also
+        var t = tasks.find(t => t.id.id == n);
+        if (t) { t.id.id = parseInt(t.id.id) - 1; }
+
+        // //managing rows
+        // var idIndex = createdRowsIds.findIndex(i => i == parseInt(id));
+        // createdRowsIds.splice(idIndex, 1);
+
+        // //managing tasks
+        // var ti = tasksId.findIndex(t => t == id);
+        // tasksId.splice(ti, 1)
+
+        //managing rows
+        var idIndex = createdRowsIds.findIndex(i => i == parseInt(n));
+        createdRowsIds.splice(idIndex, 1, (parseInt(n) - 1));
+        //managing tasks
+        //var ti = tasksId.findIndex(t => t == `${n}`);
+        //tasksId.splice(ti, 1, `${n - 1}`)
+    }
+
+    // remove it from createdRowsIds
+    createdRowsIds.splice(parseInt(id), 1);
+
+    //check if there is a task 
+    if (tasks.find(t => t.id.id == parseInt(id))) {
+        //--remove it from tasksId
+        //--tasksId.splice(parseInt(id), 1);
+        //remove it from filledRows
+        filledRows.splice(parseInt(id), 1);
+        // add the removed task to removedfromDB if it wasn't new
+        if (tasks.find(t => t.id.id == parseInt(id)).dbId) {
+            removeFromDB.push(tasks.find(t => t.id.id == parseInt(id)).dbId);
+        }
+        //remove task
+        tasks.splice(parseInt(id), 1);
+    }
+    // decrease from the total number
+    preRowsNo--;
+}
+
+function removeDependency(id) {
+    var task = tasks.find(t => t.id.id == id);
+    
+
+    if (task && task.depends) {
+        // save the deleted dependencies 
+        var deletedDependency = { followed: task.depends.depId.id, following: task.id.id };
+        if (!deletedDep.find(d => d.followed == task.depends.depId.id)) {
+            deletedDep.push(deletedDependency);
+        }
+        var independentTaskId = task.depends.depId.id;
+        var independentTask = tasks.find(t => t.id.id == independentTaskId);
+        var depTaskdep = independentTask.dependencies.findIndex(d => d.depId.id == independentTask.id.id);
+        //remove the dependency from the independent task
+        independentTask.dependencies.splice(depTaskdep, 1);
+    }
+    if (task && task.dependencies.length > 0) {
+        // remove the dependencies relations
+        task.dependencies.forEach(function (i) {
+            var t = tasks.find(t => t.id.id == i.depId.id);
+            // save the deleted dependencies 
+            var deletedDependency = { followed: t.depends.depId.id, following: t.id.id };
+            if (!deletedDep.find(d => d.followed == task.depends.depId.id)) {
+                deletedDep.push(deletedDependency);
+            }
+            t.depends = null;
+            document.getElementById(`Dependency${t.id.id}`).value = "";
+            $(`#startDate${t.id.id}`).datepicker("option", "disabled", false);
+        })
+    }
+}
+
+function addRow(rowid) {
+    var id = parseInt(rowid.toString().split('-')[1]);
+
+    // shifting the ids 
+    var remainingElements = preRowsNo - (parseInt(id) + 1);
+    for (let i = remainingElements; i > 0; i--) {
+        // shifiting the rows themselves 
+        var n = i + id;
+        var nextRow = document.getElementById(`tempT-${n}`);
+        nextRow.id = `tempT-${n + 1}`;
+        var label = nextRow.firstChild.firstChild;
+        label.innerText = n + 2;
+        var name = document.getElementById(`taskName${n}`);
+        name.id = `taskName${n + 1}`;
+        var Start = document.getElementById(`startDate${n}`);
+        Start.id = `startDate${n + 1}`;
+        var end = document.getElementById(`endDate${n}`);
+        end.id = `endDate${n + 1}`;
+        var duration = document.getElementById(`Duration${n}`);
+        duration.id = `Duration${n + 1}`;
+        var dependency = document.getElementById(`Dependency${n}`);
+        dependency.id = `Dependency${n + 1}`;
+        var assign = document.getElementById(`assign${n}`);
+        assign.id = `assign${n + 1}`;
+        var progress = document.getElementById(`progress${n}`);
+        progress.id = `progress${n + 1}`;
+
+        // shifting the tasks also
+        var t = tasks.find(t => t.id.id == n);
+        if (t) { t.id.id = parseInt(t.id.id) + 1; }
+        //managing rows
+        var idIndex = createdRowsIds.findIndex(i => i == parseInt(n));
+        createdRowsIds.splice(idIndex, 0, (parseInt(n) + 1));
+        //managing tasks
+        var ti = tasksId.findIndex(t => t == `${n}`);
+        tasksId.splice(ti, 1, `${n + 1}`)
+    }
+    var tr = tableRow(id + 1);
+    //var trr = $('table > tbody > tr').eq(id).after(tr);
+    tr.insertAfter($(`#tempT-${id}`));
+    createdRowsIds.push(parseInt(id));
+    preRowsNo++;
+}
+
+// attached to OnChange event 
 //complete one senario
-function dependency(id, dep) {
-    if (!dep) { return }
-    var n = id.toString().split("Dependency")[1];
+function dependency(cell) {
+    var cellId = cell.id;
+    var dep = cell.value;
+    var depTaskId = parseInt(cellId.toString().split("Dependency")[1]);
     var deps = dep.toString().split(':');
     var targetLag = parseInt(deps[1]);
-    console.log(deps);
-    var targetEndDate = parseDate($(`#endDate${deps[0] - 1}`)[0].value);
-    var startDate = parseDate($(`#startDate${n}`)[0].value);
-    //var endDate = parseDate($(`#endDate${n}`)[0].value);
-    var preDurat = $(`#Duration${n}`)[0];
-    console.log(preDurat);
-    var lag = Math.ceil((startDate - targetEndDate) / 86400000);
-    console.log("lag = " + lag);
+    //repeated
+    var independentTask = tasks.find(x => x.id.id === depTaskId - 1);
+    // var index = dependentTask.depends.depId;
+    // var independentTask = tasks.find(x => x.id.id === index.id);
+    if (dep) {
+        if (parseInt(deps[0]) == (parseInt(depTaskId) + 1)) {
+            alert("closed loop in dependecy");
+            cell.value = "";
+            return;
+        }
+        if (deps[0] <= 0 || !createdRowsIds.includes(parseInt(deps[0])) || !independentTask) {
+            alert("no tasks with this number");
+            cell.value = "";
+            return;
+        }
+        var depIdObj = tasks.find(t => t.id.id == (deps[0] - 1)).id;
+        var indepIdObj = tasks.find(t => t.id.id == depTaskId).id;
+        var dependecy = new Dependency(depIdObj, targetLag);
+        var inDependecy = new Dependency(indepIdObj, targetLag);
+        var targetEndDate = parseDate($(`#endDate${deps[0] - 1}`)[0].value);
+        var startDate = parseDate($(`#startDate${depTaskId}`)[0].value);
+        //var endDate = parseDate($(`#endDate${n}`)[0].value);
+        var preDurat = $(`#Duration${depTaskId}`)[0];
+        var lag = computeLag(startDate, targetEndDate);
+        //console.log("lag = " + lag);
+        if (lag < 0) {
+            if (targetLag) { lag = lag - targetLag - 1; }
+            shiftTaskDate(startDate, preDurat.value, lag, depTaskId);
+            lag = 0; // this is now
+        }
+        if (lag > 0 && targetLag) { lag = lag + targetLag; }
+        dependecy.lag = lag;
+        inDependecy.lag = lag;
+
+        $(`#startDate${depTaskId}`).datepicker("option", "disabled", true);
+        var dependentTask = tasks.find(x => x.id.id === depTaskId);
+        var independentTask = tasks.find(x => x.id.id === deps[0] - 1);
+        dependentTask.depends = dependecy; // `${deps[0]}`;
+        if (!independentTask.dependencies.includes(inDependecy)) { independentTask.dependencies.push(inDependecy); }
+    } else {
+        var depTaskId = cell.id.toString().split("Dependency")[1];
+        var inputType = typeof preValue;
+        var preValue = cell.value;
+        if (preValue == "") { inputType = typeof parseInt(preValue); }
+        if (cell.value == "" && inputType == 'number') {
+            $(`#startDate${depTaskId}`).datepicker("option", "disabled", false);
+            var dependentTask = tasks.find(x => x.id.id === parseInt(depTaskId));
+
+            var index = dependentTask.depends.depId;
+            var independentTask = tasks.find(x => x.id.id === index.id);
+
+            var inDependecy = new Dependency(dependentTask.id, dependentTask.depends.lag);
+            //--- delete dependencies from the two ways ---//
+            // save the deleted dependencies 
+            var deletedDependency = { followed: independentTask.id.id, following: dependentTask.id.id };
+            if (!deletedDep.find(d => d.followed == independentTask.id.id)) {
+                deletedDep.push(deletedDependency);
+            }
+            
+            dependentTask.depends = null; // delete 
+            var depIndex = independentTask.dependencies.findIndex(t => t.depId.id == inDependecy.depId.id);
+            if (independentTask.dependencies.some(d => d.depId.id == inDependecy.depId.id)) { independentTask.dependencies.splice(depIndex, 1); }
+        }
+    }
+
+}
+
+function wirteDependency(input) {
+    var regex = /[^0-9:]/gi;
+    input.value = input.value.replace(regex, "");
+}
+
+function shiftTaskDate(startDate, preDurat, lag, n) {
+    var d1 = new Date(startDate);
+    //var d2 = new Date(endDate);
     if (lag < 0) {
-        if (targetLag) { lag = lag - targetLag - 1; }
-        console.log("lag += " + lag)
-        var d1 = new Date(startDate);
-        //var d2 = new Date(endDate);
         while (lag < 0) {
             if (!isHoliday(d1)) {
                 lag++;
@@ -350,75 +613,312 @@ function dependency(id, dep) {
             d1.setDate(d1.getDate() + 1);
             //d2.setDate(d2.getDate() + 1);
         }
-        while (isHoliday(d1)) { d1.setDate(d1.getDate() + 1); }
-        var SDate = document.getElementById(`startDate${n}`);
-        SDate.value = formatDate(d1);
-        var EDate = document.getElementById(`endDate${n}`);
-        var re = computeEndFromDuration(d1, preDurat);
-        EDate.value = formatDate(re);
+        while (isHoliday(d1)) { d1.setDate(d1.getDate() + 1); } //in case of stopping at thursday
     }
 
     if (lag > 0) {
-        if(targetLag){lag = lag + targetLag;}
+        while (lag > 0) {
+            if (!isHoliday(d1)) {
+                lag--;
+            }
+            d1.setDate(d1.getDate() - 1);
+        }
+        while (isHoliday(d1)) { d1.setDate(d1.getDate() + 1); } //in case of stopping at thursday
+    }
+    var SDate = document.getElementById(`startDate${n}`);
+    SDate.value = formatDate(d1);
+    var EDate = document.getElementById(`endDate${n}`);
+    var re = computeEndFromDurationVal(d1, preDurat);
+    while (isHoliday(re)) { re.setDate(re.getDate() + 1); }
+    EDate.value = formatDate(re);
+}
+
+function computeLag(startDate, targetEndDate) {
+    var lag = Math.ceil((startDate - targetEndDate) / 86400000);
+
+    var sDay = new Date(startDate);
+    while (sDay.getDate() != targetEndDate.getDate() && lag < 0) {
+        sDay.setDate(sDay.getDate() + 1);
+        if (isHoliday(sDay)) { lag++; }
+    } // remove holidays from the abslute lag when lag <0
+    while (sDay.getDate() != targetEndDate.getDate() && lag > 0) {
+        sDay.setDate(sDay.getDate() - 1);
+        if (isHoliday(sDay)) { lag--; }
+    } // remove holidays from the abslute lag when lag <0
+    return lag;
+}
+
+/* #region  task asigning */
+function assignTask(n) {
+    var taskId = n;
+    if (!tasks.find(t => t.id.id == taskId)) {
+        var task = createTaskObj(taskId);
+        tasks.splice(task.id.id, 0, task);
+    } else {
+        replaceTask(taskId);
     }
 }
 
-function wirteDependency(input){
-    var regex = /[^0-9:]/gi;
-    input.value = input.value.replace(regex, "");
+function createTaskObj(n) {
+    var taskId = new Id(parseInt(n));
+    var taskName = $(`#taskName${n}`)[0].value;
+    var Sdate = $(`#startDate${n}`)[0].value;
+    Sdate = parseDate(Sdate);
+    var Edate = $(`#endDate${n}`)[0].value;
+    Edate = parseDate(Edate);
+    var Duration = $(`#Duration${n}`)[0].value;
+    var assigneeWord = $(`#assign${n}`)[0].value;
+    var assignee = assigneeTeams.findIndex(a => a == assigneeWord);
+    //var progress = parseInt($(`#progress${n}`)[0].value);
+
+    var task = new Task(taskId, taskName, Sdate, Edate, Duration, assignee);
+    task.tableViewOrder = n;
+    return task;
 }
 
-function daysToMilliseconds(days) {
-    return days * 24 * 60 * 60 * 1000;
-}
-
-function drawChart() {
-
-    var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Task ID');
-    data.addColumn('string', 'Task Name');
-    data.addColumn('date', 'Start Date');
-    data.addColumn('date', 'End Date');
-    data.addColumn('number', 'Duration');
-    data.addColumn('number', 'Percent Complete');
-    data.addColumn('string', 'Dependencies');
-
-    for (let i = 0; i < tasks.length; i++) {
-        var dep = `${tasks[i].depends}`;
-        if(dep<0){dep = null}
-        data.addRows([
-            [`${tasks[i].id}`, `${tasks[i].name}`, tasks[i].startDate, tasks[i].endDate,
-            daysToMilliseconds(tasks[i].duration), 20, dep]
-        ]);
-
+function replaceTask(n) {
+    var newTask = createTaskObj(n);
+    var index = tasks.findIndex(t => t.id.id == n);
+    if (index >= 0) {
+        var depArr = tasks.find(t => t.id.id == index).dependencies;
+        newTask.dependencies = depArr;
+        var oldDep = tasks[index].depends;
+        newTask.depends = oldDep;
+        newTask.id = tasks[index].id;  // to save the reference obj
+        newTask.dbId = tasks[index].dbId; // save the same DB id when update 
+        tasks.splice(index, 1, newTask);
     }
- 
+    //console.log(tasks);
+}
 
-    var options = {
-        height: 275,
-        gantt: {
-            criticalPathEnabled: false,
-            criticalPathStyle: {
-                stroke: '#e64a19',
-                strokeWidth: 5
+function assignTasks() {
+    var dataToDB = [];
+    tasks.forEach(function (t) {
+        var viewmodelTask = {
+            id: t.id.id,
+            name: t.name,
+            start: t.start.getTime(),
+            end: t.end.getTime(),
+            duration: t.duration,
+            progress: t.progress,
+            dbId: t.dbId,
+            assignee: t.assignee
+        }
+        if (t.depends != -1 && t.depends != -2 && t.depends != null) {
+            viewmodelTask.Dependecy = { id: t.depends.depId.id, lag: t.depends.lag };
+        }
+        if (t.dependencies.length > 0 && t) {
+            viewmodelTask.Dependecies = convertDependencies(t); 
+        }
+
+        dataToDB.push(viewmodelTask);
+    });
+    return dataToDB;
+}
+
+function convertDependencies (t) {
+    var Dependecies = [];
+    t.dependencies.forEach(function (d) {
+        Dependecies.push({ id: d.depId.id, lag: d.lag })
+    });
+    return Dependecies;
+}
+/* #endregion */
+
+
+/* #region  Frapp Chart */
+
+/* {
+    id: 'Task 1',
+    name: 'Redesign website',
+    start: '2020-12-31',
+    end: '2021-12-31',
+    progress: 20,
+    dependencies: 'Task 1',
+    custom_class: 'critical'
+}*/
+function formatGanttDate(date) {
+    var d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2)
+        month = '0' + month;
+    if (day.length < 2)
+        day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+var ganttTasks = [];
+
+
+var oldS = "";
+var oldE = "";
+var options = {
+    header_height: 20,
+    column_width: 30,
+    step: 40,
+    view_modes: ['Day', 'Week', 'Month'],
+    bar_height: 10,
+    bar_corner_radius: 3,
+    arrow_curve: 5,
+    padding: 18,
+    view_mode: 'Week',
+    date_format: 'DD/MM/YYYY',
+    custom_popup_html: null,
+
+    on_click: function (task) {
+        //console.log(task);
+    },
+    on_date_change: function (task, start, end) {
+        console.log("start = " + start);
+        console.log("task._srart = " + task._start);
+        console.log("task.srart = " + task.start);
+        console.log("end = " + end);
+        console.log("task._end = " + task._end);
+        console.log("task.end = " + task.end);
+        console.log(`task = ${task}`)
+        console.log(task)
+        console.log("          ")
+
+        if (oldS != start) {
+            if (oldE == end || oldE == "") {
+                changeStartDate(task);
+                oldS = start;
+                oldE = end;
             }
         }
-    };
+        if (oldE != end) {
+            if (oldS == start || oldS == "") {
+                changeEndDate(task);
+                oldS = start;
+                oldE = end;
+            }
+        }
+    },
 
-    var chart = new google.visualization.Gantt(document.getElementById('chart_div'));
+    on_progress_change: function (task, progress) {
+        //console.log(task, progress);
+    },
+    on_view_change: function (mode) {
+        //console.log(mode);
+    }
+};
 
-    chart.draw(data, options);
+function draw() {
+    ganttTasks = [];
+    tasks.forEach(function (t) {
+        var ganttTask = {
+            id: `${t.id.id}`,
+            name: `${t.name}`,
+            start: `${formatGanttDate(t.start)}`,
+            end: `${formatGanttDate(t.end)}`,
+            progress: '20',
+            dependencies: `${t.depends ? t.depends.depId.id : ""}`
+        };
+        ganttTasks.push(ganttTask);
+    });
+    if (ganttTasks.length > 0) { ganttChart(); }
 }
+function ganttChart() {
+    var gantt = new Gantt('#ganttchart', ganttTasks, options);
+}
+var vm = 1;
+function changeViewMode() {
+    if (vm == 1) {
+        options.view_mode = "Day";
+        vm++;
+    } else if (vm == 2) {
+        options.view_mode = "Week";
+        vm++;
+    } else {
+        options.view_mode = "Month";
+        vm = 1;
+    }
+    ganttChart();
+}
+// because of the arrangement of date elements
+function parseGanttDate(s) {
+    var b = s.split(/\D/);
+    return new Date(b[0], --b[1], b[2]);
+}
+function changeStartDate(frappTask) {
+    var taskid = parseInt(frappTask.id);
+    if (typeof frappTask.start == String) { var oldStart = parseGanttDate(frappTask.start); }
+    var newStart = frappTask._start;
+    $(`#startDate${taskid}`)[0].value = formatDate(newStart);
+    var oldEnd = parseGanttDate(frappTask.end);
+    $(`#Duration${taskid}`)[0].value = computeDuration(newStart, oldEnd);
+    tasks.find(t => t.id.id == taskid).start = newStart;
+    ganttTasks.find(t => t.id == taskid).start = newStart;
+}
+function changeEndDate(frappTask) {
+    var taskid = parseInt(frappTask.id);
+    var oldEnd = parseDate(frappTask.end);
+    var newEnd = frappTask._end;
+    newEnd = newEnd.setDate(newEnd.getDay() - 1);
+    $(`#endDate${taskid}`)[0].value = formatDate(newEnd);
+    var oldStart = parseDate(frappTask.start);
+    $(`#Duration${taskid}`)[0].value = computeDuration(oldStart, newEnd);
+    tasks.find(t => t.id.id == taskid).end = newEnd;
+    ganttTasks.find(t => t.id == taskid).end = newEnd;
+}
+
+/* #endregion */
+
+/* #region  trial dta */
+
+//function createRowTaskWithData(datArray) {
+//    for (let i = 0; i < datArray.length; i++) {
+//        createRowTask(1);
+//        fillData(i, datArray[i]);
+//    }
+//}
+
+//function fillData(rowId, task) {
+//    var n = rowId;
+//    $("td").children("label")[0].value = n + 1;
+//    $(`#taskName${n}`)[0].value = task.name;
+//    $(`#startDate${n}`)[0].value = formatDate(task.start);
+//    $(`#endDate${n}`)[0].value = formatDate(task.end);
+//    if (task.duration) {
+//        $(`#Duration${n}`)[0].value = task.duration;
+//    } else {
+//        $(`#Duration${n}`)[0].value = computeDuration(task.start, task.end);
+//    }
+//    if (task.depends > 0) { $(`#Dependency${n}`)[0].value = task.depends; }
+
+
+//}
+
+
+//var p = [{
+//    id: "0", name: "p1", depends: -1, start: "Mon May 18 2020 00:00:00 GMT+0200 (Eastern European Standard Time)",
+//    end: "Tue May 19 2020 00:00:00 GMT+0200 (Eastern European Standard Time)"
+//},
+//{
+//    id: "1", name: "p2", depends: 0, start: "Tue May 19 2020 00:00:00 GMT+0200 (Eastern European Standard Time)",
+//    end: "Wed May 27 2020 00:00:00 GMT+0200 (Eastern European Standard Time)"
+//},
+//{
+//    id: "2", name: "p3", depends: 0, start: "Wed May 20 2020 00:00:00 GMT+0200 (Eastern European Standard Time)",
+//    end: "Mon May 25 2020 00:00:00 GMT+0200 (Eastern European Standard Time)"
+//}];
+
+/* #endregion */
+
 
 // send the array of tasks to the backend
 function submit() {
     var proId = $('#proId').val();
     var Acts = assignTasks();
-    
+
     $.ajax({
         type: "POST",
         url: "/Activity/AddActivities",
-        data: { id: proId, Acts: Acts },
+        data: { id: proId, Acts: Acts, reDbId: removeFromDB, reDep: deletedDep },
         success: function (response) {
             console.log("fol");
         },
@@ -427,6 +927,3 @@ function submit() {
         }
     });
 }
-///////////////////////////////////
-
-/**/

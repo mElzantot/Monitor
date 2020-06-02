@@ -20,7 +20,9 @@ namespace ITI.CEI40.Monitor.Data
         public virtual DbSet<Project> Projects { get; set; }
         public virtual DbSet<Activity> Tasks { get; set; }
         public virtual DbSet<SubTask> SubTasks { get; set; }
-        public virtual DbSet<Claim> Claims { get; set; }
+        public virtual DbSet<Claim> Claims { get; set; }  
+        public virtual DbSet<Invoice> Invoices { get; set; }  
+        public virtual DbSet<InvoiceItem> InvoiceItems { get; set; }  
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -43,8 +45,6 @@ namespace ITI.CEI40.Monitor.Data
                    .HasOne(x => x.TeamLeader)
                     .WithMany()
                    .HasForeignKey(x => x.FK_TeamLeaderId);
-
-
 
             //Team Tasks many to many Relship
             /*modelBuilder.Entity<TeamTasks>()
@@ -74,6 +74,25 @@ namespace ITI.CEI40.Monitor.Data
              .HasOne(pt => pt.Project)
              .WithMany(t => t.DepartmentProjects)
              .HasForeignKey(pt => pt.ProjectID);
+
+
+
+            //-------Tasks Dependecy many to many Relship
+            modelBuilder.Entity<Dependencies>()
+                .HasKey(TT => new { TT.ActivityToFollowId, TT.FollowingActivityId });
+
+            modelBuilder.Entity<Dependencies>()
+            .Property(d => d.Lag);
+
+            modelBuilder.Entity<Dependencies>()
+                .HasOne(t => t.ActivityToFollow)
+                .WithMany(tt => tt.FollowingActivities)
+                .HasForeignKey(pt => pt.ActivityToFollowId);
+
+            modelBuilder.Entity<Dependencies>()
+             .HasOne(pt => pt.FollowingActivity)
+             .WithMany(t => t.ActivitiesToFollow)
+             .HasForeignKey(pt => pt.FollowingActivityId);
 
             //Engineer SubTasks many to many Relship
 
