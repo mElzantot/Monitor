@@ -2,27 +2,25 @@
 
 
 
-<div class="d-flex">
-    <h4 class="mr-3 pt-2" style="">
+<div class="d-flex mb-3">
+    <h4 class="mr-3 pt-2">
         @Model.FirstOrDefault().Team.Name
     </h4>
     <span class="alert alert-danger">@Model.Count Tasks</span>
 </div>
 
-<hr/>
-<table class="table table-hover">
-    <thead>
+
+<table class="table table-hover text-center">
+    <thead class="alert-info">
         <tr>
             <th>Name</th>
             <th>Project</th>
             <th>Progress</th>
-            <th>Start Date</th>
-            <th>End Date</th>
+            <th>From</th>
+            <th>To</th>
             <th>Priority</th>
-            <th>Actual Duration</th>
-            <th>Description</th>
-
-            @*<th></th>*@
+            <th>Working hours</th>
+            <th></th>
         </tr>
     </thead>
 
@@ -35,14 +33,14 @@
             <td><div class="progress"><div class="progress-bar" role="progressbar" style="width: @Model[i].Progress%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@Model[i].Progress%</div></div></td>
             <td>@Model[i].StartDate.Date.ToShortDateString()</td>
             <td>@Model[i].EndDate.Date.ToShortDateString()</td>
-            <td style="width:30%"><select asp-for="@Model[i].Priority" asp-items="@Html.GetEnumSelectList<Priority>()" class="form-control"></select></td>
-            <td>@Model[i].ActualDuratin Days</td>
+            <td width="17%"><select asp-for="@Model[i].Priority" asp-items="@Html.GetEnumSelectList<Priority>()" class="form-control"></select></td>
+            <td>@Model[i].ActualDuratin hours</td>
             <td>
                 <div class="btn-group dropleft">
                     <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <i class="fas fa-info"></i>
                     </button>
-                    <div class="dropdown-menu">
+                    <div class="dropdown-menu px-3 mx-1 text-muted">
                         @Model[i].Description
                     </div>
                 </div>
