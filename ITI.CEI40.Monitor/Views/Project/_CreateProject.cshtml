@@ -57,7 +57,7 @@
                                 <tr id="@item.ID" onclick="OpenEditSec(@item.ID)">
                                     <td class="text-center font-weight-bold">@item.Name</td>
                                     <td style="text-align:right">
-                                        <button asp-controller="Activity" asp-action="Index/@item.ID" onclick="" class="btn alert-info "><i id="i" class="fas fa-chart-area"></i> Chart</button>
+                                        <a href="/Activity/Index/@item.ID"  class="btn alert-info "><i id="i" class="fas fa-chart-area"></i> Chart</a>
 
                                         @if (item.EndDate != null)
                                         {
@@ -150,7 +150,7 @@
                             `<tr id="${response.id}" onclick="Edit(${response.id})">
                                                                                     <td class="text-center font-weight-bold">${response.name}</td>
                                                                                     <td style="text-align:right">
-                                                                                    <span class="btn alert-info "><i id="i" class="fas fa-chart-area"></i> Chart</span>
+                                                                                     <a href="/Activity/Index/${response.id}"  class="btn alert-info "><i id="i" class="fas fa-chart-area"></i> Chart</a>
                                                                                     <div class="btn-group dropleft">
                                                         <button type="button" class="btn alert-warning " data-toggle="dropdown" >
                                                             Dashboard
