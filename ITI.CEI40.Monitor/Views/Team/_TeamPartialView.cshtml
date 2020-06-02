@@ -1,13 +1,23 @@
 ﻿@model Team
 
-<tr>
-    <td>@Model.Name</td>
-    <td>@Model.Engineers.Count()</td>
-    <td>@Model.TeamLeader</td>
-    <td>
+<tr id="@Model.Id">
+    <td class="text-center font-weight-bold">@Model.Name</td>
+    @if (Model.TeamLeader !=null)
+    {
+    <td class="ManagerName">@Model.TeamLeader.UserName</td>
+    }
+    else
+    {
+        <td class="ManagerName"></td>
+    }
+    <td class="text-right">
         <div class="btn-group" role="group" aria-label="Basic example">
-            <a class="btn btn-outline-primary" asp-controller="Team" asp-action="viewEmployees" asp-route-id="@Model.Id"><i class="fas fa-users"></i></a>
-            <button type="button" class="btn btn-danger" onclick="deleteDept(@Model.Id)"><i class="far fa-trash-alt"></i></button>
+            <button type="button" class="btn btn-outline-success " onclick="AssignLeader(@Model.Id)"><i class="fas fa-male"></i></button>
+            <a class="btn btn-outline-primary" asp-controller="Employee" asp-action="ViewEmployees" asp-route-id="@Model.Id"><i class="fas fa-users"></i></a>
+            <button type="button" class="btn btn-danger" onclick="deleteTeam(@Model.Id)"><i class="far fa-trash-alt"></i></button>
         </div>
     </td>
 </tr>
+
+
+

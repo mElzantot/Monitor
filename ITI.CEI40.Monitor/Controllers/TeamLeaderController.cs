@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITI.CEI40.Monitor.Controllers
@@ -22,18 +23,22 @@ namespace ITI.CEI40.Monitor.Controllers
             return View();
         }
 
+        [Authorize(Roles = "Team Leader")]
         public IActionResult EngineersView(int teamid)
         {
             var engieers = unitofwork.Engineers.GetEngineersInsideTeam(teamid);
             return View(engieers);
         }
 
+        [Authorize(Roles = "Team Leader")]
         [HttpGet]
         public IActionResult displaySubTasks(string engId)
         {
             var subtask = unitofwork.SubTasks.GetSubTasksByEngineerId(engId).ToList();
             return PartialView("_SubTaskPartialView", subtask);
         }
+
+        [Authorize(Roles = "Team Leader")]
         [HttpGet]
         public IActionResult displayCharts(string engId)
         {

@@ -5,11 +5,14 @@ using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
 using ITI.CEI40.Monitor.Models.View_Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITI.CEI40.Monitor.Controllers
 {
+    //[Authorize(Roles = "Admin")]
+
     public class TeamController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
@@ -22,14 +25,15 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [HttpGet]
-        public IActionResult ViewTeams(int id)
+        public IActionResult ViewTeams(int id,string Name)
         {
             TeamViewModel TeamVm = new TeamViewModel
             {
-                teams = unitOfWork.Teams.GetAllWithAttributes(id).ToList(),
+                teams = unitOfWork.Teams.getTeamsinsideDept(id).ToList(),
                 FK_DepartmentId = id,
+                DepName = Name
             };
-            return View(TeamVm);
+            return PartialView("_ViewTeamsPartial",TeamVm);
         }
 
         [HttpPost]
@@ -61,7 +65,6 @@ namespace ITI.CEI40.Monitor.Controllers
             }
             return false;
         }
-
 
     }
 }

@@ -6,11 +6,14 @@ using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
 using ITI.CEI40.Monitor.Entities.Enums;
 using ITI.CEI40.Monitor.Models.View_Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITI.CEI40.Monitor.Controllers
 {
+    //[Authorize(Roles = "Admin")]
+
     public class EmployeeController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;

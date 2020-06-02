@@ -5,10 +5,13 @@ using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
 using ITI.CEI40.Monitor.Models.View_Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITI.CEI40.Monitor.Controllers
 {
+    //[Authorize(Roles = "Admin")]
+
     public class DepartmentController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
@@ -50,11 +53,10 @@ namespace ITI.CEI40.Monitor.Controllers
                 var newDept = new Department
                 {
                     Name = name
-
                 };
                 newDept = unitOfWork.Departments.Add(newDept);
-                List<Department> depts = unitOfWork.Departments.GetAllDeptWithManagers().ToList();
-                return PartialView("_DepartmentPartial", depts);
+               // List<Department> depts = unitOfWork.Departments.GetAllDeptWithManagers().ToList();
+                return PartialView("_DepartmentPartial", newDept);
             }
             return null;
 

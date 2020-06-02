@@ -17,7 +17,7 @@
                 <th scope="col"></th>
             </tr>
         </thead>
-        <tbody id="tableBody">
+        <tbody id="teamsList">
             @for (int i = 0; i < Model.teams.Count(); i++)
             {
                 <tr id="@Model.teams[i].Id">
@@ -36,6 +36,56 @@
         </tbody>
     </table>
 </div>
+
+
+
+<!--#region Table Section  -->
+<div id="teamsTable" style="border: 2px solid rgb(219, 219, 219) ;  border-radius: 8px;">
+
+    @if (Model.teams.Count <= 0)
+    {
+        <h4 id="NO Teams ADDED TILL NOW" style="padding:45px 20px " class="text-muted text-center">Create your first project </h4>
+    }
+    else
+    {
+        <table class="table table-hover text-center">
+            <thead>
+                <tr>
+                    <th scope="col">Department</th>
+                    <th scope="col">Team Leader</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="tablebody">
+                @foreach (var item in Model.teams)
+                {
+                    <tr id="@item.Id" onclick="showTeams(@item.Id)">
+                        <td class="text-center font-weight-bold">@item.Name</td>
+                        @if (item.FK_TeamLeaderId != null)
+                        {
+                            <td class="ManagerName">@item.TeamLeader.UserName</td>
+                        }
+                        else
+                        {
+                            <td></td>
+                        }
+                        <td class="text-right">
+                            <div class="btn-group" role="group" aria-label="Basic example">
+                                <button type="button" class="btn btn-outline-success " onclick="AssignManager(@item.Id)"><i class="fas fa-male"></i></button>
+                                <a class="btn btn-outline-primary" asp-controller="Employee" asp-action="ViewEmployees" asp-route-id="@item.Id"><i class="fas fa-users"></i></a>
+                                <button type="button" class="btn btn-danger" onclick="deleteTeam(@item.Id)"><i class="far fa-trash-alt"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    <button type="button" class="btn btn-sm btn-primary mb-3 ml-3" onclick="addDept()">Add Department</button>
+</div>
+
+
+
 
 
 
@@ -112,7 +162,6 @@
                     alert("Please Enter Team Name ")
                 }
                 else {
-
                     $.post("/Team/addTeam", { name: teamName, FK_DepartmentId:@Model.FK_DepartmentId }, function (data, status) {
                         if (status == "success") {
                             var tbody = $("#tableBody");

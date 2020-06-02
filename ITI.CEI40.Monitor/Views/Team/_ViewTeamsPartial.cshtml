@@ -1,0 +1,50 @@
+﻿@model TeamViewModel
+
+@if (Model.teams.Count <= 0)
+{
+    <h4 style="padding:45px 20px " class="text-muted text-center">NO TEAMS ADDED TILL NOW </h4>
+}
+else
+{
+    <h3 class="p-3"> @Model.DepName</h3>
+    <table class="table table-hover text-center">
+        <thead>
+            <tr>
+                <th scope="col">Team</th>
+                <th scope="col">Team Leader</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody id="teamsList">
+            @foreach (var item in Model.teams)
+            {
+                <tr id="@item.Id">
+                    <td class="text-center font-weight-bold">@item.Name</td>
+                    @if (item.FK_TeamLeaderId != null)
+                    {
+                        <td class="ManagerName">@item.TeamLeader.UserName</td>
+                    }
+                    else
+                    {
+                        <td class="ManagerName"></td>
+                    }
+                    <td class="text-right">
+                        <div class="btn-group" role="group" aria-label="Basic example">
+                            <button type="button" class="btn btn-outline-success " onclick="AssignLeader(@item.Id)"><i class="fas fa-male"></i></button>
+                            <a class="btn btn-outline-primary" asp-controller="Employee" asp-action="ViewEmployees" asp-route-id="@item.Id"><i class="fas fa-users"></i></a>
+                            <button type="button" class="btn btn-danger" onclick="deleteTeam(@item.Id)"><i class="far fa-trash-alt"></i></button>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+<button type="button" class="btn btn-sm btn-primary mb-3 ml-3" onclick="addTeam()">Add Team</button>
+
+
+
+
+
+

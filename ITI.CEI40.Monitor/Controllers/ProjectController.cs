@@ -7,10 +7,13 @@ using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
 using ITI.CEI40.Monitor.Models;
 using ITI.CEI40.Monitor.Models.View_Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITI.CEI40.Monitor.Controllers
 {
+    [Authorize(Roles = "Project Manager")]
+
     public class ProjectController : Controller
     {
 

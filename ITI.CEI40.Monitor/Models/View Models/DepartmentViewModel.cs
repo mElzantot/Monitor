@@ -13,10 +13,12 @@ namespace ITI.CEI40.Monitor.Models.View_Models
 
         public Department Dept { get; set; }
 
-        [Display(Name ="Team Name")]
-        public string teamName { get; set; }
+        [Required]
+        [MaxLength(50)]
+        public string Name { get; set; }
 
-
+        [Display(Name = "Team Leader")]
+        public int TeamLeaderId { get; set; }
 
     }
 }

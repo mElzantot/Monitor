@@ -12,6 +12,8 @@ namespace ITI.CEI40.Monitor.Models.View_Models
     {
         public List<Team> teams { get; set; }
 
+        public string DepName { get; set; }
+
         [Required]
         [MaxLength(50)]
         public string Name { get; set; }

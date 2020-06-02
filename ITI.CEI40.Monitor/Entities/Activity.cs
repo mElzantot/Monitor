@@ -25,15 +25,12 @@ namespace ITI.CEI40.Monitor.Entities
         [MaxLength(256)]
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
-
         
         public Team Team { get; set; }
         [ForeignKey(nameof(Team))]
         public int? FK_TeamId { get; set; }
 
-
         public ICollection<SubTask> SubTasks { get; set; }
-
 
         public Project Project { get; set; }
         [ForeignKey(nameof(Project))]

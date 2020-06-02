@@ -80,7 +80,6 @@ namespace ITI.CEI40.Monitor
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();
-
             app.UseAuthentication();
             SeedData.Initialize(roleManager);
 

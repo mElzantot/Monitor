@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 {
-    public interface ITeamManager: IRepository<Team>
+    public interface ITeamManager : IRepository<Team>
     {
         Team FindByName(string name);
         Team GetTeamWithEngineersandLeader(int id);
@@ -14,8 +14,6 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         Team GetTeamWithAttributes(int id);
         IEnumerable<Team> GetAllWithAttributes(int id);
         Team GetTeamWithTasksAndEngineers(int id);
-
-
     }
 
 }

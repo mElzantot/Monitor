@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
 using ITI.CEI40.Monitor.Models.View_Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITI.CEI40.Monitor.Controllers
@@ -13,17 +15,24 @@ namespace ITI.CEI40.Monitor.Controllers
     public class SubTaskController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
-        public SubTaskController(IUnitOfWork unitOfWork)
+        private readonly UserManager<ApplicationUser> userManager;
+
+        public SubTaskController(IUnitOfWork unitOfWork,UserManager<ApplicationUser> userManager)
         {
             this.unitOfWork = unitOfWork;
+            this.userManager = userManager;
         }
 
+        [Authorize(Roles = "Engineer")]
 
-        public IActionResult Index(string engineerID)
+        public IActionResult Index()
         {
-            IEnumerable<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByEngineerId(engineerID);      
+            //----------- Get user Id from UserManager ---------//
+            string engId = userManager.GetUserId(HttpContext.User);
+            IEnumerable<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByEngineerId(engId);      
             return View("Engineer",subTasks);
         }
+
 
         public IActionResult DisplayRow(int ID)
         {
@@ -95,8 +104,7 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
 
-
-
+        [Authorize(Roles = "Team Leader")]
         [HttpGet]
         public IActionResult displaySubTasks(int taskID)
         {
@@ -110,6 +118,7 @@ namespace ITI.CEI40.Monitor.Controllers
 
         }
 
+        [Authorize(Roles = "Team Leader")]
         [HttpGet]
         public IActionResult AddSubTask(int taskID, int teamId)
         {
@@ -121,6 +130,7 @@ namespace ITI.CEI40.Monitor.Controllers
             return PartialView("_SubTaskModal", subTask);
         }
 
+        [Authorize(Roles = "Team Leader")]
         [HttpPost]
         public IActionResult AddSubTask(SubTaskViewModel subTask)
         {

@@ -16,6 +16,8 @@ namespace ITI.CEI40.Monitor.Entities
         [Required]
         [MaxLength(30)]
         public string Name { get; set; }
+
+        [Display(Name = "Department Manager")]
         public string FK_ManagerID { get; set; }
         public ApplicationUser Manager { get; set; }
         public ICollection<Team> Teams { get; set; }

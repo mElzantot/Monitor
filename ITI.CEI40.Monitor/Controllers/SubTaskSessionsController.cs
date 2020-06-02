@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITI.CEI40.Monitor.Controllers
@@ -17,11 +18,8 @@ namespace ITI.CEI40.Monitor.Controllers
             this.unitOfWork = unitOfWork;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
 
+        [Authorize(Roles = "Engineer")]
         [HttpGet]
         public IActionResult EmployeeTimeSheet(string EmpId)
         {
