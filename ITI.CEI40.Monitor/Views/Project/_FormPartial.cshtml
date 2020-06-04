@@ -1,62 +1,72 @@
-﻿@model Project
+﻿@model ProjectViewModel
 
 <div id="formSec" class="col-6">
     <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
         @*
-        <form method="post" data-ajax-url="/Employee/AddEmployee" data-ajax="true" data-ajax-method="Post" data-ajax-complete="addEmployee"
-                 data-ajax-update="#tableBody" data-ajax-mode="after" id="EmployeeForm">
+            <form method="post" data-ajax-url="/Employee/AddEmployee" data-ajax="true" data-ajax-method="Post" data-ajax-complete="addEmployee"
+                     data-ajax-update="#tableBody" data-ajax-mode="after" id="EmployeeForm">
         *@
 
 
         @*<form id="projectForm" onsubmit="SubmitForm(event)">*@
 
-        <form method="post" data-ajax-url="/project/Edit" data-ajax="true" data-ajax-method="Post" data-ajax-complete="EditName"
+        <form method="post" enctype="multipart/form-data" data-ajax-url="/project/Edit" data-ajax="true" data-ajax-method="Post" data-ajax-complete="EditName"
               data-ajax-update="#prjName" data-ajax-mode="replace" id="ProjectForm">
             <div class="row">
-                <input hidden asp-for="@Model.ID" />
-                <input hidden asp-for="@Model.StartDate" value="@Model.StartDate" />
-                <input hidden asp-for="@Model.EndDate" value="@Model.EndDate" />
+                <input hidden asp-for="@Model.Project.ID" />
+                <input hidden asp-for="@Model.Project.StartDate" value="@Model.Project.StartDate" />
+                <input hidden asp-for="@Model.Project.EndDate" value="@Model.Project.EndDate" />
 
                 <div class="form-group col-lg-6">
-                    <label  asp-for="@Model.Name">Project Name</label>
-                    <input id="prjName" asp-for="@Model.Name" class="form-control" placeholder="Project Name" />
-                    <span asp-validation-for="@Model.Name" class="text-danger"></span>
+                    <label asp-for="@Model.Project.Name">Project Name</label>
+                    <input id="prjName" asp-for="@Model.Project.Name" class="form-control" placeholder="Project Name" />
+                    <span asp-validation-for="@Model.Project.Name" class="text-danger"></span>
                 </div>
                 <div class="form-group col-lg-6">
-                    <label asp-for="@Model.Owner">Owner Name</label>
-                    <input asp-for="@Model.Owner" class="form-control" placeholder="Owner Name" />
-                    <span asp-validation-for="@Model.Owner" class="text-danger"></span>
+                    <label asp-for="@Model.Project.Owner">Owner Name</label>
+                    <input asp-for="@Model.Project.Owner" class="form-control" placeholder="Owner Name" />
+                    <span asp-validation-for="@Model.Project.Owner" class="text-danger"></span>
                 </div>
             </div>
             <hr />
+
             <div class="row">
                 <div class="form-group col-lg-6">
-                    <label asp-for="@Model.Priority">Priority</label>
+                    <label asp-for="@Model.Project.Priority">Priority</label>
                     @Html.DropDownList("Priority",
                     new SelectList(Enum.GetValues(typeof(Priority))),
                     "Select Priority",
                     new { @class = "form-control" })
                 </div>
-                <span asp-validation-for="@Model.Status" class="text-danger"></span>
+                <span asp-validation-for="@Model.Project.Status" class="text-danger"></span>
                 <div class="form-group col-lg-6">
-                    <label asp-for="@Model.Status">Status</label>
+                    <label asp-for="@Model.Project.Status">Status</label>
                     @Html.DropDownList("Status",
                     new SelectList(Enum.GetValues(typeof(Status))),
                     "Select Status",
                     new { @class = "form-control" })
                 </div>
-                <span asp-validation-for="@Model.Status" class="text-danger"></span>
+                <span asp-validation-for="@Model.Project.Status" class="text-danger"></span>
             </div>
 
             <hr />
 
+            <div class="form-group row">
+                <label asp-for="Files" class="col-sm-2 col-form-label"></label>
+                <div class="col-sm-10">
+                    <div class="custom-file">
+                        <input asp-for="Files" multiple class="form-control custom-file-input">
+                        <label class="custom-file-label">Choose File...</label>
+                    </div>
+                </div>
+            </div>
 
             <div class="row mb-3">
                 <div class="form-group col-lg-6">
-                    <label asp-for="@Model.Income">Income</label>
-                    @if (Model.Income > 0)
+                    <label asp-for="@Model.Project.Income">Income</label>
+                    @if (Model.Project.Income > 0)
                     {
-                        <h5>@Model.Income LE</h5>
+                        <h5>@Model.Project.Income LE</h5>
                     }
                     else
                     {
@@ -65,10 +75,10 @@
                 </div>
 
                 <div class="form-group col-lg-6">
-                    <label asp-for="@Model.Outcome">Outcome</label>
-                    @if (Model.Income > 0)
+                    <label asp-for="@Model.Project.Outcome">Outcome</label>
+                    @if (Model.Project.Income > 0)
                     {
-                        <h5>@Model.Outcome LE</h5>
+                        <h5>@Model.Project.Outcome LE</h5>
                     }
                     else
                     {
@@ -77,7 +87,7 @@
                 </div>
             </div>
 
-            
+
             <button type="submit" class="btn btn-primary">Update</button>
         </form>
     </div>

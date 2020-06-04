@@ -23,7 +23,9 @@ namespace ITI.CEI40.Monitor.Data
         public virtual DbSet<SubTaskSession> SubTaskSessions { get; set; }
         public virtual DbSet<Claim> Claims { get; set; }  
         public virtual DbSet<Invoice> Invoices { get; set; }  
-        public virtual DbSet<InvoiceItem> InvoiceItems { get; set; }  
+        public virtual DbSet<InvoiceItem> InvoiceItems { get; set; }
+
+
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -117,6 +119,8 @@ namespace ITI.CEI40.Monitor.Data
             // .HasOne(pt => pt.SubTask)
             // .WithMany(t => t.EngineerSubTasks)
             // .HasForeignKey(pt => pt.SubTaskID);
+
+            
 
             //--------On Delete  options 
 

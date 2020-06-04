@@ -28,6 +28,7 @@ namespace ITI.CEI40.Monitor.Data
             Invoices = new InvoicesManager(context);
             InoviceItems = new InvoiceItemManager(context);
             Dependency = new DependencyManager(context);
+            Files = new FilesManager(context);
 
         }
         public IClaimManager Claims { get; }
@@ -44,6 +45,7 @@ namespace ITI.CEI40.Monitor.Data
         public IInvoicesManager Invoices { get; }
         public IInoviceItemManger InoviceItems { get; }
         public IDependencyManager Dependency { get; }
+        public IFilesManager Files { get;  }
 
 
 

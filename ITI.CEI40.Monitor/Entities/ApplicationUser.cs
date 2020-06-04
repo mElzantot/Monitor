@@ -38,6 +38,7 @@ namespace ITI.CEI40.Monitor.Entities
         public ICollection<SubTask> SubTasks { get; set; }
         public ICollection<Project> ManagedProjects { get; set; }
         public ICollection<SubTaskSession> SubTaskSessions { get; set; }
+        public ICollection<Files> Files { get; set; }
 
     }
 }

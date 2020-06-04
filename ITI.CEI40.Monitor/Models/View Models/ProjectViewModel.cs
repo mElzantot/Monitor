@@ -1,4 +1,5 @@
 ﻿using ITI.CEI40.Monitor.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,5 +11,6 @@ namespace ITI.CEI40.Monitor.Models
     {
         public IEnumerable<Project> Projects { get; set; }
         public Project Project { get; set; }
+        public List<IFormFile> Files { get; set; }
     }
 }

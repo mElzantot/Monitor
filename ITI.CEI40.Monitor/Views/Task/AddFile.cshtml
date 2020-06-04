@@ -1,0 +1,49 @@
+﻿
+@model TaskViewModel
+
+
+<div class="form-group">
+    <form enctype="multipart/form-data" asp-controller="Task" asp-action="AddFile"
+          method="post" class="mt-3">
+        @*<input hidden type="text" asp-for="Task.Id" value="@Model.Task.Id" />*@
+        @Html.HiddenFor(m => m.Task.Id)
+
+        <div class="form-group row">
+            <label asp-for="Files" class="col-sm-2 col-form-label"></label>
+            <div class="col-sm-10">
+                <div class="custom-file">
+                    <input asp-for="Files" multiple class="form-control custom-file-input">
+                    <label class="custom-file-label">Choose File...</label>
+                </div>
+            </div>
+        </div>
+
+        @*<div asp-validation-summary="All" class="text-danger"></div>*@
+
+        <div class="form-group row">
+            <div class="col-sm-10">
+                <button type="submit" class="btn btn-primary">Add File(s)</button>
+            </div>
+        </div>
+
+
+
+        @section Scripts {
+            <script>
+                $(document).ready(function () {
+                    $('.custom-file-input').on("change", function () {
+                        var fileLabel = $(this).next('.custom-file-label');
+                        var files = $(this)[0].files;
+                        if (files.length > 1) {
+                            fileLabel.html(files.length + ' files selected');
+                        }
+                        else if (files.length == 1) {
+                            fileLabel.html(files[0].name);
+                        }
+                    });
+                });
+            </script>
+        }
+    </form>
+
+</div>

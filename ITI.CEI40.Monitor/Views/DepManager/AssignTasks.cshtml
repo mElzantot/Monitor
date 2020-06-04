@@ -31,6 +31,7 @@ else
                             <th>Working Hours</th>
                             <th>Description</th>
                             <th>Dashboard</th>
+                            <th>Files</th>
                             <th>Assigned To</th>
                         </tr>
                     </thead>
@@ -69,15 +70,14 @@ else
                                         <i class="fas fa-chart-area"></i>
                                     </button>
                                 </td>
+                                <td id="filepartial">
+                                    <a href="/Task/AddFile/@item.Id"  class="btn btn-secondary">
+                                        AddFile
+                                    </a>
+
+                                </td>
                                 @if (item.FK_TeamId == null)
                                 {
-
-                                    @*<td>
-                                            <select id="teamlist" asp-for="FK_TeamId" asp-items="new SelectList(Model.Teams,nameof(Model.Team.Id),nameof(Model.Team.Name)) ">
-                                                <option value="">--  Select Team  --</option>
-                                            </select>
-
-                                        </td>*@
                                     <td id="chId"><button onclick="viewModal(@item.Id)" class="btn btn-secondary" type="submit">Assign</button></td>
                                 }
                                 else
@@ -118,6 +118,9 @@ else
         </div>
     </div>
 
+    
+
+    
     <div id="Board">
     </div>
 
@@ -125,7 +128,7 @@ else
 @section Scripts{
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    
+
 
 
     <script>
@@ -137,6 +140,9 @@ else
             $('#AssignTeamModal').modal('show');
 
         }
+
+
+        
 
         function assignTeams() {
             var team = $('#teams').val();
@@ -151,8 +157,6 @@ else
 
                 success: function (result) {
                     alert('Task assigned Successfully !');
-                    //$(`ch-${result.taskid}`).empty();
-                    //$(`ch-${result.taskid}`).append(result.teamName);
                     $('#chId').empty();
                     $('#chId').append(result.teamName);
                     $('#AssignTeamModal').modal('hide');
@@ -162,6 +166,19 @@ else
                 }
             })
         }
+        //function addFile(id) {
+        //    $.ajax({
+        //        url: "/Task/AddFile",
+        //        type: "Get",
+        //        data: { taskid: `${id}` },
+        //        success: function (result) {
+        //            if (result) {
+        //                $('#MainView').hide();
+        //                //$('#mainPage').append(result);
+        //            }
+        //        }
+        //    })
+        //}
 
         ////DashBoard
         function Dashboard(id) {

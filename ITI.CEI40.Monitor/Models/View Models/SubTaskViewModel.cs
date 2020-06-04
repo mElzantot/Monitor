@@ -1,4 +1,5 @@
 ﻿using ITI.CEI40.Monitor.Entities;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,11 @@ namespace ITI.CEI40.Monitor.Models.View_Models
 {
     public class SubTaskViewModel
     {
+
+        public SubTaskViewModel()
+        {
+
+        }
 
         public int SubTaskId { get; set; }
 
@@ -42,5 +48,6 @@ namespace ITI.CEI40.Monitor.Models.View_Models
         [Display(Name = "Assigned to")]
         public string Assignee { get; set; }
 
+        public ICollection<IFormFile> files { get; set; }
     }
 }

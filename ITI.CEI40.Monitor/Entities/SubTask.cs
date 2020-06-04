@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -61,6 +62,9 @@ namespace ITI.CEI40.Monitor.Entities
         public ApplicationUser Engineer { get; set; }
         [ForeignKey("Engineer")]
         public string FK_EngineerID { get; set; }
+
+
+        public ICollection<Files> files { get; set; }
 
     }
 }

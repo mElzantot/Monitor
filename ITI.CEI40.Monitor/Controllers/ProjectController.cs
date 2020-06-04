@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
 using ITI.CEI40.Monitor.Models;
 using ITI.CEI40.Monitor.Models.View_Models;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITI.CEI40.Monitor.Controllers
@@ -15,9 +17,11 @@ namespace ITI.CEI40.Monitor.Controllers
     {
 
         private readonly IUnitOfWork unitofwork;
-        public ProjectController(IUnitOfWork unitOfWork)
+        private readonly IHostingEnvironment hostingEnvironment;
+        public ProjectController(IUnitOfWork unitOfWork,IHostingEnvironment hostingEnvironment)
         {
             this.unitofwork = unitOfWork;
+            this.hostingEnvironment = hostingEnvironment;
         }
 
         public IActionResult Index()
@@ -48,10 +52,15 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpGet]
         public IActionResult Edit(int id)
         {
-            Project project = unitofwork.Projects.GetById(id);
-            if (project != null)
+            //Project project = unitofwork.Projects.GetById(id);
+
+            ProjectViewModel projectVM = new ProjectViewModel
             {
-                return PartialView("_FormPartial", project);
+                Project= unitofwork.Projects.GetById(id),
+            };
+            if (projectVM != null)
+            {
+                return PartialView("_FormPartial", projectVM);
             }
             else
             {
@@ -59,29 +68,62 @@ namespace ITI.CEI40.Monitor.Controllers
             }
         }
 
-        //[HttpPost]
-        //public JsonResult Edit(Project project)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (project.Status == Status.Completed)
-        //        {
-        //            project.EndDate = DateTime.Now;
-        //            var projectTasks = unitofwork.Tasks.GetAllTaskWithProject(project.ID);
-        //            foreach (var task in projectTasks)
-        //            {
-        //                project.WorkingHrs += task.ActualDuration;
-        //            }
-        //        }
+        
 
-        //        unitofwork.Projects.Edit(project);
-        //        return Json(project);
-        //    }
-        //    else
-        //    {
-        //        return Json(project);
-        //    }
-        //}
+        
+
+        [HttpPost]
+        public JsonResult Edit(ProjectViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+
+                Project project = new Project();
+                project = model.Project;
+                int projid = project.ID;
+                string uniqeFileName = null;
+                if (model.Files != null)
+                {
+                    //-------Get Files Folder path in Server
+                    string uploaderFolder = Path.Combine(hostingEnvironment.WebRootPath, "files");
+
+                    foreach (var item in model.Files)
+                    {
+                        //-------Create New Guid fo each file
+                        uniqeFileName = Guid.NewGuid().ToString() + "_" + item.FileName;
+                        //---------The full path for file
+                        string filePath = Path.Combine(uploaderFolder, uniqeFileName);
+                        //----------Copy file to server
+                        item.CopyTo(new FileStream(filePath, FileMode.Create));
+
+                        //------Creat instance of file
+                        Files file = new Files
+                        {
+                            FilePath = uniqeFileName,
+                            FK_ProjectId = projid,
+
+                            FileType = Entities.Enums.FileType.Subtask,
+                            Time = DateTime.Now,
+
+
+                        };
+
+                        //-----Add file To DB
+                        unitofwork.Files.Add(file);
+
+                    }
+
+                }
+                unitofwork.Projects.Edit(model.Project);
+
+
+                return Json(model.Project);
+            }
+            else
+            {
+                return Json(null);
+            }
+        }
 
         [HttpGet]
         public IActionResult CompletedProjects()

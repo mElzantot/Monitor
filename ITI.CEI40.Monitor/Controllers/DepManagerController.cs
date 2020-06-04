@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
 using ITI.CEI40.Monitor.Models.View_Models;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -13,10 +16,12 @@ namespace ITI.CEI40.Monitor.Controllers
     public class DepManagerController : Controller
     {
         private readonly IUnitOfWork unitofwork;
+        private readonly IHostingEnvironment hostingEnvironment;
 
-        public DepManagerController(IUnitOfWork unitofwork)
+        public DepManagerController(IUnitOfWork unitofwork,IHostingEnvironment hostingEnvironment)
         {
             this.unitofwork = unitofwork;
+            this.hostingEnvironment = hostingEnvironment;
         }
         public IActionResult Index()
         {
@@ -70,6 +75,7 @@ namespace ITI.CEI40.Monitor.Controllers
             return View("_DashBoardPartial", subtask);
         }
 
+        
 
 
     }

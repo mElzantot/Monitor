@@ -72,5 +72,7 @@ namespace ITI.CEI40.Monitor.Entities
 
         public Department Department { get; set; }
 
+        public ICollection<Files> Files { get; set; }
+
     }
 }

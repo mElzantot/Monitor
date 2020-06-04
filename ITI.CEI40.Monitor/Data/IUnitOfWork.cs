@@ -22,6 +22,7 @@ namespace ITI.CEI40.Monitor.Data
         IInvoicesManager Invoices { get; }
         IInoviceItemManger InoviceItems { get; }
         IDependencyManager Dependency { get; }
+        IFilesManager Files { get; }
         int Complete();
 
     }

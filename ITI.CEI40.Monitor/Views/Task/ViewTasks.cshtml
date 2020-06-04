@@ -44,7 +44,7 @@
 <div class="modal fade" id="addSubTaskModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post" data-ajax-url="/SubTask/AddSubTask" data-ajax="true" data-ajax-method="Post" data-ajax-complete="addSubTask"
+            <form enctype="multipart/form-data" method="post" data-ajax-url="/SubTask/AddSubTask" data-ajax="true" data-ajax-method="Post" data-ajax-complete="addSubTask"
                   data-ajax-update="#tableBody" data-ajax-mode="after" id="SubTaskForm">
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Add SubTask</h5>
@@ -150,5 +150,6 @@
             $("#modalBody").empty();
         })
 
+        
     </script>
 }

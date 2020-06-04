@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
 using ITI.CEI40.Monitor.Models.View_Models;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITI.CEI40.Monitor.Controllers
@@ -13,9 +15,12 @@ namespace ITI.CEI40.Monitor.Controllers
     public class SubTaskController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
-        public SubTaskController(IUnitOfWork unitOfWork)
+        private readonly IHostingEnvironment hostingEnvironment;
+
+        public SubTaskController(IUnitOfWork unitOfWork,IHostingEnvironment hostingEnvironment)
         {
             this.unitOfWork = unitOfWork;
+            this.hostingEnvironment = hostingEnvironment;
         }
 
 
@@ -123,26 +128,68 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddSubTask(SubTaskViewModel subTask)
+        public IActionResult AddSubTask(SubTaskViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var startDate = subTask.StartDate.Split('/').Select(Int32.Parse).ToList();
-                var endDate = subTask.EndDate.Split('/').Select(Int32.Parse).ToList();
+                var startDate = model.StartDate.Split('/').Select(Int32.Parse).ToList();
+                var endDate = model.EndDate.Split('/').Select(Int32.Parse).ToList();
                 var newSubTask = new SubTask
                 {
-                    Name = subTask.Name,
-                    Description = subTask.Description,
-                    FK_TaskId = subTask.FK_TaskId,
-                    FK_EngineerID = subTask.Assignee,
-                    Priority = subTask.Priority,
-                    Status = subTask.Status,
+                    Name = model.Name,
+                    Description = model.Description,
+                    FK_TaskId = model.FK_TaskId,
+                    FK_EngineerID = model.Assignee,
+                    Priority = model.Priority,
+                    Status = model.Status,
                     StartDate = new DateTime(startDate[2], startDate[1], startDate[0]),
-                    EndDate = new DateTime(endDate[2], endDate[1], endDate[0])
+                    EndDate = new DateTime(endDate[2], endDate[1], endDate[0]),
+                    
                 };
 
                 newSubTask = unitOfWork.SubTasks.Add(newSubTask);
-                newSubTask.Engineer = unitOfWork.Engineers.GetById(subTask.Assignee);
+                newSubTask.Engineer = unitOfWork.Engineers.GetById(model.Assignee);
+
+                int subTaskId = newSubTask.Id;
+
+                string uniqeFileName = null;
+                if (model.files != null)
+                {
+                    //-------Get Files Folder path in Server
+                    string uploaderFolder = Path.Combine(hostingEnvironment.WebRootPath, "files");
+
+                    foreach (var item in model.files)
+                    {
+                        //-------Create New Guid fo each file
+                        uniqeFileName = Guid.NewGuid().ToString() + "_" + item.FileName;
+                        //---------The full path for file
+                        string filePath = Path.Combine(uploaderFolder, uniqeFileName);
+                        //----------Copy file to server
+                        item.CopyTo(new FileStream(filePath, FileMode.Create));
+
+                        //------Creat instance of file
+                        Files file = new Files
+                        {
+                            FilePath = uniqeFileName,
+                            FK_SubTaskId = subTaskId,
+                            FK_SenderId = newSubTask.FK_EngineerID,
+                            FileType = Entities.Enums.FileType.Subtask,
+                            Time = DateTime.Now,
+                            
+
+                        };
+
+                        //-----Add file To DB
+                        unitOfWork.Files.Add(file);
+
+                    }
+                }
+
+                
+
+                
+
+
                 return PartialView("_NewSubTaskPartialView", newSubTask);
 
             }
