@@ -31,14 +31,17 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpGet]
         public IActionResult displaySubTasks(string engId)
         {
-            var subtask = unitofwork.SubTasks.GetSubTasksByEngineerId(engId).ToList();
+            List<SubTask> subtask = unitofwork.SubTasks.GetEngineerSubTasks(engId);
             return PartialView("_SubTaskPartialView", subtask);
         }
-        [HttpGet]
-        public IActionResult displayCharts(string engId)
+
+
+        //Omar to edit status if the team leader submit the subtask
+        public void EditStatus(int id,int status)
         {
-            var subtask = unitofwork.SubTasks.GetSubTasksByEngineerId(engId).ToList();
-            return PartialView("_ChartsPartialView", subtask);
+            var subtask = unitofwork.SubTasks.GetById(id);
+            subtask.Status = (Status)status;
+            unitofwork.SubTasks.Edit(subtask);
         }
     }
 }

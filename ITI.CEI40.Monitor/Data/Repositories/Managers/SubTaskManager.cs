@@ -45,5 +45,14 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Where(sub => sub.Id == subTaskId).Include(sub => sub.Task).ThenInclude(t => t.Project).FirstOrDefault();
         }
 
+        //Get only SubTasks which is on hold or active
+        public List<SubTask> GetEngineerSubTasks(string EngineerId)
+        {
+            return set.Where(sub => sub.FK_EngineerID == EngineerId)
+                .Where(s => s.Status == Status.OnHold || s.Status == Status.Active)
+                .Include(s => s.Engineer).Include(s=>s.Task).ThenInclude(t=>t.Project).ToList();
+        }
+
+ 
     }
 }

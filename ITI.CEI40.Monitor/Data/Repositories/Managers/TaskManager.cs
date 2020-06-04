@@ -38,6 +38,15 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         }
 
 
+        //Omar //Get only task where status == on hold or active
+        public List<Activity> GetHoldActiveTasks(int teamId)
+        {
+            return set.Where(t => t.FK_TeamId == teamId)
+               .Where(t=>t.Status==Status.OnHold || t.Status==Status.Active)
+               .Include(t => t.Project).Include(t => t.Team).ToList();
+        }
+
+
         public IEnumerable<Activity> GetActivitiesFromProject(int projId)
         {
             return set.Where(p => p.FK_ProjectId == projId).Include(a => a.Project)
@@ -56,5 +65,6 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         {
             return set.Where(t => t.FK_ProjectId == proId).Where(t => t.ViewOrder == viewOrder).FirstOrDefault();
         }
+
     }
 }

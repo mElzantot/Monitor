@@ -7,6 +7,7 @@ using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
 using ITI.CEI40.Monitor.Models.View_Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 
 namespace ITI.CEI40.Monitor.Controllers
 {
@@ -21,9 +22,10 @@ namespace ITI.CEI40.Monitor.Controllers
 
         public IActionResult Index(string engineerID)
         {
-            IEnumerable<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByEngineerId(engineerID);      
+            IEnumerable<SubTask> subTasks = unitOfWork.SubTasks.GetEngineerSubTasks(engineerID);      
             return View("Engineer",subTasks);
         }
+
 
         public IActionResult DisplayRow(int ID)
         {
@@ -82,19 +84,25 @@ namespace ITI.CEI40.Monitor.Controllers
             subTask = unitOfWork.SubTasks.Edit(subTask);
         }
 
-        public void EditStatus(int ID, Status status)
+        public void EditStatus(int id)
         {
-            SubTask subTask = unitOfWork.SubTasks.GetById(ID);
-            subTask.Status = status;
+            SubTask subTask = unitOfWork.SubTasks.GetById(id);
+            subTask.Status = Status.OnHold;
             unitOfWork.SubTasks.Edit(subTask);
         }
+
+
+
+
+
+
+        //Shaker Actions
         public void EditPriority(int ID, Priority priority)
         {
             Activity task = unitOfWork.Tasks.GetById(ID);
             task.Priority = priority;
             unitOfWork.Tasks.Edit(task);
         }
-
 
 
 

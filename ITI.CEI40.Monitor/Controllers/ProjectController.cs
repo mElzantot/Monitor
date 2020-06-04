@@ -59,30 +59,30 @@ namespace ITI.CEI40.Monitor.Controllers
             }
         }
 
-        //[HttpPost]
-        //public JsonResult Edit(Project project)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (project.Status == Status.Completed)
-        //        {
-        //            project.EndDate = DateTime.Now;
-        //            var projectTasks = unitofwork.Tasks.GetAllTaskWithProject(project.ID);
-        //            foreach (var task in projectTasks)
-        //            {
-        //                project.WorkingHrs += task.ActualDuration;
-        //            }
-        //        }
 
-        //        unitofwork.Projects.Edit(project);
-        //        return Json(project);
-        //    }
-        //    else
-        //    {
-        //        return Json(project);
-        //    }
-        //}
+        [HttpPost]
+        public JsonResult Edit(Project project)
+        {
+            if (ModelState.IsValid)
+            {
+                unitofwork.Projects.Edit(project);
+                return Json(project);
+            }
+            else
+            {
+                return Json(project);
+            }
+        }
 
+        [HttpGet]
+        public IActionResult DashBoard(int projId)
+        {
+            //Project project = unitofwork.Projects.GetProjectWithTasks(projId);
+            List<Activity> tasks = unitofwork.Tasks.GetActivitiesFromProject(projId).ToList();
+            return PartialView("_DashBoardPartial", tasks);
+        }
+
+        //shaker
         [HttpGet]
         public IActionResult CompletedProjects()
         {
@@ -105,21 +105,12 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
 
-        [HttpGet]
-        public IActionResult DashBoard(int projId)
-        {
-            //Project project = unitofwork.Projects.GetProjectWithTasks(projId);
-            List<Activity> tasks = unitofwork.Tasks.GetActivitiesFromProject(projId).ToList();
-            return PartialView("_DashBoardPartial", tasks);
-        }
 
         public IActionResult ProjectDailyReport(int Id)
         {
             Project project = unitofwork.Projects.GetProjectForReport(Id);
             return View(project);
         }
-
-
 
     }
 }
