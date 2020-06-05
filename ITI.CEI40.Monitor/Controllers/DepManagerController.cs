@@ -75,8 +75,14 @@ namespace ITI.CEI40.Monitor.Controllers
             return View("_DashBoardPartial", subtask);
         }
 
-        
 
+        //Omar to edit status if the Departement manager submit the subtask
+        public void EditStatus(int id, int status)
+        {
+            var task = unitofwork.Tasks.GetById(id);
+            task.Status = (Status)status;
+            unitofwork.Tasks.Edit(task);
+        }
 
     }
 }

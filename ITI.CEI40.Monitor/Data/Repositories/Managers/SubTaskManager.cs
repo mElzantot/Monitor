@@ -37,12 +37,17 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         public SubTask GetSubTaskIncludingTask(int subTaskId)
         {
-            return set.Where(sub => sub.Id == subTaskId).Include(sub => sub.Task).FirstOrDefault();
+            return set.Where(sub => sub.Id == subTaskId).Include(sub => sub.Task).Include(e=>e.Engineer).FirstOrDefault();
         }
 
         public SubTask GetSubTaskIncludingProject(int subTaskId)
         {
             return set.Where(sub => sub.Id == subTaskId).Include(sub => sub.Task).ThenInclude(t => t.Project).FirstOrDefault();
+        }
+
+        public SubTask GetSubWithItsFiles(int id)
+        {
+            return set.Where(a => a.Id == id).Include(s => s.files).FirstOrDefault();
         }
 
     }

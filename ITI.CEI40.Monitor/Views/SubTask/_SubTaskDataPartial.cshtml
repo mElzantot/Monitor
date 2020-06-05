@@ -30,17 +30,24 @@
                 <div class="font-weight-bold mb-2 "> Files <span class="caret"></span> </div>
                 <table class="table table-striped table-sm">
                     <tbody>
-                        <tr>
-                            <td>file1.html</td>
-                        </tr>
-                        <tr>
+                        @if (Model.files.Count == 0)
+                        {
+                            <tr>
+                                <td>No Files Uploaded</td>
+                            </tr>
+                        }
+                        else
+                        {
+                            foreach (var item in Model.files)
+                            {
+                                <tr>
+                                    <td><a href="/files/@item.FilePath" download> attachment</a></td>
+                                </tr>
+                            }
 
-                            <td>file2.css</td>
-                        </tr>
-                        <tr>
+                        }
 
-                            <td>file3.dxf</td>
-                        </tr>
+                        
                     </tbody>
                 </table>
             </div>

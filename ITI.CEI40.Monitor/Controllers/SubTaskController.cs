@@ -32,7 +32,7 @@ namespace ITI.CEI40.Monitor.Controllers
 
         public IActionResult DisplayRow(int ID)
         {
-            SubTask subTask = unitOfWork.SubTasks.GetById(ID);
+            SubTask subTask = unitOfWork.SubTasks.GetSubWithItsFiles(ID);
             return PartialView("_SubTaskDataPartial", subTask);
         }
 
@@ -172,10 +172,65 @@ namespace ITI.CEI40.Monitor.Controllers
                         {
                             FilePath = uniqeFileName,
                             FK_SubTaskId = subTaskId,
-                            FK_SenderId = newSubTask.FK_EngineerID,
+                            RecieverId = newSubTask.FK_EngineerID,
                             FileType = Entities.Enums.FileType.Subtask,
                             Time = DateTime.Now,
                             
+
+                        };
+                        //-----Add file To DB
+                        unitOfWork.Files.Add(file);
+                    }
+                }
+                return PartialView("_NewSubTaskPartialView", newSubTask);
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        [HttpGet]
+        public IActionResult AddFile(int staskid)
+        {
+            MySubTaskViewModel subtaskVM = new MySubTaskViewModel();
+
+            subtaskVM.SubTask = unitOfWork.SubTasks.GetSubTaskIncludingTask(staskid);
+            return View(subtaskVM);
+        }
+
+        [HttpPost]
+        public IActionResult AddFile(MySubTaskViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                SubTask subtask = new SubTask();
+                subtask = model.SubTask;
+                int subtaskid = subtask.Id;
+                string uniqeFileName = null;
+                if (model.Files != null)
+                {
+                    //-------Get Files Folder path in Server
+                    string uploaderFolder = Path.Combine(hostingEnvironment.WebRootPath, "files");
+
+                    foreach (var item in model.Files)
+                    {
+                        //-------Create New Guid fo each file
+                        uniqeFileName = Guid.NewGuid().ToString() + "_" + item.FileName;
+                        //---------The full path for file
+                        string filePath = Path.Combine(uploaderFolder, uniqeFileName);
+                        //----------Copy file to server
+                        item.CopyTo(new FileStream(filePath, FileMode.Create));
+
+                        //------Creat instance of file
+                        Files file = new Files
+                        {
+                            FilePath = uniqeFileName,
+                            FK_SubTaskId = subtaskid,
+                            FK_SenderId = subtask.FK_EngineerID,
+                            FileType = Entities.Enums.FileType.Subtask,
+                            Time = DateTime.Now,
+
 
                         };
 
@@ -183,20 +238,12 @@ namespace ITI.CEI40.Monitor.Controllers
                         unitOfWork.Files.Add(file);
 
                     }
+
                 }
-
-                
-
-                
-
-
-                return PartialView("_NewSubTaskPartialView", newSubTask);
+                return View(model);
 
             }
-            else
-            {
-                return null;
-            }
+            else return View("Error");
         }
 
     }

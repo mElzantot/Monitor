@@ -33,12 +33,12 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpGet]
         public IActionResult AddFile(int taskid)
         {
-            var taskVM = new TaskViewModel
+            TaskViewModel taskVM = new TaskViewModel
             {
-                Task = unitOfWork.Tasks.GetById(taskid),
+                Task = unitOfWork.Tasks.GetTaskWithProject(taskid),
             };
 
-            return View("AddFile", taskVM);
+            return View( taskVM);
         }
 
         [HttpPost]
@@ -72,6 +72,7 @@ namespace ITI.CEI40.Monitor.Controllers
                         {
                             FilePath = uniqeFileName,
                             FK_TaskId=taskid,
+                            //FK_SenderId=model.Task.Team.FK_TeamLeaderId,
                             FileType = Entities.Enums.FileType.Subtask,
                             Time = DateTime.Now,
 

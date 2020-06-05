@@ -49,5 +49,7 @@ namespace ITI.CEI40.Monitor.Models.View_Models
         public string Assignee { get; set; }
 
         public ICollection<IFormFile> files { get; set; }
+
+        public SubTask SubTask { get; set; }
     }
 }

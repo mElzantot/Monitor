@@ -15,20 +15,21 @@
         {
             <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
                 <div class="table-responsive">
-                    <table class="table table-hover text-center" id="Tasktable"  style="width:100%;">
+                    <table class="table table-hover text-center" id="Tasktable" style="width:100%;">
                         <thead class="tableh alert-primary">
-                            <tr >
+                            <tr>
                                 <th></th>
                                 <th>Name</th>
                                 <th>Project</th>
                                 <th width="26%">Status</th>
                                 <th class="remaining">Remaining Time</th>
                                 <th>Progress</th>
+                                <th></th>
                             </tr>
                         </thead>
 
 
-                        <tbody >
+                        <tbody>
 
                             @foreach (var item in Model)
                             {
@@ -42,8 +43,16 @@
                                     <td>@item.Name</td>
                                     <td>@item.Task.Project.Name</td>
 
-                                    <td >
-                                        <select asp-for="@item.Status" asp-items="@Html.GetEnumSelectList<Status>()" class="form-control"></select>
+                                    <td>
+                                        @if (item.Status == Status.OnHold)
+                                        {
+                                            <div class="btn btn-warning hold"> OnHold </div>
+                                        }
+                                        else
+                                        {
+                                            <button class="btn btn-success active" onclick="ChangeStatus(this)"> Active</button>
+                                        }
+                                        @*<select asp-for="@item.Status" asp-items="@Html.GetEnumSelectList<Status>()" class="form-control"></select>*@
                                     </td>
 
                                     @{
@@ -60,10 +69,16 @@
                                         }
                                     }
 
+
                                     <td>
-                                        <div  class="progress">
+                                        <div class="progress">
                                             <div class="progress-bar" role="progressbar" style="width: @item.Progress%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@item.Progress%</div>
                                         </div>
+                                    </td>
+                                    <td>
+                                        <a href="/SubTask/AddFile?staskid=@item.Id" class="btn alert-primary">
+                                             <i class="fa fa-upload" aria-hidden="true">Files</i>
+                                        </a>
                                     </td>
                                 </tr>
                             }
@@ -75,7 +90,7 @@
         else
         {
             <div style="border: 2px solid rgb(219, 219, 219) ; padding: 50px 25px;  border-radius: 8px;">
-                <h4 class="text-muted text-center">You donot have tasks</h4>
+                <h4 class="text-muted text-center">You don't have tasks</h4>
             </div>
         }
 
@@ -99,12 +114,9 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Write a reason for Holding</h5>
-
+                <h5 class="modal-title" id="exampleModalLabel">Comment</h5>
             </div>
             <div class="modal-body">
-                Reason:
-                <br />
                 <input id="reason" type="text" class="form-control" />
             </div>
             <div class="modal-footer">
@@ -114,12 +126,6 @@
         </div>
     </div>
 </div>
-
-</div>    
-
-
-
-
 
 
 
@@ -133,83 +139,64 @@
     <script>
         var rowID;
 
-        (function () {
+        //(function () {
 
-            var previous;
-            $("select").on('focus', function () {
-                // Store the current value on focus and on change
-                previous = this.value;
+        //    var previous;
+        //    $("select").on('focus', function () {
+        //        // Store the current value on focus and on change
+        //        previous = this.value;
 
-            }).change(function () {
+        //    }).change(function () {
 
-                var value = this.value;
-                switch (value) {
-                    case '0': //Active
-                        if (confirm('Is the task Active?')) {
-                            ChangeStatus(rowID, value);
-                        }
-                        break;
+        //        var value = this.value;
+        //        switch (value) {
+        //            case '0': //Active
+        //                if (confirm('Is the task Active?')) {
+        //                    ChangeStatus(rowID, value);
+        //                }
+        //                break;
 
-                    case '1': //onhold
+        //            case '1': //onhold
 
-                        $("#togleBtn").trigger("click");
+        //                $("#togleBtn").trigger("click");
 
-                        $('#send').click(function () {
-                            if ($('#reason').val()) { //validation for empty rason
-                                console.log($('#reason').val())//send reason in notification
-                                $("#exampleModal").modal('toggle');
-                                ChangeStatus(rowID, value);
-                            }
-                        })
+        //                $('#send').click(function () {
+        //                    if ($('#reason').val()) { //validation for empty rason
+        //                        console.log($('#reason').val())//send reason in notification
+        //                        $("#exampleModal").modal('toggle');
+        //                        ChangeStatus(rowID, value);
+        //                    }
+        //                })
 
-                        $('#close').click(function () {
-                            $(`#${rowID} > td > select`)[0].value = previous
-                        })
+        //                $('#close').click(function () {
+        //                    $(`#${rowID} > td > select`)[0].value = previous
+        //                })
 
-                        break;
+        //                break;
 
-                    case '2': // completed
-                        if (confirm('Is the task finished?')) {
-                            $(`#${rowID}`).hide();
-                            ChangeStatus(rowID, value);
-                        }
-                        else {
-                            $(`#${rowID} > td > select`)[0].value = previous
-                        }
-                        break;
+        //            case '2': // completed
+        //                if (confirm('Is the task finished?')) {
+        //                    $(`#${rowID}`).hide();
+        //                    ChangeStatus(rowID, value);
+        //                }
+        //                else {
+        //                    $(`#${rowID} > td > select`)[0].value = previous
+        //                }
+        //                break;
 
-                    case '3': //canceled
-                        if (confirm('Do you want to cancel this task?')) {
-                            $(`#${rowID}`).hide();
-                            ChangeStatus(rowID, value);
-                        }
-                        else {
-                            $(`#${rowID} > td > select`)[0].value = previous
-                        }
-                        break;
-                }
+        //            case '3': //canceled
+        //                if (confirm('Do you want to cancel this task?')) {
+        //                    $(`#${rowID}`).hide();
+        //                    ChangeStatus(rowID, value);
+        //                }
+        //                else {
+        //                    $(`#${rowID} > td > select`)[0].value = previous
+        //                }
+        //                break;
+        //        }
 
-            });
-        })();
-
-        function ChangeStatus(id, value) {
-
-            $.ajax({
-                type: "GET",
-                url: `/Subtask/EditStatus`,
-                data: {
-                    ID: id,
-                    status: value
-                },
-                success: function () {
-
-                },
-                error: function (x, y, err) {
-                    console.log(arguments)
-                }
-            })
-        }
-
+        //    });
+        //})();
 
         function SelectRow(id) {
             rowID = id;
@@ -231,6 +218,14 @@
 
 
         function ChangeProgress(id, value) {
+            if (value == 100) {
+                $("#togleBtn").trigger("click");
+
+                $('#send').click(function () {
+                    console.log($('#reason').val())//send reason in notification
+                    $("#exampleModal").modal('toggle');
+                })
+            }
             $.ajax({
                 type: "GET",
                 url: `/Subtask/EditProgress`,
@@ -251,11 +246,6 @@
 
 
         function ChangeISUnderWork(id, value) {
-            //if (false) {
-
-            //        $('#toggle-silent').bootstrapToggle('off');
-            //}
-
             $.ajax({
                 type: "GET",
                 url: `/Subtask/EditIsUnderWork`,
@@ -272,6 +262,45 @@
             })
         }
 
+        function ChangeStatus(value) {
+            $("#togleBtn").trigger("click");
+
+            $('#send').click(function () {
+                if ($('#reason').val()) { //validation for empty rason
+                    console.log($('#reason').val())//send reason in notification
+                    $("#exampleModal").modal('toggle');
+                    $.ajax({
+                        type: "GET",
+                        url: `/Subtask/EditStatus`,
+                        data: {
+                            id: rowID,
+                        },
+                        success: function (response) {
+                            console.log(value)
+                            var btn = document.createElement('div')
+                            btn.innerText = 'On Hold'
+                            btn.classList.add('btn-warning')
+                            btn.classList.add('btn')
+                            value.replaceWith(btn)
+                        },
+                        error: function (x, y, err) {
+                            console.log(arguments)
+                        }
+                    })
+                }
+            })
+        }
+
+        $('.active').mouseover(function () {
+            this.classList.remove('btn-success');
+            this.classList.add('btn-warning');
+            this.innerText = 'On Hold';
+        })
+        $('.active').mouseleave(function () {
+            this.classList.remove('btn-warning');
+            this.classList.add('btn-success');
+            this.innerText = 'Active';
+        })
     </script>
 }
 

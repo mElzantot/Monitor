@@ -101,8 +101,8 @@ namespace ITI.CEI40.Monitor.Controllers
                         {
                             FilePath = uniqeFileName,
                             FK_ProjectId = projid,
-
-                            FileType = Entities.Enums.FileType.Subtask,
+                            FK_SenderId=project.FK_Manager,
+                            FileType = Entities.Enums.FileType.Project,
                             Time = DateTime.Now,
 
 
