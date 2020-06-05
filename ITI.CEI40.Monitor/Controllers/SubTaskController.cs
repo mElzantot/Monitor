@@ -51,7 +51,7 @@ namespace ITI.CEI40.Monitor.Controllers
             List<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByTaskId(subTask.FK_TaskId);            int totalSubTaskDuration = 0;            foreach (var item in subTasks)            {                totalSubTaskDuration += (int)(item.EndDate - item.StartDate).Value.TotalDays;            }            int subtaskDuration = (int)(subTask.EndDate - subTask.StartDate).Value.TotalDays;            task.Progress += ((progress - subTaskLastProgress) * (subtaskDuration)) / (totalSubTaskDuration);            task = unitOfWork.Tasks.Edit(task);
             subTask.Progress = progress;            subTask = unitOfWork.SubTasks.Edit(subTask);        }
 
-        [Authorize(Roles ="Engineer")]
+        [Authorize(Roles ="Engineer")]  
         public void EditIsUnderWork(int ID, bool Is)
         {
             SubTask subTask = unitOfWork.SubTasks.GetSubTaskIncludingProject(ID);
