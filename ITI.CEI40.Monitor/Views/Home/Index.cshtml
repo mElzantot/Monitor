@@ -1,8 +1,40 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    Layout = null;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@*<div class="text-center">
+        <h1 class="display-4">Welcome</h1>
+        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    </div>*@
+<html>
+<head>
+    <title>Chat</title>
+    <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+    <script>
+        window.onload = function () {
+            connection = new signalR.HubConnectionBuilder().withUrl("/notificationsHub").build();
+            connection.start();
+            connection.on("newMessage",function (msg) {
+                console.log(arguments);
+                document.getElementById("NotificationList").innerHTML += "<li>" + msg + "</li>";
+            });
+        }
+
+
+            function send() {
+                var message = document.getElementById("txt").value;
+                console.log(message);
+                 connection.invoke("sendMessages", message);
+            }
+
+    </script>
+</head>
+<body>
+    <input type="text" id="txt" />
+    <input type="button"  value="send" onclick="send()" />
+    <ul id="NotificationList">
+
+    </ul>
+</body>
+</html>

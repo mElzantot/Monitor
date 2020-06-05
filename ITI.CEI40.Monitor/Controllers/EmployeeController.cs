@@ -76,6 +76,7 @@ namespace ITI.CEI40.Monitor.Controllers
             if (ModelState.IsValid)
             {
                 ApplicationUser Emp = await userManager.FindByIdAsync(id);
+                //---------Get The Roles before Updating
                 var EmpCurrentRoles = await userManager.GetRolesAsync(Emp);
                 List<IdentityRole> ExistingRoles = roleManager.Roles.ToList();
                 EmpRolesViewModel EmpRolVM = new EmpRolesViewModel() { EmpId = id };
@@ -101,7 +102,7 @@ namespace ITI.CEI40.Monitor.Controllers
             return null;
         }
 
-
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<JsonResult> EditEmployeeRoles(EmpRolesViewModel EmpRolVM)
         {
@@ -122,7 +123,6 @@ namespace ITI.CEI40.Monitor.Controllers
                 }
             }
             return Json(Emp); ;
-
         }
 
         #endregion

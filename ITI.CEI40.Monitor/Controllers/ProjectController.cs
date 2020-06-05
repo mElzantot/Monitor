@@ -5,29 +5,34 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
+using ITI.CEI40.Monitor.Entities.Enums;
 using ITI.CEI40.Monitor.Models;
 using ITI.CEI40.Monitor.Models.View_Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITI.CEI40.Monitor.Controllers
 {
-    [Authorize(Roles = "Project Manager")]
 
+    [Authorize(Roles = "ProjectManager")]
     public class ProjectController : Controller
     {
 
         private readonly IUnitOfWork unitofwork;
-        public ProjectController(IUnitOfWork unitOfWork)
+        private readonly UserManager<ApplicationUser> userManager;
+
+        public ProjectController(UserManager<ApplicationUser> userManager,IUnitOfWork unitOfWork)
         {
             this.unitofwork = unitOfWork;
+            this.userManager = userManager;
         }
 
         public IActionResult Index()
         {
             ProjectViewModel projectView = new ProjectViewModel
             {
-                Projects = unitofwork.Projects.GetRunningProjects(),
+                Projects = unitofwork.Projects.GetRunningProjects(userManager.GetUserId(HttpContext.User)),
             };
 
             return View("_CreateProject", projectView);
@@ -39,6 +44,7 @@ namespace ITI.CEI40.Monitor.Controllers
         {
             if (ModelState.IsValid)
             {
+                project.FK_Manager = userManager.GetUserId(HttpContext.User);
                 project = unitofwork.Projects.Add(project);
                 return Json(project);
             }
@@ -62,35 +68,25 @@ namespace ITI.CEI40.Monitor.Controllers
             }
         }
 
-        //[HttpPost]
-        //public JsonResult Edit(Project project)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        if (project.Status == Status.Completed)
-        //        {
-        //            project.EndDate = DateTime.Now;
-        //            var projectTasks = unitofwork.Tasks.GetAllTaskWithProject(project.ID);
-        //            foreach (var task in projectTasks)
-        //            {
-        //                project.WorkingHrs += task.ActualDuration;
-        //            }
-        //        }
-
-        //        unitofwork.Projects.Edit(project);
-        //        return Json(project);
-        //    }
-        //    else
-        //    {
-        //        return Json(project);
-        //    }
-        //}
+        [HttpPost]
+        public JsonResult Edit(Project project)
+        {
+            if (ModelState.IsValid)
+            {
+                unitofwork.Projects.Edit(project);
+                return Json(project);
+            }
+            else
+            {
+                return Json(project);
+            }
+        }
 
         [HttpGet]
         public IActionResult CompletedProjects()
         {
             //--------Start Date will be the start date of first task of project
-            var compProjects = unitofwork.Projects.GetCompletedProjects().ToList();
+            var compProjects = unitofwork.Projects.GetCompletedProjects(userManager.GetUserId(HttpContext.User)).ToList();
             List<CompletedProjectsViewModel> CompletedProjectsVM = new List<CompletedProjectsViewModel>();
             foreach (var item in compProjects)
             {

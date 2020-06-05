@@ -113,6 +113,7 @@
 <div class="modal fade  " id="EditRolesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm">
         <div class="modal-content">
+            @Html.AntiForgeryToken()
             <form method="post" data-ajax-url="/Employee/EditEmployeeRoles" data-ajax="true" data-ajax-method="Post" data-ajax-complete="EditRoles"
                   id="RolesForm">
                 <div class="modal-header">

@@ -1,4 +1,5 @@
 ﻿using ITI.CEI40.Monitor.Data;
+using ITI.CEI40.Monitor.Entities.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -13,7 +14,7 @@ namespace ITI.CEI40.Monitor.Entities
 
         public static void Initialize(RoleManager<IdentityRole> roleManager)
         {
-        List<string> roles = new List<string> { "Admin", "Department Manager", "Project Manager" ,"Team Leader", "Engineer" };
+            var roles = Enum.GetNames(typeof(Roles));
             foreach (var item in roles)
             {
                 if (!roleManager.RoleExistsAsync(item).Result)
@@ -23,10 +24,11 @@ namespace ITI.CEI40.Monitor.Entities
                     role.NormalizedName = item.ToUpper();
                     IdentityResult roleResult = roleManager.CreateAsync(role).Result;
                 }
-
             }
 
         }
+
+        
 
     }
 }

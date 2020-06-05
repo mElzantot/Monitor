@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using ITI.CEI40.Monitor.Models;
+using ITI.CEI40.Monitor.Entities.Enums;
 
 namespace ITI.CEI40.Monitor.Controllers
 {
