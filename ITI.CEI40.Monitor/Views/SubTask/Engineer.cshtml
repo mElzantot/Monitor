@@ -21,7 +21,7 @@
                                 <th></th>
                                 <th>Name</th>
                                 <th>Project</th>
-                                <th width="26%">Status</th>
+                                <th>Status</th>
                                 <th class="remaining">Remaining Time</th>
                                 <th>Progress</th>
                             </tr>
@@ -45,11 +45,11 @@
                                     <td>
                                         @if (item.Status == Status.OnHold)
                                         {
-                                            <div class="btn btn-warning hold"> OnHold </div>
+                                            <button class=" btn btn-warning" onclick="ChangeStatus(this)">OnHold</button>
                                         }
                                         else
                                         {
-                                            <button class="btn btn-success active" onclick="ChangeStatus(this)"> Active</button>
+                                            <button class="btn btn-success" onclick="ChangeStatus(this)">Active</button>
                                         }
                                         @*<select asp-for="@item.Status" asp-items="@Html.GetEnumSelectList<Status>()" class="form-control"></select>*@
                                     </td>
@@ -219,6 +219,7 @@
                     console.log($('#reason').val())//send reason in notification
                     $("#exampleModal").modal('toggle');
                 })
+                //$('#close').click(function)
             }
             $.ajax({
                 type: "GET",
@@ -256,45 +257,103 @@
             })
         }
 
-        function ChangeStatus(value) {
+
+        function ChangeStatus(element) {
             $("#togleBtn").trigger("click");
 
             $('#send').click(function () {
-                if ($('#reason').val()) { //validation for empty rason
-                    console.log($('#reason').val())//send reason in notification
-                    $("#exampleModal").modal('toggle');
-                    $.ajax({
-                        type: "GET",
-                        url: `/Subtask/EditStatus`,
-                        data: {
-                            id: rowID,
-                        },
-                        success: function (response) {
-                            console.log(value)
-                            var btn = document.createElement('div')
-                            btn.innerText = 'On Hold'
-                            btn.classList.add('btn-warning')
-                            btn.classList.add('btn')
-                            value.replaceWith(btn)
-                        },
-                        error: function (x, y, err) {
-                            console.log(arguments)
-                        }
-                    })
+                var text = $('#reason').val()
+                console.log(text)//send reason in notification
+                text.value = '';//cleare text
+                $("#exampleModal").modal('toggle');
+                console.log(element.innerText)
+                console.log(element)
+                console.log(rowID)
+                var value;
+                debugger;
+                //switch (element.innerText) {
+                //    case 'OnHold':
+                //        value = 0;
+                //        //var btn = document.getelementsbyclassname('active')
+                //        //btn = btn[0]
+                //        //btn.classlist.remove('d-none')
+                //        //element.replaceWith(btn)
+                //        element.classList.remove('btn-warning')
+                //        element.classList.remove('hold')
+                //        element.classList.add('btn-success')
+                //        element.classList.add('active')
+                //        element.innerText='Active'
+                //        break;
+                //    case 'Active':
+                //        value = 1;
+                //        //var btn = document.getElementsByClassName('hold')
+                //        //btn = btn[0]
+                //        //btn.classList.remove('d-none')
+                //        //element.replaceWith(btn)
+                //        element.classList.remove('btn-success')
+                //        element.classList.remove('active')
+                //        element.classList.add('btn-warning')
+                //        element.classList.add('hold')
+                //        element.innerText = 'OnHold'
+                //        break;
+                //}
+                if (element.innerText == 'Active') {
+                    value = 1;
+                    element.classList.remove('btn-success')
+                    element.classList.remove('active')
+                    element.classList.add('btn-warning')
+                    element.classList.add('hold')
+                    element.innerText = 'OnHold'
                 }
+                else {
+                    value = 0;
+                    element.classList.remove('btn-warning')
+                    element.classList.remove('hold')
+                    element.classList.add('btn-success')
+                    element.classList.add('active')
+                    element.innerText = 'Active'
+                }
+
+
+                $.ajax({
+                    type: "GET",
+                    url: `/Subtask/EditStatus`,
+                    data: {
+                        id: rowID,
+                        status: value
+                    },
+                    success: function (response) {
+                    },
+                    error: function (x, y, err) {
+                        console.log(arguments)
+                    }
+                })
             })
         }
 
-        $('.active').mouseover(function () {
-            this.classList.remove('btn-success');
-            this.classList.add('btn-warning');
-            this.innerText = 'On Hold';
-        })
-        $('.active').mouseleave(function () {
-            this.classList.remove('btn-warning');
-            this.classList.add('btn-success');
-            this.innerText = 'Active';
-        })
+
+                //$('.active').mouseover(function () {
+                //    this.classList.remove('btn-success');
+                //    this.classList.add('btn-warning');
+                //    this.innerText = 'OnHold';
+                //})
+                //$('.active').mouseleave(function () {
+                //    this.classList.remove('btn-warning');
+                //    this.classList.add('btn-success');
+                //    this.innerText = 'Active';
+                //})
+
+
+                //$('.hold').mouseover(function () {
+                //    this.classList.remove('btn-warning');
+                //    this.classList.add('btn-success');
+                //    this.innerText = 'Active';
+                //})
+                //$('.hold').mouseleave(function () {
+                //    this.classList.remove('btn-success');
+                //    this.classList.add('btn-warning');
+                //    this.innerText = 'OnHold';
+                //})
     </script>
 }
 

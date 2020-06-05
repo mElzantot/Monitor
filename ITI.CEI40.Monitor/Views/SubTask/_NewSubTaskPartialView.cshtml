@@ -3,8 +3,8 @@
 <tr id="@Model.Id">
     <td>@Model.Name</td>
     <td>@Model.Priority</td>
-    <td>@Model.StartDate</td>
-    <td>@Model.EndDate</td>
+    <td>@Model.StartDate.Value.ToShortDateString()</td>
+    <td>@Model.EndDate.Value.ToShortDateString()</td>
     <td>@Model.Status</td>
     <td>@Model.Progress</td>
     @if (@Model.Engineer != null)

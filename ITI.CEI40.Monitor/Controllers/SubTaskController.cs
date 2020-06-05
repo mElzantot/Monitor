@@ -84,10 +84,10 @@ namespace ITI.CEI40.Monitor.Controllers
             subTask = unitOfWork.SubTasks.Edit(subTask);
         }
 
-        public void EditStatus(int id)
+        public void EditStatus(int id,int status)
         {
             SubTask subTask = unitOfWork.SubTasks.GetById(id);
-            subTask.Status = Status.OnHold;
+            subTask.Status = (Status)status;
             unitOfWork.SubTasks.Edit(subTask);
         }
 

@@ -24,7 +24,7 @@ namespace ITI.CEI40.Monitor.Controllers
         }
         public IActionResult TeamsView(int DepId)
         {
-            IEnumerable<Team> teams= unitofwork.Teams.getTeamsinsideDept(DepId);
+            IEnumerable<Team> teams = unitofwork.Teams.getTeamsinsideDept(DepId);
             return View(teams);
         }
 
@@ -39,7 +39,7 @@ namespace ITI.CEI40.Monitor.Controllers
         public IActionResult AssignTasks(int depid)
         {
             var activityVM = new ActivityViewModel();
-            
+
             activityVM.Tasks = unitofwork.Tasks.GetDepartmentTasks(depid);
 
             activityVM.Teams = unitofwork.Teams.getTeamsinsideDept(depid).ToList();
@@ -47,10 +47,10 @@ namespace ITI.CEI40.Monitor.Controllers
             return View(activityVM);
         }
 
-        
+
 
         [HttpPost]
-        public JsonResult AssignTasks(int taskId,int teamId)
+        public JsonResult AssignTasks(int taskId, int teamId)
         {
             if (ModelState.IsValid)
             {
@@ -58,9 +58,9 @@ namespace ITI.CEI40.Monitor.Controllers
                 task.FK_TeamId = teamId;
                 var team = unitofwork.Teams.GetById(teamId);
                 unitofwork.Complete();
-                return Json(new { teamName=team.Name});
+                return Json(new { teamName = team.Name });
             }
-            return Json(new {  });
+            return Json(new { });
         }
 
         [HttpGet]
@@ -76,6 +76,16 @@ namespace ITI.CEI40.Monitor.Controllers
         {
             var task = unitofwork.Tasks.GetById(id);
             task.Status = (Status)status;
+            if (task.Status == Status.Cancelled)
+            {
+                List<SubTask> subTasks = unitofwork.SubTasks.GetSubTasksByTaskId(task.Id);
+                foreach (var item in subTasks)
+                {
+                    item.Status = Status.Cancelled;
+                    //Want to Edit // Make Edit for List of items
+                    unitofwork.SubTasks.Edit(item);
+                }
+            }
             unitofwork.Tasks.Edit(task);
         }
 
