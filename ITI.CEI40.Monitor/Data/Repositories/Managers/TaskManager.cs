@@ -48,5 +48,13 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         {
             return set.Where(a => a.FK_DepID == depid).Include(a => a.Team).Include(a=>a.Project).ToList();
         }
+        public IEnumerable<Activity> GetByProjectId(int id)
+        {
+            return set.Where(t => t.FK_ProjectId == id).Include(t=>t.FollowingActivities).Include(t => t.ActivitiesToFollow);
+        }
+        public Activity GetByProIdAndViewOrder(int proId, int viewOrder)
+        {
+            return set.Where(t => t.FK_ProjectId == proId).Where(t => t.ViewOrder == viewOrder).FirstOrDefault();
+        }
     }
 }

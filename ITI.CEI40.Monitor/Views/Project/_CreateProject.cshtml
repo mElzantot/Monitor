@@ -55,8 +55,8 @@
                                 <tr id="@item.ID" onclick="OpenEditSec(@item.ID)">
                                     <td class="text-center font-weight-bold">@item.Name</td>
                                     <td style="text-align:right">
-                                        <button @*asp-controller="Activity" asp-action="Index/@item.ID"*@ onclick="" class="btn alert-info "><i id="i" class="fas fa-chart-area"></i> Chart</button>
-
+                                        <a href="/Activity/Index/@item.ID" class="btn alert-info" ><i id="i" class="fas fa-chart-area"></i> Chart</a>
+                                        
                                         @if (item.EndDate != null)
                                         {
                                             <button onclick="Dashboard(@item.ID)" type="button" class="btn alert-warning">Dashboard</button>
@@ -147,8 +147,8 @@
                         $('#tablebody').append(
                             `<tr id="${response.id}" onclick="Edit(${response.id})">
                                                                                     <td class="text-center font-weight-bold">${response.name}</td>
-                                                                                    <td class="text-center">
-                                                                                    <span class="btn alert-info "><i id="i" class="fas fa-chart-area"></i> Chart</span>
+                                                                                    <td style="text-align:right">
+                                                                                    <a href="/Activity/Index/${response.id}" class="btn alert-info" ><i id="i" class="fas fa-chart-area"></i> Chart</a>
                                                                                     <div class="btn-group dropleft">
                                                         <button type="button" class="btn alert-warning " data-toggle="dropdown" >
                                                             Dashboard
@@ -325,7 +325,6 @@
                     pieHole: 0.4,
                     //chartArea: { left: 20, top: 0, width: '50%', height: '75%' }
                     chartArea: { left: 150, height: '80%' }
-
                 };
 
                 var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
@@ -352,9 +351,6 @@
                 chart.draw(data, options);
             }
         }
-
-
-
         function Show(divName) {
             $(`#${divName}`).removeClass('d-none');
         }

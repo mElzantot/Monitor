@@ -58,9 +58,16 @@ namespace ITI.CEI40.Monitor.Controllers
                 task.FK_TeamId = teamId;
                 var team = unitofwork.Teams.GetById(teamId);
                 unitofwork.Complete();
-                return Json(new { teamName=team.Name });
+                return Json(new { teamName=team.Name});
             }
             return Json(new {  });
+        }
+
+        [HttpGet]
+        public IActionResult Dashboard(int taskId)
+        {
+            var subtask = unitofwork.SubTasks.GetSubTasksFromTask(taskId);
+            return View("_DashBoardPartial", subtask);
         }
 
 

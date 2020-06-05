@@ -17,11 +17,13 @@ namespace ITI.CEI40.Monitor.Entities
         [Key]
         public int Id { get; set; }
 
+        public int ViewOrder { get; set; }
+
         [Required]
         [MaxLength(50)]
         public string Name { get; set; }
 
-        [Required]
+        //[Required]
         [MaxLength(256)]
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
@@ -36,15 +38,24 @@ namespace ITI.CEI40.Monitor.Entities
         [ForeignKey(nameof(Project))]
         public int FK_ProjectId { get; set; }
 
-        [DataType(DataType.Date)]
-        [Column("Start Date", TypeName = "Date")]
+
+        [DataType(DataType.DateTime)]
+        [Column("Start Date")]
         [Display(Name = "Start Date")]
         public DateTime StartDate { get; set; }
 
-        [DataType(DataType.Date)]
-        [Column("End Date", TypeName = "Date")]
+        [DataType(DataType.DateTime)]
+        [Column("End Date")]
         [Display(Name = "End Date")]
         public DateTime EndDate { get; set; }
+
+        //[DataType(DataType.DateTime)]
+        //[Column("Estimated Duration")]
+        [Display(Name = "Estimated Duration")]
+        public int EstDuration { get; set; }
+
+        public ICollection<Dependencies> ActivitiesToFollow { set; get; }
+        public ICollection<Dependencies> FollowingActivities { set; get; }
 
         public int Progress { get; set; }
         public int ActualDuratoin { get; set; }
