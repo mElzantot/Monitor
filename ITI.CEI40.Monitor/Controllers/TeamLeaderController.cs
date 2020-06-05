@@ -23,14 +23,14 @@ namespace ITI.CEI40.Monitor.Controllers
             return View();
         }
 
-        [Authorize(Roles = "Team Leader")]
+        [Authorize(Roles = "TeamLeader")]
         public IActionResult EngineersView(int teamid)
         {
             var engieers = unitofwork.Engineers.GetEngineersInsideTeam(teamid);
             return View(engieers);
         }
 
-        [Authorize(Roles = "Team Leader")]
+        [Authorize(Roles = "TeamLeader")]
         [HttpGet]
         public IActionResult displaySubTasks(string engId)
         {
@@ -38,7 +38,9 @@ namespace ITI.CEI40.Monitor.Controllers
             return PartialView("_SubTaskPartialView", subtask);
         }
 
-        [Authorize(Roles = "Team Leader")]
+
+
+        [Authorize(Roles = "TeamLeader")]
         [HttpGet]
         public IActionResult displayCharts(string engId)
         {

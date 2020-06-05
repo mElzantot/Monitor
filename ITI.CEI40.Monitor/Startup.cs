@@ -15,6 +15,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ITI.CEI40.Monitor.Entities;
 using Microsoft.AspNetCore.Internal;
+using Microsoft.AspNetCore.SignalR;
+using ITI.CEI40.Monitor.Hubs;
 
 namespace ITI.CEI40.Monitor
 {
@@ -40,17 +42,19 @@ namespace ITI.CEI40.Monitor
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddDefaultIdentity<ApplicationUser>(options =>
-            {
-                options.Password.RequiredLength = 6;
-                options.Password.RequiredUniqueChars = 0;
-                options.Password.RequireLowercase = true;
-                options.Password.RequireUppercase = false;
-                options.Password.RequireNonAlphanumeric = false;
-                options.User.AllowedUserNameCharacters = string.Empty;
-                options.User.RequireUniqueEmail = true;
-            })
-                .AddRoles<IdentityRole>()
+
+
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+             {
+                 options.Password.RequiredLength = 6;
+                 options.Password.RequiredUniqueChars = 0;
+                 options.Password.RequireLowercase = true;
+                 options.Password.RequireUppercase = false;
+                 options.Password.RequireNonAlphanumeric = false;
+                 options.User.AllowedUserNameCharacters = string.Empty;
+                 options.User.RequireUniqueEmail = true;
+             })
+                //.AddRoles<IdentityRole>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -59,8 +63,16 @@ namespace ITI.CEI40.Monitor
                 .AddJsonOptions(
             options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
         );
-            ;
-            services.AddScoped<IUnitOfWork,UnitOfWork>();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, UserClaimsPrincipalFactory<ApplicationUser, IdentityRole>>();
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
+                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
+            });
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -79,9 +91,15 @@ namespace ITI.CEI40.Monitor
             }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseCookiePolicy();
+            app.UseCookiePolicy() ;
             app.UseAuthentication();
             SeedData.Initialize(roleManager);
+
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<NotificationsHub>("/notificationsHub");
+            });
 
             app.UseMvc(routes =>
             {

@@ -24,23 +24,22 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [Authorize(Roles = "Engineer")]
-
         public IActionResult Index()
         {
             //----------- Get user Id from UserManager ---------//
             string engId = userManager.GetUserId(HttpContext.User);
-            IEnumerable<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByEngineerId(engId);      
+            List<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByEngineerId(engId).ToList();      
             return View("Engineer",subTasks);
         }
 
-
+        [Authorize(Roles ="Engineer")]
         public IActionResult DisplayRow(int ID)
         {
             SubTask subTask = unitOfWork.SubTasks.GetById(ID);
             return PartialView("_SubTaskDataPartial", subTask);
         }
 
-
+        [Authorize(Roles ="Engineer")]
         public void EditProgress(int ID, int progress)        {            SubTask subTask = unitOfWork.SubTasks.GetSubTaskIncludingTask(ID);
 
             int subTaskLastProgress = subTask.Progress;
@@ -52,9 +51,7 @@ namespace ITI.CEI40.Monitor.Controllers
             List<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByTaskId(subTask.FK_TaskId);            int totalSubTaskDuration = 0;            foreach (var item in subTasks)            {                totalSubTaskDuration += (int)(item.EndDate - item.StartDate).Value.TotalDays;            }            int subtaskDuration = (int)(subTask.EndDate - subTask.StartDate).Value.TotalDays;            task.Progress += ((progress - subTaskLastProgress) * (subtaskDuration)) / (totalSubTaskDuration);            task = unitOfWork.Tasks.Edit(task);
             subTask.Progress = progress;            subTask = unitOfWork.SubTasks.Edit(subTask);        }
 
-        
-
-
+        [Authorize(Roles ="Engineer")]
         public void EditIsUnderWork(int ID, bool Is)
         {
             SubTask subTask = unitOfWork.SubTasks.GetSubTaskIncludingProject(ID);
@@ -97,6 +94,8 @@ namespace ITI.CEI40.Monitor.Controllers
             subTask.Status = status;
             unitOfWork.SubTasks.Edit(subTask);
         }
+
+
         public void EditPriority(int ID, Priority priority)
         {
             Activity task = unitOfWork.Tasks.GetById(ID);
@@ -105,7 +104,7 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
 
-        [Authorize(Roles = "Team Leader")]
+        [Authorize(Roles = "TeamLeader")]
         [HttpGet]
         public IActionResult displaySubTasks(int taskID)
         {
@@ -119,7 +118,7 @@ namespace ITI.CEI40.Monitor.Controllers
 
         }
 
-        [Authorize(Roles = "Team Leader")]
+        [Authorize(Roles = "TeamLeader")]
         [HttpGet]
         public IActionResult AddSubTask(int taskID, int teamId)
         {

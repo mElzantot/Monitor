@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 {
-    public class ProjectManager:Reposiotry<ApplicationDbContext,Project>,IProjectManager
+    public class ProjectManager : Reposiotry<ApplicationDbContext, Project>, IProjectManager
     {
-        public ProjectManager(ApplicationDbContext context):base(context)
+        public ProjectManager(ApplicationDbContext context) : base(context)
         {
         }
 
@@ -20,17 +20,17 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         }
 
 
-        public IEnumerable<Project> GetCompletedProjects()
+        public IEnumerable<Project> GetCompletedProjects(string managerId = null)
         {
-            return set.Where(pr =>  pr.Status == Status.Completed);
+            return set.Where(pr => pr.FK_Manager == managerId &&  pr.Status == Status.Completed);
         }
 
-        public IEnumerable<Project> GetCancelledProjects( )
+        public IEnumerable<Project> GetCancelledProjects(string managerId = null)
         {
-            return set.Where(pr => pr.Status == Status.Cancelled);
+            return set.Where(pr => pr.FK_Manager == managerId &&  pr.Status == Status.Cancelled);
         }
 
-        
+
         public IEnumerable<Project> GetAllProjects()
         {
             return set.Include(p => p.Status).Include(p => p.Tasks);
@@ -41,9 +41,12 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Include(p => p.Tasks).FirstOrDefault(p => p.ID == projectId);
 
         }
-        public IEnumerable<Project> GetRunningProjects()
+        public IEnumerable<Project> GetRunningProjects(string managerId = null)
         {
-            return set.Where(pr => pr.Status != Status.Cancelled && pr.Status != Status.Completed);
+            if (managerId == null)
+                return set.Where(pr => pr.Status != Status.Cancelled && pr.Status != Status.Completed);
+            else
+                return set.Where(pr => pr.FK_Manager == managerId && pr.Status != Status.Cancelled && pr.Status != Status.Completed);
         }
 
 

@@ -7,11 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Data\Migrations\20200602123457_init.cs" />
-    <Compile Remove="Data\Migrations\20200602123457_init.Designer.cs" />
-    <Compile Remove="Data\Migrations\20200602130053_firstPull.cs" />
-    <Compile Remove="Data\Migrations\20200602130053_firstPull.Designer.cs" />
+    <Compile Remove="wwwroot\lib\%2540microsoft\**" />
+    <Content Remove="wwwroot\lib\%2540microsoft\**" />
+    <EmbeddedResource Remove="wwwroot\lib\%2540microsoft\**" />
+    <None Remove="wwwroot\lib\%2540microsoft\**" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="wwwroot\lib\signalr\dist\browser\signalr.js" />
+    <Content Remove="wwwroot\lib\signalr\dist\browser\signalr.min.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\lib\%40microsoft\signalr\dist\browser\signalr.js" />
+    <None Include="wwwroot\lib\%40microsoft\signalr\dist\browser\signalr.min.js" />
+    <None Include="wwwroot\lib\signalr\dist\browser\signalr.js" />
+    <None Include="wwwroot\lib\signalr\dist\browser\signalr.min.js" />
+  </ItemGroup>
+
 
 
   <ItemGroup>
