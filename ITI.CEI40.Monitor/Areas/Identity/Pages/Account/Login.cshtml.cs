@@ -84,6 +84,7 @@ namespace ITI.CEI40.Monitor.Areas.Identity.Pages.Account
                     if (result.Succeeded)
                     {
                         _logger.LogInformation("User logged in.");
+
                         if (await _userManager.IsInRoleAsync(user, Roles.ProjectManager.ToString()))
                             returnUrl = Url.Content("~/Project/Index");
                         else if (await _userManager.IsInRoleAsync(user, Roles.DepartmentManager.ToString()))
