@@ -63,14 +63,7 @@ namespace ITI.CEI40.Monitor.Controllers
             return Json(new { });
         }
 
-        [HttpGet]
-        public IActionResult Dashboard(int taskId)
-        {
-            var subtask = unitofwork.SubTasks.GetSubTasksFromTask(taskId);
-            return View("_DashBoardPartial", subtask);
-        }
-
-
+       
         //Omar to edit status if the Departement manager submit the subtask
         public void EditStatus(int id, int status)
         {

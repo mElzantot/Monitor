@@ -11,6 +11,8 @@
     <Compile Remove="Data\Migrations\20200602123457_init.Designer.cs" />
     <Compile Remove="Data\Migrations\20200602130053_firstPull.cs" />
     <Compile Remove="Data\Migrations\20200602130053_firstPull.Designer.cs" />
+    <Compile Remove="Migrations\20200606095526_CreateDBBB.cs" />
+    <Compile Remove="Migrations\20200606095526_CreateDBBB.Designer.cs" />
   </ItemGroup>
 
 

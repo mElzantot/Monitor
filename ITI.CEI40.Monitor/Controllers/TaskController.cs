@@ -30,5 +30,12 @@ namespace ITI.CEI40.Monitor.Controllers
             task.Status = Status.OnHold;
             unitOfWork.Tasks.Edit(task);
         }
+
+        [HttpGet]
+        public IActionResult Dashboard(int taskId)
+        {
+            var subtask = unitOfWork.SubTasks.GetSubTasksFromTask(taskId);
+            return View("_DashboardPartial", subtask);
+        }
     }
 }

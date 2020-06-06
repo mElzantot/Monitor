@@ -10,6 +10,11 @@
                         @Model.SubTasks[0].Task.Name
                     </h4>
                     <span class="alert alert-danger">@Model.SubTasks.Count() Sub Tasks</span>
+                    <span>
+                        <button onclick="Dashboard(@Model.TaskId)" class=" ml-2 alert alert-info ">
+                            <i class="fas fa-chart-area">Dashboard</i>
+                        </button>
+                    </span>
                 </div>
                 <div class="text-muted"> @Model.taskDescription</div>
             </div>
@@ -37,7 +42,7 @@
                             <td>@Model.SubTasks[i].EndDate.Value.ToShortDateString()</td>
                             <td>@Model.SubTasks[i].Status</td>
                             
-                            <td><div class="progress"><div class="progress-bar" role="progressbar" style="width:@Model.SubTasks[i].Progress%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@Model.SubTasks[i].Progress%</div></div></td>
+                            <td><div class="progress"><div class="progress-bar" role="progressbar" style="width:@Model.SubTasks[i].Progress%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@Model.SubTasks[i].Progress%</div></div></td>                           
                             @if (@Model.SubTasks[i].Engineer != null)
                             {
                                 <td>@Model.SubTasks[i].Engineer.UserName</td>
