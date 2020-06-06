@@ -88,6 +88,7 @@ namespace ITI.CEI40.Monitor.Controllers
             subTask = unitOfWork.SubTasks.Edit(subTask);
         }
 
+        [Authorize(Roles = "Engineer")]
         public void EditStatus(int ID, Status status)
         {
             SubTask subTask = unitOfWork.SubTasks.GetById(ID);
@@ -95,7 +96,7 @@ namespace ITI.CEI40.Monitor.Controllers
             unitOfWork.SubTasks.Edit(subTask);
         }
 
-
+        [Authorize(Roles = "Engineer")]
         public void EditPriority(int ID, Priority priority)
         {
             Activity task = unitOfWork.Tasks.GetById(ID);

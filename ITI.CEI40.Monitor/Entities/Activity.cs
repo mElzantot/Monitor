@@ -59,6 +59,7 @@ namespace ITI.CEI40.Monitor.Entities
 
         public int Progress { get; set; }
         public int ActualDuratoin { get; set; }
+        public int SumOfSubTasksDurations { get; set; }
 
         public Status Status { get; set; }
         public Priority Priority { get; set; }

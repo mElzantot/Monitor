@@ -16,7 +16,6 @@ namespace ITI.CEI40.Monitor.Entities
             this.WorkingHrs = 0;
             this.Income = 0;
             this.Outcome = 0;
-            this.Progress = 0;
         }
 
         [Key]
@@ -42,14 +41,13 @@ namespace ITI.CEI40.Monitor.Entities
         public float Income { get; set; } //Invoices
         public float Outcome { get; set; } //---Actual
 
-        public float Progress { get; set; }
         public Status? Status { get; set; }
         public Priority? Priority { get; set; }
 
-        [DataType(DataType.Date)]
+        [DataType(DataType.DateTime)]
         public DateTime? StartDate { get; set; }
-
-        [DataType(DataType.Date)]
+        
+        [DataType(DataType.DateTime)]
         public DateTime? EndDate { get; set; }
 
         public int? EstimatedDuration { get; set; }
