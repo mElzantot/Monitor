@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
+using ITI.CEI40.Monitor.Hubs;
 using ITI.CEI40.Monitor.Models.View_Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -47,6 +48,9 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpPost]
         public IActionResult AddDepartment(string name)
         {
+            //var context = GlobalHost.ConnectionManager.GetHubContext<NotificationsHub>();
+
+
             Department ExistingDept = unitOfWork.Departments.FindByName(name);
             if (ExistingDept == null)
             {
@@ -56,6 +60,7 @@ namespace ITI.CEI40.Monitor.Controllers
                 };
                 newDept = unitOfWork.Departments.Add(newDept);
                // List<Department> depts = unitOfWork.Departments.GetAllDeptWithManagers().ToList();
+               Action
                 return PartialView("_DepartmentPartial", newDept);
             }
             return null;
