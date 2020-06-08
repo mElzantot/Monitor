@@ -3,7 +3,7 @@
 
 
 <form enctype="multipart/form-data"
-      method="post" class="mt-3">
+      method="post" class="mt-3 form-group col-8" style="margin:auto;padding:20px">
     <input hidden asp-for="@Model.Task.Id" />
     <div class="form-group row" hidden>
         <label asp-for="Task.Name" class="col-sm-2 col-form-label"></label>
@@ -96,10 +96,9 @@
     <div class="form-group ">
         <div class="col-sm-10">
             <button value="@Model.Task" type="submit" class="btn btn-primary">Add</button>
-        </div>
-        <div class="col-sm-10">
             <a href="/DepManager/AssignTasks?depid=@Model.Task.FK_DepID" class="btn btn-primary">  Back To List</a>
         </div>
+        
     </div>
 
     @section Scripts {
