@@ -53,6 +53,14 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
                 .Include(s => s.Engineer).Include(s=>s.Task).ThenInclude(t=>t.Project).ToList();
         }
 
- 
+        public IEnumerable<SubTask> GetEngineerCancelledSubTasks(string EngineerId)
+        {
+            return set.Where(sub => sub.FK_EngineerID == EngineerId)
+                .Where(s => s.Status == Status.Cancelled)
+                .Include(s => s.Engineer).Include(s => s.Task).ThenInclude(t => t.Project).ToList();
+        }
+
+
+
     }
 }

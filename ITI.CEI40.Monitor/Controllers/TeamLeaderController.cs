@@ -43,5 +43,12 @@ namespace ITI.CEI40.Monitor.Controllers
             subtask.Status = (Status)status;
             unitofwork.SubTasks.Edit(subtask);
         }
+
+        [HttpGet]
+        public IActionResult displayCancellesSubTasks(string engId)
+        {
+            var subtask = unitofwork.SubTasks.GetEngineerSubTasks(engId);
+            return PartialView(subtask);
+        }
     }
 }

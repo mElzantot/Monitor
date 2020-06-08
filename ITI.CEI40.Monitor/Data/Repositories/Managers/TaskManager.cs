@@ -65,6 +65,12 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         {
             return set.Where(t => t.FK_ProjectId == proId).Where(t => t.ViewOrder == viewOrder).FirstOrDefault();
         }
+        public IEnumerable<Activity> GetDepCancelledTasks(int depid)
+        {
+            return set.Where(a => a.FK_DepID == depid).Where(s => s.Status == Status.Cancelled)
+                .Include(a=>a.Team).Include(p => p.Project);
+        }
+        
 
     }
 }
