@@ -23,6 +23,9 @@
                 <input class="staskname" id="n-@i" value="@Model[i].Name" hidden="hidden" />
                 <input class="staskprog" id="p-@i" value="@Model[i].Progress" hidden="hidden" />
                 <input class="staskdur" id="d-@i" value="@(Model[i].ActualDuration)" hidden="hidden" />
+                <input class="engname" id="e-@i" value="@(Model[i].Engineer.UserName)" hidden="hidden" />
+                <input class="ststartdate" id="sd-@i" value="@(Model[i].StartDate)" hidden="hidden" />
+                <input class="stenddate" id="ed-@i" value="@(Model[i].EndDate)" hidden="hidden" />
             }
 
             @{
@@ -245,13 +248,11 @@
 
 
                 @* Cost Chart *@
-                <div style="border :.5px solid  rgb(219, 219, 219); width:80%">
-                    <div id="chart_div" style="height:300px"></div>
-                </div>
-
                 @*<div style="border :.5px solid  rgb(219, 219, 219); width:80%">
-                        <div id="line_top_x"></div>
-                    </div>*@
+                <div id="chart_div" style="height:300px"></div>
+            </div>*@
+
+                <div id="timeline" style="height:300px; width:400px "></div>
             </div>
 
         </div>

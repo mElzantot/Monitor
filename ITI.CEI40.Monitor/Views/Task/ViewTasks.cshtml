@@ -250,6 +250,11 @@
             this.innerText = 'Active';
         })
 
+        function parseDate(s) {
+            var b = s.split(/\D/);
+            return new Date(b[0], --b[1], b[2]);
+        }
+
         ///Dashboard
         function Dashboard(id) {
             $.ajax({
@@ -275,9 +280,15 @@
             var ns = [];
             var ps = [];
             var dur = [];
+            var eng = [];
+            var st = [];
+            var ed = [];
             var names = $('.staskname')
             var progress = $('.staskprog')
             var durations = $('.staskdur')
+            var engineers = $('.engname')
+            var startdates = $('.ststartdate')
+            var enddates = $('.stenddate')
             for (var i = 0; i < names.length; i++) {
                 //console.log(names[i].defaultValue)
                 ns.push(names[i].defaultValue)
@@ -290,16 +301,30 @@
                 //console.log(progress[i].defaultValue)
                 dur.push(durations[i].defaultValue)
             }
+            for (var i = 0; i < engineers.length; i++) {
+                //console.log(names[i].defaultValue)
+                eng.push(engineers[i].defaultValue)
+            }
+            for (var i = 0; i < startdates.length; i++) {
+                //console.log(names[i].defaultValue)
+                st.push(startdates[i].defaultValue)
+            }
+            for (var i = 0; i < enddates.length; i++) {
+                //console.log(names[i].defaultValue)
+                ed.push(enddates[i].defaultValue)
+            }
             console.log(ns);
             console.log(ps);
             console.log(dur);
-
-
+            console.log(eng);
+            console.log(st);
+            console.log(ed);
 
             google.charts.load("current", { packages: ['corechart'] });
             google.charts.setOnLoadCallback(drawChart);
             google.charts.setOnLoadCallback(drawChart2);
-            google.charts.setOnLoadCallback(drawChart3);
+            //google.charts.setOnLoadCallback(drawChart3);
+            google.charts.setOnLoadCallback(drawChart4);
 
 
             function drawChart() {
@@ -361,23 +386,40 @@
                 chart.draw(data, options);
             }
 
-            function drawChart3() {
-                var data = google.visualization.arrayToDataTable([
-                    ['Year', 'Sales', 'Expenses'],
-                    ['2013', 1000, 400],
-                    ['2014', 1170, 460],
-                    ['2015', 660, 1120],
-                    ['2016', 1030, 540]
+            
+
+            function drawChart4() {
+
+                var container = document.getElementById('timeline');
+                var chart = new google.visualization.Timeline(container);
+                var dataTable = new google.visualization.DataTable();
+                dataTable.addColumn({ type: 'string', id: 'Position' });
+                dataTable.addColumn({ type: 'string', id: 'Name' });
+                dataTable.addColumn({ type: 'date', id: 'Start' });
+                dataTable.addColumn({ type: 'date', id: 'End' });
+                
+                dataTable.addRows([
+                    [`${eng[0]}`, `${ns[0]}`, parseDate(st[0]), parseDate(ed[0])]
                 ]);
+                  
+                   
+                for (let j = 1; j < ns.length; j++) {
+                    dataTable.addRows([
+                        [`${eng[j]}`, `${ns[j]}`, parseDate(st[j]), parseDate(ed[j])]
+                    ]);
+
+                }
+                    
+             
 
                 var options = {
-                    title: 'Company Performance',
-                    hAxis: { title: 'Year', titleTextStyle: { color: 'green' } },
-                    vAxis: { minValue: 0 }
+                    colors: ['#cbb69d', '#603913', '#c69c6e'],
+                    timeline: {
+                        rowLabelStyle: { fontName: 'Helvetica', fontSize: 24, color: '#603913' },
+                        barLabelStyle: { fontName: 'Garamond', fontSize: 14 }
+                    }
                 };
-
-                var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
-                chart.draw(data, options);
+                chart.draw(dataTable, options);
             }
         }
 
