@@ -27,7 +27,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         ///Must Edit include engineering subtask
         public IEnumerable<SubTask> GetSubTasksFromTask(int taskId)
         {
-            return set.Where(st => st.FK_TaskId == taskId).Include(s=>s.Task).Include(t=>t.SubTaskSession).ToList();
+            return set.Where(st => st.FK_TaskId == taskId).Include(s=>s.Task).Include(s=>s.Engineer).Include(t=>t.SubTaskSession).ToList();
         }
 
         public IEnumerable<SubTask> GetSubTasksByEngineerId(string engineerId)
@@ -44,6 +44,23 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         {
             return set.Where(sub => sub.Id == subTaskId).Include(sub => sub.Task).ThenInclude(t => t.Project).FirstOrDefault();
         }
+
+        //Get only SubTasks which is on hold or active
+        public List<SubTask> GetEngineerSubTasks(string EngineerId)
+        {
+            return set.Where(sub => sub.FK_EngineerID == EngineerId)
+                .Where(s => s.Status == Status.OnHold || s.Status == Status.Active)
+                .Include(s => s.Engineer).Include(s=>s.Task).ThenInclude(t=>t.Project).ToList();
+        }
+
+        public IEnumerable<SubTask> GetEngineerCancelledSubTasks(string EngineerId)
+        {
+            return set.Where(sub => sub.FK_EngineerID == EngineerId)
+                .Where(s => s.Status == Status.Cancelled)
+                .Include(s => s.Engineer).Include(s => s.Task).ThenInclude(t => t.Project).ToList();
+        }
+
+
 
     }
 }

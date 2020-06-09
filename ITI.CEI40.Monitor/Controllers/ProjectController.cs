@@ -83,6 +83,7 @@ namespace ITI.CEI40.Monitor.Controllers
             }
         }
 
+        //shaker
         [HttpGet]
         public IActionResult CompletedProjects()
         {
@@ -105,21 +106,12 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
 
-        [HttpGet]
-        public IActionResult DashBoard(int projId)
-        {
-            //Project project = unitofwork.Projects.GetProjectWithTasks(projId);
-            List<Activity> tasks = unitofwork.Tasks.GetActivitiesFromProject(projId).ToList();
-            return PartialView("_DashBoardPartial", tasks);
-        }
 
         public IActionResult ProjectDailyReport(int Id)
         {
             Project project = unitofwork.Projects.GetProjectForReport(Id);
             return View(project);
         }
-
-
 
     }
 }

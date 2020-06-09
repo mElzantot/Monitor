@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 
 namespace ITI.CEI40.Monitor.Controllers
 {
@@ -93,10 +94,10 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [Authorize(Roles = "Engineer")]
-        public void EditStatus(int ID, Status status)
+        public void EditStatus(int id,int status)
         {
-            SubTask subTask = unitOfWork.SubTasks.GetById(ID);
-            subTask.Status = status;
+            SubTask subTask = unitOfWork.SubTasks.GetById(id);
+            subTask.Status = (Status)status;
             unitOfWork.SubTasks.Edit(subTask);
         }
 

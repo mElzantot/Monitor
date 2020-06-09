@@ -25,8 +25,6 @@
                                 <td>@Model[i].UserName</td>
                                 <td>@Model[i].TotalEvaluation</td>
                                 @*<td><button class="btn btn-info" onclick='displayCharts("@Model[i].Id")'>Charts</button></td>*@
-
-
                             </tr>
                         }
                     </tbody>
@@ -36,7 +34,7 @@
             <div style=" padding: 15px; border-radius: 8px;">
                 <div class="row" style="margin:auto;" id="tasks">
                     <h4 id="alertdiv" class="text-muted text-center mt-5" style="margin:auto;">Select Engineer to Show Data</h4>
-                    <div id="tableBody" class="table table-hover">
+                    <div id="tableBody" class="table table-hover align-middle">
                     </div>
                 </div>
             </div>
@@ -136,6 +134,31 @@
             })
         }
 
+        function ChangeStatus(Id, value) {
+            var meassage;
+            switch (value) {
+                case 2:
+                    meassage = 'Do you want to submit this task';
+                    break;
+                case 3:
+                    meassage = 'Do you want to cancel this task';
+                    break;
+            }
+
+            if (confirm(meassage)) {
+                $.ajax({
+                    url: "/TeamLeader/EditStatus",
+                    type: "Get",
+                    data: {
+                        id: Id,
+                        status: value
+                    },
+                    success: function () {
+                        $(`#${Id}`).hide();
+                    }
+                })
+            }
+        }
     </script>
 }
 

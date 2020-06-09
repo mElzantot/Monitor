@@ -16,6 +16,9 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         List<SubTask> GetSubTasksByTaskId(int taskId);
         SubTask GetSubTaskIncludingTask(int subTaskId);
         SubTask GetSubTaskIncludingProject(int subTaskId);
+
+        List<SubTask> GetEngineerSubTasks(string EngineerId);
+        IEnumerable<SubTask> GetEngineerCancelledSubTasks(string EngineerId);
     }
 
     
