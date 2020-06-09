@@ -61,7 +61,7 @@ namespace ITI.CEI40.Monitor.Controllers
                     foreach (var item in model.Files)
                     {
                         //-------Create New Guid fo each file
-                        uniqeFileName = Guid.NewGuid().ToString() + "_" + item.FileName;
+                        uniqeFileName = item.FileName;
                         //---------The full path for file
                         string filePath = Path.Combine(uploaderFolder, uniqeFileName);
                         //----------Copy file to server

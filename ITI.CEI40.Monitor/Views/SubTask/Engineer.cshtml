@@ -24,7 +24,6 @@
                                 <th width="26%">Status</th>
                                 <th class="remaining">Remaining Time</th>
                                 <th>Progress</th>
-                                <th></th>
                             </tr>
                         </thead>
 
@@ -75,11 +74,7 @@
                                             <div class="progress-bar" role="progressbar" style="width: @item.Progress%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@item.Progress%</div>
                                         </div>
                                     </td>
-                                    <td>
-                                        <a href="/SubTask/AddFile?staskid=@item.Id" class="btn alert-primary">
-                                             <i class="fa fa-upload" aria-hidden="true">Files</i>
-                                        </a>
-                                    </td>
+                                    
                                 </tr>
                             }
                         </tbody>

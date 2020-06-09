@@ -22,9 +22,15 @@
                         <input type="range" asp-for="@Model.Progress" onchange="ChangeProgress(@Model.Id,this.value)" min="0" max="100" step="10" class="slider" id="myRange">
 
                     </div>
+
+                    <div>
+                        <a href="/SubTask/AddFile?staskid=@Model.Id" class="btn-sm alert-primary">
+                            <i class="fa fa-upload" aria-hidden="true">Files</i>
+                        </a>
+                    </div>
                 </div>
 
-
+                <br />
 
 
                 <div class="font-weight-bold mb-2 "> Files <span class="caret"></span> </div>
@@ -41,7 +47,7 @@
                             foreach (var item in Model.files)
                             {
                                 <tr>
-                                    <td><a href="/files/@item.FilePath" download> attachment</a></td>
+                                    <td><a href="/files/@item.FilePath" download> @item.FilePath</a></td>
                                 </tr>
                             }
 

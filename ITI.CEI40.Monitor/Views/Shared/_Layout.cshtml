@@ -27,6 +27,7 @@
 <body>
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+            
             <a class="navbar-brand" asp-action="Index" asp-controller="Home"><img src="~/img/Monitor.PNG" class="rounded-circle " alt="Monitor" width="40" height="40" />Monitor</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -36,6 +37,7 @@
                     @*<li class="nav-item active">
             <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
         </li>*@
+
                     <li class="nav-item">
                         <a class="nav-link px-3 py-3 " asp-area="" asp-controller="Home" asp-action="Index"><i id="i" class="fas fa-home"></i> Home</a>
                     </li>
@@ -58,12 +60,20 @@
                     </li>
                     <li class="dropdown nav-item">
                         <a href="#" class="dropdown-toggle nav-link px-3 py-3 " data-toggle="dropdown" role="button"
-                           aria-haspopup="true" aria-expanded="false"><i id="i" class="fas fa-tasks"></i> Projects <span class="caret"></span></a>
+                           aria-haspopup="true" aria-expanded="false"><i id="i" class="fas fa-tasks"></i>Projects<span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li><a class="dropdown-item" asp-controller="Project" asp-action="Index">Active</a></li>
                             <li><a class="dropdown-item" asp-controller="Project" asp-action="CompletedProjects">Completed</a></li>
                             <li><a class="dropdown-item" asp-controller="Project" asp-action="Index">Canceled</a></li>
                         </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a href="#" class="">
+                            <i class="fa fa-bell fa-2x" aria-hidden="true" style="color:#4da76b"></i>
+                            <span class="badge" style="position:relative; right:5px; top:-15px; color:#4da76b">
+                                2
+                            </span>
+                        </a>
                     </li>
                 </ul>
             </div>
