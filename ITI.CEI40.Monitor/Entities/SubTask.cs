@@ -15,6 +15,7 @@ namespace ITI.CEI40.Monitor.Entities
             this.Progress = 0;
             this.SubTaskSession = new HashSet<SubTaskSession>();
             this.ActualDuration = 0;
+            this.Status = Status.Active;
         }
 
         [Key]

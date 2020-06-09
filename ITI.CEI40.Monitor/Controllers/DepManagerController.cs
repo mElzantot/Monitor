@@ -82,5 +82,13 @@ namespace ITI.CEI40.Monitor.Controllers
             unitofwork.Tasks.Edit(task);
         }
 
+        [HttpGet]
+        public IActionResult CancelledTasks(int depid)
+        {
+            var tasks = unitofwork.Tasks.GetDepCancelledTasks(depid).ToList();
+            return View( tasks);
+        }
+
+        
     }
 }
