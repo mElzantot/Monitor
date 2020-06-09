@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
 using ITI.CEI40.Monitor.Entities.Enums;
+using ITI.CEI40.Monitor.Hubs;
 using ITI.CEI40.Monitor.Models.View_Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ITI.CEI40.Monitor.Controllers
 {
@@ -17,13 +19,15 @@ namespace ITI.CEI40.Monitor.Controllers
     public class EmployeeController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
+        private readonly IHubContext<NotificationsHub> hubContext;
         private readonly IUnitOfWork unitofwork;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public EmployeeController(RoleManager<IdentityRole> roleManager,
+        public EmployeeController(RoleManager<IdentityRole> roleManager,IHubContext<NotificationsHub> hubContext,
            UserManager<ApplicationUser> userManager, IUnitOfWork unitofwork)
         {
             this.roleManager = roleManager;
+            this.hubContext = hubContext;
             this.unitofwork = unitofwork;
             this.userManager = userManager;
         }
@@ -58,11 +62,13 @@ namespace ITI.CEI40.Monitor.Controllers
                 };
 
                 var result = await userManager.CreateAsync(newEmp, employee.Password);
+
                 if (result.Succeeded)
                 {
                     return PartialView("_EmployeePartialView", newEmp);
                 }
             }
+
             //-------Not Acceptable ( Need solution ) ------//
             return null;
 
@@ -122,6 +128,7 @@ namespace ITI.CEI40.Monitor.Controllers
                     var addedToRoles = await userManager.AddToRoleAsync(Emp, item.role.ToString());
                 }
             }
+
             return Json(Emp); ;
         }
 
@@ -129,7 +136,6 @@ namespace ITI.CEI40.Monitor.Controllers
 
 
         #region Edit Employee Data
-
 
         [HttpGet]
         public async Task<IActionResult> EditEmployee(string id)
@@ -236,6 +242,18 @@ namespace ITI.CEI40.Monitor.Controllers
             }
             return Json(new { Complete = false });
         }
+
+
+        //-----------Employee TimeSheet
+        [Authorize(Roles = "Engineer")]
+        [HttpGet]
+        public IActionResult EmployeeTimeSheet()
+        {
+            List<SubTaskSession> EmpSessions = unitofwork.SubTaskSessions.GetTimeSheetForEmp(userManager.GetUserId(HttpContext.User)).ToList();
+
+            return View(EmpSessions);
+        }
+
 
     }
 }

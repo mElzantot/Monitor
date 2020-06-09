@@ -5,10 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
+using ITI.CEI40.Monitor.Hubs;
 using ITI.CEI40.Monitor.Models.View_Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ITI.CEI40.Monitor.Controllers
 {
@@ -16,11 +18,13 @@ namespace ITI.CEI40.Monitor.Controllers
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IHubContext<NotificationsHub> hubContext;
 
-        public SubTaskController(IUnitOfWork unitOfWork,UserManager<ApplicationUser> userManager)
+        public SubTaskController(IUnitOfWork unitOfWork,UserManager<ApplicationUser> userManager,IHubContext<NotificationsHub> hubContext)
         {
             this.unitOfWork = unitOfWork;
             this.userManager = userManager;
+            this.hubContext = hubContext;
         }
 
         [Authorize(Roles = "Engineer")]
@@ -153,6 +157,35 @@ namespace ITI.CEI40.Monitor.Controllers
 
                 newSubTask = unitOfWork.SubTasks.Add(newSubTask);
                 newSubTask.Engineer = unitOfWork.Engineers.GetById(subTask.Assignee);
+
+
+                //--------Add Notification to DataBase
+
+                Notification Notification = new Notification
+                {
+                    Action = Entities.Enums.NotificationType.Assigned,
+                    TaskName = newSubTask.Name,
+                    FK_SenderId = userManager.GetUserId(HttpContext.User),
+                    NotifTime = DateTime.Now
+                };
+
+                Notification Savednotification = unitOfWork.Notification.Add(Notification);
+                NotificationUsers notificationUsers = new NotificationUsers
+                {
+                    NotificationId = Savednotification.Id,
+                    userID = newSubTask.FK_EngineerID
+                };
+
+                unitOfWork.NotificationUsers.Add(notificationUsers);
+
+                //---------Send Notification to Employee
+
+                string message = $"New Task ," +
+                    $" There Is a new task -{Notification.TaskName}- assigned to you at {Notification.NotifTime.Date} ";
+
+                hubContext.Clients.User(newSubTask.FK_EngineerID).SendAsync("newNotification", message);
+
+
                 return PartialView("_NewSubTaskPartialView", newSubTask);
 
             }

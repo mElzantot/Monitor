@@ -30,6 +30,7 @@ namespace ITI.CEI40.Monitor.Controllers
 
         public IActionResult Index()
         {
+
             ProjectViewModel projectView = new ProjectViewModel
             {
                 Projects = unitofwork.Projects.GetRunningProjects(userManager.GetUserId(HttpContext.User)),

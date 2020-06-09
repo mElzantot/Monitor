@@ -27,7 +27,7 @@ namespace ITI.CEI40.Monitor.Models.View_Models
         public float TotalEvaluation { get; set; }
 
         [Required]
-        [Range(0, 60000)]
+        [Range(0, 100000)]
         public float Salary { get; set; }
 
         public List<ApplicationUser> Employees { get; set; }

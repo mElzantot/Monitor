@@ -34,6 +34,9 @@ namespace ITI.CEI40.Monitor.Entities
 
         public ICollection<NotificationUsers> NotificationUsers { get; set; }
 
+        [Required]
+        [DataType(DataType.DateTime)]
+        public DateTime NotifTime { get; set; }
 
     }
 }

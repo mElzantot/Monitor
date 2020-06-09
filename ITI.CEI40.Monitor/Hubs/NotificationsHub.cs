@@ -27,22 +27,6 @@ namespace ITI.CEI40.Monitor.Hubs
         }
 
 
-        public override Task OnConnectedAsync()
-        {
-            string userId = Context.UserIdentifier;
-            return base.OnConnectedAsync(); 
-        }
-
-
-
-
-
-
-
-
-
-
-
 
     }
 }

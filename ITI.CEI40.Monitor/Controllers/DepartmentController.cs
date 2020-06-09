@@ -8,6 +8,7 @@ using ITI.CEI40.Monitor.Hubs;
 using ITI.CEI40.Monitor.Models.View_Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ITI.CEI40.Monitor.Controllers
 {
@@ -16,10 +17,12 @@ namespace ITI.CEI40.Monitor.Controllers
     public class DepartmentController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly IHubContext<NotificationsHub> hubContext;
 
-        public DepartmentController(IUnitOfWork unitOfWork)
+        public DepartmentController(IUnitOfWork unitOfWork, IHubContext<NotificationsHub> hubContext )
         {
             this.unitOfWork = unitOfWork;
+            this.hubContext = hubContext;
         }
 
 
@@ -48,8 +51,6 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpPost]
         public IActionResult AddDepartment(string name)
         {
-            //var context = GlobalHost.ConnectionManager.GetHubContext<NotificationsHub>();
-
 
             Department ExistingDept = unitOfWork.Departments.FindByName(name);
             if (ExistingDept == null)
@@ -59,8 +60,7 @@ namespace ITI.CEI40.Monitor.Controllers
                     Name = name
                 };
                 newDept = unitOfWork.Departments.Add(newDept);
-               // List<Department> depts = unitOfWork.Departments.GetAllDeptWithManagers().ToList();
-               Action
+                // List<Department> depts = unitOfWork.Departments.GetAllDeptWithManagers().ToList();
                 return PartialView("_DepartmentPartial", newDept);
             }
             return null;

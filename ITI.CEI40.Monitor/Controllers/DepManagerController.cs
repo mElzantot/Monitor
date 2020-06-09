@@ -4,19 +4,26 @@ using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
+using ITI.CEI40.Monitor.Hubs;
 using ITI.CEI40.Monitor.Models.View_Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ITI.CEI40.Monitor.Controllers
 {
     public class DepManagerController : Controller
     {
-        private readonly IUnitOfWork unitofwork;
+        private readonly IUnitOfWork unitOfWork;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly IHubContext<NotificationsHub> hubContext;
 
-        public DepManagerController(IUnitOfWork unitofwork)
+        public DepManagerController(IUnitOfWork unitofwork , UserManager<ApplicationUser> userManager , IHubContext<NotificationsHub> hubContext)
         {
-            this.unitofwork = unitofwork;
+            this.unitOfWork = unitofwork;
+            this.userManager = userManager;
+            this.hubContext = hubContext;
         }
         public IActionResult Index()
         {
@@ -24,14 +31,14 @@ namespace ITI.CEI40.Monitor.Controllers
         }
         public IActionResult TeamsView(int DepId)
         {
-            IEnumerable<Team> teams= unitofwork.Teams.getTeamsinsideDept(DepId);
+            IEnumerable<Team> teams= unitOfWork.Teams.getTeamsinsideDept(DepId);
             return View(teams);
         }
 
         [HttpGet]
         public IActionResult displayTasks(int teamId)
         {
-            var task = unitofwork.Tasks.GetAllTaskWithTheirProject(teamId);
+            var task = unitOfWork.Tasks.GetAllTaskWithTheirProject(teamId);
             return PartialView("_TaskPartialView", task);
         }
 
@@ -40,9 +47,9 @@ namespace ITI.CEI40.Monitor.Controllers
         {
             var activityVM = new ActivityViewModel();
             
-            activityVM.Tasks = unitofwork.Tasks.GetDepartmentTasks(depid);
+            activityVM.Tasks = unitOfWork.Tasks.GetDepartmentTasks(depid);
 
-            activityVM.Teams = unitofwork.Teams.getTeamsinsideDept(depid).ToList();
+            activityVM.Teams = unitOfWork.Teams.getTeamsinsideDept(depid).ToList();
 
             return View(activityVM);
         }
@@ -50,23 +57,52 @@ namespace ITI.CEI40.Monitor.Controllers
         
 
         [HttpPost]
-        public JsonResult AssignTasks(int taskId,int teamId)
+        public  JsonResult AssignTasks(int taskId,int teamId)
         {
             if (ModelState.IsValid)
             {
-                var task = unitofwork.Tasks.GetById(taskId);
+                var task = unitOfWork.Tasks.GetById(taskId);
                 task.FK_TeamId = teamId;
-                var team = unitofwork.Teams.GetById(teamId);
-                unitofwork.Complete();
+                var team = unitOfWork.Teams.GetById(teamId);
+                unitOfWork.Complete();
+
+                //--------Add Notification to DataBase
+
+                Notification Notification = new Notification
+                {
+                    Action = Entities.Enums.NotificationType.Assigned,
+                    TaskName = task.Name,
+                    FK_SenderId = userManager.GetUserId(HttpContext.User),
+                    NotifTime = DateTime.Now
+                };
+
+                Notification Savednotification = unitOfWork.Notification.Add(Notification);
+                NotificationUsers notificationUsers = new NotificationUsers
+                {
+                    NotificationId = Savednotification.Id,
+                    userID = team.FK_TeamLeaderId
+                };
+
+                unitOfWork.NotificationUsers.Add(notificationUsers);
+
+                //---------Send Notification to Team
+
+                string message = $" New Task " +
+                    $"{HttpContext.User.Identity.Name} -Department Manager- has assigned new task" +
+                    $" -{Notification.TaskName}- to your Team at {Notification.NotifTime}";
+                hubContext.Clients.User(notificationUsers.userID).SendAsync("newNotification", message);
+
+
                 return Json(new { teamName=team.Name});
             }
+
             return Json(new {  });
         }
 
         [HttpGet]
         public IActionResult Dashboard(int taskId)
         {
-            var subtask = unitofwork.SubTasks.GetSubTasksFromTask(taskId);
+            var subtask = unitOfWork.SubTasks.GetSubTasksFromTask(taskId);
             return View("_DashBoardPartial", subtask);
         }
 

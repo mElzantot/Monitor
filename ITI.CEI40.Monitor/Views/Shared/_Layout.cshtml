@@ -51,6 +51,10 @@
                         </li>
 
                         <li class="nav-item">
+                            <a class="nav-link px-3 py-3  " asp-controller="Employee" asp-action="EmployeeTimeSheet" ><i class="fas fa-users"></i>TimeSheet</a>
+                        </li>
+
+                        <li class="nav-item">
                             <a class="nav-link px-3 py-3  " asp-controller="Department" asp-action="ViewDepartments"><i id="i" class="fas fa-chart-area"></i> Admin</a>
                         </li>
                         <li class="dropdown nav-item">
@@ -103,6 +107,7 @@
         window.onload = function () {
             connection = new signalR.HubConnectionBuilder().withUrl("/notificationsHub").build();
             connection.start();
+
             connection.on("newNotification", function (msg) {
                 console.log(msg);
                 //document.getElementById("NotificationList").innerHTML += "<li>" + msg + "</li>";
