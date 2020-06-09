@@ -56,7 +56,10 @@ else
                         {
                             <button onclick="ChangeStatus(@Model[i].Id,2)" class="btn btn-success"><i class="fas fa-check-square"></i></button>
                         }
-                        <button onclick="ChangeStatus(@Model[i].Id,3)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                        @if (Model[i].Project.Status == Status.Cancelled)
+                        {
+                            <button onclick="ChangeStatus(@Model[i].Id,3)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                        }
                     </div>
                 </td>
             </tr>

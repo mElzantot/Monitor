@@ -80,15 +80,54 @@ else
                             </div>
                             @if (@Model[i].Progress == 100)
                             {
-                                <button onclick="ChangeStatus(@Model[i].Id,2)" class="btn btn-success"><i class="fas fa-check-square"></i></button>
+                                <button onclick="Submit(@Model[i].Id)" class="btn btn-success"><i class="fas fa-check-square"></i></button>
                             }
-                            <button onclick="ChangeStatus(@Model[i].Id,3)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
+                            <button onclick="Cancele(@Model[i].Id)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
                         </div>
                     </td>
                 </tr>
             }
         }
     </table>
+
+    <!-- Button trigger modal -->
+    <button type="button" id="togleBtn" class="btn btn-primary d-none" data-toggle="modal" data-target="#exampleModal">
+        Launch demo modal
+    </button>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-muted" id="exampleModalLabel">Task submittion</h5>
+                </div>
+
+                <div class="modal-body">
+                    <div class="col">
+                        <label asp-for="@Model[0].Complexity"></label>
+                        <input id="complex" asp-for="@Model[0].Complexity" type="number" class="form-control" />
+                    </div>
+                    <br />
+                    <div class="col">
+                        <label asp-for="@Model[0].Evaluation"></label>
+                        <input id="evaluation" asp-for="@Model[0].Evaluation" type="number" class="form-control" />
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
+                    <button id="Submit" type="button" class="btn btn-primary">Submit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 }
+
+
+
+
+
 
 

@@ -13,6 +13,7 @@ namespace ITI.CEI40.Monitor.Models.View_Models
         public List<Activity> Activities { set; get; }
         public List<int> reDbId { set; get; }
         public List<DeletedDependecy> reDep { set; get; }
+        public List<Department> Departments { set; get; }
     }
 
     public class Act
@@ -24,11 +25,9 @@ namespace ITI.CEI40.Monitor.Models.View_Models
         public int duration { get; set; }
         public int progress { get; set; }
         public int dbId { get; set; }
-        //public int depend { get; set; }
-        //public int dependLag { get; set; }
+        public int assignee { get; set; }
         public Dependecy Dependecy { get; set; }
         public List<Dependecy> Dependecies { get; set; }
-        public int assignee { get; set; }
 
     }
 

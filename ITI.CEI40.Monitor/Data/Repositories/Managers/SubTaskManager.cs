@@ -53,6 +53,10 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
                 .Include(s => s.Engineer).Include(s=>s.Task).ThenInclude(t=>t.Project).ToList();
         }
 
+        public SubTask GetSubTaskWithEngineer(int id)
+        {
+            return set.Where(s => s.Id == id).Include(s => s.Engineer).FirstOrDefault();
+        }
  
     }
 }

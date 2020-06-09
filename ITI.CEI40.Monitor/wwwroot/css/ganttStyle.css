@@ -1,4 +1,4 @@
-body{
+body {
     margin: 0;
     padding: 0;
     font-size: 100%;
@@ -6,7 +6,7 @@ body{
 
 
 table {
-    text-align     : center;
+    text-align: center;
     /* border-collapse: collapse; */
 }
 
@@ -14,15 +14,18 @@ table {
     background-color: #eee;
 }
 
+    .tablebody td {
+        height:10px
+    }
 
 input {
-    border-top-style   : hidden;
-    border-right-style : hidden;
-    border-left-style  : hidden;
+    border-top-style: hidden;
+    border-right-style: hidden;
+    border-left-style: hidden;
     border-bottom-style: groove;
-    background-color   : transparent;
-    box-sizing         : border-box;
-    width              : 100%;
+    background-color: transparent;
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .no-outline {
@@ -33,67 +36,125 @@ input {
 
 /* split screen */
 
-
-#table {
-    background-color: #dde;
-    width: 90%;
-    height: 100%;
-    min-width: 10px;
+.splitview {
+    position: relative;
+    width: 100%;
+    min-height: 45vw;
     overflow: auto;
 }
 
-.errprogress{
+.panel {
+    position: absolute;
+    width: 100vw;
+    min-height: 45vw;
+    overflow: auto;
+}
+
+.tablecontent {
+    background-color: rgb(248, 248, 250);
+    z-index: 1;
+    width: 50%;
+}
+
+.ganttcontent {
+    background-color: rgb(248, 244, 244);
+    z-index: 2;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 50%;
+}
+
+
+#table {
+    background-color: #dde;
+    width: 100%;
+    height: 100%;
+    min-width: 50px;
+    overflow: auto;
+}
+
+/* Handle. */
+.handle {
+    height: 100%;
+    position: absolute;
+    display: block;
+    background-color: rgb(145, 145, 145);
+    width: 4px;
+    top: 0;
+    left: 50%;
+    z-index: 3;
+}
+
+    .handle:hover {
+        cursor: e-resize;
+    }
+
+    .handle:active {
+        background-color: rgb(34, 34, 37);
+        cursor: e-resize;
+    }
+
+.errprogress {
     border: 1px solid red;
+}
+
+/*buttons*/
+tbody button {
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
 }
 
 
 /* modal ?? */
 
 .dep-modal-bg {
-    position        : fixed;
-    width           : 100%;
-    height          : 100hv;
-    top             : 0;
-    left            : 0;
+    position: fixed;
+    width: 100%;
+    height: 100hv;
+    top: 0;
+    left: 0;
     background-color: rgba(0, 0, 0, 0.5);
-    display         : flex;
-    justify-content : center;
-    align-items     : center;
-    visibility      : hidden;
-    opacity         : 0;
-    transition      : visibility 0s, opacity 0.5s;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.5s;
 }
 
 .dep-bg-active {
     visibility: visible;
-    opacity   : 1;
+    opacity: 1;
 }
 
 .dep-modal {
     position: relative;
-    font-family     : 'Montserrat', sans-serif;
+    font-family: 'Montserrat', sans-serif;
     background-color: white;
-    width           : 30%;
-    height          : 30%;
-    display         : flex;
-    justify-content : space-around;
-    align-items     : center;
-    flex-direction  : column;
+    width: 30%;
+    height: 30%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
 }
 
-.dep-modal button {
-    padding         : 10px 10px;
-    background-color: rgb(9, 72, 80);
-    color           : white;
-    border          : none;
-    font-family     : 'Montserrat', sans-serif;
-    cursor          : pointer;
-}
-.dep-modal span{
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-weight: bold;
-    cursor: pointer;
-}
+    .dep-modal button {
+        padding: 10px 10px;
+        background-color: rgb(9, 72, 80);
+        color: white;
+        border: none;
+        font-family: 'Montserrat', sans-serif;
+        cursor: pointer;
+    }
+
+    .dep-modal span {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-weight: bold;
+        cursor: pointer;
+    }
 /*modal ???*/

@@ -17,82 +17,99 @@
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 }
-
-
-<div>
-    <input style="display:none;" id="submitBtn" type="button" class="btn btn-primary" onclick="submit()" value="submit project" />
-    <input id="editBtn" type="button" class="btn btn-info" onclick="startEdit()" value="Edit project" />
+<div class="buttons" >
     <div style="display: flex;">
-        <input type="button" onclick="draw()" value="assignTasks" />
-        <input type="button" onclick="changeViewMode()" value="Change view mode" />
+        <input disabled id="submitBtn" type="button" class="btn btn-primary" onclick="submit()" value="submit project" />
+        <a style="width:500px" class="btn btn-light" href="/Project/Index">Back To List</a>
+        <input hidden id="editBtn" type="button" class="btn btn-info" onclick="startEdit()" value="Edit project" />
+        <div style="display: flex; align-items:center">
+            <button onclick="changeViewMode(1)" class="btn btn-outline-dark">Days</button>
+            <button onclick="changeViewMode(2)" class="btn btn-outline-dark">Weeks</button>
+            <button onclick="changeViewMode(3)" class="btn btn-outline-dark">Months</button>
+        </div>
+        <button onclick="spliterTo(10)" class="btn btn-light">
+            <span class="ui-icon ui-icon-caret-1-w"></span>
+        </button>
+        <button onclick="spliterTo(50)" class="btn btn-light">
+            <span class="ui-icon ui-icon-caret-2-e-w"></span>
+        </button>
+        <button onclick="spliterTo(90)" class="btn btn-light">
+            <span class="ui-icon ui-icon-caret-1-e"></span>
+        </button>
     </div>
     <input id="proId" value="@Model.ProjectId" hidden="hidden" />
 </div>
-<div>
-
-    <table id="table" class="table table-bordered table-hover table-sm">
-        <thead calss="thead thead-dark">
-            <tr>
-                <th></th>
-                <th scope="col">Task Name</th>
-                <th scope="col">Start Date</th>
-                <th scope="col">End Date</th>
-                <th scope="col">Task Duration</th>
-                <th scope="col">Dependencie</th>
-                <th scope="col">Assignees</th>
-                <th scope="col">Progress</th>
-            </tr>
-        </thead>
-        <tbody class="tablebody" id="tbody">
-            @{
-                if (Model.Activities != null && Model.Activities.Count != 0)
-                {
-                    for (int i = 0; i < Model.Activities.Count(); i++)
-                    {
-                        <tr id="row-@i">
-                            <td><label id="l-@i">@(Model.Activities[i].ViewOrder + 1) </label></td>
-                            <td><input readonly id="n-@i" asp-for="@Model.Activities[i].Name" type="text" class="Name no-outline" value="@Model.Activities[i].Name"></td>
-                            @{string sd = Model.Activities[i].StartDate.ToShortDateString();}
-                            <td><input readonly id="s-@i" asp-for="@sd" type="text" class="datepicker no-outline" /></td>
-                            @{string ed = Model.Activities[i].EndDate.ToShortDateString();}
-                            <td><input readonly id="e-@i" asp-for="@ed" type="text" class="datepicker no-outline" /></td>
-                            <td><input readonly id="d-@i" asp-for="@Model.Activities[i].EstDuration" type="text" class="durations no-outline"></td>
-                            @*create depends*@
-                            @if (Model.Activities[i].ActivitiesToFollow.Count > 0)
+<div class="splitview">
+    <div class="panel tablecontent">
+        <div>
+            <table id="table" class="table table-bordered table-hover table-sm container" style="font-size:12px;">
+                <thead calss="thead thead-dark">
+                    <tr>
+                        <th></th>
+                        <th scope="col">Task Name</th>
+                        <th scope="col">Start Date</th>
+                        <th scope="col">End Date</th>
+                        <th scope="col">Task Duration</th>
+                        <th scope="col">Dependencie</th>
+                        <th scope="col">Assignees</th>
+                        <th scope="col">Progress</th>
+                    </tr>
+                </thead>
+                <tbody class="tablebody" id="tbody">
+                    @{
+                        if (Model.Activities != null && Model.Activities.Count != 0)
+                        {
+                            for (int i = 0; i < Model.Activities.Count(); i++)
                             {
-                                <td>
-                                    <input readonly type="text" id="dep-@i" class="no-outline" asp-for="@Model.Activities[i].ActivitiesToFollow.FirstOrDefault().ActivityToFollow.ViewOrder" value="@(Model.Activities[i].ActivitiesToFollow.FirstOrDefault().ActivityToFollow.ViewOrder+1)">
-                                </td>
-                                <td style="display:none;">
-                                    <input hidden readonly type="text" id="lag-@i" class="no-outline" asp-for="@Model.Activities[i].ActivitiesToFollow.FirstOrDefault().Lag">
-                                </td>
-                            }
-                            else
-                            {
-                                <td>
-                                    <input readonly type="text" class="no-outline" value="">
-                                    <input hidden readonly type="text" id="dep-@i" class="no-outline" value="-1">
-                                </td>
-                                <td style="display:none;">
-                                    <input readonly type="text" id="lag-@i" class="no-outline" value="0">
-                                </td>
-                            }
+                                <tr id="row-@i" style="display:none;">
+                                    <td><label id="l-@i">@(Model.Activities[i].ViewOrder + 1) </label></td>
+                                    <td><input readonly id="n-@i" asp-for="@Model.Activities[i].Name" type="text" class="Name no-outline" value="@Model.Activities[i].Name"></td>
+                                    @{string sd = Model.Activities[i].StartDate.ToShortDateString();}
+                                    <td><input readonly id="s-@i" asp-for="@sd" type="text" class="datepicker no-outline" /></td>
+                                    @{string ed = Model.Activities[i].EndDate.ToShortDateString();}
+                                    <td><input readonly id="e-@i" asp-for="@ed" type="text" class="datepicker no-outline" /></td>
+                                    <td><input readonly id="d-@i" asp-for="@Model.Activities[i].EstDuration" type="text" class="durations no-outline"></td>
+                                    @*create depends*@
+                                    @if (Model.Activities[i].ActivitiesToFollow.Count > 0)
+                                    {
+                                        <td>
+                                            <input readonly type="text" id="dep-@i" class="no-outline" asp-for="@Model.Activities[i].ActivitiesToFollow.FirstOrDefault().ActivityToFollow.ViewOrder" value="@(Model.Activities[i].ActivitiesToFollow.FirstOrDefault().ActivityToFollow.ViewOrder+1)">
+                                        </td>
+                                        <td style="display:none;">
+                                            <input hidden readonly type="text" id="lag-@i" class="no-outline" asp-for="@Model.Activities[i].ActivitiesToFollow.FirstOrDefault().Lag">
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td>
+                                            <input readonly type="text" class="no-outline" value="">
+                                            <input hidden readonly type="text" id="dep-@i" class="no-outline" value="-1">
+                                        </td>
+                                        <td style="display:none;">
+                                            <input readonly type="text" id="lag-@i" class="no-outline" value="0">
+                                        </td>
+                                    }
 
-                            <td><input readonly asp-for="@Model.Activities[i].FK_DepID" type="text" class="no-outline"></td>
-                            <td><input readonly asp-for="@Model.Activities[i].Progress" type="text" class="no-outline"></td>
-                            <td style="display:none;"><input id="dbid-@i" value="@Model.Activities[i].Id" /></td>
-                        </tr>
+                                    <td><input id="assign-@i" readonly asp-for="@Model.Activities[i].FK_DepID" value="@Model.Activities[i].FK_DepID" class="no-outline"></td>
+                                    <td><input readonly asp-for="@Model.Activities[i].Progress" class="no-outline"></td>
+                                    <td style="display:none;"><input id="dbid-@i" value="@Model.Activities[i].Id" /></td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr hidden><td><input id="checkdata" value="false" /></td></tr>
+                        }
                     }
-                }
-                else
-                {
-                    <tr hidden><td><input id="checkdata" value="false" /></td></tr>
-                }
-            }
-        </tbody>
-    </table>
+                </tbody>
+            </table>
 
-    <svg id="ganttchart"></svg>
+        </div>
+    </div>
+    <div class="panel ganttcontent">
+        <svg id="ganttchart"></svg>
+    </div>
+    <div class="handle"></div>
 </div>
 
 @section Scripts{
@@ -110,6 +127,8 @@
             crossorigin="anonymous"></script>
     <script src="~/js/ganttScript.js"></script>
     <script>
+        // fill the array of the departments assignee
+        fillAssignees();
 
         var dataArray = [];
         var editonece = true;
@@ -131,6 +150,7 @@
                     var dbid = $(`#dbid-${i}`)[0].value;
                     var dependsId = $(`#dep-${i}`)[0].value - 1;
                     var lag = $(`#lag-${i}`)[0].value;
+                    var assignee = $(`#assign-${i}`)[0].value;
                     var taskObj = {
                         id: parseInt(label),
                         name: `${name}`,
@@ -139,7 +159,8 @@
                         duration: duration,
                         dbId: parseInt(dbid),
                         depends: parseInt(dependsId),
-                        lag: lag
+                        lag: lag,
+                        assignee: assignee
                     };
 
                     dataArray.push(taskObj);
@@ -171,12 +192,13 @@
         }
 
         function fillData(rowId, task) {
-            var realTask = new Task(new Id(task.id), task.name, task.start, task.end, task.duration); // dependency???
+            // create the task object
+            var realTask = new Task(new Id(task.id), task.name, task.start, task.end, task.duration, task.assignee); 
             realTask.dbId = task.dbId;
             if (task.depends > -1) {
-                realTask.depends = new Dependency(new Id(task.depends), task.lag);
-                // note that the task dependevy has a hierarchy
-                tasks.find(t => t.id.id == task.depends).dependencies.push(new Dependency(new Id(task.id), task.lag));
+                // note that the task dependevy has a hierarchy (using the same id object)
+                realTask.depends = new Dependency(tasks.find(t => t.id.id == task.depends).id, task.lag);
+                tasks.find(t => t.id.id == task.depends).dependencies.push(new Dependency(realTask.id, task.lag));
             } else {
                 realTask.depends = null;
             }
@@ -193,17 +215,37 @@
                 $(`#Duration${n}`)[0].value = computeDuration(task.start, task.end);
             }
             if (task.depends > 0) { $(`#Dependency${n}`)[0].value = task.depends; }
-            openRow(n);
+            openRow(n); // before closing the dependency cell
             if (realTask.depends != null) {
                 $(`#Dependency${n}`)[0].value = realTask.depends.depId.id + 1;
                 $(`#startDate${n}`).datepicker("option", "disabled", true);
             }
+            $(`#assignlist${n}`)[0].value = task.assignee;
         }
+
+
+        function fillAssignees() {
+            @foreach (var d in Model.Departments)
+             {
+                <text>
+                    assigneeTeams.push({depId: @d.Id, depName: '@d.Name' });
+                </text>
+             }
+
+            // i had should use this way
+            @*var model = @Html.Raw(Json.Serialize(Model));
+            console.log(model);*@
+        }
+        
         //////////////////////////////////////
 
         document.addEventListener("DOMContentLoaded", table(dataArray, noData), false);
+        document.addEventListener("DOMContentLoaded", function () {
+            // then start fill the data
+            startEdit();
+        });
 
-            addAssignOpts();
+        // add the Department assignees to the tables
         //$.when($.ajax(table())).then(function () {
         //});
 

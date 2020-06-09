@@ -24,10 +24,10 @@ namespace ITI.CEI40.Monitor.Controllers
             return View(tasks);
         }
 
-        public void EditStatus(int id)
+        public void EditStatus(int id,int status)
         {
             Activity task = unitOfWork.Tasks.GetById(id);
-            task.Status = Status.OnHold;
+            task.Status = (Status)status;
             unitOfWork.Tasks.Edit(task);
         }
 

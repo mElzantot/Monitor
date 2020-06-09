@@ -10,7 +10,6 @@ namespace ITI.CEI40.Monitor.Controllers
 {
     public class TeamLeaderController : Controller
     {
-
         private readonly IUnitOfWork unitofwork;
         public TeamLeaderController(IUnitOfWork unitofwork)
         {
@@ -36,12 +35,23 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
 
-        //Omar to edit status if the team leader submit the subtask
-        public void EditStatus(int id,int status)
+        //Omar 
+        public void CancelSubTask(int id)
         {
             var subtask = unitofwork.SubTasks.GetById(id);
-            subtask.Status = (Status)status;
+            subtask.Status = Status.Cancelled;
             unitofwork.SubTasks.Edit(subtask);
+        }
+
+        //Omar 
+        public void SubmitSubTask(int id, float complexity, float evaluation)
+        {
+            var subtask = unitofwork.SubTasks.GetSubTaskWithEngineer(id);
+            subtask.Status = Status.Completed;
+            subtask.Complexity = complexity;
+            subtask.Evaluation = evaluation;
+            //subtask.Engineer.TotalEvaluation;
+            unitofwork.SubTasks.Edit(subtask);  
         }
     }
 }
