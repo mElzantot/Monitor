@@ -23,8 +23,9 @@ namespace ITI.CEI40.Monitor.Data
         IInoviceItemManger InoviceItems { get; }
         IDependencyManager Dependency { get; }
         INotificationManager Notification { get; }
-
         INotificationUsersManager NotificationUsers { get; }
+        IFilesManager Files { get; }
+
 
 
         int Complete();
