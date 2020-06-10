@@ -110,9 +110,9 @@
 
 
 <!-- Button trigger modal -->
-<button type="button" id="togleBtn" class="btn btn-primary d-none" data-toggle="modal" data-target="#exampleModal">
-    Launch demo modal
-</button>
+@*<button type="button" id="togleBtn" class="btn btn-primary d-none" data-toggle="modal" data-target="#exampleModal">
+        Launch demo modal
+    </button>*@
 
 
 <!-- Modal -->
@@ -120,9 +120,34 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Comment</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Submit Task</h5>
             </div>
             <div class="modal-body">
+                <label>Comment</label>
+                @*<input hidden id="status"/>
+                    <input hidden id="taskId"/>*@
+                <div>
+                    <input id="reason" type="text" class="form-control" />
+                    <button id="upload" type="button" class="btn btn-light"><i class="fas fa-arrow-circle-up"></i> Upload</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
+                <button id="send" type="button" class="btn btn-primary">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hold Modal -->
+<div class="modal fade" id="HoldModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Hold Reason</h5>
+            </div>
+            <div class="modal-body">
+                <label>Reason</label>
                 <input id="reason" type="text" class="form-control" />
             </div>
             <div class="modal-footer">
@@ -165,15 +190,6 @@
 
 
         function ChangeProgress(id, value) {
-            if (value == 100) {
-                $("#togleBtn").trigger("click");
-
-                $('#send').click(function () {
-                    console.log($('#reason').val())//send reason in notification
-                    $("#exampleModal").modal('toggle');
-                })
-                //$('#close').click(function)
-            }
             $.ajax({
                 type: "GET",
                 url: `/Subtask/EditProgress`,
@@ -191,6 +207,16 @@
                 }
             })
         }
+
+
+
+        //function SubmitSunTask() {
+        //    $("#exampleModal").modal('show');
+        //}
+
+
+
+
 
 
         function ChangeISUnderWork(id, value) {
@@ -211,129 +237,141 @@
         }
 
 
+
         function ChangeStatus(event, Id) {
+            debugger;
             event.stopPropagation();
             var element = event.target;
             var txtValue = element.innerText;
-            var value;
-            $("#togleBtn").trigger("click");
 
-            $('#close').click(function () {
-                debugger
-               // $("#exampleModal").modal('toggle');
-            })
 
-            $('#send').click(function () {
-                var text = $('#reason').val()
-                //console.log(text)//send reason in notification
-                text.value = '';
-                $("#exampleModal").modal('toggle');
-                switch (txtValue) {
-                  
-                    case 'Active':
-                        value = 0;
-                        element.classList.remove('btn-warning')
-                        element.classList.add('btn-success')
-                        element.innerText = 'Active'
-                        break;
-                    case 'OnHold':
-                        value = 1;
-                        element.classList.remove('btn-success')
-                        element.classList.add('btn-warning')
-                        element.innerText = 'OnHold'
-                        break;
-                }
-                $.ajax({
-                    type: "get",
-                    url: `/subtask/editstatus`,
-                    data: {
-                        id: Id,
-                        status: value
-                    },
-                    success: function (response) {
-                    },
-                    error: function (x, y, err) {
-                        console.log(arguments)
-                    }
-                })
+            $("#status").val(txtValue);
+            $("#taskId").val(Id);
 
-            })
+            $("#HoldModal").modal('show');
         }
 
-            function StatusColor(element) {
-                switch (element.innerText) {
-                    case 'OnHold':
-                        element.classList.remove('btn-warning')
-                        element.classList.add('btn-success')
-                        element.innerText = 'Active'
-                        break;
-                    case 'Active':
-                        element.classList.remove('btn-success')
-                        element.classList.add('btn-warning')
-                        element.innerText = 'OnHold'
-                        break;
-                }
+        $('#send').click(function () {
+            console.log($('#reason').val())//send reason in notification
+            $("#exampleModal").modal('toggle');
+        })
+
+        //$('#send').click(function () {
+        //debugger
+        //var value;
+        //var text = $('#reason').val()
+        //$('#reason').val('');
+        //let txtValue = $("#status").val();
+        //let Id= $("#taskId").val();
+
+        ////console.log(text)//send reason in notification
+
+        //$("#exampleModal").modal('toggle');
+        //switch (txtValue) {
+
+        //    case 'Active':
+        //        value = 0;
+        //        element.classList.remove('btn-warning')
+        //        element.classList.add('btn-success')
+        //        element.innerText = 'Active'
+        //        break;
+        //    case 'OnHold':
+        //        value = 1;
+        //        element.classList.remove('btn-success')
+        //        element.classList.add('btn-warning')
+        //        element.innerText = 'OnHold'
+        //        break;
+        //}
+        //$.ajax({
+        //    type: "get",
+        //    url: `/subtask/editstatus`,
+        //    data: {
+        //        id: Id,
+        //        status: value
+        //    },
+        //    success: function (response) {
+        //    },
+        //    error: function (x, y, err) {
+        //        console.log(arguments)
+        //    }
+        //})
+        //})
+
+
+        function StatusColor(element) {
+            switch (element.innerText) {
+                case 'OnHold':
+                    element.classList.remove('btn-warning')
+                    element.classList.add('btn-success')
+                    element.innerText = 'Active'
+                    break;
+                case 'Active':
+                    element.classList.remove('btn-success')
+                    element.classList.add('btn-warning')
+                    element.innerText = 'OnHold'
+                    break;
             }
+        }
 
 
-            //(function () {
+                                    //(function () {
 
-            //    var previous;
-            //    $("select").on('focus', function () {
-            //        // Store the current value on focus and on change
-            //        previous = this.value;
+                                    //    var previous;
+                                    //    $("select").on('focus', function () {
+                                    //        // Store the current value on focus and on change
+                                    //        previous = this.value;
 
-            //    }).change(function () {
+                                    //    }).change(function () {
 
-            //        var value = this.value;
-            //        switch (value) {
-            //            case '0': //Active
-            //                if (confirm('Is the task Active?')) {
-            //                    ChangeStatus(rowID, value);
-            //                }
-            //                break;
+                                    //        var value = this.value;
+                                    //        switch (value) {
+                                    //            case '0': //Active
+                                    //                if (confirm('Is the task Active?')) {
+                                    //                    ChangeStatus(rowID, value);
+                                    //                }
+                                    //                break;
 
-            //            case '1': //onhold
+                                    //            case '1': //onhold
 
-            //                $("#togleBtn").trigger("click");
+                                    //                $("#togleBtn").trigger("click");
 
-            //                $('#send').click(function () {
-            //                    if ($('#reason').val()) { //validation for empty rason
-            //                        console.log($('#reason').val())//send reason in notification
-            //                        $("#exampleModal").modal('toggle');
-            //                        ChangeStatus(rowID, value);
-            //                    }
-            //                })
+                                    //                $('#send').click(function () {
+                                    //                    if ($('#reason').val()) { //validation for empty rason
+                                    //                        console.log($('#reason').val())//send reason in notification
+                                    //                        $("#exampleModal").modal('toggle');
+                                    //                        ChangeStatus(rowID, value);
+                                    //                    }
+                                    //                })
 
-            //                $('#close').click(function () {
-            //                    $(`#${rowID} > td > select`)[0].value = previous
-            //                })
+                                    //                $('#close').click(function () {
+                                    //                    $(`#${rowID} > td > select`)[0].value = previous
+                                    //                })
 
-            //                break;
+                                    //                break;
 
-            //            case '2': // completed
-            //                if (confirm('Is the task finished?')) {
-            //                    $(`#${rowID}`).hide();
-            //                    ChangeStatus(rowID, value);
-            //                }
-            //                else {
-            //                    $(`#${rowID} > td > select`)[0].value = previous
-            //                }
-            //                break;
+                                    //            case '2': // completed
+                                    //                if (confirm('Is the task finished?')) {
+                                    //                    $(`#${rowID}`).hide();
+                                    //                    ChangeStatus(rowID, value);
+                                    //                }
+                                    //                else {
+                                    //                    $(`#${rowID} > td > select`)[0].value = previous
+                                    //                }
+                                    //                break;
 
-            //            case '3': //canceled
-            //                if (confirm('Do you want to cancel this task?')) {
-            //                    $(`#${rowID}`).hide();
-            //                    ChangeStatus(rowID, value);
-            //                }
-            //                else {
-            //                    $(`#${rowID} > td > select`)[0].value = previous
-            //                }
-            //                break;
-            //        }
+                                    //            case '3': //canceled
+                                    //                if (confirm('Do you want to cancel this task?')) {
+                                    //                    $(`#${rowID}`).hide();
+                                    //                    ChangeStatus(rowID, value);
+                                    //                }
+                                    //                else {
+                                    //                    $(`#${rowID} > td > select`)[0].value = previous
+                                    //                }
+                                    //                break;
+                                    //        }
 
-            //    });
-            //})();
+                                    //    });
+                                    //})();
     </script>
 }
 
