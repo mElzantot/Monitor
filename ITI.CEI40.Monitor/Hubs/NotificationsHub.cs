@@ -26,6 +26,16 @@ namespace ITI.CEI40.Monitor.Hubs
             //Clients.All.SendAsync("newNotification", notification);
         }
 
+        public override Task OnConnectedAsync()
+        {
+            userManager.GetUserId(Context.User);
+
+            return base.OnConnectedAsync(); 
+        }
+
+
+
+
 
 
     }

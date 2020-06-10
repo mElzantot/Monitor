@@ -12,8 +12,6 @@ namespace ITI.CEI40.Monitor.Data
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
     {
 
-
-
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -27,8 +25,8 @@ namespace ITI.CEI40.Monitor.Data
         public virtual DbSet<Claim> Claims { get; set; }  
         public virtual DbSet<Invoice> Invoices { get; set; }  
         public virtual DbSet<InvoiceItem> InvoiceItems { get; set; }  
-
         public virtual DbSet<Notification> Notifications { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

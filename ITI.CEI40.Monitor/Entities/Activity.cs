@@ -13,6 +13,7 @@ namespace ITI.CEI40.Monitor.Entities
         public Activity()
         {
             this.ActualDuratoin = 0;
+            this.Commrnts = new HashSet<Comment>();
         }
         [Key]
         public int Id { get; set; }
@@ -56,6 +57,7 @@ namespace ITI.CEI40.Monitor.Entities
 
         public ICollection<Dependencies> ActivitiesToFollow { set; get; }
         public ICollection<Dependencies> FollowingActivities { set; get; }
+        public ICollection<Comment> Commrnts { get; set; }
 
         public int Progress { get; set; }
         public int ActualDuratoin { get; set; }

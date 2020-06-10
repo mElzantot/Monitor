@@ -38,7 +38,7 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpGet]
         public IActionResult displayTasks(int teamId)
         {
-            var tasks = unitofwork.Tasks.GetHoldActiveTasks(teamId);
+            var tasks = unitOfWork.Tasks.GetHoldActiveTasks(teamId);
             return PartialView("_TaskPartialView", tasks);
         }
 
@@ -102,19 +102,19 @@ namespace ITI.CEI40.Monitor.Controllers
         //Omar to edit status if the Departement manager submit the subtask
         public void EditStatus(int id, int status)
         {
-            var task = unitofwork.Tasks.GetById(id);
+            var task = unitOfWork.Tasks.GetById(id);
             task.Status = (Status)status;
             if (task.Status == Status.Cancelled)
             {
-                List<SubTask> subTasks = unitofwork.SubTasks.GetSubTasksByTaskId(task.Id);
+                List<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByTaskId(task.Id);
                 foreach (var item in subTasks)
                 {
                     item.Status = Status.Cancelled;
                     //Want to Edit // Make Edit for List of items
-                    unitofwork.SubTasks.Edit(item);
+                    unitOfWork.SubTasks.Edit(item);
                 }
             }
-            unitofwork.Tasks.Edit(task);
+            unitOfWork.Tasks.Edit(task);
         }
 
 
@@ -122,7 +122,7 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpGet]
         public IActionResult CancelledTasks(int depid)
         {
-            var tasks = unitofwork.Tasks.GetDepCancelledTasks(depid).ToList();
+            var tasks = unitOfWork.Tasks.GetDepCancelledTasks(depid).ToList();
             return View( tasks);
         }
 
