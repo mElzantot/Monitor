@@ -1,4 +1,5 @@
 ﻿using ITI.CEI40.Monitor.Entities.Enums;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,7 +19,6 @@ namespace ITI.CEI40.Monitor.Entities
 
         [ForeignKey(nameof(Comment))]
         public int CommentID { get; set; }
-
         public Comment Comment { get; set; }
 
         //[ForeignKey("Sender")]

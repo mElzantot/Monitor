@@ -40,27 +40,33 @@
                                     <td>@item.Task.Project.Name</td>
 
 
-                                    @if (item.Status == Status.OnHold)
-                                    {
-                                        <td>
-                                            <button class="btn btn-sm btn-warning" onclick="ChangeStatus(event,@item.Id)"
-                                                    onmouseover="StatusColor(event.target)"
-                                                    onmouseout="StatusColor(event.target)">
-                                                OnHold
-                                            </button>
-                                        </td>
-                                    }
-                                    else
-                                    {
-                                        <td>
-                                            <button class="btn btn-sm btn-success" onclick="ChangeStatus(event,@item.Id)"
-                                                    onmouseover="StatusColor(event.target)"
-                                                    onmouseout="StatusColor(event.target)">
-                                                Active
-                                            </button>
-                                        </td>
-                                    }
-                                   @* <td> <select asp-for="@item.Status" asp-items="@Html.GetEnumSelectList<Status>()" class="form-control"></select></td>*@
+                                    @*@if (item.Status == Status.OnHold)
+                                        {
+                                            <td>
+                                                <button class="btn btn-sm btn-warning" onclick="ChangeStatus(event,@item.Id)"
+                                                        onmouseover="StatusColor(event.target)"
+                                                        onmouseout="StatusColor(event.target)">
+                                                    OnHold
+                                                </button>
+                                            </td>
+                                        }
+                                        else
+                                        {
+                                            <td>
+                                                <button class="btn btn-sm btn-success" onclick="ChangeStatus(event,@item.Id)"
+                                                        onmouseover="StatusColor(event.target)"
+                                                        onmouseout="StatusColor(event.target)">
+                                                    Active
+                                                </button>
+                                            </td>
+                                        }*@
+
+                                    <td>
+                                        <select asp-for="@item.Status" class="form-control">
+                                            <option value="0">Active</option>
+                                            <option value="1">OnHold</option>
+                                        </select>
+                                    </td>
 
 
                                     @{
@@ -103,34 +109,40 @@
 </div>
 
 
-<!-- Button trigger modal -->
-@*<button type="button" id="togleBtn" class="btn btn-primary d-none" data-toggle="modal" data-target="#exampleModal">
-        Launch demo modal
-    </button>*@
 
 
-<!-- Modal -->
-@*<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Submit Task</h5>
-                </div>
+
+<!-- File Modal -->
+<div class="modal fade" id="FileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Submit Task</h5>
+            </div>
+
+            <form id="FileForm" enctype="multipart/form-data"
+                  method="post" asp-action="AddFile" asp-controller="Task"  >
                 <div class="modal-body">
-                    <label>Comment</label>
-
-                    <div>
-                        <input id="reason" type="text" class="form-control" />
-                        <button id="upload" type="button" class="btn btn-light"><i class="fas fa-arrow-circle-up"></i> Upload</button>
+                    <label>Upload File</label>
+                    @*<form enctype="multipart/form-data" asp-action="Hamada" asp-controller="SubTask" method="post">*@
+                    <div class="custom-file">
+                        <input name="file" class="form-control custom-file-input" type="file" />
+                        <label class="custom-file-label">Choose File...</label>
                     </div>
+
+                    <label>Comment</label>
+                    <input class="form-control" type="text" name="comment" />
+                    <input id="task_Id" hidden />
+                    @*<input type="submit" value="submit" />*@
                 </div>
                 <div class="modal-footer">
                     <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
-                    <button id="send" type="button" class="btn btn-primary">Send</button>
+                    <button id="upload" type="submit" class="btn btn-primary">Upload</button>
                 </div>
-            </div>
+            </form>
         </div>
-    </div>*@
+    </div>
+</div>
 
 
 
@@ -169,8 +181,10 @@
     <script>
 
 
+        let rowId;
 
         function SelectRow(id) {
+            rowId = id;
             $.ajax({
                 type: "GET",
                 url: `/Subtask/DisplayRow`,
@@ -233,45 +247,59 @@
         }
 
 
-
-        function ChangeStatus(event, Id) {
-            event.stopPropagation();
-            var element = event.target;
-            var txtValue = element.innerText;
-
-            $("#status").val(txtValue);
-            $("#taskId").val(Id);
-            $("#ele").val(element);
-            $("#HoldModal").modal('show');
-
+        function UploadFile(taskId) {
+            $('#FileModal').modal('show');
+            $('#task_Id').val(taskId);
         }
+
+        $('#upload').click(function () {
+            $.ajax({
+                type: 'post',
+                url: `/Task/AddFile`,
+                data:
+                    $('#FileForm').serialize()
+                ,
+                success: function (response) {
+                }
+            })
+        })
+
+        let previous;
+        let value;
+
+        $("select").on('focus', function () {
+            // Store the current value on focus and on change
+            previous = this.value;
+        }).change(function () {
+            value = this.value;
+            switch (value) {
+                case '0': //Active
+                    if (confirm('Do you want to active the task?')) {
+                        ChangeStatus(rowId, value);
+                    }
+                    else {
+                        $(`#${rowId} > td > select`)[0].value = previous
+                    }
+                    break;
+
+                case '1': //onhold
+                    $("#HoldModal").modal('show');
+                    break;
+            }
+        });
 
 
         $('#send').click(function () {
-            let Reason = $('#reason').val();
-            let txtValue = $("#status").val();
-            let Id = $("#taskId").val();
-            let element = $("#ele").val();
-            let value;
+            let reason= $('#reason').val()
+            $("#HoldModal").modal('hide');
+            ChangeStatus(rowId, value, reason); 
+        })
 
-            switch (txtValue) {
-                case 'Active':
-                    value = 0;
-                    //element.classList.remove('btn-warning')
-                    //element.classList.add('btn-success')
-                    //element.innerText = 'Active'
-                    break;
-                case 'OnHold':
-                    value = 1;
-                    //element.classList.remove('btn-success')
-                    //element.classList.add('btn-warning')
-                    //element.innerText = 'OnHold'
-                    break;
-            }
+        $('#close').click(function () {
+            $(`#${rowId} > td > select`)[0].value = previous
+        })
 
-            $('#reason').val('');
-            $("#exampleModal").modal('toggle');
-
+        function ChangeStatus(Id, value,Reason) {
             $.ajax({
                 type: "get",
                 url: `/subtask/editstatus`,
@@ -286,113 +314,105 @@
                     console.log(arguments)
                 }
             })
-        })
-
-        //$('#send').click(function () {
-        //debugger
-        //var value;
-        //var text = $('#reason').val()
-        //$('#reason').val('');
-        //let txtValue = $("#status").val();
-        //let Id= $("#taskId").val();
-
-        ////console.log(text)//send reason in notification
-
-        //$("#exampleModal").modal('toggle');
-
-        //$.ajax({
-        //    type: "get",
-        //    url: `/subtask/editstatus`,
-        //    data: {
-        //        id: Id,
-        //        status: value
-        //    },
-        //    success: function (response) {
-        //    },
-        //    error: function (x, y, err) {
-        //        console.log(arguments)
-        //    }
-        //})
-        //})
-
-
-        function StatusColor(element) {
-            switch (element.innerText) {
-                case 'OnHold':
-                    element.classList.remove('btn-warning')
-                    element.classList.add('btn-success')
-                    element.innerText = 'Active'
-                    break;
-                case 'Active':
-                    element.classList.remove('btn-success')
-                    element.classList.add('btn-warning')
-                    element.innerText = 'OnHold'
-                    break;
-            }
         }
 
 
 
+                                                //function ChangeStatus(event, Id) {
+                                        //    event.stopPropagation();
+                                        //    var element = event.target;
+                                        //    var txtValue = element.innerText;
 
-        //(function () {
+                                        //    $("#status").val(txtValue);
+                                        //    $("#taskId").val(Id);
+                                        //    $("#ele").val(element);
+                                        //    $("#HoldModal").modal('show');
+                                        //}
 
-        //    var previous;
-        //    $("select").on('focus', function () {
-        //        // Store the current value on focus and on change
-        //        previous = this.value;
 
-        //    }).change(function () {
+                                        //$('#send').click(function () {
+                                        //    let Reason = $('#reason').val();
+                                        //    let txtValue = $("#status").val();
+                                        //    let Id = $("#taskId").val();
+                                        //    let element = $("#ele").val();
+                                        //    let value;
 
-        //        var value = this.value;
-        //        switch (value) {
-        //            case '0': //Active
-        //                if (confirm('Is the task Active?')) {
-        //                    ChangeStatus(rowID, value);
-        //                }
-        //                break;
+                                        //    switch (txtValue) {
+                                        //        case 'Active':
+                                        //            value = 0;
+                                        //            //element.classList.remove('btn-warning')
+                                        //            //element.classList.add('btn-success')
+                                        //            //element.innerText = 'Active'
+                                        //            break;
+                                        //        case 'OnHold':
+                                        //            value = 1;
+                                        //            //element.classList.remove('btn-success')
+                                        //            //element.classList.add('btn-warning')
+                                        //            //element.innerText = 'OnHold'
+                                        //            break;
+                                        //    }
 
-        //            case '1': //onhold
+                                        //    $('#reason').val('');
+                                        //    $("#exampleModal").modal('toggle');
 
-        //                $("#togleBtn").trigger("click");
+                                        //    $.ajax({
+                                        //        type: "get",
+                                        //        url: `/subtask/editstatus`,
+                                        //        data: {
+                                        //            id: Id,
+                                        //            status: value,
+                                        //            reason: Reason
+                                        //        },
+                                        //        success: function (response) {
+                                        //        },
+                                        //        error: function (x, y, err) {
+                                        //            console.log(arguments)
+                                        //        }
+                                        //    })
+                                        //})
 
-        //                $('#send').click(function () {
-        //                    if ($('#reason').val()) { //validation for empty rason
-        //                        console.log($('#reason').val())//send reason in notification
-        //                        $("#exampleModal").modal('toggle');
-        //                        ChangeStatus(rowID, value);
-        //                    }
-        //                })
+                                        //$('#send').click(function () {
+                                        //debugger
+                                        //var value;
+                                        //var text = $('#reason').val()
+                                        //$('#reason').val('');
+                                        //let txtValue = $("#status").val();
+                                        //let Id= $("#taskId").val();
 
-        //                $('#close').click(function () {
-        //                    $(`#${rowID} > td > select`)[0].value = previous
-        //                })
+                                        ////console.log(text)//send reason in notification
 
-        //                break;
+                                        //$("#exampleModal").modal('toggle');
 
-        //            //case '2': // completed
-        //            //    if (confirm('Is the task finished?')) {
-        //            //        $(`#${rowID}`).hide();
-        //            //        ChangeStatus(rowID, value);
-        //            //    }
-        //            //    else {
-        //            //        $(`#${rowID} > td > select`)[0].value = previous
-        //            //    }
-        //            //    break;
+                                        //$.ajax({
+                                        //    type: "get",
+                                        //    url: `/subtask/editstatus`,
+                                        //    data: {
+                                        //        id: Id,
+                                        //        status: value
+                                        //    },
+                                        //    success: function (response) {
+                                        //    },
+                                        //    error: function (x, y, err) {
+                                        //        console.log(arguments)
+                                        //    }
+                                        //})
+                                        //})
 
-        //            //case '3': //canceled
-        //            //    if (confirm('Do you want to cancel this task?')) {
-        //            //        $(`#${rowID}`).hide();
-        //            //        ChangeStatus(rowID, value);
-        //            //    }
-        //            //    else {
-        //            //        $(`#${rowID} > td > select`)[0].value = previous
-        //            //    }
-        //            //    break;
-        //        }
 
-        //    });
-        //})();
-
+                                        //function StatusColor(element) {
+                                        //    switch (element.innerText) {
+                                        //        case 'OnHold':
+                                        //            element.classList.remove('btn-warning')
+                                        //            element.classList.add('btn-success')
+                                        //            element.innerText = 'Active'
+                                        //            break;
+                                        //        case 'Active':
+                                        //            element.classList.remove('btn-success')
+                                        //            element.classList.add('btn-warning')
+                                        //            element.innerText = 'OnHold'
+                                        //            break;
+                                        //    }
+                                        //}
 
     </script>
 }

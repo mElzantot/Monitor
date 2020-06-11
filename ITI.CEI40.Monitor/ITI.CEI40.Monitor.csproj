@@ -18,6 +18,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200611102057_IFile.cs" />
+    <Compile Remove="Migrations\20200611102057_IFile.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="wwwroot\lib\signalr\dist\browser\signalr.js" />
     <Content Remove="wwwroot\lib\signalr\dist\browser\signalr.min.js" />
   </ItemGroup>
@@ -38,6 +43,12 @@
     <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
+  </ItemGroup>
+
+
+
+  <ItemGroup>
+    <Folder Include="wwwroot\file\" />
   </ItemGroup>
 
 </Project>

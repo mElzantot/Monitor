@@ -1,0 +1,105 @@
+﻿@model CommentViewModel
+
+@{
+    ViewData["Title"] = "Comments";
+}
+
+
+<div>
+    <div>
+        <h3 class="text-muted m-3">@Model.TaskName</h3>
+    </div>
+    <div class="row " style="border: 2px solid rgb(219, 219, 219) ; border-radius: 8px;">
+        <div class="col-3  innerleft pt-4" style="border-right:2px solid rgb(219, 219, 219);">
+            @foreach (var item in Model.Engineers)
+            {
+                
+                <div class="font-weight-bold mb-2">@item</div>
+            }
+        </div>
+        <div class="col-9 innerright " style="overflow-y:scroll; height:28rem">
+            @foreach (var item in Model.Comments)
+            {
+                if (item.FK_sender == Model.Sender)
+                {
+                    <div class="message-row you-message">
+                        <div class="message-text">
+                            @item.comment
+                            <br>
+                            @if (item.File != null)
+                            {
+                                <a href="#" download="" class="">@item.File.FilePath</a>
+                            }
+                        </div>
+                        <div class="message-time">@item.commentTime</div>
+                    </div>
+                }
+                else
+                {
+                    <div class="message-row other-message">
+                        <div class="message-text">
+                            <div class="user-name">@item.Sender.UserName</div>
+                             
+                            @item.comment
+                            <br>
+                            @if (item.File != null)
+                            {
+                                <a href="#" download="" class="">@item.File.FilePath</a>
+                            }
+                        </div>
+                        <div class="message-time">@item.commentTime</div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+
+@section Style{
+    <style>
+        .message-row {
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: 70%;
+        }
+
+        .message-text {
+            padding: 20px, 14px;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .message-time {
+            font-size: .8rem;
+            color: #777;
+        }
+
+        .you-message .message-text {
+            background-color: rgb(47, 136, 76);
+            color: #eee;
+            border: 1px solid rgb(47, 136, 76);
+            border-radius: 7px 7px 0 7px;
+        }
+
+        .user-name {
+            font-size: 1rem;
+        }
+
+        .other-message .message-text {
+            background-color: #eee;
+            color: #111;
+            border: 1px solid #eee;
+            border-radius: 7px 7px 7px 0;
+        }
+
+        .you-message {
+            justify-content: end;
+            justify-items: end;
+        }
+
+        .other-message {
+            justify-items: start;
+        }
+    </style>
+}

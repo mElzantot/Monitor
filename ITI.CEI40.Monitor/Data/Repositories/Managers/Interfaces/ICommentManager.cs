@@ -8,5 +8,6 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers.Interfaces
 {
     public interface ICommentManager : IRepository<Comment>
     {
+        IEnumerable<Comment> GetCommentsForTask(int taskID);
     }
 }

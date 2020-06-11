@@ -9,7 +9,6 @@ namespace ITI.CEI40.Monitor.Entities
 {
     public class Comment
     {
-
         public int Id { get; set; }
 
         [ForeignKey(nameof(Sender))]

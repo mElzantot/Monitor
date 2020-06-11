@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
@@ -8,6 +8,8 @@ using ITI.CEI40.Monitor.Entities;
 using ITI.CEI40.Monitor.Hubs;
 using ITI.CEI40.Monitor.Models.View_Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -20,13 +22,17 @@ namespace ITI.CEI40.Monitor.Controllers
         private readonly IUnitOfWork unitOfWork;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IHubContext<NotificationsHub> hubContext;
+    
 
         public SubTaskController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IHubContext<NotificationsHub> hubContext)
         {
             this.unitOfWork = unitOfWork;
             this.userManager = userManager;
             this.hubContext = hubContext;
+           
         }
+
+
 
         [Authorize(Roles = "Engineer")]
         public IActionResult Index()
@@ -40,7 +46,7 @@ namespace ITI.CEI40.Monitor.Controllers
         [Authorize(Roles = "Engineer")]
         public IActionResult DisplayRow(int ID)
         {
-            SubTask subTask = unitOfWork.SubTasks.GetById(ID);
+            SubTask subTask = unitOfWork.SubTasks.GetSubTaskIncludingTask(ID);
             return PartialView("_SubTaskDataPartial", subTask);
         }
 
@@ -99,7 +105,7 @@ namespace ITI.CEI40.Monitor.Controllers
             SubTask subTask = unitOfWork.SubTasks.GetSubTaskWithTeam(id);
             subTask.Status = (Status)status;
             unitOfWork.SubTasks.Edit(subTask);
-              
+
             Comment comment = new Comment
             {
                 FK_sender = userManager.GetUserId(HttpContext.User),
