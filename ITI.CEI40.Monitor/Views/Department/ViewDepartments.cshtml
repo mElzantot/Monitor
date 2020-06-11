@@ -269,7 +269,7 @@
             $.ajax({
                 url: "/Employee/AssignManager",
                 type: "GET",
-                data: { role: "Department Manager" },
+                data: { role: "DepartmentManager" },
                 success: function (result, status) {
                     if (result && status == "success") {
                         $("#managers").empty();
@@ -374,7 +374,7 @@
             $.ajax({
                 url: "/Employee/AssignManager",
                 type: "GET",
-                data: { role: "Team Leader" },
+                data: { role: "TeamLeader" },
                 success: function (result, status) {
                     if (result && status == "success") {
                         $("#leaders").empty();

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
+using ITI.CEI40.Monitor.Models.View_Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -21,8 +22,9 @@ namespace ITI.CEI40.Monitor.Controllers
             this.userManager = userManager;
         }
 
-        public IActionResult ViewTasks(int teamID)
+        public IActionResult ViewTasks()
         {
+            int teamID = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
             var tasks = unitOfWork.Tasks.GetTasksByTeamID(teamID);
             ViewBag.TeamId = teamID;
             return View(tasks);
@@ -45,27 +47,27 @@ namespace ITI.CEI40.Monitor.Controllers
 
 
         [HttpPost]
-        public IActionResult AddFile(string comment, IFormFile file, int taskId)
+        public IActionResult AddFile(FileViewModel addedFile)
         {
             string userId = userManager.GetUserId(HttpContext.User);
             Comment fComment = new Comment
             {
                 commentTime = DateTime.Now,
                 FK_sender = userId,
-                fk_TaskId = taskId,
-                comment = comment
+                fk_TaskId = addedFile.taskId,
+                comment = addedFile.comment
             };
 
             fComment = unitOfWork.Comments.Add(fComment);
 
-            if (file != null)
+            if (addedFile.file != null)
             {
                 string filePath = "./wwwroot/file";
-                filePath = Path.Combine(filePath, file.FileName);
+                filePath = Path.Combine(filePath, addedFile.file.FileName);
 
                 using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
                 {
-                    file.CopyTo(fileStream);
+                    addedFile.file.CopyTo(fileStream);
                 }
 
                 Files cFile = new Files

@@ -47,7 +47,7 @@ else
                                 <td>@item.Priority</td>
                                 <td>@item.ActualDuratoin Hours</td>
                                 <td>
-                                    <div class="btn-group dropleft" >
+                                    <div class="btn-group dropleft">
                                         <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-info"></i>
                                         </button>
@@ -57,10 +57,10 @@ else
                                     </div>
 
                                 </td>
-                                
 
-                                @if (item.Progress==100)
-	                            {
+
+                                @if (item.Progress == 100)
+                                {
                                     <td>
                                         <button class="btn btn-success">
                                             Submit
@@ -73,13 +73,14 @@ else
                                         <div class="progress">
                                             <div class="progress-bar" role="progressbar" style="width: @item.Progress%; " aria-valuemin="0" aria-valuemax="100">@item.Progress%</div>
                                         </div>
-                                    </td>		                            
-                                   
+                                    </td>
+
+
+
                                 }
 
                                 @if (item.FK_TeamId == null)
                                 {
-
                                     @*<td>
                                             <select id="teamlist" asp-for="FK_TeamId" asp-items="new SelectList(Model.Teams,nameof(Model.Team.Id),nameof(Model.Team.Name)) ">
                                                 <option value="">--  Select Team  --</option>
@@ -133,8 +134,6 @@ else
 @section Scripts{
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    
-
 
     <script>
 
@@ -143,12 +142,11 @@ else
         function viewModal(id) {
             taskID = id;
             $('#AssignTeamModal').modal('show');
-
         }
 
         function assignTeams() {
             var team = $('#teams').val();
-
+                
             $.post({
                 type: "POST",
                 url: `/DepManager/AssignTasks`,
@@ -171,7 +169,7 @@ else
             })
         }
 
-        
+
 
     </script>
 }

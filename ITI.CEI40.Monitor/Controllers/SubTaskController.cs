@@ -134,9 +134,11 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpGet]
         public IActionResult displaySubTasks(int taskID)
         {
+
             var taskVM = new TaskViewModel
             {
                 TaskId = taskID,
+                TaskName = unitOfWork.Tasks.GetById(taskID).Name,
                 taskDescription = unitOfWork.Tasks.GetById(taskID).Description,
                 SubTasks = unitOfWork.SubTasks.GetSubTasksByTaskId(taskID),
             };
@@ -156,7 +158,7 @@ namespace ITI.CEI40.Monitor.Controllers
             return PartialView("_SubTaskModal", subTask);
         }
 
-        [Authorize(Roles = "Team Leader")]
+        [Authorize(Roles = "TeamLeader")]
         [HttpPost]
         public IActionResult AddSubTask(SubTaskViewModel subTask)
         {

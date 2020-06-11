@@ -12,6 +12,8 @@ namespace ITI.CEI40.Monitor.Models.View_Models
 
         public int TaskId { get; set; }
 
+        public string TaskName { get; set; }
+
         public List<SubTask> SubTasks { get; set; }
 
     }

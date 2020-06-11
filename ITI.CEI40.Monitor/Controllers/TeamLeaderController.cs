@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITI.CEI40.Monitor.Controllers
@@ -12,9 +13,12 @@ namespace ITI.CEI40.Monitor.Controllers
     public class TeamLeaderController : Controller
     {
         private readonly IUnitOfWork unitofwork;
-        public TeamLeaderController(IUnitOfWork unitofwork)
+        private readonly UserManager<ApplicationUser> userManager;
+
+        public TeamLeaderController(IUnitOfWork unitofwork,UserManager<ApplicationUser> userManager)
         {
             this.unitofwork = unitofwork;
+            this.userManager = userManager;
         }
 
         public IActionResult Index()
@@ -23,9 +27,10 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [Authorize(Roles = "TeamLeader")]
-        public IActionResult EngineersView(int teamid)
+        public IActionResult EngineersView( )
         {
-            var engieers = unitofwork.Engineers.GetEngineersInsideTeam(teamid);
+            int teamId = unitofwork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
+            var engieers = unitofwork.Engineers.GetEngineersInsideTeam(teamId);
             return View(engieers);
         }
 

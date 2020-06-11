@@ -29,8 +29,9 @@ namespace ITI.CEI40.Monitor.Controllers
         {
             return View();
         }
-        public IActionResult TeamsView(int DepId)
+        public IActionResult TeamsView()
         {
+            int DepId = unitOfWork.Departments.GetDepartmentWithManagerID(userManager.GetUserId(HttpContext.User)).Id;
             IEnumerable<Team> teams= unitOfWork.Teams.getTeamsinsideDept(DepId);
             return View(teams);
         }
@@ -43,13 +44,12 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [HttpGet]
-        public IActionResult AssignTasks(int depid)
+        public IActionResult AssignTasks()
         {
+            int DepId = unitOfWork.Departments.GetDepartmentWithManagerID(userManager.GetUserId(HttpContext.User)).Id;
             var activityVM = new ActivityViewModel();
-            
-            activityVM.Tasks = unitOfWork.Tasks.GetDepartmentTasks(depid);
-
-            activityVM.Teams = unitOfWork.Teams.getTeamsinsideDept(depid).ToList();
+            activityVM.Tasks = unitOfWork.Tasks.GetDepartmentTasks(DepId);
+            activityVM.Teams = unitOfWork.Teams.getTeamsinsideDept(DepId).ToList();
 
             return View(activityVM);
         }
