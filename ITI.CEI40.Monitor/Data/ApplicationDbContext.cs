@@ -22,18 +22,22 @@ namespace ITI.CEI40.Monitor.Data
         public virtual DbSet<Activity> Tasks { get; set; }
         public virtual DbSet<SubTask> SubTasks { get; set; }
         public virtual DbSet<SubTaskSession> SubTaskSessions { get; set; }
-        public virtual DbSet<Claim> Claims { get; set; }  
-        public virtual DbSet<Invoice> Invoices { get; set; }  
-        public virtual DbSet<InvoiceItem> InvoiceItems { get; set; }  
+        public virtual DbSet<Claim> Claims { get; set; }
+        public virtual DbSet<Invoice> Invoices { get; set; }
+        public virtual DbSet<InvoiceItem> InvoiceItems { get; set; }
         public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
-
         public virtual DbSet<Files> Files { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
+            //-----One To one Optional Between Files and Comments
+            modelBuilder.Entity<Comment>()
+            .HasOne(a => a.File)
+            .WithOne(b => b.Comment)
+             .HasForeignKey<Files>(b => b.CommentID);
 
             //------One To Many RelationShip Between User and Team
             modelBuilder.Entity<ApplicationUser>()
@@ -55,7 +59,7 @@ namespace ITI.CEI40.Monitor.Data
             //----------User/ Notification Many to Many
 
             modelBuilder.Entity<NotificationUsers>()
-                .HasKey(TT => new {TT.userID, TT.NotificationId });
+                .HasKey(TT => new { TT.userID, TT.NotificationId });
 
             modelBuilder.Entity<NotificationUsers>()
                 .HasOne(t => t.User)

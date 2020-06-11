@@ -26,5 +26,7 @@ namespace ITI.CEI40.Monitor.Entities
         [DataType(DataType.DateTime)]
         public DateTime commentTime { get; set; }
 
+        public Files File { get; set; }
+
     }
 }
