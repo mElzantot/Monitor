@@ -25,6 +25,7 @@ namespace ITI.CEI40.Monitor.Data
         INotificationManager Notification { get; }
         INotificationUsersManager NotificationUsers { get; }
         IFilesManager Files { get; }
+        ICommentManager Comments { get; }
 
 
 
