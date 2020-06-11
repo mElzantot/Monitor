@@ -5,30 +5,30 @@
 
 
 <div>
-    <div >
+    <div>
         <h3 class="text-muted m-3">Engineers</h3>
     </div>
     <div class="row " style="border: 2px solid rgb(219, 219, 219) ; border-radius: 8px;">
         <div class="col-3  innerleft pt-4" style="border-right:2px solid rgb(219, 219, 219);">
-                <table class="table table-hover text-center" id="teamTable">
-                    <thead class="table-hover">
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Total Evaluation </th>
+            <table class="table table-hover text-center" id="teamTable">
+                <thead class="table-hover">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Total Evaluation </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Count(); i++)
+                    {
+
+                        <tr id="@Model[i].Id" onclick='displaySubTasks("@Model[i].Id")'>
+                            <td>@Model[i].UserName</td>
+                            <td>@Model[i].TotalEvaluation</td>
+                            @*<td><button class="btn btn-info" onclick='displayCharts("@Model[i].Id")'>Charts</button></td>*@
                         </tr>
-                    </thead>
-                    <tbody>
-                        @for (int i = 0; i < Model.Count(); i++)
-                        {
-                           
-                            <tr id="@Model[i].Id" onclick='displaySubTasks("@Model[i].Id")'>
-                                <td>@Model[i].UserName</td>
-                                <td>@Model[i].TotalEvaluation</td>
-                                @*<td><button class="btn btn-info" onclick='displayCharts("@Model[i].Id")'>Charts</button></td>*@
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                    }
+                </tbody>
+            </table>
         </div>
         <div class="col-9 innerright ">
             <div style=" padding: 15px; border-radius: 8px;">
@@ -41,6 +41,10 @@
         </div>
     </div>
 </div>
+
+
+
+
 
 
 <!-- #endregion -->
@@ -134,24 +138,35 @@
             })
         }
 
-        function ChangeStatus(Id, value) {
-            var meassage;
-            switch (value) {
-                case 2:
-                    meassage = 'Do you want to submit this task';
-                    break;
-                case 3:
-                    meassage = 'Do you want to cancel this task';
-                    break;
-            }
+        function Submit(Id) {
+            $("#togleBtn").trigger("click");
+            $('#Submit').click(function () {
+                $("#exampleModal").modal('toggle');
+                var complex = $('#complex').val();
+                var evaluation = $('#evaluation').val();
 
-            if (confirm(meassage)) {
                 $.ajax({
-                    url: "/TeamLeader/EditStatus",
+                    url: "/TeamLeader/SubmitSubTask",
                     type: "Get",
                     data: {
                         id: Id,
-                        status: value
+                        complexity: complex,
+                        evaluation: evaluation
+                    },
+                    success: function () {
+                        $(`#${Id}`).hide();
+                    }
+                })
+            })
+        }
+
+        function Cancele(Id) {
+            if (confirm('Do you want to cancel this task')) {
+                $.ajax({
+                    url: "/TeamLeader/CancelSubTask",
+                    type: "Get",
+                    data: {
+                        id: Id,
                     },
                     success: function () {
                         $(`#${Id}`).hide();

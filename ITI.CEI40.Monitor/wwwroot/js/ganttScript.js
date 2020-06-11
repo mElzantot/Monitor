@@ -1,10 +1,24 @@
 
 var preRowsNo = 0;
 var createdRowsIds = [];
-var deletedDep = [];
+var deletedDep = [];   // an array to store dependency objects to delete from DB
+var removeFromDB = [];  // an array to store dbids to delete from DB
 var tasksIdOrder = [0];
 var tasks = [];
-var assigneeTeams = ["1", "2", "3", "4", "5"];
+var filledRows = [];
+var assigneeTeams = [];
+
+// add function that will fire with splice
+//function processQ() {
+//    // ... this will be called on each .push
+//    console.log("*");
+//    console.log("");
+//}
+
+//var tasks = [];
+//tasks.splice = function () { Array.prototype.push.apply(this, arguments); processQ(); };
+
+
 
 class Id {
     constructor(id) {
@@ -43,15 +57,20 @@ var trydata = [{ id: "0", name: "p1", depends: -1, start: new Date(), end: new D
 
 //document.onload = table();
 function table(dataArray, noData) {
+    
+
     if (noData) {
         if (!dataArray.length > 0) {
-            createRowTask(1);
+            createRowTask(20);
         } else {
             createRowTaskWithData(dataArray);
-            createRowTask(1);
+            createRowTask(10);
         }
+        draw();
     }
+
 }
+
 
 
 // s is format y-m-d
@@ -129,14 +148,15 @@ function createRowTask(num) {
         var tr = tableRow(n);
         $('#tbody').append(tr);
         createdRowsIds.push(parseInt(n));
+        addAssignOpts(n);
     }
     preRowsNo = num;
 }
 
 function tableRow(n) {
     var datapt1 = `<td style="display: flex;" ><label>${n + 1}</label>
-        <input type="button" onclick="deleteRow(this.parentElement.parentElement.id)" value="x" />
-        <input type="button" onclick="addRow(this.parentElement.parentElement.id)" value="+" />
+        <button onclick="deleteRow(this.parentElement.parentElement.id); draw();"><span class="ui-icon ui-icon-trash" style="display:inline-block"></span></button>
+        <button onclick="addRow(this.parentElement.parentElement.id)"><span class="ui-icon ui-icon-arrowstop-1-s" style="display:inline-block"></span></button >
         </td>
         <td><input type="text" id="taskName${n}" class="Name test no-outline"></td>`;
 
@@ -151,7 +171,7 @@ function tableRow(n) {
         beforeShowDay: function (dt) {
             return [dt.getDay() == 5 || dt.getDay() == 6 ? false : true];
         }, //----   (Disable The Week Ends in Datepicker  )
-        minDate: 0, //-----Disable the previous Days 
+        //minDate: 0, //-----Disable the previous Days 
         onSelect: function () {
             var startDate = $(`#startDate${n}`).datepicker('getDate');
             var endDate = $(`#endDate${n}`).datepicker('getDate');
@@ -162,6 +182,7 @@ function tableRow(n) {
                 // console.log(selectedId);
             }
             assignTask(parseInt(n));
+            draw();
         }
     });
     td1.append(datepicker1);
@@ -177,7 +198,7 @@ function tableRow(n) {
         beforeShowDay: function (dt) {
             return [dt.getDay() == 5 || dt.getDay() == 6 ? false : true];
         }, //----   (Disable The Week Ends in Datepicker  )
-        minDate: 0, //-----Disable the previous Days 
+        //minDate: 0, //-----Disable the previous Days 
         onSelect: function () {
             var startDate = $(`#startDate${n}`).datepicker('getDate');
             var endDate = $(`#endDate${n}`).datepicker('getDate');
@@ -199,6 +220,7 @@ function tableRow(n) {
                 });
             }
             assignTask(parseInt(n));
+            draw();
         }
     });
     td2.append(datepicker2);
@@ -208,9 +230,11 @@ function tableRow(n) {
             class="no-outline" onkeyup="wirteDependency(this)" readonly>
         </td>`
     var assigneeList =
-        `<td><input list="assign" name="assignees" class="no-outline" id = "assign${n}" readonly />
-            <datalist id="assign">
-            </datalist></td>`
+        `<td><input hidden list="assign" name="assignees" class="no-outline" id = "assign${n}" readonly />
+            <select  id="assignlist${n}"> 
+            <option value="">Select Department</option>
+            </select >
+        </td>`
     var progress =
         `<td><input type="number" min="0" max="100" value="0" class="no-outline progress" id = "progress${n}" readonly></td>`;
 
@@ -227,12 +251,13 @@ function tableRow(n) {
 }
 
 //options for assignees
-function addAssignOpts() {
+function addAssignOpts(n) {
+    var select = document.getElementById(`assignlist${n}`);
     assigneeTeams.forEach(function (ass) {
-        var select = document.getElementById("assign");
         var el = document.createElement("option");
-        el.value = ass;
-        if (select) { select.appendChild(el); }
+        el.value = ass.depId;
+        el.innerHTML = ass.depName;
+        if (select ) { select.appendChild(el); }
     });
 }
 
@@ -259,15 +284,7 @@ function traverse(rootTask, arrayOfDeps) {
     }
 }
 
-filledRows = [];
-// var preTaskName = "";
-// console.log(preTaskName);
-// $('tbody').on('focus keydown', '.Name', function (e) {
-//     if (e.keyCode == 13) {
-//         preTaskName = e.target.value;
-//         console.log(preTaskName);
-//     }
-// });
+
 
 $('tbody').on('change', '.Name', function (e) {
     e.preventDefault();
@@ -296,11 +313,15 @@ $('tbody').on('change', '.Name', function (e) {
 $('tbody').on('change', function (e) {
     var row = e.target.parentElement.parentElement;
     var rowNumber = row.id.split('tempT-')[1];
-    //console.log($(`#endDate${rowNumber}`)[0].value)
     assignTask(parseInt(rowNumber));
-    //draw();
-    document.getElementById("submitBtn").style.display = "block";
+    // open the submit button after changes
+    openSubmission();
+    draw();
 });
+
+function openSubmission() {
+    document.getElementById("submitBtn").disabled = false;
+}
 
 function fillRowTask(e) {
     var id = e.target.id;
@@ -372,7 +393,7 @@ function openRow(id) {
     $(`#endDate${id}`).datepicker("option", "disabled", false);
 }
 
-var removeFromDB = [];  // an array to store dbids to delete from DB
+
 // we have a check here
 function deleteRow(rowid) {
     var id = rowid.toString().split('-')[1];
@@ -381,9 +402,20 @@ function deleteRow(rowid) {
     // delete row
     var row = document.getElementById(rowid);
     row.parentNode.removeChild(row);
+    //check if there is a task before shifting
+    if (tasks.find(t => t.id.id == parseInt(id))) {
+        //remove it from filledRows
+        filledRows.splice(parseInt(id), 1);
+        // add the removed task to removedfromDB if it wasn't new
+        var removed = tasks.find(t => t.id.id == parseInt(id)).dbId;
+        if (removed && !removeFromDB.includes(removed)) {
+            removeFromDB.push(removed);
+        }
+        //remove task
+        tasks.splice(parseInt(id), 1);
+    }
 
-
-    // shifting the ids 
+    // shifting the ids (The Table Side)
     var remainingElements = preRowsNo - (parseInt(id) + 1);
     for (let i = 0; i < remainingElements; i++) {
         var n = parseInt(id) + i + 1;
@@ -403,6 +435,8 @@ function deleteRow(rowid) {
         dependency.id = `Dependency${n - 1}`;
         var assign = document.getElementById(`assign${n}`);
         assign.id = `assign${n - 1}`;
+        var assignlist = document.getElementById(`assignlist${n}`);
+        assignlist.id = `assignlist${n - 1}`;
         var progress = document.getElementById(`progress${n}`);
         progress.id = `progress${n - 1}`;
 
@@ -410,50 +444,33 @@ function deleteRow(rowid) {
         var t = tasks.find(t => t.id.id == n);
         if (t) { t.id.id = parseInt(t.id.id) - 1; }
 
-        // //managing rows
-        // var idIndex = createdRowsIds.findIndex(i => i == parseInt(id));
-        // createdRowsIds.splice(idIndex, 1);
-
-        // //managing tasks
-        // var ti = tasksId.findIndex(t => t == id);
-        // tasksId.splice(ti, 1)
-
         //managing rows
         var idIndex = createdRowsIds.findIndex(i => i == parseInt(n));
         createdRowsIds.splice(idIndex, 1, (parseInt(n) - 1));
-        //managing tasks
-        //var ti = tasksId.findIndex(t => t == `${n}`);
-        //tasksId.splice(ti, 1, `${n - 1}`)
     }
 
     // remove it from createdRowsIds
     createdRowsIds.splice(parseInt(id), 1);
 
-    //check if there is a task 
-    if (tasks.find(t => t.id.id == parseInt(id))) {
-        //--remove it from tasksId
-        //--tasksId.splice(parseInt(id), 1);
-        //remove it from filledRows
-        filledRows.splice(parseInt(id), 1);
-        // add the removed task to removedfromDB if it wasn't new
-        if (tasks.find(t => t.id.id == parseInt(id)).dbId) {
-            removeFromDB.push(tasks.find(t => t.id.id == parseInt(id)).dbId);
-        }
-        //remove task
-        tasks.splice(parseInt(id), 1);
-    }
+    // update the value of the dependency
+    updateDependency();
     // decrease from the total number
     preRowsNo--;
+    // redraw the tasks
+    draw();
+    // open the submit button after changes
+    openSubmission();
 }
+
 
 function removeDependency(id) {
     var task = tasks.find(t => t.id.id == id);
-    
+
 
     if (task && task.depends) {
         // save the deleted dependencies 
-        var deletedDependency = { followed: task.depends.depId.id, following: task.id.id };
         if (!deletedDep.find(d => d.followed == task.depends.depId.id)) {
+            var deletedDependency = { followed: task.depends.depId.id, following: task.id.id };
             deletedDep.push(deletedDependency);
         }
         var independentTaskId = task.depends.depId.id;
@@ -467,9 +484,11 @@ function removeDependency(id) {
         task.dependencies.forEach(function (i) {
             var t = tasks.find(t => t.id.id == i.depId.id);
             // save the deleted dependencies 
-            var deletedDependency = { followed: t.depends.depId.id, following: t.id.id };
-            if (!deletedDep.find(d => d.followed == task.depends.depId.id)) {
-                deletedDep.push(deletedDependency);
+            if (task.depends) {
+                if (!deletedDep.find(d => d.followed == task.depends.depId.id)) {
+                    var deletedDependency = { followed: t.depends.depId.id, following: t.id.id };
+                    deletedDep.push(deletedDependency);
+                }
             }
             t.depends = null;
             document.getElementById(`Dependency${t.id.id}`).value = "";
@@ -502,6 +521,8 @@ function addRow(rowid) {
         dependency.id = `Dependency${n + 1}`;
         var assign = document.getElementById(`assign${n}`);
         assign.id = `assign${n + 1}`;
+        var assignlist = document.getElementById(`assignlist${n}`);
+        assignlist.id = `assignlist${n + 1}`;
         var progress = document.getElementById(`progress${n}`);
         progress.id = `progress${n + 1}`;
 
@@ -511,15 +532,35 @@ function addRow(rowid) {
         //managing rows
         var idIndex = createdRowsIds.findIndex(i => i == parseInt(n));
         createdRowsIds.splice(idIndex, 0, (parseInt(n) + 1));
-        //managing tasks
-        var ti = tasksId.findIndex(t => t == `${n}`);
-        tasksId.splice(ti, 1, `${n + 1}`)
     }
     var tr = tableRow(id + 1);
     //var trr = $('table > tbody > tr').eq(id).after(tr);
     tr.insertAfter($(`#tempT-${id}`));
     createdRowsIds.push(parseInt(id));
+    // update the value of the dependency
+    updateDependency();
     preRowsNo++;
+    // check if the row has data or delete it 
+    checkFillingRow(id);
+}
+
+function checkFillingRow(id) {
+    id = parseInt(id) + 1;
+    $(`#taskName${id}`).focus();
+    $(`#taskName${id}`).blur(function () {
+        var val = $(`#taskName${id}`).val();
+        if (val == null || val == "" || val == undefined) {
+            deleteRow(`tempT-${id}`);
+        }
+    })
+}
+
+function updateDependency() {
+    tasks.forEach(function (t) {
+        if (t.depends) {
+            $(`#Dependency${t.id.id}`).val(t.depends.depId.id + 1);
+        }
+    })
 }
 
 // attached to OnChange event 
@@ -588,7 +629,7 @@ function dependency(cell) {
             if (!deletedDep.find(d => d.followed == independentTask.id.id)) {
                 deletedDep.push(deletedDependency);
             }
-            
+
             dependentTask.depends = null; // delete 
             var depIndex = independentTask.dependencies.findIndex(t => t.depId.id == inDependecy.depId.id);
             if (independentTask.dependencies.some(d => d.depId.id == inDependecy.depId.id)) { independentTask.dependencies.splice(depIndex, 1); }
@@ -667,9 +708,7 @@ function createTaskObj(n) {
     var Edate = $(`#endDate${n}`)[0].value;
     Edate = parseDate(Edate);
     var Duration = $(`#Duration${n}`)[0].value;
-    var assigneeWord = $(`#assign${n}`)[0].value;
-    var assignee = assigneeTeams.findIndex(a => a == assigneeWord);
-    //var progress = parseInt($(`#progress${n}`)[0].value);
+    var assignee = $(`#assignlist${n}`)[0].value;
 
     var task = new Task(taskId, taskName, Sdate, Edate, Duration, assignee);
     task.tableViewOrder = n;
@@ -708,7 +747,7 @@ function assignTasks() {
             viewmodelTask.Dependecy = { id: t.depends.depId.id, lag: t.depends.lag };
         }
         if (t.dependencies.length > 0 && t) {
-            viewmodelTask.Dependecies = convertDependencies(t); 
+            viewmodelTask.Dependecies = convertDependencies(t);
         }
 
         dataToDB.push(viewmodelTask);
@@ -716,7 +755,7 @@ function assignTasks() {
     return dataToDB;
 }
 
-function convertDependencies (t) {
+function convertDependencies(t) {
     var Dependecies = [];
     t.dependencies.forEach(function (d) {
         Dependecies.push({ id: d.depId.id, lag: d.lag })
@@ -757,11 +796,11 @@ var ganttTasks = [];
 var oldS = "";
 var oldE = "";
 var options = {
-    header_height: 20,
+    header_height: 35,
     column_width: 30,
     step: 40,
     view_modes: ['Day', 'Week', 'Month'],
-    bar_height: 10,
+    bar_height: 21,
     bar_corner_radius: 3,
     arrow_curve: 5,
     padding: 18,
@@ -773,30 +812,7 @@ var options = {
         //console.log(task);
     },
     on_date_change: function (task, start, end) {
-        console.log("start = " + start);
-        console.log("task._srart = " + task._start);
-        console.log("task.srart = " + task.start);
-        console.log("end = " + end);
-        console.log("task._end = " + task._end);
-        console.log("task.end = " + task.end);
-        console.log(`task = ${task}`)
-        console.log(task)
-        console.log("          ")
-
-        if (oldS != start) {
-            if (oldE == end || oldE == "") {
-                changeStartDate(task);
-                oldS = start;
-                oldE = end;
-            }
-        }
-        if (oldE != end) {
-            if (oldS == start || oldS == "") {
-                changeEndDate(task);
-                oldS = start;
-                oldE = end;
-            }
-        }
+        changeDates(task, start, end);
     },
 
     on_progress_change: function (task, progress) {
@@ -824,9 +840,12 @@ function draw() {
 }
 function ganttChart() {
     var gantt = new Gantt('#ganttchart', ganttTasks, options);
+    //var gantt = new Gantt("#gantt", data);
+    var new_height = gantt.$svg.getAttribute('height') - 100;
+    gantt.$svg.setAttribute('height', new_height);
 }
-var vm = 1;
-function changeViewMode() {
+
+function changeViewMode(vm) {
     if (vm == 1) {
         options.view_mode = "Day";
         vm++;
@@ -835,7 +854,6 @@ function changeViewMode() {
         vm++;
     } else {
         options.view_mode = "Month";
-        vm = 1;
     }
     ganttChart();
 }
@@ -844,71 +862,18 @@ function parseGanttDate(s) {
     var b = s.split(/\D/);
     return new Date(b[0], --b[1], b[2]);
 }
-function changeStartDate(frappTask) {
+function changeDates(frappTask, frappStart, frappEnd) {
     var taskid = parseInt(frappTask.id);
-    if (typeof frappTask.start == String) { var oldStart = parseGanttDate(frappTask.start); }
-    var newStart = frappTask._start;
-    $(`#startDate${taskid}`)[0].value = formatDate(newStart);
-    var oldEnd = parseGanttDate(frappTask.end);
-    $(`#Duration${taskid}`)[0].value = computeDuration(newStart, oldEnd);
-    tasks.find(t => t.id.id == taskid).start = newStart;
-    ganttTasks.find(t => t.id == taskid).start = newStart;
-}
-function changeEndDate(frappTask) {
-    var taskid = parseInt(frappTask.id);
-    var oldEnd = parseDate(frappTask.end);
-    var newEnd = frappTask._end;
-    newEnd = newEnd.setDate(newEnd.getDay() - 1);
-    $(`#endDate${taskid}`)[0].value = formatDate(newEnd);
-    var oldStart = parseDate(frappTask.start);
-    $(`#Duration${taskid}`)[0].value = computeDuration(oldStart, newEnd);
-    tasks.find(t => t.id.id == taskid).end = newEnd;
-    ganttTasks.find(t => t.id == taskid).end = newEnd;
+    $(`#startDate${taskid}`)[0].value = formatDate(frappStart);
+    $(`#endDate${taskid}`)[0].value = formatDate(frappEnd);
+    $(`#Duration${taskid}`)[0].value = computeDuration(frappStart, frappEnd);
+
+    assignTask(taskid);
+    ganttTasks.find(t => t.id == taskid).start = formatGanttDate(frappStart);
+    ganttTasks.find(t => t.id == taskid).end = formatGanttDate(frappEnd);
 }
 
 /* #endregion */
-
-/* #region  trial dta */
-
-//function createRowTaskWithData(datArray) {
-//    for (let i = 0; i < datArray.length; i++) {
-//        createRowTask(1);
-//        fillData(i, datArray[i]);
-//    }
-//}
-
-//function fillData(rowId, task) {
-//    var n = rowId;
-//    $("td").children("label")[0].value = n + 1;
-//    $(`#taskName${n}`)[0].value = task.name;
-//    $(`#startDate${n}`)[0].value = formatDate(task.start);
-//    $(`#endDate${n}`)[0].value = formatDate(task.end);
-//    if (task.duration) {
-//        $(`#Duration${n}`)[0].value = task.duration;
-//    } else {
-//        $(`#Duration${n}`)[0].value = computeDuration(task.start, task.end);
-//    }
-//    if (task.depends > 0) { $(`#Dependency${n}`)[0].value = task.depends; }
-
-
-//}
-
-
-//var p = [{
-//    id: "0", name: "p1", depends: -1, start: "Mon May 18 2020 00:00:00 GMT+0200 (Eastern European Standard Time)",
-//    end: "Tue May 19 2020 00:00:00 GMT+0200 (Eastern European Standard Time)"
-//},
-//{
-//    id: "1", name: "p2", depends: 0, start: "Tue May 19 2020 00:00:00 GMT+0200 (Eastern European Standard Time)",
-//    end: "Wed May 27 2020 00:00:00 GMT+0200 (Eastern European Standard Time)"
-//},
-//{
-//    id: "2", name: "p3", depends: 0, start: "Wed May 20 2020 00:00:00 GMT+0200 (Eastern European Standard Time)",
-//    end: "Mon May 25 2020 00:00:00 GMT+0200 (Eastern European Standard Time)"
-//}];
-
-/* #endregion */
-
 
 // send the array of tasks to the backend
 function submit() {
@@ -920,10 +885,66 @@ function submit() {
         url: "/Activity/AddActivities",
         data: { id: proId, Acts: Acts, reDbId: removeFromDB, reDep: deletedDep },
         success: function (response) {
-            console.log("fol");
+            //console.log("fol: " + response);
+            alert("Project tasks updated successfully");
+            if (alert) {
+                window.location.reload();
+            }
         },
         error: function (x, y, err) {
             console.log(arguments);
         }
     });
 }
+
+// split view handling
+var parent = document.querySelector('.splitview'),
+    tablePanel = parent.querySelector('.tablecontent'),
+    ganttPanel = parent.querySelector('.ganttcontent'),
+    handle = parent.querySelector('.handle');
+document.addEventListener('DOMContentLoaded', function () {
+
+    var flag = false; var once = false;
+    document.addEventListener("mousedown", function (event) { flag = true; once = true; });
+    document.addEventListener("mouseup", function (event) {
+        flag = false; once = false;
+        tablePanel.style.pointerEvents = "auto";
+        ganttPanel.style.pointerEvents = "auto";
+    });
+    parent.addEventListener("mousemove", function (event) {
+        if (event.target.className === "handle" && once) { once = false; }
+        if (flag && !once) {
+            tablePanel.style.pointerEvents = "none";
+            ganttPanel.style.pointerEvents = "none";
+            // Move the handle.
+            handle.style.left = event.clientX + 'px';
+            // Adjust the table panel width.
+            tablePanel.style.width = event.clientX + 'px';
+            // Adjust the gantt panel width.
+            ganttPanel.style.left = event.clientX + 'px';
+        }
+
+    });
+});
+function spliterTo(ratio) {
+    // Move the handle.
+    handle.style.left = ratio + '%';
+    // Adjust the table panel width.
+    tablePanel.style.width = ratio + '%';
+    // Adjust the gantt panel width.
+    ganttPanel.style.left = ratio + '%';
+}
+
+
+const observer = new MutationObserver(function (mutations) {
+    mutations.forEach(function (mutation) {
+        if (mutation.attributeName === "value") {
+            console.log("mnmn");
+        }
+    });
+});
+
+const dates = document.querySelector('.datepicker');
+observer.observe(dates, {
+    attributes: true
+});
