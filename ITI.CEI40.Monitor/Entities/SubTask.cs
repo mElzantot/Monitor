@@ -54,7 +54,8 @@ namespace ITI.CEI40.Monitor.Entities
         public int Progress { get; set; }
         public Status Status { get; set; }
         public Priority Priority { get; set; }
-        public int? Evaluation { get; set; }
+        public float? Evaluation { get; set; }
+        public float? Complexity { get; set; }
 
 
         //public ICollection<EngineerSubTasks> EngineerSubTasks { get; set; }
