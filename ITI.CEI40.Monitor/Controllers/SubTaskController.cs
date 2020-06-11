@@ -21,7 +21,7 @@ namespace ITI.CEI40.Monitor.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IHubContext<NotificationsHub> hubContext;
 
-        public SubTaskController(IUnitOfWork unitOfWork,UserManager<ApplicationUser> userManager,IHubContext<NotificationsHub> hubContext)
+        public SubTaskController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IHubContext<NotificationsHub> hubContext)
         {
             this.unitOfWork = unitOfWork;
             this.userManager = userManager;
@@ -33,18 +33,18 @@ namespace ITI.CEI40.Monitor.Controllers
         {
             //----------- Get user Id from UserManager ---------//
             string engId = userManager.GetUserId(HttpContext.User);
-            List<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByEngineerId(engId).ToList();      
-            return View("Engineer",subTasks);
+            List<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByEngineerId(engId).ToList();
+            return View("Engineer", subTasks);
         }
 
-        [Authorize(Roles ="Engineer")]
+        [Authorize(Roles = "Engineer")]
         public IActionResult DisplayRow(int ID)
         {
             SubTask subTask = unitOfWork.SubTasks.GetById(ID);
             return PartialView("_SubTaskDataPartial", subTask);
         }
 
-        [Authorize(Roles ="Engineer")]
+        [Authorize(Roles = "Engineer")]
         public void EditProgress(int ID, int progress)        {            SubTask subTask = unitOfWork.SubTasks.GetSubTaskIncludingTask(ID);
 
             int subTaskLastProgress = subTask.Progress;
@@ -56,12 +56,12 @@ namespace ITI.CEI40.Monitor.Controllers
             List<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByTaskId(subTask.FK_TaskId);            int totalSubTaskDuration = 0;            foreach (var item in subTasks)            {                totalSubTaskDuration += (int)(item.EndDate - item.StartDate).Value.TotalDays;            }            int subtaskDuration = (int)(subTask.EndDate - subTask.StartDate).Value.TotalDays;            task.Progress += ((progress - subTaskLastProgress) * (subtaskDuration)) / (totalSubTaskDuration);            task = unitOfWork.Tasks.Edit(task);
             subTask.Progress = progress;            subTask = unitOfWork.SubTasks.Edit(subTask);        }
 
-        [Authorize(Roles ="Engineer")]  
+        [Authorize(Roles = "Engineer")]
         public void EditIsUnderWork(int ID, bool Is)
         {
             SubTask subTask = unitOfWork.SubTasks.GetSubTaskIncludingProject(ID);
             subTask.IsUnderWork = Is;
-           
+
             if (Is)
             {
                 SubTaskSession subTaskSession = new SubTaskSession()
@@ -94,12 +94,26 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [Authorize(Roles = "Engineer")]
-        public void EditStatus(int id,int status)
+        public void EditStatus(int id, int status, string reason)
         {
-            SubTask subTask = unitOfWork.SubTasks.GetById(id);
+            SubTask subTask = unitOfWork.SubTasks.GetSubTaskWithTeam(id);
             subTask.Status = (Status)status;
             unitOfWork.SubTasks.Edit(subTask);
+              
+            Comment comment = new Comment
+            {
+                FK_sender = userManager.GetUserId(HttpContext.User),
+                fk_TaskId = subTask.FK_TaskId,
+                commentTime = DateTime.Now
+            };
+            comment.comment = $"{subTask.Name} status has changed to {subTask.Status.ToString()}";
+            comment.comment += reason;
+            comment = unitOfWork.Comments.Add(comment);
+
+            //hubContext.Clients.User(subTask.Task.Team.FK_TeamLeaderId).SendAsync("newNotification",
+            // $"");
         }
+
 
         [Authorize(Roles = "Engineer")]
         public void EditPriority(int ID, Priority priority)

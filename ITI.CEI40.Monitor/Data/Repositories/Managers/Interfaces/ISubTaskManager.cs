@@ -20,6 +20,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         List<SubTask> GetEngineerSubTasks(string EngineerId);
         SubTask GetSubTaskWithEngineer(int id);
         IEnumerable<SubTask> GetEngineerCancelledSubTasks(string EngineerId);
+        SubTask GetSubTaskWithTeam(int id);
     }
 
     

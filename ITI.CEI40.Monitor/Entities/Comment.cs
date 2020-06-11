@@ -14,12 +14,10 @@ namespace ITI.CEI40.Monitor.Entities
 
         [ForeignKey(nameof(Sender))]
         public string FK_sender { get; set; }
-
         public ApplicationUser Sender { get; set; }
 
         [ForeignKey(nameof(Task))]
         public int fk_TaskId { get; set; }
-
         public Activity Task { get; set; }
 
         public string comment { get; set; }

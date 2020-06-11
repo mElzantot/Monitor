@@ -60,7 +60,7 @@
                                             </button>
                                         </td>
                                     }
-                                    @*<select asp-for="@item.Status" asp-items="@Html.GetEnumSelectList<Status>()" class="form-control"></select>*@
+                                   @* <td> <select asp-for="@item.Status" asp-items="@Html.GetEnumSelectList<Status>()" class="form-control"></select></td>*@
 
 
                                     @{
@@ -110,28 +110,29 @@
 
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Submit Task</h5>
-            </div>
-            <div class="modal-body">
-                <label>Comment</label>
-                @*<input hidden id="status"/>
-                    <input hidden id="taskId"/>*@
-                <div>
-                    <input id="reason" type="text" class="form-control" />
-                    <button id="upload" type="button" class="btn btn-light"><i class="fas fa-arrow-circle-up"></i> Upload</button>
+@*<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Submit Task</h5>
+                </div>
+                <div class="modal-body">
+                    <label>Comment</label>
+
+                    <div>
+                        <input id="reason" type="text" class="form-control" />
+                        <button id="upload" type="button" class="btn btn-light"><i class="fas fa-arrow-circle-up"></i> Upload</button>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
+                    <button id="send" type="button" class="btn btn-primary">Send</button>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
-                <button id="send" type="button" class="btn btn-primary">Send</button>
-            </div>
         </div>
-    </div>
-</div>
+    </div>*@
+
+
 
 <!-- Hold Modal -->
 <div class="modal fade" id="HoldModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -141,6 +142,10 @@
                 <h5 class="modal-title" id="exampleModalLabel">Hold Reason</h5>
             </div>
             <div class="modal-body">
+                <input hidden id="status" />
+                <input hidden id="taskId" />
+                <input hidden id="ele" />
+
                 <label>Reason</label>
                 <input id="reason" type="text" class="form-control" />
             </div>
@@ -230,20 +235,57 @@
 
 
         function ChangeStatus(event, Id) {
-            debugger;
             event.stopPropagation();
             var element = event.target;
             var txtValue = element.innerText;
 
-
             $("#status").val(txtValue);
             $("#taskId").val(Id);
+            $("#ele").val(element);
             $("#HoldModal").modal('show');
+
         }
 
+
         $('#send').click(function () {
-            console.log($('#reason').val())//send reason in notification
+            let Reason = $('#reason').val();
+            let txtValue = $("#status").val();
+            let Id = $("#taskId").val();
+            let element = $("#ele").val();
+            let value;
+
+            switch (txtValue) {
+                case 'Active':
+                    value = 0;
+                    //element.classList.remove('btn-warning')
+                    //element.classList.add('btn-success')
+                    //element.innerText = 'Active'
+                    break;
+                case 'OnHold':
+                    value = 1;
+                    //element.classList.remove('btn-success')
+                    //element.classList.add('btn-warning')
+                    //element.innerText = 'OnHold'
+                    break;
+            }
+
+            $('#reason').val('');
             $("#exampleModal").modal('toggle');
+
+            $.ajax({
+                type: "get",
+                url: `/subtask/editstatus`,
+                data: {
+                    id: Id,
+                    status: value,
+                    reason: Reason
+                },
+                success: function (response) {
+                },
+                error: function (x, y, err) {
+                    console.log(arguments)
+                }
+            })
         })
 
         //$('#send').click(function () {
@@ -257,21 +299,7 @@
         ////console.log(text)//send reason in notification
 
         //$("#exampleModal").modal('toggle');
-        //switch (txtValue) {
 
-        //    case 'Active':
-        //        value = 0;
-        //        element.classList.remove('btn-warning')
-        //        element.classList.add('btn-success')
-        //        element.innerText = 'Active'
-        //        break;
-        //    case 'OnHold':
-        //        value = 1;
-        //        element.classList.remove('btn-success')
-        //        element.classList.add('btn-warning')
-        //        element.innerText = 'OnHold'
-        //        break;
-        //}
         //$.ajax({
         //    type: "get",
         //    url: `/subtask/editstatus`,
@@ -304,64 +332,68 @@
         }
 
 
-                                    //(function () {
 
-                                    //    var previous;
-                                    //    $("select").on('focus', function () {
-                                    //        // Store the current value on focus and on change
-                                    //        previous = this.value;
 
-                                    //    }).change(function () {
+        //(function () {
 
-                                    //        var value = this.value;
-                                    //        switch (value) {
-                                    //            case '0': //Active
-                                    //                if (confirm('Is the task Active?')) {
-                                    //                    ChangeStatus(rowID, value);
-                                    //                }
-                                    //                break;
+        //    var previous;
+        //    $("select").on('focus', function () {
+        //        // Store the current value on focus and on change
+        //        previous = this.value;
 
-                                    //            case '1': //onhold
+        //    }).change(function () {
 
-                                    //                $("#togleBtn").trigger("click");
+        //        var value = this.value;
+        //        switch (value) {
+        //            case '0': //Active
+        //                if (confirm('Is the task Active?')) {
+        //                    ChangeStatus(rowID, value);
+        //                }
+        //                break;
 
-                                    //                $('#send').click(function () {
-                                    //                    if ($('#reason').val()) { //validation for empty rason
-                                    //                        console.log($('#reason').val())//send reason in notification
-                                    //                        $("#exampleModal").modal('toggle');
-                                    //                        ChangeStatus(rowID, value);
-                                    //                    }
-                                    //                })
+        //            case '1': //onhold
 
-                                    //                $('#close').click(function () {
-                                    //                    $(`#${rowID} > td > select`)[0].value = previous
-                                    //                })
+        //                $("#togleBtn").trigger("click");
 
-                                    //                break;
+        //                $('#send').click(function () {
+        //                    if ($('#reason').val()) { //validation for empty rason
+        //                        console.log($('#reason').val())//send reason in notification
+        //                        $("#exampleModal").modal('toggle');
+        //                        ChangeStatus(rowID, value);
+        //                    }
+        //                })
 
-                                    //            case '2': // completed
-                                    //                if (confirm('Is the task finished?')) {
-                                    //                    $(`#${rowID}`).hide();
-                                    //                    ChangeStatus(rowID, value);
-                                    //                }
-                                    //                else {
-                                    //                    $(`#${rowID} > td > select`)[0].value = previous
-                                    //                }
-                                    //                break;
+        //                $('#close').click(function () {
+        //                    $(`#${rowID} > td > select`)[0].value = previous
+        //                })
 
-                                    //            case '3': //canceled
-                                    //                if (confirm('Do you want to cancel this task?')) {
-                                    //                    $(`#${rowID}`).hide();
-                                    //                    ChangeStatus(rowID, value);
-                                    //                }
-                                    //                else {
-                                    //                    $(`#${rowID} > td > select`)[0].value = previous
-                                    //                }
-                                    //                break;
-                                    //        }
+        //                break;
 
-                                    //    });
-                                    //})();
+        //            //case '2': // completed
+        //            //    if (confirm('Is the task finished?')) {
+        //            //        $(`#${rowID}`).hide();
+        //            //        ChangeStatus(rowID, value);
+        //            //    }
+        //            //    else {
+        //            //        $(`#${rowID} > td > select`)[0].value = previous
+        //            //    }
+        //            //    break;
+
+        //            //case '3': //canceled
+        //            //    if (confirm('Do you want to cancel this task?')) {
+        //            //        $(`#${rowID}`).hide();
+        //            //        ChangeStatus(rowID, value);
+        //            //    }
+        //            //    else {
+        //            //        $(`#${rowID} > td > select`)[0].value = previous
+        //            //    }
+        //            //    break;
+        //        }
+
+        //    });
+        //})();
+
+
     </script>
 }
 
