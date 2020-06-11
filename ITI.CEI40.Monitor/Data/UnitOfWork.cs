@@ -31,7 +31,7 @@ namespace ITI.CEI40.Monitor.Data
             Notification = new NotificationManager(context);
             NotificationUsers = new NotificationUsersManager(context);
             Files = new FilesManager(context);
-
+            Comments = new CommentManager(context);
 
         }
         public IClaimManager Claims { get; }
@@ -51,6 +51,7 @@ namespace ITI.CEI40.Monitor.Data
         public INotificationManager Notification { get;}
         public INotificationUsersManager NotificationUsers { get; }
         public IFilesManager Files { get; }
+        public ICommentManager Comments { get; }
 
 
 
