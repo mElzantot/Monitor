@@ -9,8 +9,7 @@ namespace ITI.CEI40.Monitor.Models.View_Models
     public class CommentViewModel
     {
         public List<Comment> Comments { get; set; }
-        public List<string> Engineers { get; set; }
+        public List<SubTask> SubTasks { get; set; }
         public string Sender { get; set; }
-        public string TaskName { get; set; }
     }
 }
