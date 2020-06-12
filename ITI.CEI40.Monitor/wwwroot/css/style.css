@@ -36,8 +36,6 @@ body {
     }
 
 
-
-
     /*nav bar dropdown list*/
 .dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
     background-color: var(--green);
@@ -71,3 +69,5 @@ body {
 .dropdown-menu clock {
     min-width: 25rem;
 }
+
+

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ITI.CEI40.Monitor.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -18,6 +19,7 @@ namespace ITI.CEI40.Monitor.Models.View_Models
 
         [Required]
         public int taskId { get; set; }
+
 
     }
 }

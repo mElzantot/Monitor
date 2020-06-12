@@ -40,6 +40,7 @@ namespace ITI.CEI40.Monitor.Controllers
             //----------- Get user Id from UserManager ---------//
             string engId = userManager.GetUserId(HttpContext.User);
             List<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByEngineerId(engId).ToList();
+
             return View("Engineer", subTasks);
         }
 
@@ -166,6 +167,7 @@ namespace ITI.CEI40.Monitor.Controllers
             {
                 var startDate = subTask.StartDate.Split('/').Select(Int32.Parse).ToList();
                 var endDate = subTask.EndDate.Split('/').Select(Int32.Parse).ToList();
+                subTask.Description = subTask.Description.Replace("\r\n", "<br>");
                 var newSubTask = new SubTask
                 {
                     Name = subTask.Name,

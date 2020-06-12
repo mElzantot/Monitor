@@ -5,11 +5,8 @@
         <div class="righthead">
             <h5 calss="col-12 mb-2 ">@Model.Name</h5>
         </div>
-
-        <div class="text-muted mb-2">@Model.Description</div>
-
-        <hr />
-
+        <div class="text-muted mb-md-1" style="max-height:100px;overflow-y:auto;"><pre>@Model.Description</pre></div>
+        <hr  />
         <div class="row">
             <div class="col-lg-7 innerleft" style="border-right:2px solid rgb(219, 219, 219)">
                 <div class="prog">
@@ -20,12 +17,9 @@
                     </div>
 
                 </div>
-                <a class="btn btn-info" href="/comment/chat?taskId=@Model.FK_TaskId">Comments</a>
-                <button onclick="UploadFile(@Model.Id)">Upload File </button>
+                <button class="btn btn-sm btn-outline-secondary" onclick="UploadFile(@Model.Id)" > Upload File <i class="fas fa-paperclip"></i></button>
+                <a class="btn btn-sm btn-outline-info" href="/comment/activitylog?taskId=@Model.FK_TaskId" >Task Details <i class="fas fa-info"></i></a>
             </div>
-
-
-
             <div class="col-lg-5 innerright ">
 
                 <div class="font-weight-bold">Start Data</div>
@@ -42,9 +36,13 @@
 
                 <div class="font-weight-bold">Actual Duration</div>
                 <div class="text-muted"> @Model.ActualDuration hour</div>
-                <br />
-                <button class="btn btn-success w-100" onclick="SubmitSunTask()">Submit</button>
+                @*<br />
+                    <button class="btn btn-success w-100" onclick="SubmitSunTask()">Submit</button>*@
             </div>
+        </div>
+        <div class="row pt-3">
+            <textarea id="commentArea" class="col-12" placeholder="Add Comment Here......"></textarea>
+            <button class="btn btn-sm btn-outline-info mt-1 float-sm-right" type="button" id="AddComment" onclick="AddComment(@Model.Id)">Comment</button>
         </div>
     </div>
 </div>
