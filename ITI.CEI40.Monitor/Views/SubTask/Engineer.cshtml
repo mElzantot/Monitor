@@ -121,10 +121,10 @@
             </div>
 
             <form id="FileForm" enctype="multipart/form-data"
-                  method="post" asp-action="AddFile" asp-controller="Task"  >
+                  method="post" asp-action="AddFile" asp-controller="Task">
                 <div class="modal-body">
                     <label>Upload File</label>
-                    @*<form enctype="multipart/form-data" asp-action="Hamada" asp-controller="SubTask" method="post">*@
+                  
                     <div class="custom-file">
                         <input name="file" class="form-control custom-file-input" type="file" />
                         <label class="custom-file-label">Choose File...</label>
@@ -133,11 +133,11 @@
                     <label>Comment</label>
                     <input class="form-control" type="text" name="comment" />
                     <input id="task_Id" hidden />
-                    @*<input type="submit" value="submit" />*@
+                    
                 </div>
                 <div class="modal-footer">
-                    <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
                     <button id="upload" type="submit" class="btn btn-primary">Upload</button>
+                    <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
                 </div>
             </form>
         </div>
@@ -266,7 +266,6 @@
 
         let previous;
         let value;
-
         $("select").on('focus', function () {
             // Store the current value on focus and on change
             previous = this.value;
