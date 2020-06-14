@@ -1,0 +1,78 @@
+﻿@model List<SubTaskSession>
+@{
+    ViewData["Title"] = "EmployeeTimeSheet";
+}
+
+
+    <div class="pt-5" id="pdfTest">
+        @if (Model.Count > 0)
+        {
+            <table class="table table-sm" style="text-align:center">
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Day</th>
+                        <th scope="col">Task Name</th>
+                        <th scope="col">From</th>
+                        <th scope="col">To</th>
+                        <th scope="col">Duration "Hrs"</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="table-success" style="font-family:Arial;">
+                        <td colspan="5" style="text-align:left">
+                            <strong>@Model[0].SessStartDate.Date.ToLocalTime().ToShortDateString()</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td>@Model[0].SubTask.Name</td>
+                        <td>@Model[0].SessStartDate.ToShortTimeString()</td>
+                        <td>@Model[0].SessEndtDate.Value.ToShortTimeString()</td>
+                        <td>@Model[0].SessDuration</td>
+                    </tr>
+
+                    @for (int i = 1; i < Model.Count; i++)
+                    {
+                        if (Model[i].SessStartDate.Day > Model[i - 1].SessStartDate.Day)
+                        {
+                            <tr class="table-success" style="font-family:Arial;">
+                                <td colspan="5" style="text-align:left">
+                                    <strong>@Model[i].SessStartDate.Date.ToLocalTime().ToShortDateString()</strong>
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <td></td>
+                            <td>@Model[i].SubTask.Name</td>
+                            <td>@Model[i].SessStartDate.ToShortTimeString()</td>
+                            <td>@Model[i].SessEndtDate.Value.ToShortTimeString()</td>
+                            <td>@Model[i].SessDuration</td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+        }
+        else
+        {
+            <h4 id="Sessions" style="padding:45px 20px " class="text-muted text-center">You Have No Sessions till Now</h4>
+        }
+
+    </div>
+
+@section Scripts{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    <script>
+        var doc = new jsPDF();
+        function generatePDF() {
+            var target = document.getElementById("pdfTest");
+            console.log(target);
+            doc.fromHTML(target, 15, 15);
+            doc.save("Test2.pdf");
+            console.log("Hello");
+        }
+
+    </script>
+}

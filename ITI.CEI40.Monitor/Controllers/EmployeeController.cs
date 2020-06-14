@@ -249,7 +249,7 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpGet]
         public IActionResult EmployeeTimeSheet()
         {
-            List<SubTaskSession> EmpSessions = unitofwork.SubTaskSessions.GetTimeSheetForEmp(userManager.GetUserId(HttpContext.User)).ToList();
+            List<SubTaskSession> EmpSessions = unitofwork.SubTaskSessions.GetTimeSheetForEmp(userManager.GetUserId(HttpContext.User)).Reverse().ToList();
 
             return View(EmpSessions);
         }

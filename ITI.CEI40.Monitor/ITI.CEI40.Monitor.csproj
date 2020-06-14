@@ -50,6 +50,7 @@
 
 
   <ItemGroup>
+    <Folder Include="Views\SubTaskSessions\" />
     <Folder Include="wwwroot\files\" />
   </ItemGroup>
 
