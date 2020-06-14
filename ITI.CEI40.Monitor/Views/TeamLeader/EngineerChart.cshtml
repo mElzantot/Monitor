@@ -1,0 +1,101 @@
+﻿
+@model EngineerChrtViewModel
+
+@foreach (var item in Model.Months)
+{
+    <input class="months" hidden asp-for="@item" />
+}
+
+@foreach (var item in Model.Quality)
+{
+    <input class="quality" hidden asp-for="@item" />
+}
+@foreach (var item in Model.Time)
+{
+    <input class="time" hidden asp-for="@item" />
+}
+
+
+
+<div class="main">
+    <div class="row">
+        <div id="line_top_x" class="col"></div>
+        <div class="col"></div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+
+
+
+
+        var month = [];
+        var quality = [];
+        var time = [];
+
+        var end = $('.months')
+        var qual = $('.quality')
+        var ti = $('.time')
+
+
+        for (var i = 0; i < end.length; i++) {
+            month.push(end[i].defaultValue)
+            quality.push(qual[i].defaultValue)
+            time.push(ti[i].defaultValue)
+        }
+
+        google.charts.load('current', { 'packages': ['line'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Month');
+            data.addColumn('number', 'Quality');
+
+            data.addRows([
+                [month[0], Number(quality[0])],
+            ]);
+
+
+            for (let j = 1; j < month.length; j++) {
+                data.addRows([
+                    [month[j], Number(quality[j])],
+                ]);
+            }
+
+
+            var options = {
+                chart: {
+                    title: 'Box Office Earnings in First Two Weeks of Opening',
+                    subtitle: 'in millions of dollars (USD)'
+                },
+                width: 900,
+                height: 500,
+                axes: {
+                    x: {
+                        0: { side: 'bottom' }
+                    }
+                }
+            };
+
+            var chart = new google.charts.Line(document.getElementById('line_top_x'));
+
+            chart.draw(data, google.charts.Line.convertOptions(options));
+        }
+    </script>
+}
+
+
+@section Style{
+    <style>
+        .main {
+            background-color: #e6f5ea;
+        }
+    </style>
+}

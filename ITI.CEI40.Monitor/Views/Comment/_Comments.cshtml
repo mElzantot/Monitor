@@ -5,122 +5,127 @@
 }
 
 
-    <div>
-        <div class="row upper-container" style="cursor:pointer">
-            <div class="col upper-icon " style="display:flex;align-items:center; justify-content:center;">
-                <h4 class="text-muted">@Model.SubTasks[0].Task.Name</h4>
-            </div>
+<div>
+    <div class="row upper-container" style="cursor:pointer">
+        <div class="col upper-icon " style="display:flex;align-items:center; justify-content:center;">
+            <h4 class="text-muted">@Model.SubTasks[0].Task.Name</h4>
+        </div>
 
-            <div class="col upper-icon">
-                <time class="icon">
-                    <em>@Model.SubTasks[0].Task.StartDate.DayOfWeek</em>
-                    <strong >@Model.SubTasks[0].Task.StartDate.ToString("MMMM") </strong>
-                    <span>@Model.SubTasks[0].Task.StartDate.Day</span>
-                </time>
-            </div>
+        <div class="col upper-icon">
+            <time class="icon">
+                <em>@Model.SubTasks[0].Task.StartDate.DayOfWeek</em>
+                <strong>@Model.SubTasks[0].Task.StartDate.ToString("MMMM") </strong>
+                <span>@Model.SubTasks[0].Task.StartDate.Day</span>
+            </time>
+        </div>
 
-            <div class="col upper-icon">
-                <time class="icon ">
-                    <em style="color:rgb(179, 20, 20)">@Model.SubTasks[0].Task.EndDate.DayOfWeek</em>
-                    <strong style="background-color: rgb(179, 20, 20);
+        <div class="col upper-icon">
+            <time class="icon ">
+                <em style="color:rgb(179, 20, 20)">@Model.SubTasks[0].Task.EndDate.DayOfWeek</em>
+                <strong style="background-color: rgb(179, 20, 20);
     border-bottom: 1px dashed #1f0203;
     box-shadow: 0 2px 0 rgb(179, 20, 20);">@Model.SubTasks[0].Task.EndDate.ToString("MMMM") </strong>
-                    <span>@Model.SubTasks[0].Task.EndDate.Day</span>
-                </time>
+    <span>@Model.SubTasks[0].Task.EndDate.Day</span>
+</time>
+</div>
+
+
+<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    @{ int filesNum = 0;}
+    @foreach (var item in Model.Comments)
+    {
+        if (item.File != null)
+        {
+            filesNum += 1;
+            <div style="margin: 0 .3em 1em 1.5em;">
+                <div class="">@item.Sender.UserName</div>
+                <div class="ml-2">
+                    <a href="#" download="" class="">@item.File.FilePath</a>
+                </div>
+                <div class="message-time">@item.commentTime</div>
             </div>
+        }
+    }
+</div>
 
 
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                @{ int filesNum = 0;}
-                @foreach (var item in Model.Comments)
-                {
-                    if (item.File != null)
+<div class="col " style="display:flex;align-items:center; justify-content:center;"
+     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    <h4 class="text-muted text-center">@filesNum Files</h4>
+</div>
+
+
+</div>
+
+
+
+
+<div class="row lower-container">
+    @for (int i = 0; i < Model.SubTasks.Count(); i++)
+    {
+        <div class="col-4 task-container ">
+            <div style="height:15rem;background-color:white;border:1px solid white ;border-radius:10px 10px 0 0; ">
+
+                <div>
+                    <span class="Eng-Name">@Model.SubTasks[i].Engineer.UserName</span>
+                    @if (Model.SubTasks[i].Status == Status.OnHold)
                     {
-                        filesNum += 1;
-                        <div style="margin: 0 .3em 1em 1.5em;">
-                            <div class="">@item.Sender.UserName</div>
-                            <div class="ml-2">
-                                <a href="#" download="" class="">@item.File.FilePath</a>
-                            </div>
-                            <div class="message-time">@item.commentTime</div>
-                        </div>
+                        <span class="btn-warning"> On Hold</span>
                     }
-                }
-            </div>
-
-
-            <div class="col " style="display:flex;align-items:center; justify-content:center;"
-                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <h4 class="text-muted text-center">@filesNum Files</h4>
-            </div>
-
-
-        </div>
-
-
-   
-
-        <div class="row lower-container">
-            @for (int i = 0; i < Model.SubTasks.Count(); i++)
-            {
-                @*@{var item = Model.SubTasks[0];}*@
-                <div class="col-4 task-container ">
-
-                    <div style="height:15rem;background-color:white;border:1px solid white ;border-radius:10px 10px 0 0; ">
-                        <div class="Eng-Name">@Model.SubTasks[i].Engineer.UserName</div>
-
-                        <div id="@i" style="overflow-y:auto; height:12em">
-                            @foreach (var comment in Model.Comments)
-                            {
-                                if (Model.SubTasks[i].Engineer.Id == Model.Sender)
-                                {
-                                    <div style="margin: 0 .3em 1em .5em;">
-                                        <div class="message-text">
-                                            @comment.comment
-                                            @if (comment.File != null)
-                                            {
-                                                <br>
-                                                <a href="#" download="" class="">@comment.File.FilePath</a>
-                                            }
-                                        </div>
-                                        <div class="message-time">@comment.commentTime</div>
-                                    </div>
-                                }
-                            }
-                        </div>
-
-
-
-
-
-
-                        <section id="@Model.SubTasks[i].Id" class="d-none">
-                            <div class="single-chart">
-                                <svg viewbox="0 0 36 36" class="circular-chart blue">
-                                    <path class="circle-bg"
-                                          d="M18 2.0845
-                                    a 15.9155 15.9155 0 0 1 0 31.831
-                                    a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                    <path class="circle"
-                                          stroke-dasharray="@Model.SubTasks[i].Progress, 100"
-                                          d="M18 2.0845
-                                  a 15.9155 15.9155 0 0 1 0 31.831
-                                  a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                    <text x="18" y="20.35" class="percentage">@Model.SubTasks[i].Progress%</text>
-                                </svg>
-                            </div>
-                        </section>
-
-                    </div>
-                    <div class="sub-name" onmouseover="display(@Model.SubTasks[i].Id,@i)" onmouseout="hide(@Model.SubTasks[i].Id, @i)">
-                        @Model.SubTasks[i].Name
-                    </div>
                 </div>
 
-            }
+                <div id="@i" style="overflow-y:auto; height:12em">
+                    @foreach (var comment in Model.Comments)
+                    {
+                        if (Model.SubTasks[i].Engineer.Id == Model.Sender)
+                        {
+                            <div style="margin: 0 .3em 1em .5em;">
+                                <div class="message-text">
+                                    @comment.comment
+                                    @if (comment.File != null)
+                                    {
+                                        <br>
+                                        <a href="#" download="" >@comment.File.FilePath</a>
+                                    }
+                                </div>
+                                <div class="message-time">@comment.commentTime</div>
+                            </div>
+                        }
+                    }
+                </div>
+
+
+
+
+
+
+                <section id="@Model.SubTasks[i].Id" class="d-none">
+                    <div class="single-chart">
+                        <svg viewbox="0 0 36 36" class="circular-chart blue">
+                            <path class="circle-bg"
+                                  d="M18 2.0845
+                                    a 15.9155 15.9155 0 0 1 0 31.831
+                                    a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <path class="circle"
+                                  stroke-dasharray="@Model.SubTasks[i].Progress, 100"
+                                  d="M18 2.0845
+                                  a 15.9155 15.9155 0 0 1 0 31.831
+                                  a 15.9155 15.9155 0 0 1 0 -31.831" />
+                            <text x="18" y="20.35" class="percentage">@Model.SubTasks[i].Progress%</text>
+                        </svg>
+                    </div>
+                </section>
+
+            </div>
+            <div class="sub-name" onmouseover="display(@Model.SubTasks[i].Id,@i)" onmouseout="hide(@Model.SubTasks[i].Id, @i)">
+                @Model.SubTasks[i].Name
+            </div>
         </div>
 
-    </div>
+    }
+</div>
+
+</div>
 
 
 
@@ -189,6 +194,7 @@
             font-size: .8rem;
             color: #777;
         }
+
 
         .you-message .message-text {
             background-color: rgb(47, 136, 76);
@@ -291,8 +297,9 @@
         }
 
         .Eng-Name {
-            font-size: 1.2em;
-            margin: .2em 0 .2em .4em;
+            font-size: 1.3em;
+            border-bottom: 1px solid black;
+            margin: .2em 6em 0em .4em;
         }
 
         .sub-name {
@@ -328,9 +335,6 @@
             width: 17.7rem;
             overflow-y: auto;
         }
-
-
-        
     </style>
     <link rel="stylesheet" href="~/css/circle.css" />
 }

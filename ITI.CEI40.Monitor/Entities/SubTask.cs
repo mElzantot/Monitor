@@ -53,9 +53,19 @@ namespace ITI.CEI40.Monitor.Entities
         public bool IsUnderWork { get; set; }
         public int Progress { get; set; }
         public Status Status { get; set; }
+
+        
         public Priority Priority { get; set; }
-        public float? Evaluation { get; set; }
-        public float? Complexity { get; set; }
+
+
+        [MaxLength(100),MinLength(0)]
+        public float TimeManagement { get; set; }
+
+        [MaxLength(100), MinLength(0)]
+        public float Complexity { get; set; }
+
+        [MaxLength(100), MinLength(0)]
+        public float Quality { get; set; }
 
 
         //public ICollection<EngineerSubTasks> EngineerSubTasks { get; set; }

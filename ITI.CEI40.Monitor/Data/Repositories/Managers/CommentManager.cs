@@ -18,7 +18,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         public IEnumerable<Comment> GetCommentsForTask(int taskID)
         {
             return set.Where(c => c.fk_TaskId == taskID).Include(c => c.Sender)
-                .Include(c => c.File).ToList().OrderBy(c => c.commentTime);
+                .Include(c => c.File).ToList().OrderByDescending(c => c.commentTime);
         }
     }
 }

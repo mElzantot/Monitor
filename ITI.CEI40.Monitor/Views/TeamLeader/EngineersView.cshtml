@@ -114,10 +114,8 @@
                             drawChart();
                             flag = false;
                         }
-
                     }
                 }
-
             })
         }
 
@@ -138,27 +136,30 @@
             })
         }
 
-        function Submit(Id) {
-            $("#togleBtn").trigger("click");
-            $('#Submit').click(function () {
-                $("#exampleModal").modal('toggle');
-                var complex = $('#complex').val();
-                var evaluation = $('#evaluation').val();
 
-                $.ajax({
-                    url: "/TeamLeader/SubmitSubTask",
-                    type: "Get",
-                    data: {
-                        id: Id,
-                        complexity: complex,
-                        evaluation: evaluation
-                    },
-                    success: function () {
-                        $(`#${Id}`).hide();
-                    }
-                })
+
+        function Submit(Id) {
+            $("#SubmitModal").modal('show');
+            $("#id").val(Id);
+        }
+
+
+
+
+        function SubmitTask(e) {
+            e.preventDefault();
+            debugger
+           // console.log($('#subtaskSubmit').serialize());
+            $.ajax({
+                url: "/TeamLeader/SubmitSubTask",
+                method: "POST",
+                contentType: "Application/json",
+                data: JSON.stringify($('#subtaskSubmit').serialize())
             })
         }
+
+
+
 
         function Cancele(Id) {
             if (confirm('Do you want to cancel this task')) {

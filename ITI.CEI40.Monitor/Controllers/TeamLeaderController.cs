@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
+using ITI.CEI40.Monitor.Models.View_Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,7 @@ namespace ITI.CEI40.Monitor.Controllers
         private readonly IUnitOfWork unitofwork;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public TeamLeaderController(IUnitOfWork unitofwork,UserManager<ApplicationUser> userManager)
+        public TeamLeaderController(IUnitOfWork unitofwork, UserManager<ApplicationUser> userManager)
         {
             this.unitofwork = unitofwork;
             this.userManager = userManager;
@@ -27,7 +28,7 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [Authorize(Roles = "TeamLeader")]
-        public IActionResult EngineersView( )
+        public IActionResult EngineersView()
         {
             int teamId = unitofwork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
             var engieers = unitofwork.Engineers.GetEngineersInsideTeam(teamId);
@@ -52,21 +53,78 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         //Omar 
-        public void SubmitSubTask(int id, float complexity, float evaluation)
+        [HttpPost]
+        public void SubmitSubTask(SubTask subTask)
         {
-            var subtask = unitofwork.SubTasks.GetSubTaskWithEngineer(id);
-            subtask.Status = Status.Completed;
-            subtask.Complexity = complexity;
-            subtask.Evaluation = evaluation;
+            //var subtask = unitofwork.SubTasks.GetSubTaskWithEngineer(id);
+            //subtask.Status = Status.Completed;
+            //subtask.Complexity = complexity;
+            //subtask.TimeManagement = time;
+            //subtask.Quality = quality;
             //subtask.Engineer.TotalEvaluation;
-            unitofwork.SubTasks.Edit(subtask);  
+            //unitofwork.SubTasks.Edit(subtask);  
+        }
+
+        //omar
+        public IActionResult EngineerChart(string EngId)
+        {
+            List<SubTask> subtasks = unitofwork.SubTasks.GetEngineerComletedSubTasks(EngId);
+
+            List<string> months = new List<string>();
+            List<float> quality = new List<float>();
+            List<float> complexity = new List<float>();
+            List<float> time = new List<float>();
+            List<int> subNo = new List<int>();
+
+            string engName = subtasks[0].Engineer.UserName;
+            string month;
+            int i = -1;
+
+            foreach (var item in subtasks)
+            {
+                month = item.EndDate.Value.ToString("MMMM");
+                if (!months.Contains(month))
+                {
+                    months.Add(month);
+                    complexity.Add(item.Complexity);
+                    quality.Add(item.Quality* item.Complexity);
+                    time.Add(item.TimeManagement* item.Complexity);
+                    subNo.Add(1);
+                    i++;
+                }
+                else
+                {
+                    complexity[i] += item.Complexity;
+                    quality[i] += item.Quality* item.Complexity;
+                    time[i] += item.TimeManagement* item.Complexity;
+                    subNo[i] += 1;
+                }
+            }
+
+            for (int j = 0; j < months.Count(); j++)
+            {
+                quality[j] = quality[j] / complexity[j];
+                time[j] = quality[j] / complexity[j];
+            }
+
+            EngineerChrtViewModel engineerChrtView = new EngineerChrtViewModel
+            {
+                SubMonth = subNo,
+                EngineerName = engName,
+                Months = months,
+                Quality = quality,
+                Time = time
+            };
+
+            return View("EngineerChart", engineerChrtView);
         }
 
         [HttpGet]
         public IActionResult displayCancellesSubTasks(string engId)
         {
-            var subtask = unitofwork.SubTasks.GetEngineerSubTasks(engId);
-            return PartialView(subtask);
+            List<SubTask> subtasks = unitofwork.SubTasks.GetEngineerSubTasks(engId);
+
+            return PartialView(subtasks);
         }
     }
 }
