@@ -74,7 +74,8 @@ namespace ITI.CEI40.Monitor.Controllers
                 SubTaskSession subTaskSession = new SubTaskSession()
                 {
                     FK_SubTaskID = ID,
-                    SessStartDate = DateTime.Now
+                    SessStartDate = DateTime.Now,
+                    EmpId = userManager.GetUserId(HttpContext.User)
                 };
                 subTaskSession = unitOfWork.SubTaskSessions.Add(subTaskSession);
             }
