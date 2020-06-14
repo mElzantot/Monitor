@@ -17,6 +17,9 @@ namespace ITI.CEI40.Monitor.Entities
             this.Comments = new HashSet<Comment>();
             this.ActualDuration = 0;
             this.Status = Status.Active;
+            this.Quality = 0;
+            this.TimeManagement = 0;
+            this.Complexity = 0;
         }
 
         [Key]
@@ -59,14 +62,17 @@ namespace ITI.CEI40.Monitor.Entities
         public Priority Priority { get; set; }
 
 
-        [MaxLength(100),MinLength(0)]
-        public float TimeManagement { get; set; }
+        [Range(0, 100)]
+        [Required]
+        public int TimeManagement { get; set; }
 
-        [MaxLength(100), MinLength(0)]
-        public float Complexity { get; set; }
+        [Range(0, 100)]
+        [Required]
+        public int Complexity { get; set; }
 
-        [MaxLength(100), MinLength(0)]
-        public float Quality { get; set; }
+        [Range(0, 100)]
+        [Required]
+        public int Quality { get; set; }
 
 
         //public ICollection<EngineerSubTasks> EngineerSubTasks { get; set; }
