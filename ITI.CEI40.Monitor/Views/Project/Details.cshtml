@@ -1,0 +1,277 @@
+﻿@model ActivityViewModel
+@{
+    ViewData["Title"] = "Details";
+    Model.Tasks = Model.Tasks.ToList();
+}
+
+<div>
+    <div>
+        <h3 class="text-muted m-3">Tasks</h3>
+    </div>
+    <div class="row " style="border: 2px solid rgb(219, 219, 219) ; border-radius: 8px;">
+        <div class="col-3  innerleft pt-4" style="border-right:2px solid rgb(219, 219, 219);">
+            <table class="table table-hover text-center" id="teamTable">
+                <thead class="table-hover">
+                    <tr>
+                        <th scope="col">Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Tasks.Count(); i++)
+                    {
+                        <tr id="@Model.Tasks[i]" onclick='displayTaskDetails("@Model.Tasks[i].Id")'>
+                            <td>@Model.Tasks[i].Name</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-9 innerright ">
+            <div style=" padding: 15px; border-radius: 8px;">
+                <div class="row" style="margin:auto;" id="tasks">
+                    <h4 id="alertdiv" class="text-muted text-center mt-5" style="margin:auto;">Select Task to Show Data</h4>
+                    <div id="tableBody" class="table table-hover align-middle">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- File Modal -->
+<div class="modal fade" id="FileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Submit Task</h5>
+            </div>
+            <form id="FileForm" enctype="multipart/form-data"
+                  method="post" asp-action="AddFile" asp-controller="Task">
+                <div class="modal-body">
+                    <label>Upload File</label>
+                    <div class="custom-file">
+                        <input name="file" class="form-control custom-file-input" type="file" />
+                        <label class="custom-file-label">Choose File...</label>
+                    </div>
+                    <input id="task_Id" name="taskId" value="" hidden />
+                </div>
+                <div class="modal-footer">
+                    <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
+                    <button id="upload" type="submit" class="btn btn-primary">Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Assign Team -->
+<div class="modal fade" id="AssignTeamModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Add Team</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="teamList">
+                <div class="form-group">
+                    <label asp-for="Team.Name"></label>
+                    <select id="teams" class="form-control" asp-for="Team.Id"
+                            asp-items="new SelectList(Model.Teams,nameof(Team.Id),nameof(Team.Name))"></select>
+                    <span asp-validation-for="Team.Id" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="assignTeams()">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- #endregion -->
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+    <script>
+
+        function displayTaskDetails(id) {
+            $.ajax({
+                url: "/Task/GetTask?taskid=" + id,
+                type: "Get",
+                //data: { engId: `${id}` },
+                success: function (result) {
+                    if (result) {
+                        $('#alertdiv').hide();
+                        $('#tableBody').empty();
+                        $('#tableBody').append(result);
+                    }
+                },
+                error: function (x, y, err) {
+                    console.log(err);
+                }
+            })
+        }
+
+        $(function () {
+            $('#toggle-two').bootstrapToggle({
+
+                on: 'Enabled',
+                off: 'Disabled'
+            });
+        })
+
+
+
+        function Submit(Id) {
+            $("#togleBtn").trigger("click");
+            $('#Submit').click(function () {
+                $("#exampleModal").modal('toggle');
+                var complex = $('#complex').val();
+                var evaluation = $('#evaluation').val();
+
+                $.ajax({
+                    url: "/TeamLeader/SubmitSubTask",
+                    type: "Get",
+                    data: {
+                        id: Id,
+                        complexity: complex,
+                        evaluation: evaluation
+                    },
+                    success: function () {
+                        $(`#${Id}`).hide();
+                    }
+                })
+            })
+        }
+
+        //-----------Add Description
+        function updateDesc(taskId) {
+            $.ajax({
+                url: "/Task/AddTaskDesc",
+                type: "Post",
+                data: { taskId: taskId, taskDesc: $("#taskDesc").val() },
+                success: function (result) {
+                    $('#tableBody').empty();
+                    $('#tableBody').append(result);
+                },
+                error: function (x, y, err) {
+                    console.log(err);
+                }
+            })
+        }
+
+        //--------Add File
+        function AddFile(taskId) {
+            $('#task_Id').attr("value", taskId);
+            $('#FileModal').modal('show');
+            $('input[type="file"]').change(function (e) {
+                let fileName = e.target.files[0].name;
+                $(".custom-file-label").html(fileName);
+            });
+        }
+
+        //----------Add Comment
+
+        function AddComment(taskId) {
+            let comment = $('#commentArea').val();
+            let isHighLevel = true;
+            if ($("#toggleBtn").val() == "Med")
+                isHighLevel = false
+            if (comment) {
+                $.ajax({
+                    type: "Post",
+                    url: `/Comment/AddCommentForTask/`,
+                    data: {
+                        comment: comment,
+                        taskId: taskId,
+                        isHighLevel: isHighLevel
+                    },
+                    success: function (res) {
+                        console.log(res);
+                    },
+                    error: function (x, y, err) {
+                        console.log(err);
+                    }
+
+                })
+            }
+        }
+
+        function CommentsToggle() {
+            if ($("#toggleBtn").val() == "High") {
+                $("#toggleBtn").val("Med");
+                $("#toggleBtn").html("Team Leader");
+                $("#toggleBtn").removeClass("btn-outline-warning");
+                $("#toggleBtn").addClass("btn-outline-success");
+                $("#HighLevel").css("display", "none");
+                $("#MedLevel").css("display", "block");
+            }
+            else {
+                $("#toggleBtn").val("High");
+                $("#toggleBtn").html("Project Manager");
+                $("#toggleBtn").removeClass("btn-outline-success");
+                $("#toggleBtn").addClass("btn-outline-warning");
+                $("#MedLevel").css("display", "none");
+                $("#HighLevel").css("display", "block");
+            }
+        }
+
+        //---------Assign Task To Team
+        var taskID;
+        function viewModal(id) {
+            taskID = id;
+            $('#AssignTeamModal').modal('show');
+        }
+
+        function assignTeams() {
+            var team = $('#teams').val();
+
+            $.post({
+                type: "POST",
+                url: `/DepManager/AssignTasks`,
+                data: {
+                    taskId: taskID,
+                    teamId: team
+                },
+                success: function (result) {
+                    alert('Task assigned Successfully !');
+                    $("#Assignedteam").removeClass("btn-outline-danger");
+                    $("#Assignedteam").addClass("btn-info");
+                    $("#Assignedteam").html(result.teamName);
+                    $("#Assignedteam").attr("disabled", true);
+                    $('#AssignTeamModal').modal('hide');
+                },
+                error: function (x, y, err) {
+                    console.log(arguments)
+                }
+            })
+        }
+
+
+
+    </script>
+}
+
+@section Style{
+
+    <style>
+
+        .message-text {
+            padding: 20px, 14px;
+            font-size: 1rem;
+            margin-bottom: 0px;
+        }
+
+        .message-time {
+            font-size: .8rem;
+            color: #777;
+        }
+    </style>
+}

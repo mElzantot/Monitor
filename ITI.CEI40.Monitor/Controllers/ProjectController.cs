@@ -22,7 +22,7 @@ namespace ITI.CEI40.Monitor.Controllers
         private readonly IUnitOfWork unitofwork;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public ProjectController(UserManager<ApplicationUser> userManager,IUnitOfWork unitOfWork)
+        public ProjectController(UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork)
         {
             this.unitofwork = unitOfWork;
             this.userManager = userManager;
@@ -37,6 +37,15 @@ namespace ITI.CEI40.Monitor.Controllers
             };
 
             return View("_CreateProject", projectView);
+        }
+
+        [HttpGet]
+        public IActionResult Details(int Id)
+        {
+            ActivityViewModel activityVM = new ActivityViewModel();
+            activityVM.Tasks = unitofwork.Tasks.GetActivitiesFromProject(Id).ToList();
+
+            return View(activityVM);
         }
 
 
@@ -103,6 +112,15 @@ namespace ITI.CEI40.Monitor.Controllers
         {
             var project = unitofwork.Projects.GetAllProjects().ToList();
             return View(project);
+        }
+
+
+        [HttpGet]
+        public IActionResult DashBoard(int projId)
+        {
+            //Project project = unitofwork.Projects.GetProjectWithTasks(projId);
+            List<Activity> tasks = unitofwork.Tasks.GetActivitiesFromProject(projId).ToList();
+            return PartialView("_DashBoardPartial", tasks);
         }
 
 

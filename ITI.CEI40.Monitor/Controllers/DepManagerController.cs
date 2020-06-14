@@ -48,10 +48,10 @@ namespace ITI.CEI40.Monitor.Controllers
         {
             int DepId = unitOfWork.Departments.GetDepartmentWithManagerID(userManager.GetUserId(HttpContext.User)).Id;
             var activityVM = new ActivityViewModel();
-            activityVM.Tasks = unitOfWork.Tasks.GetDepartmentTasks(DepId);
+            activityVM.Tasks = unitOfWork.Tasks.GetDepartmentTasks(DepId).ToList();
             activityVM.Teams = unitOfWork.Teams.getTeamsinsideDept(DepId).ToList();
 
-            return View(activityVM);
+            return View("/Views/Project/Details.cshtml",activityVM);
         }
 
 
