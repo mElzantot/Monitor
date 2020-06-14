@@ -14,6 +14,7 @@ namespace ITI.CEI40.Monitor.Entities
         {
             this.Progress = 0;
             this.SubTaskSession = new HashSet<SubTaskSession>();
+            this.Comments = new HashSet<Comment>();
             this.ActualDuration = 0;
             this.Status = Status.Active;
         }
@@ -60,6 +61,7 @@ namespace ITI.CEI40.Monitor.Entities
 
         //public ICollection<EngineerSubTasks> EngineerSubTasks { get; set; }
         public virtual ICollection<SubTaskSession> SubTaskSession { get; set; }
+        public virtual ICollection<Comment> Comments { get; set; }
         public ApplicationUser Engineer { get; set; }
         [ForeignKey("Engineer")]
         public string FK_EngineerID { get; set; }

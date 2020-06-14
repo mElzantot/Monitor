@@ -55,6 +55,7 @@
                                 <tr id="@item.ID" onclick="OpenEditSec(@item.ID)">
                                     <td class="text-center font-weight-bold">@item.Name</td>
                                     <td style="text-align:right">
+                                        <a href="/Project/Details/@item.ID" class="btn btn-outline-info" ><i id="i" class="fas fa-chart-area"></i> Details</a>
                                         <a href="/Activity/Index/@item.ID" class="btn alert-info" ><i id="i" class="fas fa-chart-area"></i> Chart</a>
                                         
                                         @if (item.EndDate != null)
@@ -242,7 +243,6 @@
 
         ////
         function LoadData() {
-            debugger;
             var ns = [];
             var ps = [];
             var dur = [];

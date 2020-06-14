@@ -20,6 +20,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css" />
     <link rel="stylesheet" href="~/css/style.css" />
+    <style>
+        * {
+            font-family: "Times New Roman", Times, serif;
+        }
+
+        pre {
+            font-family: "Times New Roman", Times, serif;
+        }
+    </style>
 
     @RenderSection("Style", required: false)
 
@@ -54,6 +63,7 @@
     </environment>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+
     <script>
         window.onload = function () {
             connection = new signalR.HubConnectionBuilder().withUrl("/notificationsHub").build();
@@ -66,11 +76,11 @@
         }
 
 
-        //function send() {
-        //    var message = document.getElementById("txt").value;
-        //    console.log(message);
-        //    connection.invoke("sendMessages", message);
-        //}
+                            //function send() {
+                            //    var message = document.getElementById("txt").value;
+                            //    console.log(message);
+                            //    connection.invoke("sendMessages", message);
+                            //}
 
     </script>
     @RenderSection("Scripts", required: false)

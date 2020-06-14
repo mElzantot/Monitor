@@ -11,7 +11,6 @@
             <div class="col-lg-7 innerleft" style="border-right:2px solid rgb(219, 219, 219)">
                 <div class="prog">
                     <div class="font-weight-bold">Progress</div>
-
                     <div class="cont">
                         <input type="range" asp-for="@Model.Progress" onchange="ChangeProgress(@Model.Id,this.value)" min="0" max="100" step="10" class="slider" id="myRange">
                     </div>
@@ -42,7 +41,7 @@
         </div>
         <div class="row pt-3">
             <textarea id="commentArea" class="col-12" placeholder="Add Comment Here......"></textarea>
-            <button class="btn btn-sm btn-outline-info mt-1 float-sm-right" type="button" id="AddComment" onclick="AddComment(@Model.Id)">Comment</button>
+            <button class="btn btn-sm btn-outline-info mt-1 float-sm-right" type="button" id="AddComment" onclick="AddComment(@Model.Id,@Model.FK_TaskId)">Comment</button>
         </div>
     </div>
 </div>

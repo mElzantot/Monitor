@@ -4,6 +4,8 @@
     --background:#e6f5ea;
 }
 
+
+
 body {
     font-family: Poppins,-apple-system,BlinkMacSystemFont,Segoe UI,Lato,Arial,sans-serif;
 }
@@ -34,7 +36,6 @@ body {
     #i{
         font-size:1.1rem;
     }
-
 
 
 /*nav bar dropdown list*/

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
+using ITI.CEI40.Monitor.Entities.Enums;
 using ITI.CEI40.Monitor.Models.View_Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -49,28 +50,18 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
 
-        //[HttpGet]
-        //public JsonResult AddFile (int subtaskId)
-        //{
-
-
-        //}
-
-
-
-
-
         [HttpPost]
         public IActionResult AddFile(FileViewModel addedFile)
         {
             string userId = userManager.GetUserId(HttpContext.User);
-            SubTask subTask = unitOfWork.SubTasks.GetById(addedFile.taskId);
+            //Activity task = unitOfWork.Tasks.GetById(addedFile.taskId);
             Comment fileComment = new Comment
             {
                 commentTime = DateTime.Now,
                 FK_sender = userId,
-                fk_TaskId = subTask.FK_TaskId,
-                comment = addedFile.comment
+                FK_TaskID = addedFile.taskId,
+                commentLevel = CommentLevels.High,
+                comment = HttpContext.User.Identity.Name.ToString() + "uploaded File "
             };
 
             fileComment = unitOfWork.Comments.Add(fileComment);
@@ -104,25 +95,52 @@ namespace ITI.CEI40.Monitor.Controllers
 
 
         [HttpPost]
-        public JsonResult AddComment(string comment, int subTaskId)
+        public JsonResult AddComment(string comment, int taskId, int? subTaskId = null)
         {
             if (ModelState.IsValid)
             {
-            string userId = userManager.GetUserId(HttpContext.User);
-            SubTask subTask = unitOfWork.SubTasks.GetById(subTaskId);
+                string userId = userManager.GetUserId(HttpContext.User);
+                //SubTask subTask = unitOfWork.SubTasks.GetById(subTaskId);
 
-            Comment Comment = new Comment
-            {
-                commentTime = DateTime.Now,
-                FK_sender = userId,
-                fk_TaskId = subTask.FK_TaskId,
-                comment = comment
-            };
-            return Json(new { result = true, msg = "Comment Added Successfully" });
+                Comment Comment = new Comment
+                {
+                    commentTime = DateTime.Now,
+                    FK_sender = userId,
+                    FK_TaskID = taskId,
+                    comment = comment
+                };
+                return Json(new { result = true, msg = "Comment Added Successfully" });
             }
 
             return Json(new { result = false, msg = "Model Is not Valid" });
 
+        }
+
+        [HttpPost]
+        public IActionResult AddTaskDesc(int taskId, string taskDesc)
+        {
+            Activity task = unitOfWork.Tasks.GetById(taskId);
+            if (taskDesc != null)
+            {
+                task.Description = taskDesc;
+                task = unitOfWork.Tasks.Edit(task);
+            }
+            return RedirectToAction(nameof(GetTask), new { taskId = taskId });
+        }
+
+
+
+        [HttpGet]
+        public PartialViewResult GetTask(int taskId)
+        {
+            ActDetailsViewModel ActDetailsVM = new ActDetailsViewModel
+            {
+                Task = unitOfWork.Tasks.GetTaskWithProjectAndTeam(taskId),
+                HighComments = unitOfWork.Comments.GetHighCommentforTask(taskId).ToList(),
+            };
+            if (HttpContext.User.IsInRole(Roles.DepartmentManager.ToString()))
+                ActDetailsVM.MedComments = unitOfWork.Comments.GetMedCommentforTask(taskId).ToList();
+            return PartialView("_TaskDetailsPartialView", ActDetailsVM);
         }
 
 

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ITI.CEI40.Monitor.Entities.Enums;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -16,8 +17,14 @@ namespace ITI.CEI40.Monitor.Entities
         public ApplicationUser Sender { get; set; }
 
         [ForeignKey(nameof(Task))]
-        public int fk_TaskId { get; set; }
+        public int? FK_TaskID { get; set; }
         public Activity Task { get; set; }
+
+
+        [ForeignKey(nameof(SubTask))]
+        public int? FK_SubTaskId { get; set; }
+        public SubTask subTask { get; set; }
+
 
         public string comment { get; set; }
 
@@ -25,6 +32,7 @@ namespace ITI.CEI40.Monitor.Entities
         [DataType(DataType.DateTime)]
         public DateTime commentTime { get; set; }
 
+        public CommentLevels commentLevel { get; set; }
         public Files File { get; set; }
 
     }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
+using ITI.CEI40.Monitor.Entities.Enums;
 using ITI.CEI40.Monitor.Models.View_Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -48,7 +49,7 @@ namespace ITI.CEI40.Monitor.Controllers
             return View(TasksMV);
         }
 
-        public IActionResult Chat(int taskId)
+        public IActionResult ActivityLog(int taskId)
         {
             string userId = usermanager.GetUserId(HttpContext.User);
 
@@ -70,10 +71,65 @@ namespace ITI.CEI40.Monitor.Controllers
             {
                 Comments = comments,
                 Sender = userId,
-                SubTasks= subTasks
+                SubTasks = subTasks
             };
             return View("_Comments", commentView);
         }
+
+
+        //-----------Link Between Engineer and Team Leader
+        [HttpPost]
+        public JsonResult AddCommentForSubTask(string comment, int subTaskId, int taskId)
+        {
+            if (ModelState.IsValid)
+            {
+                string userId = usermanager.GetUserId(HttpContext.User);
+
+                Comment Comment = new Comment
+                {
+                    commentTime = DateTime.Now,
+                    FK_sender = userId,
+                    FK_SubTaskId = subTaskId,
+                    FK_TaskID = taskId,
+                    commentLevel = CommentLevels.low,
+                    comment = comment
+                };
+                return Json(new { result = true, msg = "Comment Added Successfully" });
+            }
+
+            return Json(new { result = false, msg = "Model Is not Valid" });
+
+        }
+
+
+        //--------Comments That invisible for Engineers
+        [HttpPost]
+        public JsonResult AddCommentForTask(string comment, int taskId, bool isHighLevel)
+        {
+            if (ModelState.IsValid)
+            {
+                string userId = usermanager.GetUserId(HttpContext.User);
+
+                Comment Comment = new Comment
+                {
+                    commentTime = DateTime.Now,
+                    FK_sender = userId,
+                    FK_TaskID = taskId,
+                    comment = comment
+                };
+                if (isHighLevel) { Comment.commentLevel = CommentLevels.High; }
+                else { Comment.commentLevel = CommentLevels.Med; }
+                Comment = unitOfWork.Comments.Add(Comment);
+                return Json(new { result = true, msg = "Comment Added Successfully" });
+            }
+            return Json(new { result = false, msg = "Model Is not Valid" });
+        }
+
+
+
+
+
+
 
     }
 }

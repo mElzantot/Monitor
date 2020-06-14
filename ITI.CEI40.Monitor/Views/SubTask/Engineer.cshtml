@@ -173,7 +173,6 @@
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
     <script>
 
-
         let rowId;
 
         function SelectRow(id) {
@@ -243,24 +242,25 @@
         function UploadFile(taskId) {
             $('#task_Id').attr("value", taskId);
             $('#FileModal').modal('show');
+            $('input[type="file"]').change(function (e) {
+                fileName = e.target.files[0].name;
+                $(".custom-file-label").html(fileName);
+            });
+
         }
 
         $('#upload').click(function () {
-            if (true) {
+            if (fileName) {
+                $.ajax({
+                    type: 'post',
+                    url: `/Task/AddFile`,
+                    data: $('#FileForm').serialize(),
+                    success: function (response) {
 
+                    }
+                })
             }
-            $.ajax({
-                type: 'post',
-                url: `/Task/AddFile`,
-                data:
-                    $('#FileForm').serialize()
-                ,
-                success: function (response) {
-
-                }
-            })
-        })
-
+        });
 
 
 
@@ -333,13 +333,14 @@
         }
 
         //---------Add Comment To SubTask Thread
-        function AddComment(subTaskId) {
+        function AddComment(subTaskId,taskId) {
             let comment = $("#commentArea");
             $.ajax({
                 type: "Post",
-                url: `/Task/AddComment`,
+                url: `/Comment/AddCommentForSubTask`,
                 data: {
                     subTaskId: subTaskId,
+                    taskId : taskId,
                     comment: comment.val()
                 },
                 success: function (res) {
@@ -354,101 +355,101 @@
         }
 
 
-                                                                    //function ChangeStatus(event, Id) {
-                                                            //    event.stopPropagation();
-                                                            //    var element = event.target;
-                                                            //    var txtValue = element.innerText;
+                                                                                    //function ChangeStatus(event, Id) {
+                                                                            //    event.stopPropagation();
+                                                                            //    var element = event.target;
+                                                                            //    var txtValue = element.innerText;
 
-                                                            //    $("#status").val(txtValue);
-                                                            //    $("#taskId").val(Id);
-                                                            //    $("#ele").val(element);
-                                                            //    $("#HoldModal").modal('show');
-                                                            //}
-
-
-                                                            //$('#send').click(function () {
-                                                            //    let Reason = $('#reason').val();
-                                                            //    let txtValue = $("#status").val();
-                                                            //    let Id = $("#taskId").val();
-                                                            //    let element = $("#ele").val();
-                                                            //    let value;
-
-                                                            //    switch (txtValue) {
-                                                            //        case 'Active':
-                                                            //            value = 0;
-                                                            //            //element.classList.remove('btn-warning')
-                                                            //            //element.classList.add('btn-success')
-                                                            //            //element.innerText = 'Active'
-                                                            //            break;
-                                                            //        case 'OnHold':
-                                                            //            value = 1;
-                                                            //            //element.classList.remove('btn-success')
-                                                            //            //element.classList.add('btn-warning')
-                                                            //            //element.innerText = 'OnHold'
-                                                            //            break;
-                                                            //    }
-
-                                                            //    $('#reason').val('');
-                                                            //    $("#exampleModal").modal('toggle');
-
-                                                            //    $.ajax({
-                                                            //        type: "get",
-                                                            //        url: `/subtask/editstatus`,
-                                                            //        data: {
-                                                            //            id: Id,
-                                                            //            status: value,
-                                                            //            reason: Reason
-                                                            //        },
-                                                            //        success: function (response) {
-                                                            //        },
-                                                            //        error: function (x, y, err) {
-                                                            //            console.log(arguments)
-                                                            //        }
-                                                            //    })
-                                                            //})
-
-                                                            //$('#send').click(function () {
-                                                            //debugger
-                                                            //var value;
-                                                            //var text = $('#reason').val()
-                                                            //$('#reason').val('');
-                                                            //let txtValue = $("#status").val();
-                                                            //let Id= $("#taskId").val();
-
-                                                            ////console.log(text)//send reason in notification
-
-                                                            //$("#exampleModal").modal('toggle');
-
-                                                            //$.ajax({
-                                                            //    type: "get",
-                                                            //    url: `/subtask/editstatus`,
-                                                            //    data: {
-                                                            //        id: Id,
-                                                            //        status: value
-                                                            //    },
-                                                            //    success: function (response) {
-                                                            //    },
-                                                            //    error: function (x, y, err) {
-                                                            //        console.log(arguments)
-                                                            //    }
-                                                            //})
-                                                            //})
+                                                                            //    $("#status").val(txtValue);
+                                                                            //    $("#taskId").val(Id);
+                                                                            //    $("#ele").val(element);
+                                                                            //    $("#HoldModal").modal('show');
+                                                                            //}
 
 
-                                                            //function StatusColor(element) {
-                                                            //    switch (element.innerText) {
-                                                            //        case 'OnHold':
-                                                            //            element.classList.remove('btn-warning')
-                                                            //            element.classList.add('btn-success')
-                                                            //            element.innerText = 'Active'
-                                                            //            break;
-                                                            //        case 'Active':
-                                                            //            element.classList.remove('btn-success')
-                                                            //            element.classList.add('btn-warning')
-                                                            //            element.innerText = 'OnHold'
-                                                            //            break;
-                                                            //    }
-                                                            //}
+                                                                            //$('#send').click(function () {
+                                                                            //    let Reason = $('#reason').val();
+                                                                            //    let txtValue = $("#status").val();
+                                                                            //    let Id = $("#taskId").val();
+                                                                            //    let element = $("#ele").val();
+                                                                            //    let value;
+
+                                                                            //    switch (txtValue) {
+                                                                            //        case 'Active':
+                                                                            //            value = 0;
+                                                                            //            //element.classList.remove('btn-warning')
+                                                                            //            //element.classList.add('btn-success')
+                                                                            //            //element.innerText = 'Active'
+                                                                            //            break;
+                                                                            //        case 'OnHold':
+                                                                            //            value = 1;
+                                                                            //            //element.classList.remove('btn-success')
+                                                                            //            //element.classList.add('btn-warning')
+                                                                            //            //element.innerText = 'OnHold'
+                                                                            //            break;
+                                                                            //    }
+
+                                                                            //    $('#reason').val('');
+                                                                            //    $("#exampleModal").modal('toggle');
+
+                                                                            //    $.ajax({
+                                                                            //        type: "get",
+                                                                            //        url: `/subtask/editstatus`,
+                                                                            //        data: {
+                                                                            //            id: Id,
+                                                                            //            status: value,
+                                                                            //            reason: Reason
+                                                                            //        },
+                                                                            //        success: function (response) {
+                                                                            //        },
+                                                                            //        error: function (x, y, err) {
+                                                                            //            console.log(arguments)
+                                                                            //        }
+                                                                            //    })
+                                                                            //})
+
+                                                                            //$('#send').click(function () {
+                                                                            //debugger
+                                                                            //var value;
+                                                                            //var text = $('#reason').val()
+                                                                            //$('#reason').val('');
+                                                                            //let txtValue = $("#status").val();
+                                                                            //let Id= $("#taskId").val();
+
+                                                                            ////console.log(text)//send reason in notification
+
+                                                                            //$("#exampleModal").modal('toggle');
+
+                                                                            //$.ajax({
+                                                                            //    type: "get",
+                                                                            //    url: `/subtask/editstatus`,
+                                                                            //    data: {
+                                                                            //        id: Id,
+                                                                            //        status: value
+                                                                            //    },
+                                                                            //    success: function (response) {
+                                                                            //    },
+                                                                            //    error: function (x, y, err) {
+                                                                            //        console.log(arguments)
+                                                                            //    }
+                                                                            //})
+                                                                            //})
+
+
+                                                                            //function StatusColor(element) {
+                                                                            //    switch (element.innerText) {
+                                                                            //        case 'OnHold':
+                                                                            //            element.classList.remove('btn-warning')
+                                                                            //            element.classList.add('btn-success')
+                                                                            //            element.innerText = 'Active'
+                                                                            //            break;
+                                                                            //        case 'Active':
+                                                                            //            element.classList.remove('btn-success')
+                                                                            //            element.classList.add('btn-warning')
+                                                                            //            element.innerText = 'OnHold'
+                                                                            //            break;
+                                                                            //    }
+                                                                            //}
 
     </script>
 }

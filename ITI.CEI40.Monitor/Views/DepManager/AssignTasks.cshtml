@@ -40,8 +40,6 @@ else
                             <tr id="@item.Id">
                                 <td>@item.Name</td>
                                 <td>@item.Project.Name</td>
-
-                                @*<td><div class="progress"><div class="progress-bar" role="progressbar" style="width: @item%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@item.Progress%</div></div></td>*@
                                 <td>@item.StartDate.Date.ToShortDateString()</td>
                                 <td>@item.EndDate.Date.ToShortDateString()</td>
                                 <td>@item.Priority</td>
@@ -55,10 +53,7 @@ else
                                             @item.Description
                                         </div>
                                     </div>
-
                                 </td>
-
-
                                 @if (item.Progress == 100)
                                 {
                                     <td>
@@ -74,19 +69,9 @@ else
                                             <div class="progress-bar" role="progressbar" style="width: @item.Progress%; " aria-valuemin="0" aria-valuemax="100">@item.Progress%</div>
                                         </div>
                                     </td>
-
-
-
                                 }
-
                                 @if (item.FK_TeamId == null)
                                 {
-                                    @*<td>
-                                            <select id="teamlist" asp-for="FK_TeamId" asp-items="new SelectList(Model.Teams,nameof(Model.Team.Id),nameof(Model.Team.Name)) ">
-                                                <option value="">--  Select Team  --</option>
-                                            </select>
-
-                                        </td>*@
                                     <td id="chId"><button onclick="viewModal(@item.Id)" class="btn btn-secondary" type="submit">Assign</button></td>
                                 }
                                 else
@@ -100,6 +85,9 @@ else
             </div>
         </div>
     </div>
+
+
+
 
     <!-- Assign Team -->
     <div class="modal fade" id="AssignTeamModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -131,6 +119,8 @@ else
     </div>
 
 }
+
+
 @section Scripts{
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -168,8 +158,6 @@ else
                 }
             })
         }
-
-
 
     </script>
 }

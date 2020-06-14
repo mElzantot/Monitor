@@ -20,6 +20,8 @@
   <ItemGroup>
     <Compile Remove="Migrations\20200611102057_IFile.cs" />
     <Compile Remove="Migrations\20200611102057_IFile.Designer.cs" />
+    <Compile Remove="Migrations\20200613024525_AddCommentLevels.cs" />
+    <Compile Remove="Migrations\20200613024525_AddCommentLevels.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

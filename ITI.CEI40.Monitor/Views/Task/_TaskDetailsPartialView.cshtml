@@ -1,0 +1,104 @@
+﻿@model ActDetailsViewModel
+
+<h4 class="mr-5" style="display:inline-block">@Model.Task.Name</h4>
+
+@if (Model.Task.Team == null)
+{
+    <button onclick="viewModal(@Model.Task.Id)" class="btn btn-sm btn-outline-danger"  type="submit" id="Assignedteam">Assign to Team</button>
+}
+else
+{
+    <button onclick="viewModal(@Model.Task.Id)" disabled class="btn btn-sm btn-info"  type="submit" >@Model.Task.Team.Name</button>
+}
+<hr />
+<div class="row">
+    <div class="col-12">
+        <table class="table table-sm">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Start Date</th>
+                    <th scope="col">Due Date</th>
+                    <th scope="col">Priority</th>
+                    <th scope="col">Progress</th>
+                    <th scope="col">Working Hrs</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="col">@Model.Task.StartDate.Date.ToShortDateString()</th>
+                    <th scope="col">@Model.Task.EndDate.Date.ToShortDateString()</th>
+                    <th scope="col">@Model.Task.Priority.ToString()</th>
+                    <th scope="col">@Model.Task.Progress %</th>
+                    <th scope="col">@Model.Task.ActualDuratoin</th>
+                </tr>
+            </tbody>
+        </table>
+        <hr />
+        <h5><strong>Description : </strong></h5>
+        @if (Model.Task.Description != null)
+        {
+            <div style="max-height:6rem">
+                <pre>@Model.Task.Description</pre>
+            </div>
+        }
+        else if (User.IsInRole(Roles.ProjectManager.ToString()))
+        {
+            <div>
+                <textarea asp-for="Task.Description" id="taskDesc" class="col-12 form-control" placeholder="Add Task Description ......"></textarea>
+                <button class="btn btn-sm btn-outline-info mt-1 float-sm-right" type="button" id="taskDesc" onclick="updateDesc(@Model.Task.Id)">Add Description</button>
+            </div>
+        }
+    </div>
+</div>
+<hr />
+<div>
+    <h5>Task History </h5>
+    @if (User.IsInRole(Roles.DepartmentManager.ToString()))
+    {
+        <button id="toggleBtn" value="High" class="btn btn-sm btn-outline-warning" onclick="CommentsToggle()">Project Manager</button>
+    }
+    <div style="max-height:300px;overflow-y:auto;display:block" id="HighLevel">
+        @if (Model.HighComments != null && Model.HighComments.Count > 0)
+        {
+            for (int i = 0; i < Model.HighComments.Count; i++)
+            {
+                <div style="margin: 0 .3em 1em .5em;">
+                    <div class="message-text">
+                        @Model.HighComments[i].comment
+                        @if (Model.HighComments[i].File != null)
+                        {
+                            <br>
+                            <a href="#" download="@Model.HighComments[i].File.FilePath">@Model.HighComments[i].File.FilePath</a>
+                        }
+                    </div>
+                    <div class="message-time">@Model.HighComments[i].commentTime</div>
+                </div>
+            }
+        }
+    </div>
+    <div style="max-height:300px;overflow-y:auto;display:none" id="MedLevel">
+        @if (Model.MedComments != null && Model.MedComments.Count > 0)
+        {
+            for (int i = 0; i < Model.MedComments.Count; i++)
+            {
+                <div style="margin: 0 .3em 1em .5em;">
+                    <div class="message-text">
+                        @Model.MedComments[i].comment
+                        @if (Model.MedComments[i].File != null)
+                        {
+                            <br>
+                            <a href="#" download="@Model.MedComments[i].File.FilePath">@Model.MedComments[i].File.FilePath</a>
+                        }
+                    </div>
+                    <div class="message-time">@Model.MedComments[i].commentTime</div>
+                </div>
+            }
+        }
+    </div>
+    <div class="row pt-3">
+        <textarea id="commentArea" class="col-12 form-control" placeholder="Add Comment Here......"></textarea>
+        <button class="btn btn-sm btn-outline-info mt-1 float-sm-right" type="button" id="AddComment" onclick="AddComment(@Model.Task.Id)">Comment</button>
+        <button class="btn btn-sm btn-outline-secondary mt-1 float-sm-right" type="button" id="AddFile" onclick="AddFile(@Model.Task.Id)">Add File</button>
+    </div>
+</div>
+

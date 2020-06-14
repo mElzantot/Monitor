@@ -110,7 +110,7 @@ namespace ITI.CEI40.Monitor.Controllers
             Comment comment = new Comment
             {
                 FK_sender = userManager.GetUserId(HttpContext.User),
-                fk_TaskId = subTask.FK_TaskId,
+                FK_TaskID = subTask.FK_TaskId,
                 commentTime = DateTime.Now
             };
             comment.comment = $"{subTask.Name} status has changed to {subTask.Status.ToString()}";
