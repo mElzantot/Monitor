@@ -104,7 +104,7 @@ namespace ITI.CEI40.Monitor.Controllers
             for (int j = 0; j < months.Count(); j++)
             {
                 quality[j] = quality[j] / complexity[j];
-                time[j] = quality[j] / complexity[j];
+                time[j] = time[j] / complexity[j];
             }
 
             EngineerChrtViewModel engineerChrtView = new EngineerChrtViewModel
@@ -115,7 +115,6 @@ namespace ITI.CEI40.Monitor.Controllers
                 Quality = quality,
                 Time = time
             };
-
             return View("EngineerChart", engineerChrtView);
         }
 
