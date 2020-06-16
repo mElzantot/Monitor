@@ -153,9 +153,9 @@ namespace ITI.CEI40.Monitor.Controllers
             TeamChartViewModel teamChart = new TeamChartViewModel
             {
                 Names= names,
-                 Values= avg
+                Values= avg
             };
-            return View();
+            return View("TeamChart", teamChart);
         }
 
 
