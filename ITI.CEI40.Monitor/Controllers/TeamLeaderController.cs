@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
+using ITI.CEI40.Monitor.Models;
 using ITI.CEI40.Monitor.Models.View_Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -149,6 +150,11 @@ namespace ITI.CEI40.Monitor.Controllers
                     avg.Add(null);
                 }
             }
+            TeamChartViewModel teamChart = new TeamChartViewModel
+            {
+                Names= names,
+                 Values= avg
+            };
             return View();
         }
 
