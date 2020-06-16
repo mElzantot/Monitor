@@ -109,7 +109,7 @@ namespace ITI.CEI40.Monitor.Controllers
 
             foreach (var item in subtasks)
             {
-                if (item.EndDate.Value.Month == DateTime.Now.Month)
+                if (item.ActualEndDate.Value.Month == DateTime.Now.Month)
                 {
                     subs.Add(item);
                 }

@@ -52,7 +52,7 @@ namespace ITI.CEI40.Monitor.Entities
         public DateTime? EndDate { get; set; }
 
         [DataType(DataType.Date)]
-        [Column("End Date", TypeName = "Date")]
+        [Column("Actual End Date", TypeName = "Date")]
         public DateTime? ActualEndDate { get; set; }
 
 
