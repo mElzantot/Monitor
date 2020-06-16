@@ -84,5 +84,6 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Where(st => st.FK_TaskId == taskId)
                 .Where(st => st.Status != Status.Cancelled).Include(s => s.Task).ToList();
         }
+
     }
 }

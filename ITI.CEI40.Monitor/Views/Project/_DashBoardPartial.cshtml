@@ -1,232 +1,233 @@
 ﻿@model List<Activity>
 
 
-<div id="DashBoard">
+    <div id="DashBoard">
+        <button onclick="selectSVG();" class="btn btn-info">Select</button>
 
-    @for (int i = 0; i < Model.Count; i++)
-    {
-        <input class="staskname" id="n-@i" value="@Model[i].Name" hidden="hidden" />
-        <input class="staskprog" id="p-@i" value="@Model[i].Progress" hidden="hidden" />
-        <input class="staskdur" id="d-@i" value="@(Model[i].ActualDuratoin)" hidden="hidden" />
-    }
-
-    @{
-        List<Activity> behind = new List<Activity>();
-        foreach (var item in Model)
+        @for (int i = 0; i < Model.Count; i++)
         {
-            if (item.ActualDuratoin > (item.EndDate - item.StartDate).TotalDays)
+            <input class="staskname" id="n-@i" value="@Model[i].Name" hidden="hidden" />
+            <input class="staskprog" id="p-@i" value="@Model[i].Progress" hidden="hidden" />
+            <input class="staskdur" id="d-@i" value="@(Model[i].ActualDuratoin)" hidden="hidden" />
+        }
+
+        @{
+            List<Activity> behind = new List<Activity>();
+            foreach (var item in Model)
             {
-                behind.Add(item);
+                if (item.ActualDuratoin > (item.EndDate - item.StartDate).TotalDays)
+                {
+                    behind.Add(item);
+                }
             }
         }
-    }
 
 
-    <br />
+        <br />
 
-    <div class="d-flex">
-        <div class="dropdown">
-            <a href="#" class="dropdown-toggle nav-link px-2 py-2 btn btn-outline-info mr-2" data-toggle="dropdown" role="button"
-               aria-haspopup="true" aria-expanded="false"><i class="fas fa-clock"></i> </a>
+        <div class="d-flex">
+            <div class="dropdown">
+                <a href="#" class="dropdown-toggle nav-link px-2 py-2 btn btn-outline-info mr-2" data-toggle="dropdown" role="button"
+                   aria-haspopup="true" aria-expanded="false"><i class="fas fa-clock"></i> </a>
 
-            <table class="dropdown-menu px-3 " style="min-width:23rem ;  border-collapse: separate; border-spacing: 5px 10px;">
-                <tbody>
-                    <tr>
-                        <td class="  text-center alert alert-danger"><i class="far fa-hourglass"></i> Dead Line</td>
-                        <td class=" text-center alert alert-danger"> @Model[0].Project.EndDate.Value.Date.ToShortDateString()</td>
-                    </tr>
-                    <tr>
-                        <td class=" text-center alert alert-warning"><i class="far fa-hourglass"></i> Remaining Time</td>
-                        @{
-                            int remaining = (int)(@Model[0].Project.EndDate - DateTime.Now).Value.TotalDays;
-                            if (remaining > 0)
-                            {
-                                <td class="text-center alert alert-warning">@remaining day</td>
+                <table class="dropdown-menu px-3 " style="min-width:23rem ;  border-collapse: separate; border-spacing: 5px 10px;">
+                    <tbody>
+                        <tr>
+                            <td class="  text-center alert alert-danger"><i class="far fa-hourglass"></i> Dead Line</td>
+                            <td class=" text-center alert alert-danger"> @Model[0].Project.EndDate.Value.Date.ToShortDateString()</td>
+                        </tr>
+                        <tr>
+                            <td class=" text-center alert alert-warning"><i class="far fa-hourglass"></i> Remaining Time</td>
+                            @{
+                                int remaining = (int)(@Model[0].Project.EndDate - DateTime.Now).Value.TotalDays;
+                                if (remaining > 0)
+                                {
+                                    <td class="text-center alert alert-warning">@remaining day</td>
+                                }
+                                else
+                                {
+                                    <td class="text-center alert alert-warning">Time Ended</td>
+                                }
                             }
-                            else
-                            {
-                                <td class="text-center alert alert-warning">Time Ended</td>
-                            }
-                        }
-                    </tr>
-                    <tr class="m-1">
-                        <td class=" text-center alert alert-info"><i class="fas fa-stopwatch"></i> Planned Duration</td>
-                        <td class=" text-center alert alert-info"> @Model[0].Project.EndDate-@Model[0].Project.StartDate day</td>
-                    </tr>
-                    <tr>
-                        <td class=" text-center alert alert-info "><i class="fas fa-stopwatch"></i> Actual Duration</td>
-                        <td class=" text-center alert alert-info">@Model[0].Project.EndDate.Value.Date.ToShortDateString()</td>
-                    </tr>
-                </tbody>
-            </table>
+                        </tr>
+                        <tr class="m-1">
+                            <td class=" text-center alert alert-info"><i class="fas fa-stopwatch"></i> Planned Duration</td>
+                            <td class=" text-center alert alert-info"> @Model[0].Project.EndDate-@Model[0].Project.StartDate day</td>
+                        </tr>
+                        <tr>
+                            <td class=" text-center alert alert-info "><i class="fas fa-stopwatch"></i> Actual Duration</td>
+                            <td class=" text-center alert alert-info">@Model[0].Project.EndDate.Value.Date.ToShortDateString()</td>
+                        </tr>
+                    </tbody>
+                </table>
 
+            </div>
+            <button class="font-weight-bold  alert alert-info mr-2" onclick="BackToList()">Back To List</button>
+            <div class="font-weight-bold text-center text-muted alert alert-info">@Model[0].Project.Name</div>
         </div>
-        <button class="font-weight-bold  alert alert-info mr-2" onclick="BackToList()">Back To List</button>
-        <div class="font-weight-bold text-center text-muted alert alert-info">@Model[0].Project.Name</div>
+
+
+
+        <div class="d-flex mb-4">
+            @* Bar Chart *@
+            <div class="w-50" style="border :.5px solid  rgb(219, 219, 219);" id="columnchart_values"></div>
+
+            @* Donut Chart *@
+            <div class="w-50" id="donutchart" style="border :.5px solid  rgb(219, 219, 219); height:300px"></div>
+        </div>
+
+
+        <div class="d-flex">
+            @*Tasks Status*@
+            <div class="justify-content-center py-4 pl-3" style="border :.5px solid  rgb(219, 219, 219); width:20%">
+                <table style=" border-collapse: separate; border-spacing: 5px 10px;">
+                    <tbod>
+                        <tr onmouseover="Show('active')" onmouseout="Hide('active')">
+                            <td class="text-center alert alert-success">
+                                Active (@Model.Count(t => t.Status == Status.Active))
+                            </td>
+                        </tr>
+                        <tr onmouseover="Show('hold')" onmouseout="Hide('hold')">
+                            <td class="text-center alert alert-success">
+                                On Hold (@Model.Count(t => t.Status == Status.OnHold))
+                            </td>
+                        </tr>
+                        <tr onmouseover="Show('complete')" onmouseout="Hide('complete')">
+                            <td class="text-center alert alert-success">
+                                Completed (@Model.Count(t => t.Status == Status.Completed))
+                            </td>
+                        </tr>
+                        <tr onmouseover="Show('behind')" onmouseout="Hide('behind')">
+                            <td class="text-center alert alert-danger">
+                                Behind Schdule (@behind.Count())
+                            </td>
+                        </tr>
+                    </tbod>
+                </table>
+            </div>
+
+
+
+            <div id="active" class="d-none" style="position:absolute;margin-top:45px;border-radius:5px; background:rgb(250, 250, 250); left:23%;  z-index:1; box-shadow: 0 6px 12px rgba(0,0,0,.3); padding:10px;">
+                @{
+                    List<Activity> Active = Model.Where(t => t.Status == Status.Active).ToList();
+
+                    if (Active.Count() > 0)
+                    {
+                        <table style="border-collapse: separate; border-spacing: 25px 8px;">
+                            <thead>
+                                <tr class="font-weight-bold">
+                                    <td>Task</td>
+                                    <td>Start</td>
+                                    <td>End</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Active)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>@item.StartDate.Date.ToShortDateString()</td>
+                                        <td>@item.EndDate.Date.ToShortDateString()</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                }
+            </div>
+
+
+            <div id="hold" class="d-none" style="position:absolute; margin-top:45px; border-radius:5px; background:rgb(250, 250, 250); left:23%;z-index:1; box-shadow: 0 6px 12px rgba(0,0,0,.3);padding:10px;">
+                @{
+                    List<Activity> hold = Model.Where(t => t.Status == Status.OnHold).ToList();
+
+                    if (hold.Count() > 0)
+                    {
+                        <table style="border-collapse: separate; border-spacing: 25px 8px;">
+                            <thead>
+                                <tr class="font-weight-bold">
+                                    <td>Task</td>
+                                    <td>Start</td>
+                                    <td>End</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in hold)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>@item.StartDate.Date.ToShortDateString()</td>
+                                        <td>@item.EndDate.Date.ToShortDateString()</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                }
+            </div>
+
+            <div id="complete" class="d-none " style="position:absolute;border-radius:5px; margin-top:45px;background:rgb(250, 250, 250); left:23%;z-index:1; box-shadow: 0 6px 12px rgba(0,0,0,.3);padding:10px;">
+                @{
+                    List<Activity> comlete = Model.Where(t => t.Status == Status.Completed).ToList();
+
+                    if (comlete.Count() > 0)
+                    {
+                        <table style="border-collapse: separate; border-spacing: 25px 8px;">
+                            <thead>
+                                <tr class="font-weight-bold">
+                                    <td>Task</td>
+                                    <td>Start</td>
+                                    <td>End</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in comlete)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>@item.StartDate.Date.ToShortDateString()</td>
+                                        <td>@item.EndDate.Date.ToShortDateString()</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                }
+            </div>
+
+            <div id="behind" class="d-none " style="position:absolute;border-radius:5px; margin-top:45px;background:rgb(250, 250, 250);left:23%; z-index:1; box-shadow: 0 6px 12px rgba(0,0,0,.3);padding:10px;">
+                @{
+
+                    if (behind.Count() > 0)
+                    {
+                        <table style="border-collapse: separate; border-spacing: 25px 8px;">
+                            <thead>
+                                <tr class="font-weight-bold">
+                                    <td>Task</td>
+                                    <td>Start</td>
+                                    <td>End</td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in behind)
+                                {
+                                    <tr>
+                                        <td>@item.Name</td>
+                                        <td>@item.StartDate.Date.ToShortDateString()</td>
+                                        <td>@item.EndDate.Date.ToShortDateString()</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                }
+            </div>
+
+            @* Cost Chart *@
+            <div style="border :.5px solid  rgb(219, 219, 219); width:80%">
+                <div id="chart_div" style="height:300px"></div>
+            </div>
+        </div>
+
     </div>
-
-
-
-    <div class="d-flex mb-4">
-        @* Bar Chart *@
-        <div class="w-50" style="border :.5px solid  rgb(219, 219, 219);" id="columnchart_values"></div>
-
-        @* Donut Chart *@
-        <div class="w-50" id="donutchart" style="border :.5px solid  rgb(219, 219, 219); height:300px"></div>
-    </div>
-
-
-    <div class="d-flex">
-        @*Tasks Status*@
-        <div class="justify-content-center py-4 pl-3" style="border :.5px solid  rgb(219, 219, 219); width:20%">
-            <table style=" border-collapse: separate; border-spacing: 5px 10px;">
-                <tbod>
-                    <tr onmouseover="Show('active')" onmouseout="Hide('active')">
-                        <td class="text-center alert alert-success">
-                            Active (@Model.Count(t => t.Status == Status.Active))
-                        </td>
-                    </tr>
-                    <tr onmouseover="Show('hold')" onmouseout="Hide('hold')">
-                        <td class="text-center alert alert-success">
-                            On Hold (@Model.Count(t => t.Status == Status.OnHold))
-                        </td>
-                    </tr>
-                    <tr onmouseover="Show('complete')" onmouseout="Hide('complete')">
-                        <td class="text-center alert alert-success">
-                            Completed (@Model.Count(t => t.Status == Status.Completed))
-                        </td>
-                    </tr>
-                    <tr onmouseover="Show('behind')" onmouseout="Hide('behind')">
-                        <td class="text-center alert alert-danger">
-                            Behind Schdule (@behind.Count())
-                        </td>
-                    </tr>
-                </tbod>
-            </table>
-        </div>
-
-
-
-        <div id="active" class="d-none" style="position:absolute;margin-top:45px;border-radius:5px; background:rgb(250, 250, 250); left:23%;  z-index:1; box-shadow: 0 6px 12px rgba(0,0,0,.3); padding:10px;">
-            @{
-                List<Activity> Active = Model.Where(t => t.Status == Status.Active).ToList();
-
-                if (Active.Count() > 0)
-                {
-                    <table style="border-collapse: separate; border-spacing: 25px 8px;">
-                        <thead>
-                            <tr class="font-weight-bold">
-                                <td>Task</td>
-                                <td>Start</td>
-                                <td>End</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Active)
-                            {
-                                <tr>
-                                    <td>@item.Name</td>
-                                    <td>@item.StartDate.Date.ToShortDateString()</td>
-                                    <td>@item.EndDate.Date.ToShortDateString()</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                }
-            }
-        </div>
-
-
-        <div id="hold" class="d-none" style="position:absolute; margin-top:45px; border-radius:5px; background:rgb(250, 250, 250); left:23%;z-index:1; box-shadow: 0 6px 12px rgba(0,0,0,.3);padding:10px;">
-            @{
-                List<Activity> hold = Model.Where(t => t.Status == Status.OnHold).ToList();
-
-                if (hold.Count() > 0)
-                {
-                    <table style="border-collapse: separate; border-spacing: 25px 8px;">
-                        <thead>
-                            <tr class="font-weight-bold">
-                                <td>Task</td>
-                                <td>Start</td>
-                                <td>End</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in hold)
-                            {
-                                <tr>
-                                    <td>@item.Name</td>
-                                    <td>@item.StartDate.Date.ToShortDateString()</td>
-                                    <td>@item.EndDate.Date.ToShortDateString()</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                }
-            }
-        </div>
-
-        <div id="complete" class="d-none " style="position:absolute;border-radius:5px; margin-top:45px;background:rgb(250, 250, 250); left:23%;z-index:1; box-shadow: 0 6px 12px rgba(0,0,0,.3);padding:10px;">
-            @{
-                List<Activity> comlete = Model.Where(t => t.Status == Status.Completed).ToList();
-
-                if (comlete.Count() > 0)
-                {
-                    <table style="border-collapse: separate; border-spacing: 25px 8px;">
-                        <thead>
-                            <tr class="font-weight-bold">
-                                <td>Task</td>
-                                <td>Start</td>
-                                <td>End</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in comlete)
-                            {
-                                <tr>
-                                    <td>@item.Name</td>
-                                    <td>@item.StartDate.Date.ToShortDateString()</td>
-                                    <td>@item.EndDate.Date.ToShortDateString()</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                }
-            }
-        </div>
-
-        <div id="behind" class="d-none " style="position:absolute;border-radius:5px; margin-top:45px;background:rgb(250, 250, 250);left:23%; z-index:1; box-shadow: 0 6px 12px rgba(0,0,0,.3);padding:10px;">
-            @{
-
-                if (behind.Count() > 0)
-                {
-                    <table style="border-collapse: separate; border-spacing: 25px 8px;">
-                        <thead>
-                            <tr class="font-weight-bold">
-                                <td>Task</td>
-                                <td>Start</td>
-                                <td>End</td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in behind)
-                            {
-                                <tr>
-                                    <td>@item.Name</td>
-                                    <td>@item.StartDate.Date.ToShortDateString()</td>
-                                    <td>@item.EndDate.Date.ToShortDateString()</td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-                }
-            }
-        </div>
-
-        @* Cost Chart *@
-        <div style="border :.5px solid  rgb(219, 219, 219); width:80%">
-            <div id="chart_div" style="height:300px"></div>
-        </div>
-    </div>
-
-</div>

@@ -63,7 +63,11 @@
     </environment>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/lib/signalr/dist/browser/signalr.js"></script>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
+    @*<script src="~/lib/JSpdf/jspdf.min.js"></script>*@
+    <
     <script>
         window.onload = function () {
             connection = new signalR.HubConnectionBuilder().withUrl("/notificationsHub").build();

@@ -55,9 +55,9 @@
                                 <tr id="@item.ID" onclick="OpenEditSec(@item.ID)">
                                     <td class="text-center font-weight-bold">@item.Name</td>
                                     <td style="text-align:right">
-                                        <a href="/Project/Details/@item.ID" class="btn btn-outline-info" ><i id="i" class="fas fa-chart-area"></i> Details</a>
-                                        <a href="/Activity/Index/@item.ID" class="btn alert-info" ><i id="i" class="fas fa-chart-area"></i> Chart</a>
-                                        
+                                        <a href="/Project/Details/@item.ID" class="btn btn-outline-info"><i id="i" class="fas fa-chart-area"></i> Details</a>
+                                        <a href="/Activity/Index/@item.ID" class="btn alert-info"><i id="i" class="fas fa-chart-area"></i> Chart</a>
+
                                         @if (item.EndDate != null)
                                         {
                                             <button onclick="Dashboard(@item.ID)" type="button" class="btn alert-warning">Dashboard</button>
@@ -96,6 +96,7 @@
 
 
 <div id="Board">
+
 </div>
 
 
@@ -147,18 +148,18 @@
                     success: function (response) {
                         $('#tablebody').append(
                             `<tr id="${response.id}" onclick="Edit(${response.id})">
-                                                                                    <td class="text-center font-weight-bold">${response.name}</td>
-                                                                                    <td style="text-align:right">
-                                                                                    <a href="/Activity/Index/${response.id}" class="btn alert-info" ><i id="i" class="fas fa-chart-area"></i> Chart</a>
-                                                                                    <div class="btn-group dropleft">
-                                                        <button type="button" class="btn alert-warning " data-toggle="dropdown" >
-                                                            Dashboard
-                                                        </button>
-                                                        <div class="dropdown-menu px-2 alert-danger">
-                                                            Lets goto charts and create tasks
-                                                        </div>
-                                                    </div>
-                                                                            </tr>`
+                                                                                                            <td class="text-center font-weight-bold">${response.name}</td>
+                                                                                                            <td style="text-align:right">
+                                                                                                            <a href="/Activity/Index/${response.id}" class="btn alert-info" ><i id="i" class="fas fa-chart-area"></i> Chart</a>
+                                                                                                            <div class="btn-group dropleft">
+                                                                                <button type="button" class="btn alert-warning " data-toggle="dropdown" >
+                                                                                    Dashboard
+                                                                                </button>
+                                                                                <div class="dropdown-menu px-2 alert-danger">
+                                                                                    Lets goto charts and create tasks
+                                                                                </div>
+                                                                            </div>
+                                                                                                    </tr>`
                         );
                         //For first time if there is no project in the table (Hide the sec of No Project is created)
                         $('#noProject').hide();
@@ -303,6 +304,7 @@
                 };
                 var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
                 chart.draw(data, options);
+                firstChart =  chart.getImageURI();
             }
 
             function drawChart2() {
@@ -357,6 +359,39 @@
         function Hide(divName) {
             $(`#${divName}`).addClass('d-none');
         }
+
+        function loadImage(url) {
+            return new Promise((resolve) => {
+                let img = new Image();
+                img.onload = () => resolve(img);
+                img.src = url;
+            })
+        }
+
+
+
+        function selectSVG() {
+            console.log(firstChart);
+            //debugger;
+            //let targetSVG = $("#columnchart_values svg");
+            //console.log(targetSVG);
+            //let SVGString = new XMLSerializer().serializeToString(targetSVG);
+            //let encodedData = window.btoa(SVGString);
+            //console.log(encodedData);
+            //let imgData = "data:image/png;base64," + encodedData;
+            ////console.log(imgData);
+            var doc = new jsPDF();
+            setTimeout(function () {
+                doc.addImage(firstChart, 'JPEG', 100, 100, 100, 100)
+                doc.save("Shaker.pdf");
+            }, 500);
+        }
+
+                    //loadImage(imgData).then((logo) => {
+                    //    const doc = new jsPDF('p', 'mm', 'a4');
+                    //    doc.addImage(logo, 'PNG', 10, 10);
+                    //    doc.save('report.pdf');
+                    //});
     </script>
 }
 

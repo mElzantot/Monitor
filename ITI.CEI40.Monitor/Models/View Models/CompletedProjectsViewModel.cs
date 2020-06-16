@@ -32,7 +32,7 @@ namespace ITI.CEI40.Monitor.Models.View_Models
 
         public string EndDate { get; set; }
 
-        public int WorkingHours { get; set; }
+        public float WorkingHours { get; set; }
 
         public float Income { get; set; }
 

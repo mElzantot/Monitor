@@ -33,6 +33,13 @@
         "dist/browser/signalr.js",
         "dist/browser/signalr.min.js"
       ]
+    },
+    {
+      "library": "jspdf@1.5.3",
+      "destination": "wwwroot/lib/jspdf/",
+      "files": [
+        "dist/jspdf.min.js"
+      ]
     }
   ]
 }

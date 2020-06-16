@@ -33,7 +33,7 @@
 
                     @for (int i = 1; i < Model.Count; i++)
                     {
-                        if (Model[i].SessStartDate.Day > Model[i - 1].SessStartDate.Day)
+                        if (Model[i].SessStartDate.Day < Model[i - 1].SessStartDate.Day)
                         {
                             <tr class="table-success" style="font-family:Arial;">
                                 <td colspan="5" style="text-align:left">
@@ -65,6 +65,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.min.js"></script>
     <script>
+
         var doc = new jsPDF();
         function generatePDF() {
             var target = document.getElementById("pdfTest");

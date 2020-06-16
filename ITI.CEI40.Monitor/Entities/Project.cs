@@ -53,9 +53,9 @@ namespace ITI.CEI40.Monitor.Entities
         public int? EstimatedDuration { get; set; }
 
         [NotMapped]
-        public int ActualDuration { get; set; }
+        public float ActualDuration { get; set; }
 
-        public int WorkingHrs { get; set; }
+        public float WorkingHrs { get; set; }
 
 
         public ICollection<Activity> Tasks { get; set; }

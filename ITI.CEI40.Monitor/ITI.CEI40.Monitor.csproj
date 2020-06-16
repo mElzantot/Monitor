@@ -45,10 +45,12 @@
 
 
   <ItemGroup>
+    <PackageReference Include="itext7" Version="7.1.11" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.1.0" />
     <PackageReference Include="Microsoft.jQuery.Unobtrusive.Ajax" Version="3.2.6" />
+    <PackageReference Include="Microsoft.ML" Version="1.5.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.4" />
     <PackageReference Include="System.Text.Json" Version="4.7.2" />
   </ItemGroup>
@@ -56,7 +58,6 @@
 
 
   <ItemGroup>
-    <Folder Include="Views\SubTaskSessions\" />
     <Folder Include="wwwroot\files\" />
   </ItemGroup>
 

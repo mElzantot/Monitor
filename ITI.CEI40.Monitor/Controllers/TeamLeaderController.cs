@@ -71,9 +71,9 @@ namespace ITI.CEI40.Monitor.Controllers
             List<SubTask> subtasks = unitofwork.SubTasks.GetEngineerComletedSubTasks(EngId);
 
             List<string> months = new List<string>();
-            List<int> quality = new List<int>();
-            List<int> complexity = new List<int>();
-            List<int> time = new List<int>();
+            List<float> quality = new List<float>();
+            List<float> complexity = new List<float>();
+            List<float> time = new List<float>();
             List<int> subNo = new List<int>();
 
             string engName = subtasks[0].Engineer.UserName;
@@ -125,6 +125,28 @@ namespace ITI.CEI40.Monitor.Controllers
             List<SubTask> subtasks = unitofwork.SubTasks.GetEngineerSubTasks(engId);
 
             return PartialView(subtasks);
+        }
+
+
+        [HttpGet]
+        public void SmartDes()
+        {
+            string engId = "20744706-e13b-486b-bead-8c8b08b78650";
+            string engId2 = "30fd099c-7885-4bc3-8399-17fe761623ee";
+            List<SubTask> subTasks = unitofwork.SubTasks.GetEngineerComletedSubTasks(engId);
+            List<SubTask> subTasks2 = unitofwork.SubTasks.GetEngineerComletedSubTasks(engId2);
+
+            subTasks.AddRange(subTasks2);
+
+            SubTask TargetsubTask = new SubTask
+            {
+                Complexity = 20,
+                Quality = 95,
+                FK_EngineerID = engId2
+            };
+
+            PredictedDuration predictedDuration = MLClass.PredictDurationBasedonQualityandCompl(subTasks2, TargetsubTask);
+
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.ML.Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -23,63 +24,82 @@ namespace ITI.CEI40.Monitor.Entities
         }
 
         [Key]
+        [NoColumn]
         public int Id { get; set; }
 
         [Required]
         [MaxLength(50)]
+        [NoColumn]
         public string Name { get; set; }
 
         [Required]
         [MaxLength(256)]
         [DataType(DataType.MultilineText)]
+        [NoColumn]
         public string Description { get; set; }
 
-
+        [NoColumn]
         public Activity Task { get; set; }
         [ForeignKey(nameof(Task))]
+        [NoColumn]
         public int FK_TaskId { get; set; }
 
+        [NoColumn]
         public ICollection<Claim> Claims { get; set; }
 
         [DataType(DataType.Date)]
         [Column("Start Date" ,TypeName = "Date")]
         [Display(Name = "Start Date")]
+        [NoColumn]
         public DateTime? StartDate { get; set; }
 
         [DataType(DataType.Date)]
         [Column("End Date", TypeName = "Date")]
         [Display(Name = "End Date")]
+        [NoColumn]
         public DateTime? EndDate { get; set; }
 
+        [LoadColumn(3)]
+        public float ActualDuration { get; set; }
 
-        public int ActualDuration { get; set; }
-
+        [NoColumn]
         public bool IsUnderWork { get; set; }
+
+        [NoColumn]
         public int Progress { get; set; }
+
+        [NoColumn]
         public Status Status { get; set; }
 
-        
+        [NoColumn]
         public Priority Priority { get; set; }
 
 
         [Range(0, 100)]
         [Required]
-        public int TimeManagement { get; set; }
+        [LoadColumn(4)]
+        public float TimeManagement { get; set; }
 
         [Range(0, 100)]
         [Required]
-        public int Complexity { get; set; }
+        [LoadColumn(1)]
+        public float Complexity { get; set; }
 
         [Range(0, 100)]
         [Required]
-        public int Quality { get; set; }
+        [LoadColumn(2)]
+        public float Quality { get; set; }
 
 
         //public ICollection<EngineerSubTasks> EngineerSubTasks { get; set; }
+        [NoColumn]
         public virtual ICollection<SubTaskSession> SubTaskSession { get; set; }
+        [NoColumn]
         public virtual ICollection<Comment> Comments { get; set; }
+        [NoColumn]
         public ApplicationUser Engineer { get; set; }
         [ForeignKey("Engineer")]
+        [LoadColumn(0)]
         public string FK_EngineerID { get; set; }
 
     }
