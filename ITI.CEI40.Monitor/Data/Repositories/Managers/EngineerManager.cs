@@ -28,6 +28,5 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         {
             return set.Where(e => e.FK_TeamID == teamId).ToList();
         }
-
     }
 }

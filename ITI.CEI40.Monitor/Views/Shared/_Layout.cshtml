@@ -40,7 +40,10 @@
     <div class="container">
         <partial name="_CookieConsentPartial" />
         <main role="main" style="margin-top :70px;" class="pb-3">
-            @RenderBody()
+            <div id="main">
+                @RenderBody()
+            </div>
+
         </main>
     </div>
     <environment include="Development">
@@ -75,12 +78,11 @@
             });
         }
 
-
-                            //function send() {
-                            //    var message = document.getElementById("txt").value;
-                            //    console.log(message);
-                            //    connection.invoke("sendMessages", message);
-                            //}
+                                    //function send() {
+                                    //    var message = document.getElementById("txt").value;
+                                    //    console.log(message);
+                                    //    connection.invoke("sendMessages", message);
+                                    //}
 
     </script>
     @RenderSection("Scripts", required: false)

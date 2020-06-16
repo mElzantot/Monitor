@@ -56,17 +56,6 @@ namespace ITI.CEI40.Monitor.Controllers
             List<Comment> comments = unitOfWork.Comments.GetCommentsForTask(taskId).ToList();
             List<SubTask> subTasks = unitOfWork.SubTasks.Get_Not_C_SubTasksFromTask(taskId).ToList();
 
-            //string taskName = subTasks[0].Task.Name;
-            //List<string> engineers = new List<string>();
-
-            //foreach (var item in subTasks)
-            //{
-            //    if (item.FK_EngineerID != userId && !engineers.Contains(item.Engineer.UserName))
-            //    {
-            //        engineers.Add(item.Engineer.UserName);
-            //    }
-            //}
-
             CommentViewModel commentView = new CommentViewModel
             {
                 Comments = comments,

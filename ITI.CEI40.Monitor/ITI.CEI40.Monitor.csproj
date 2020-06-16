@@ -28,6 +28,12 @@
     <Compile Remove="Migrations\20200614174053_addEvaluation.Designer.cs" />
     <Compile Remove="Migrations\20200614174402_addEvaluation2.cs" />
     <Compile Remove="Migrations\20200614174402_addEvaluation2.Designer.cs" />
+    <Compile Remove="Migrations\20200615192928_enddata.cs" />
+    <Compile Remove="Migrations\20200615192928_enddata.Designer.cs" />
+    <Compile Remove="Migrations\20200615195050_subenddata.cs" />
+    <Compile Remove="Migrations\20200615195050_subenddata.Designer.cs" />
+    <Compile Remove="Migrations\20200615195138_subenddata.cs" />
+    <Compile Remove="Migrations\20200615195138_subenddata.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,12 +1,23 @@
 ﻿@model SubTask
 
-<div class="col-5 rightcont" id="rightSec">
-    <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
-        <div class="righthead">
-            <h5 calss="col-12 mb-2 ">@Model.Name</h5>
+<div class="col-5 rightcont" id="rightSec" >
+    <div style="border: 2px solid white ; padding: 20px; border-radius: 8px; background:white" >
+        <div class="righthead " >
+
+            <div class="dropdown">
+                <button class="btn-light btn btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    @Model.Name
+                </button>
+
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    <div class="text-muted p-2">@Model.Description</div>
+                </div>
+            </div>
         </div>
-        <div class="text-muted mb-md-1" style="max-height:100px;overflow-y:auto;"><pre>@Model.Description</pre></div>
-        <hr  />
+
+
+
+        <hr />
         <div class="row">
             <div class="col-lg-7 innerleft" style="border-right:2px solid rgb(219, 219, 219)">
                 <div class="prog">
@@ -16,8 +27,8 @@
                     </div>
 
                 </div>
-                <button class="btn btn-sm btn-outline-secondary" onclick="UploadFile(@Model.Id)" > Upload File <i class="fas fa-paperclip"></i></button>
-                <a class="btn btn-sm btn-outline-info" href="/comment/activitylog?taskId=@Model.FK_TaskId" >Task Details <i class="fas fa-info"></i></a>
+
+                <a class="btn btn-sm btn-outline-info" href="/comment/activitylog?taskId=@Model.FK_TaskId">Task Details <i class="fas fa-info"></i></a>             
             </div>
             <div class="col-lg-5 innerright ">
 
@@ -39,10 +50,12 @@
                     <button class="btn btn-success w-100" onclick="SubmitSunTask()">Submit</button>*@
             </div>
         </div>
-        <div class="row pt-3">
-            <textarea id="commentArea" class="col-12" placeholder="Add Comment Here......"></textarea>
-            <button class="btn btn-sm btn-outline-info mt-1 float-sm-right" type="button" id="AddComment" onclick="AddComment(@Model.Id,@Model.FK_TaskId)">Comment</button>
-        </div>
+   
+            <textarea id="commentArea" class="col-12 mt-3" placeholder="Add Comment Here......"></textarea>
+            <div style="display:flex;justify-content:flex-end">
+                <button class="btn btn-sm btn-outline-secondary mr-2" onclick="UploadFile(@Model.Id)"> Upload File <i class="fas fa-paperclip"></i></button>
+                <button class="btn btn-sm btn-outline-info float-sm-right" type="button" id="AddComment" onclick="AddComment(@Model.Id,@Model.FK_TaskId)">Comment</button>
+            </div>
     </div>
 </div>
 

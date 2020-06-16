@@ -66,19 +66,21 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         //omar
-        public IActionResult EngineerChart(string EngId)
+        [Authorize(Roles = "Engineer")]
+        public IActionResult EngineerChart()
         {
-            List<SubTask> subtasks = unitofwork.SubTasks.GetEngineerComletedSubTasks(EngId);
+            string engId = userManager.GetUserId(HttpContext.User);
+            List<SubTask> subtasks = unitofwork.SubTasks.GetEngineerComletedSubTasks(engId);
 
             List<string> months = new List<string>();
             List<int> quality = new List<int>();
             List<int> complexity = new List<int>();
             List<int> time = new List<int>();
-            List<int> subNo = new List<int>();
-
+            List<SubTask> subs = new List<SubTask>();
             string engName = subtasks[0].Engineer.UserName;
             string month;
             int i = -1;
+
 
             foreach (var item in subtasks)
             {
@@ -89,6 +91,106 @@ namespace ITI.CEI40.Monitor.Controllers
                     complexity.Add(item.Complexity);
                     quality.Add(item.Quality * item.Complexity);
                     time.Add(item.TimeManagement * item.Complexity);
+                    i++;
+                }
+                else
+                {
+                    complexity[i] += item.Complexity;
+                    quality[i] += item.Quality * item.Complexity;
+                    time[i] += item.TimeManagement * item.Complexity;
+                }
+            }
+
+            for (int j = 0; j < months.Count(); j++)
+            {
+                quality[j] = quality[j] / complexity[j];
+                time[j] = time[j] / complexity[j];
+            }
+
+            foreach (var item in subtasks)
+            {
+                if (item.EndDate.Value.Month == DateTime.Now.Month)
+                {
+                    subs.Add(item);
+                }
+            }
+
+            EngineerChrtViewModel engineerChrtView = new EngineerChrtViewModel
+            {
+                EngineerName = engName,
+                Months = months,
+                Quality = quality,
+                Time = time,
+                LastTasks = subs,
+                Complexity = complexity
+            };
+            return View("EngineerChart", engineerChrtView);
+        }
+
+
+        [Authorize(Roles = "TeamLeader")]
+        public IActionResult EngineersChart()
+        {
+            int teamId = unitofwork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
+            Team team = unitofwork.Teams.GetTeamWithCompletedSubtasksAndEngineers(teamId);
+
+            return View();
+        }
+
+
+
+        private List<float> EngineerPerformence(List<SubTask> subTasks)
+        {
+            List<float> result = new List<float>();
+            foreach (var item in subTasks)
+            {
+                result[0] += item.ActualDuration;
+                result[1] += item.Complexity;
+                result[2] += item.Quality * item.Complexity;
+                result[3] += item.TimeManagement * item.Complexity;
+            }
+            result[2] = result[2] / result[1];
+            result[3] = result[3] / result[1];
+            return result;
+        }
+
+
+
+
+
+
+
+
+
+
+        public JsonResult TryJson()
+        {
+            string engId = userManager.GetUserId(HttpContext.User);
+            List<SubTask> subtasks = unitofwork.SubTasks.GetEngineerComletedSubTasks(engId);
+
+            List<string> months = new List<string>();
+            List<int> quality = new List<int>();
+            List<int> complexity = new List<int>();
+            List<int> time = new List<int>();
+            List<int> subNo = new List<int>();
+            List<int> totalDuration = new List<int>();
+            List<int> tasksDuration = new List<int>();
+
+            string engName = subtasks[0].Engineer.UserName;
+            string month;
+            int i = -1;
+
+
+            foreach (var item in subtasks)
+            {
+                month = item.EndDate.Value.ToString("MMMM");
+                if (!months.Contains(month))
+                {
+                    months.Add(month);
+                    complexity.Add(item.Complexity);
+                    quality.Add(item.Quality * item.Complexity);
+                    time.Add(item.TimeManagement * item.Complexity);
+                    totalDuration.Add(item.ActualDuration);
                     subNo.Add(1);
                     i++;
                 }
@@ -97,6 +199,7 @@ namespace ITI.CEI40.Monitor.Controllers
                     complexity[i] += item.Complexity;
                     quality[i] += item.Quality * item.Complexity;
                     time[i] += item.TimeManagement * item.Complexity;
+                    totalDuration[i] += item.ActualDuration;
                     subNo[i] += 1;
                 }
             }
@@ -109,13 +212,15 @@ namespace ITI.CEI40.Monitor.Controllers
 
             EngineerChrtViewModel engineerChrtView = new EngineerChrtViewModel
             {
-                SubMonth = subNo,
+
                 EngineerName = engName,
                 Months = months,
                 Quality = quality,
-                Time = time
+                Time = time,
+                Complexity = complexity,
+
             };
-            return View("EngineerChart", engineerChrtView);
+            return Json(engineerChrtView);
         }
 
         [HttpGet]
@@ -125,5 +230,6 @@ namespace ITI.CEI40.Monitor.Controllers
 
             return PartialView(subtasks);
         }
+
     }
 }

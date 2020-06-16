@@ -51,6 +51,10 @@ namespace ITI.CEI40.Monitor.Entities
         [Display(Name = "End Date")]
         public DateTime? EndDate { get; set; }
 
+        [DataType(DataType.Date)]
+        [Column("End Date", TypeName = "Date")]
+        public DateTime? ActualEndDate { get; set; }
+
 
         public int ActualDuration { get; set; }
 
@@ -58,9 +62,7 @@ namespace ITI.CEI40.Monitor.Entities
         public int Progress { get; set; }
         public Status Status { get; set; }
 
-        
         public Priority Priority { get; set; }
-
 
         [Range(0, 100)]
         [Required]
@@ -74,13 +76,11 @@ namespace ITI.CEI40.Monitor.Entities
         [Required]
         public int Quality { get; set; }
 
-
         //public ICollection<EngineerSubTasks> EngineerSubTasks { get; set; }
         public virtual ICollection<SubTaskSession> SubTaskSession { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
         public ApplicationUser Engineer { get; set; }
         [ForeignKey("Engineer")]
         public string FK_EngineerID { get; set; }
-
     }
 }

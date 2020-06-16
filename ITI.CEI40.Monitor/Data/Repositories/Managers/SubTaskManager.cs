@@ -82,7 +82,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         public IEnumerable<SubTask> Get_Not_C_SubTasksFromTask(int taskId)
         {
             return set.Where(st => st.FK_TaskId == taskId)
-                .Where(st => st.Status != Status.Cancelled).Include(s => s.Task).ToList();
+                .Where(st => st.Status != Status.Cancelled).Include(s => s.Task).Include(s=>s.SubTaskSession).ToList();
         }
     }
 }
