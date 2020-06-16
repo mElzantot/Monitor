@@ -15,6 +15,6 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         IEnumerable<Team> GetAllWithAttributes(int id);
         Team GetTeamWithTasksAndEngineers(int id);
         Team GetTeamWithTeamLeaderId(string teamLeaderId);
-        Team GetTeamWithCompletedSubtasksAndEngineers(int id);
+        Team GetTeamWithSubtasksAndEngineers(int id);
     }
 }

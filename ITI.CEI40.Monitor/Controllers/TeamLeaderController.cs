@@ -84,7 +84,7 @@ namespace ITI.CEI40.Monitor.Controllers
 
             foreach (var item in subtasks)
             {
-                month = item.EndDate.Value.ToString("MMMM");
+                month = item.ActualEndDate.Value.ToString("MMMM");
                 if (!months.Contains(month))
                 {
                     months.Add(month);
@@ -132,8 +132,23 @@ namespace ITI.CEI40.Monitor.Controllers
         public IActionResult EngineersChart()
         {
             int teamId = unitofwork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
-            Team team = unitofwork.Teams.GetTeamWithCompletedSubtasksAndEngineers(teamId);
+            List<ApplicationUser> team = unitofwork.Engineers.GetEngineersInsideTeamWithSubTasks(teamId);
+            
+            List<string> names = new List<string>();
+            List<List<float>> avg = new List<List<float>>();
 
+            foreach (var item in team)
+            {
+                names.Add(item.UserName);
+                if (item.SubTasks != null)
+                {
+                   avg.Add(EngineerPerformence(item.SubTasks.ToList()));
+                }
+                else
+                {
+                    avg.Add(null);
+                }
+            }
             return View();
         }
 

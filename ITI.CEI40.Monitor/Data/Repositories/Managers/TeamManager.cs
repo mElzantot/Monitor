@@ -13,7 +13,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         {
 
         }
-
+        
         public List<Team> getTeamsinsideDept(int deptID)
         {
             return set.Where(e => e.FK_DepartmentId == deptID).Include(t => t.TeamLeader).ToList();
@@ -54,12 +54,10 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Where(t => t.FK_TeamLeaderId == teamLeaderId).FirstOrDefault();
         }
 
-        public Team GetTeamWithCompletedSubtasksAndEngineers(int id)
+        public Team GetTeamWithSubtasksAndEngineers(int id)
         {
             return set.Where(t => t.Id == id).Include(t => t.Engineers)
-                .ThenInclude(e => e.SubTasks.Where(s => s.Status == Status.Completed)).FirstOrDefault();
+                .ThenInclude(e => e.SubTasks).FirstOrDefault();
         }
-
-
     }
 }
