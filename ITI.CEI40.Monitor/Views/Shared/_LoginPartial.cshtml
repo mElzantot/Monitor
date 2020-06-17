@@ -19,7 +19,10 @@
                 @if (User.IsInRole(Roles.Admin.ToString()))
                 {
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-0  " asp-controller="Department" asp-action="ViewDepartments"><i id="i" class="fas fa-chart-area"></i> Admin</a>
+                        <a class="nav-link px-3 py-0  " asp-controller="Department" asp-action="ViewDepartments"><i id="i" class="fas fa-chart-area"></i> Organization</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 py-0  " asp-controller="Employee" asp-action="ViewEmployees"><i id="i" class="fas fa-chart-area"></i> Employees |</a>
                     </li>
                 }
 
@@ -69,7 +72,6 @@
                     </li>
                 }
 
-
                 <li class="nav-item">
                     <a class="nav-link px-3 py-0" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity.Name</a>
                 </li>
@@ -86,9 +88,11 @@
                 </li>
             }
             <li class="nav-item">
-                <a class="nav-link px-3 py-0  " asp-controller="Department" asp-action="ViewDepartments"><i id="i" class="fas fa-chart-area"></i> Admin</a>
+                <a class="nav-link px-3 py-0  " asp-controller="Department" asp-action="ViewDepartments"><i id="i" class="fas fa-chart-area"></i> Organization |</a>
             </li>
-
+            <li class="nav-item">
+                <a class="nav-link px-3 py-0  " asp-controller="Employee" asp-action="ViewEmployees"><i id="i" class="fas fa-chart-area"></i> Employees |</a>
+            </li>
         </ul>
     </div>
 </nav>

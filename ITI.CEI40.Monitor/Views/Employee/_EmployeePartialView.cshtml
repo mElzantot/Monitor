@@ -1,15 +1,19 @@
 ﻿@model ApplicationUser
 
-<tr id="@Model.Id">
-    <td>@Model.UserName</td>
-    <td>@Model.Email</td>
-    <td>@(Model.SalaryRate*30*8)</td>
-    <td>@Model.TotalEvaluation</td>
-    <td>
-        <div class="btn-group" role="group" aria-label="Basic example">
-            <button type="button" class="btn btn-info btn-sm" onclick='UpdateEmpRoles("@Model.Id")'>Employee Roles</button>
-            <button type="button" class="btn btn-light btn-sm" onclick='EditEmployeeInfo("@Model.Id")'>Edit Employee</button>
-            <button type="button" class="btn btn-danger" onclick='deleteTeam("@Model.Id")'><i class="far fa-trash-alt"></i></button>
-        </div>
-    </td>
-</tr>
+    <tr id="@Model.Id">
+        <th>@Model.UserName</th>
+        <td>@Model.Email</td>
+        <td>@(Model.SalaryRate * 30 * 8)</td>
+        <td>@Model.TotalEvaluation</td>
+        <td></td>
+
+        <td>
+            <div class="btn-group" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-info btn-sm" onclick='UpdateEmpRoles("@Model.Id")'>Roles</button>
+                <button type="button" class="btn btn-light btn-sm" onclick='EditEmployeeInfo("@Model.Id")'><i class="fas fa-edit"></i></button>
+                <button type="button" class="btn btn-danger btn-sm" onclick='deleteTeam("@Model.Id")'><i class="far fa-trash-alt"></i></button>
+            </div>
+        </td>
+    </tr>
+
+
