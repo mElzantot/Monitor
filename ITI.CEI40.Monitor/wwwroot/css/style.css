@@ -31,43 +31,238 @@ body {
     }
 
 
-    #i{
-        font-size:1.1rem;
-    }
+#i {
+    font-size: 1.1rem;
+}
 
 
 
 
-    /*nav bar dropdown list*/
-.dropdown-menu>li>a:focus, .dropdown-menu>li>a:hover {
+/*nav bar dropdown list*/
+.dropdown-menu > li > a:focus, .dropdown-menu > li > a:hover {
     background-color: var(--green);
-    border-radius: 8px;   
-  }
-  
-  
-  .dropdown-menu>li>a{
+    border-radius: 8px;
+}
+
+
+.dropdown-menu > li > a {
     margin: 0 8px;
-  }
-  
-  
-  .dropdown-menu{
+}
+
+
+.dropdown-menu {
     border-width: 0.0px;
     border-bottom-left-radius: 7px;
     border-bottom-right-radius: 7px;
     box-shadow: 0 6px 12px rgba(0,0,0,.175);
-  }
-  
-  .navbar-brand{
+}
+
+.navbar-brand {
     font-size: 35px;
     line-height: 30px;
-  }
-  
-   .dropdown-item{
-      width: 90%;
-  } 
-  /*#endregion*/
+}
+
+.dropdown-item {
+    width: 90%;
+}
+/*#endregion*/
 
 
 .dropdown-menu clock {
     min-width: 25rem;
 }
+
+.buttons {
+    display: flex;
+    align-content: center;
+    align-items: center;
+}
+
+    .buttons > * {
+        display: inline;
+        float: none;
+    }
+
+#submitBtn {
+    width: 130px;
+}
+
+.viewmodes {
+    display: flex;
+    align-items: center;
+}
+
+.viewtext {
+    white-space: nowrap;
+    font-size: large;
+    font-weight: bold;
+    color: wheat;
+    width: 200px;
+    height: 38px;
+    text-align: center;
+    border-radius: 5px;
+    border: 2px solid #BADA55;
+    background-color: #000033;
+}
+
+.modal-body {
+    display: block;
+}
+
+.invoname {
+    display: flex;
+}
+
+    .invoname input {
+        width: 40%;
+        margin-left: 10px;
+    }
+
+    .invoname label {
+        font-weight: bold;
+    }
+
+.invoitemtable {
+    margin-left: 20px;
+    border-collapse: separate;
+    border: 1px solid #ffffff;
+    border-radius: 3px;
+}
+
+    .invoitemtable thead {
+        background-color: #ccffeb;
+        border-radius: 7px;
+        border: 1px solid;
+        text-align: left;
+        font-weight: bold;
+    }
+
+        .invoitemtable thead td {
+            border: 1px solid;
+            border-radius: 5px;
+            padding: 1px;
+            text-align: center;
+        }
+
+    .invoitemtable input {
+        border-radius: 5px;
+        border: 1px solid #e0ebeb;
+        width: 100px;
+    }
+
+        .invoitemtable input[type=number]::-webkit-inner-spin-button,
+        .invoitemtable input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .invoitemtable input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+.invodate {
+    display: flex;
+}
+
+    .invodate .form-group {
+        display: flex;
+    }
+
+    .invodate label {
+        font-weight: bold;
+        margin-right: 30px;
+        white-space: nowrap;
+    }
+
+    .invodate input {
+        width: 70%;
+        margin-left: 10px;
+        margin-right: 30px;
+    }
+
+.invoitemfooter {
+    display: flex;
+}
+
+    .invoitemfooter input {
+        margin-left: 8px;
+    }
+
+.ivovalue {
+    display: flex;
+    margin-left: 50px;
+}
+
+    .ivovalue label {
+        font-weight: bold;
+        margin-right: 10px;
+        white-space: nowrap;
+    }
+
+    .ivovalue input {
+        width: 60%;
+        margin-left: 10px;
+    }
+
+.invototaltable {
+    display: inline-flex;
+    border-top: 1px solid #c0c0c0;
+    border-bottom: 1px solid #c0c0c0;
+    width: 100%;
+    /*overflow:hidden;*/
+}
+
+    .invototaltable h3 {
+        font-weight: bolder;
+        padding: 10px;
+    }
+
+        .invototaltable h3 input {
+            font-weight: bold;
+            padding: 0px;
+            margin-left: 80px;
+        }
+
+.projectinfo {
+    display: inline-block;
+    border: 1px solid;
+    border-radius: 5px;
+    padding:10px;
+    width:400px;
+    height:100px;
+    margin-left:100px;
+    margin-bottom:50px;
+}
+
+.proname {
+    display: flex;
+}
+
+    .proname label {
+        font-weight: bold;
+        margin-right: 10px;
+        white-space: nowrap;
+    }
+
+    .proname input {
+        width: 60%;
+        margin-left: 10px;
+        border: none;
+        font-weight: bold;
+    }
+
+.prodescripe {
+    display: flex;
+}
+    .prodescripe label {
+        font-weight: bold;
+        margin-right: 10px;
+        white-space: nowrap;
+    }
+
+    .prodescripe input {
+        width: 60%;
+        margin-left: 10px;
+        border: none;
+        font-weight: bold;
+    }

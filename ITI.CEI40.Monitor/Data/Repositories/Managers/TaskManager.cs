@@ -50,11 +50,12 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         }
         public IEnumerable<Activity> GetByProjectId(int id)
         {
-            return set.Where(t => t.FK_ProjectId == id).Include(t=>t.FollowingActivities).Include(t => t.ActivitiesToFollow);
+            return set.Where(t => t.FK_ProjectId == id).Where(t => t.Status != Status.Cancelled).Include(t=>t.FollowingActivities).Include(t => t.ActivitiesToFollow);
         }
-        public Activity GetByProIdAndViewOrder(int proId, int viewOrder)
+        public IEnumerable<Activity> GetByProIdAndViewOrder(int proId, int viewOrder)
         {
-            return set.Where(t => t.FK_ProjectId == proId).Where(t => t.ViewOrder == viewOrder).FirstOrDefault();
+            return set.Where(t => t.FK_ProjectId == proId).Where(t => t.ViewOrder == viewOrder);
         }
+
     }
 }

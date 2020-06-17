@@ -47,5 +47,12 @@ namespace ITI.CEI40.Monitor.Controllers
             var subtask = unitofwork.SubTasks.GetSubTasksByEngineerId(engId).ToList();
             return PartialView("_ChartsPartialView", subtask);
         }
+
+        [HttpGet]
+        public IActionResult displayAll(int teamid)
+        {
+            List<ApplicationUser> engieers = unitofwork.Engineers.GetEngineersWithSubtasks(teamid).ToList();
+            return View(engieers);
+        }
     }
 }

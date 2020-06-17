@@ -1,4 +1,7 @@
-﻿using System;
+﻿using ITI.CEI40.Monitor.Data;
+using ITI.CEI40.Monitor.Entities;
+using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;

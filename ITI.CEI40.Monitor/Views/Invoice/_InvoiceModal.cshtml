@@ -1,6 +1,6 @@
 ﻿@model Invoice
 
-<form method="post" data-ajax-url="/Invoice/addInvoice" data-ajax="true" data-ajax-method="Post" data-ajax-complete="addInvoice"
+@*<form method="post" data-ajax-url="/Invoice/addInvoice" data-ajax="true" data-ajax-method="Post" data-ajax-complete="addInvoice"
       data-ajax-update="#tableBody" data-ajax-mode="after" id="InvoiceForm">
     <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Invoices</h5>
@@ -17,13 +17,8 @@
             <span asp-validation-for="@Model.Name" class="text-danger"></span>
         </div>
         <div class="form-group">
-            <label asp-for="@Model.Value"></label>
-            <input asp-for="@Model.Value" class="form-control" readonly />
-            <span asp-validation-for="@Model.Value" class="text-danger"></span>
-        </div>
-        <div class="form-group">
             <div class="row">
-                <table class="table-condensed"  style="text-align:center;">
+                <table class="table-condensed" style="text-align:center;">
                     <thead>
                         <tr>
                             <td>Qunatity</td>
@@ -41,14 +36,18 @@
                                     <td><input asp-for="@item.Quantity" type="number" readonly /></td>
                                     <td><input asp-for="@item.Description" class="descripe" type="text" readonly /></td>
                                     <td><input asp-for="@item.UnitPrice" type="number" readonly /></td>
-                                    <td><input class="totalprice" readonly /></td>
+                                    <td><input class="totalprice" readonly value="@(item.Quantity * item.UnitPrice)" /></td>
                                 </tr>
                             }
                         }
-
                     </tbody>
                 </table>
             </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="@Model.Value"></label>
+            <input asp-for="@Model.Value" class="form-control" readonly />
+            <span asp-validation-for="@Model.Value" class="text-danger"></span>
         </div>
         <div class="form-group">
             <label asp-for="@Model.InvoiceDate"></label>
@@ -62,8 +61,70 @@
             <span asp-validation-for="@Model.PaymentDate" class="text-danger"></span>
         </div>
     </div>
-    <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">Add</button>
-        <button type="reset" class="btn btn-secondary" data-dismiss="modal">Close</button>
+</form>*@
+
+<form method="post" data-ajax-url="/Invoice/addInvoice" data-ajax="true" data-ajax-method="Post" data-ajax-complete="addInvoice"
+      data-ajax-update="#tableBody" data-ajax-mode="after" id="InvoiceForm">
+    <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Invoices</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body" style="padding-left:100px">
+        <div class="form-group invoname" >
+            <label asp-for="@Model.Name" style="margin-right:0"></label>
+            <input asp-for="@Model.Name" class="form-control" readonly />
+            <span asp-validation-for="@Model.Name" class="text-danger"></span>
+        </div>
+        <div class="invodate">
+            <div class="form-group ">
+                <label asp-for="@Model.InvoiceDate" style="margin-right:0"></label>
+                <input asp-for="@Model.InvoiceDate" class="form-control" readonly/>
+                <span asp-validation-for="@Model.InvoiceDate" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group ">
+                <label asp-for="@Model.PaymentDate" style="margin-right:0"></label>
+                <input asp-for="@Model.PaymentDate" class="form-control" readonly/>
+                <span asp-validation-for="@Model.PaymentDate" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group invoitems">
+            <div class="row">
+                <table class="table-condensed table-sm invoitemtable">
+                    <thead style="background-color:#80b3ff;">
+                        <tr>
+                            <td>Qunatity</td>
+                            <td>Description</td>
+                            <td>Unit Price</td>
+                            <td>Total Price</td>
+                        </tr>
+                    </thead>
+                    <tbody id="itemtbody">
+                        @if (Model.invoiceItems != null)
+                        {
+                            foreach (var item in Model.invoiceItems)
+                            {
+                                <tr>
+                                    <td><input asp-for="@item.Quantity" type="number" readonly /></td>
+                                    <td><input asp-for="@item.Description" class="descripe" type="text" readonly /></td>
+                                    <td><input asp-for="@item.UnitPrice" type="number" readonly /></td>
+                                    <td><input class="totalprice" readonly value="@(item.Quantity * item.UnitPrice)" /></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="invoitemfooter">
+            <div class="form-group ivovalue" style="margin-left: -5px;">
+                <label asp-for="@Model.Value">Invoice Total Value</label>
+                <input asp-for="@Model.Value" class="form-control" id="invoicevlaue" readonly />
+                <span asp-validation-for="@Model.Value" class="text-danger"></span>
+            </div>
+        </div>
     </div>
 </form>

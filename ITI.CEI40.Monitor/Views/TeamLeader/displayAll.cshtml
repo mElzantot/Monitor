@@ -1,0 +1,68 @@
+﻿@model List<ApplicationUser>
+
+@{
+    ViewData["Title"] = "Resources Timeline";
+}
+
+<h1>Resources Timeline</h1>
+
+
+@if (Model != null)
+{
+
+    <div id="timeline" style="height:100%"></div>
+}
+else
+{
+    <h2 class="alert alert-info"> There is no Employees here </h2>
+}
+
+
+
+
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    var model = @Html.Raw(Json.Serialize(Model));
+    console.log(model);
+
+    function parseDate(s) {
+        var b = s.split(/\D/);
+        return new Date(b[0], --b[1], b[2]);
+    }
+
+    google.charts.load("current", { packages: ["timeline"] });
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+
+        var container = document.getElementById('timeline');
+        var chart = new google.visualization.Timeline(container);
+        var dataTable = new google.visualization.DataTable();
+        dataTable.addColumn({ type: 'string', id: 'Position' });
+        dataTable.addColumn({ type: 'string', id: 'Name' });
+        dataTable.addColumn({ type: 'date', id: 'Start' });
+        dataTable.addColumn({ type: 'date', id: 'End' });
+        model.forEach(function (emp) {
+            if (emp.subTasks.length > 0) {
+                emp.subTasks.forEach(function (subt) {
+                if (subt) {
+                    dataTable.addRows([
+                        [`${emp.userName}`, `${subt.name}`, parseDate(subt.startDate), parseDate(subt.endDate)]
+                    ]);
+                }
+            });
+            } else {
+                dataTable.addRows([
+                    [`${emp.userName}`, 'there is no tasks for this employee', new Date(), new Date()]
+                ]);
+            }
+        });
+
+         var options = {
+              colors: ['#cbb69d', '#603913', '#c69c6e'],
+              timeline: { rowLabelStyle: {fontName: 'Helvetica', fontSize: 24, color: '#603913' },
+                             barLabelStyle: { fontName: 'Garamond', fontSize: 14 } }
+         };
+        chart.draw(dataTable, options);
+    }
+
+</script>

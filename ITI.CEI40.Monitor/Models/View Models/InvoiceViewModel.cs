@@ -14,6 +14,7 @@ namespace ITI.CEI40.Monitor.Models.View_Models
         public List<Invoice> Invoices { get; set; }
         public InvoiceItem InvoiceItem { get; set; }
         public List<InvoiceItem> InvoiceItems { get; set; }
+        public string CurrentUser { get; set; }
     }
 
 }

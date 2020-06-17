@@ -29,5 +29,10 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Where(e => e.FK_TeamID == teamId).ToList();
         }
 
+        public IEnumerable<ApplicationUser> GetEngineersWithSubtasks(int teamId)
+        {
+            return set.Where(e => e.FK_TeamID == teamId).Include(t=>t.SubTasks);
+        }
+
     }
 }
