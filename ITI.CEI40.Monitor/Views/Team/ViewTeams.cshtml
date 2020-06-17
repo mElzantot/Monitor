@@ -26,9 +26,9 @@
                     <td class="ManagerName">@Model.teams[i].TeamLeader</td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" class="btn btn-outline-success " onclick="AssignManager(@Model.teams[i].Id)"><i class="fas fa-male"></i></button>
-                            <a class="btn btn-outline-primary" asp-controller="Employee" asp-action="ViewEmployees" asp-route-id="@Model.teams[i].Id"><i class="fas fa-users"></i></a>
-                            <button type="button" class="btn btn-danger" onclick="deleteTeam(@Model.teams[i].Id)"><i class="far fa-trash-alt"></i></button>
+                            <button type="button" class="btn btn-outline-success btn-sm" onclick="AssignManager(@Model.teams[i].Id)"><i class="fas fa-male"></i></button>
+                            @*<a class="btn btn-outline-primary" asp-controller="Employee" asp-action="ViewEmployees" asp-route-id="@Model.teams[i].Id"><i class="fas fa-users"></i></a>*@
+                            <button type="button" class="btn btn-danger btn-sm" onclick="deleteTeam(@Model.teams[i].Id)"><i class="far fa-trash-alt"></i></button>
                         </div>
                     </td>
                 </tr>

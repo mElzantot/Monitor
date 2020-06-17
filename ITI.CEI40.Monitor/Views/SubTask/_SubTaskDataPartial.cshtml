@@ -53,7 +53,7 @@
    
             <textarea id="commentArea" class="col-12 mt-3" placeholder="Add Comment Here......"></textarea>
             <div style="display:flex;justify-content:flex-end">
-                <button class="btn btn-sm btn-outline-secondary mr-2" onclick="UploadFile(@Model.Id)"> Upload File <i class="fas fa-paperclip"></i></button>
+                <button class="btn btn-sm btn-outline-secondary mr-2" onclick="UploadFile(@Model.Id,@Model.FK_TaskId)"> Upload File <i class="fas fa-paperclip"></i></button>
                 <button class="btn btn-sm btn-outline-info float-sm-right" type="button" id="AddComment" onclick="AddComment(@Model.Id,@Model.FK_TaskId)">Comment</button>
             </div>
     </div>

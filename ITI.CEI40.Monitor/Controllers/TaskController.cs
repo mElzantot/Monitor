@@ -61,7 +61,7 @@ namespace ITI.CEI40.Monitor.Controllers
                 FK_sender = userId,
                 FK_TaskID = addedFile.taskId,
                 commentLevel = CommentLevels.High,
-                comment = HttpContext.User.Identity.Name.ToString() + "uploaded File "
+                comment = HttpContext.User.Identity.Name.ToString() +  " uploaded File "
             };
 
             fileComment = unitOfWork.Comments.Add(fileComment);

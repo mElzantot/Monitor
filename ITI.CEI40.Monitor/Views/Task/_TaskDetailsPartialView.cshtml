@@ -2,13 +2,19 @@
 
 <h4 class="mr-5" style="display:inline-block">@Model.Task.Name</h4>
 
-@if (Model.Task.Team == null)
-{
-    <button onclick="viewModal(@Model.Task.Id)" class="btn btn-sm btn-outline-danger"  type="submit" id="Assignedteam">Assign to Team</button>
-}
-else
-{
-    <button onclick="viewModal(@Model.Task.Id)" disabled class="btn btn-sm btn-info"  type="submit" >@Model.Task.Team.Name</button>
+
+@{
+    if (User.IsInRole(Roles.DepartmentManager.ToString()))
+    {
+        if (Model.Task.Team == null)
+        {
+            <button onclick="viewModal(@Model.Task.Id)" class="btn btn-sm btn-outline-danger" type="submit" id="Assignedteam">Assign to Team</button>
+        }
+        else
+        {
+            <button onclick="viewModal(@Model.Task.Id)" disabled class="btn btn-sm btn-info" type="submit">@Model.Task.Team.Name</button>
+        }
+    }
 }
 <hr />
 <div class="row">
@@ -95,12 +101,12 @@ else
             }
         }
     </div>
-    
-        <textarea id="commentArea" class=" form-control mt-2" placeholder="Add Comment Here......"></textarea>
-    
-        <div style=" display:flex;justify-content:flex-end">
-            <button class="btn btn-sm btn-outline-info mt-1 float-sm-right" type="button" id="AddComment" onclick="AddComment(@Model.Task.Id)">Comment</button>
-            <button class="btn btn-sm btn-outline-secondary mt-1 float-sm-right" type="button" id="AddFile" onclick="AddFile(@Model.Task.Id)">Add File</button>
-        </div>
+
+    <textarea id="commentArea" class=" form-control mt-2" placeholder="Add Comment Here......"></textarea>
+
+    <div style=" display:flex;justify-content:flex-end">
+        <button class="btn btn-sm btn-outline-info mt-1 float-sm-right" type="button" id="AddComment" onclick="AddComment(@Model.Task.Id)">Comment</button>
+        <button class="btn btn-sm btn-outline-secondary mt-1 float-sm-right" type="button" id="AddFile" onclick="AddFile(@Model.Task.Id)">Add File</button>
+    </div>
 </div>
 

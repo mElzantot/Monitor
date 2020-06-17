@@ -85,9 +85,9 @@ namespace ITI.CEI40.Monitor.Controllers
 
 
             List<string> months = new List<string>();
-            List<int> quality = new List<int>();
-            List<int> complexity = new List<int>();
-            List<int> time = new List<int>();
+            List<float> quality = new List<float>();
+            List<float> complexity = new List<float>();
+            List<float> time = new List<float>();
             List<SubTask> subs = new List<SubTask>();
             string engName = subtasks[0].Engineer.UserName;
             string month;
@@ -208,12 +208,12 @@ namespace ITI.CEI40.Monitor.Controllers
             List<SubTask> subtasks = unitofwork.SubTasks.GetEngineerComletedSubTasks(engId);
 
             List<string> months = new List<string>();
-            List<int> quality = new List<int>();
-            List<int> complexity = new List<int>();
-            List<int> time = new List<int>();
+            List<float> quality = new List<float>();
+            List<float> complexity = new List<float>();
+            List<float> time = new List<float>();
             List<int> subNo = new List<int>();
-            List<int> totalDuration = new List<int>();
-            List<int> tasksDuration = new List<int>();
+            List<float> totalDuration = new List<float>();
+            List<float> tasksDuration = new List<float>();
 
             string engName = subtasks[0].Engineer.UserName;
             string month;

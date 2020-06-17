@@ -6,17 +6,18 @@
 <h1>View Employees</h1>
 <br />
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#addEmployeeModal">
+<button type="button" class="btn btn-info btn-sm mb-3" data-toggle="modal" data-target="#addEmployeeModal">
     Add Employee
 </button>
 <div style="text-align:center">
-    <table class="table table-striped">
-        <thead>
+    <table class="table table-sm">
+        <thead class="thead-dark">
             <tr>
                 <th scope="col">Name</th>
                 <th scope="col">E-Mail</th>
-                <th scope="col">Salary "LE" </th>
+                <th scope="col">Salary </th>
                 <th scope="col">Evaluation</th>
+                <th scope="col">Joined Date</th>
                 <th scope="col"></th>
             </tr>
         </thead>
@@ -25,15 +26,16 @@
             @for (int i = 0; i < Model.Employees.Count(); i++)
             {
                 <tr id="@Model.Employees[i].Id">
-                    <td>@Model.Employees[i].UserName</td>
+                    <th>@Model.Employees[i].UserName</th>
                     <td class="email">@Model.Employees[i].Email</td>
                     <td class="salary">@(Model.Employees[i].SalaryRate * 30 * 8)</td>
                     <td>@Model.Employees[i].TotalEvaluation</td>
+                    <td></td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" class="btn btn-info btn-sm" onclick='UpdateEmpRoles("@Model.Employees[i].Id")'>Employee Roles</button>
-                            <button type="button" class="btn btn-light btn-sm" onclick='EditEmployeeInfo("@Model.Employees[i].Id")'>Edit Employee</button>
-                            <button type="button" class="btn btn-danger" onclick='deleteTeam("@Model.Employees[i].Id")'><i class="far fa-trash-alt"></i></button>
+                            <button type="button" class="btn btn-info btn-sm" onclick='UpdateEmpRoles("@Model.Employees[i].Id")'>Roles</button>
+                            <button type="button" class="btn btn-light btn-sm" onclick='EditEmployeeInfo("@Model.Employees[i].Id")'><i class="fas fa-edit"></i></button>
+                            <button type="button" class="btn btn-danger btn-sm " onclick='deleteTeam("@Model.Employees[i].Id")'><i class="far fa-trash-alt"></i></button>
                         </div>
                     </td>
                 </tr>
@@ -57,37 +59,55 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <input hidden type="text" asp-for="FK_TeamId" value="@Model.FK_TeamId" />
+                    @*<input hidden type="text" asp-for="FK_TeamId" value="@Model.FK_TeamId" />*@
                     <div class="form-group">
                         <label asp-for="UserName"></label>
-                        <input asp-for="UserName" class="form-control" />
+                        <input asp-for="UserName" class="form-control form-control-sm" />
                         <span asp-validation-for="UserName" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="Email"></label>
-                        <input asp-for="Email" class="form-control" />
+                        <input asp-for="Email" class="form-control form-control-sm" />
                         <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <div id="AddDepartmentSection">
+                        <div class="row" id="DepartmentSection">
+                            <div class="form-group col-6">
+                                <label asp-for="DepName"></label>
+                                <select class="form-control form-control-sm" id="DepartmentId" asp-for="DepId"
+                                        asp-items="new SelectList(Model.Departments,nameof(Department.Id),nameof(Department.Name))" onchange="getTeams()">
+                                    <option value="0">Select Department</option>
+                                </select>
+                                <span asp-validation-for="DepId" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col-6">
+                                <label asp-for="TeamName"></label>
+                                <select class="form-control form-control-sm" id="teams" asp-for="TeamId"
+                                        asp-items="new SelectList(string.Empty,nameof(Team.Id),nameof(Team.Name))">
+                                </select>
+                                <span asp-validation-for="TeamId" class="text-danger"></span>
+                            </div>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label asp-for="Salary"></label>
-                        <input asp-for="Salary" class="form-control" type="number" />
+                        <input asp-for="Salary" class="form-control form-control-sm" type="number" />
                         <span asp-validation-for="Salary" class="text-danger"></span>
                     </div>
-                    <br />
                     <div class="form-group">
                         <label asp-for="Password"></label>
-                        <input asp-for="Password" class="form-control" />
+                        <input asp-for="Password" class="form-control form-control-sm" />
                         <span asp-validation-for="Password" class="text-danger"></span>
                     </div>
                     <div class="form-group">
                         <label asp-for="ConfirmPassword"></label>
-                        <input asp-for="ConfirmPassword" class="form-control" />
+                        <input asp-for="ConfirmPassword" class="form-control form-control-sm" />
                         <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Add</button>
-                    <button type="reset" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary btn-sm">Add Employee</button>
+                    <button type="reset" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
                 </div>
             </form>
         </div>
@@ -190,6 +210,7 @@
         //-------------Edit Employee---------------//
 
         function EditEmployeeInfo(id) {
+
             $.ajax({
                 url: "/Employee/EditEmployee/" + id,
                 type: "GET",
@@ -198,6 +219,7 @@
                         $("#EditEmployeeForm").prepend(result);
                         $('#EditEmployeeForm').attr("data-ajax-update", id);
                         $('#EditEmployeeModal').modal('show');
+                        $('#editModal').append($('#DepartmentSection'));
                     }
                 }
             });
@@ -205,15 +227,19 @@
 
 
         $('#EditEmployeeModal').on('hidden.bs.modal', function (e) {
+            $('#AddDepartmentSection').append($('#DepartmentSection'));
             $("#EditEmployeeForm").empty();
+
         })
 
 
         //----------Get Teams after Selecting Department
         function getTeams() {
+            console.log($("#DepartmentId").val());
             var DepId = $("#DepartmentId").val();
             console.log(DepId);
             $.ajax({
+                url: "/Employee/GetTeamsforEdit/" + DepId,
                 url: "/Employee/GetTeamsforEdit/" + DepId,
                 type: "GET",
                 success: function (result, status) {

@@ -33,19 +33,14 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [HttpGet]
-        public IActionResult ViewEmployees(int id)
+        public IActionResult ViewEmployees()
         {
-            if (unitofwork.Teams.GetById(id) != null)
-            {
                 var EmploeeVm = new EmployeeViewModel
                 {
-                    Employees = unitofwork.Engineers.GetEngineersInsideTeam(id).ToList(),
-                    FK_TeamId = id
+                    Departments = unitofwork.Departments.GetAll().ToList(),
+                    Employees = unitofwork.Engineers.GetAll().ToList()
                 };
                 return View(EmploeeVm);
-            }
-
-            return BadRequest();
         }
 
         [HttpPost]
@@ -57,7 +52,7 @@ namespace ITI.CEI40.Monitor.Controllers
                 {
                     UserName = employee.UserName,
                     Email = employee.Email,
-                    FK_TeamID = employee.FK_TeamId,
+                    FK_TeamID = employee.TeamId,
                     SalaryRate = employee.Salary / (30 * 8)
                 };
 
@@ -173,8 +168,6 @@ namespace ITI.CEI40.Monitor.Controllers
 
                 throw;
             }
-
-
             return Json(teams);
         }
 
