@@ -266,3 +266,49 @@ body {
         border: none;
         font-weight: bold;
     }
+
+    /**********Notifications***************/
+
+.newnotification {
+    background-color: #f5f7f6;
+}
+
+.popover-body {
+    margin: 0;
+    padding: 0;
+}
+
+.notification-list {
+    list-style-type: none;
+    height: 300px;
+    overflow: auto;
+    margin: 0;
+    padding: 0;
+}
+
+    .notification-list li {
+        padding: 0 10px 0 10px;
+    }
+
+    .notification-list::-webkit-scrollbar {
+        padding: 0 10px 0 20px;
+    }
+
+    .notification-list::-webkit-scrollbar-thumb {
+        background-color: #525861;
+        border-radius: 0 8px 8px 0;
+    }
+
+.loadmorebtn {
+    margin: 0;
+    padding: 0;
+    display: block;
+    width: 100%;
+    border: none;
+    background-color: rgba(53, 30, 255,0);
+    padding: 10px 28px;
+    font-size: 16px;
+    cursor: pointer;
+    text-align: center;
+}
+/**************************/

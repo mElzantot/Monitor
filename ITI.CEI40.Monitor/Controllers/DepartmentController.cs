@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
+using ITI.CEI40.Monitor.Hubs;
 using ITI.CEI40.Monitor.Models.View_Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ITI.CEI40.Monitor.Controllers
 {
@@ -15,10 +18,12 @@ namespace ITI.CEI40.Monitor.Controllers
     public class DepartmentController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly IHubContext<NotificationsHub> hubContext;
 
-        public DepartmentController(IUnitOfWork unitOfWork)
+        public DepartmentController(IUnitOfWork unitOfWork, IHubContext<NotificationsHub> hubContext)
         {
             this.unitOfWork = unitOfWork;
+            this.hubContext = hubContext;
         }
 
 
@@ -55,7 +60,27 @@ namespace ITI.CEI40.Monitor.Controllers
                     Name = name
                 };
                 newDept = unitOfWork.Departments.Add(newDept);
-               // List<Department> depts = unitOfWork.Departments.GetAllDeptWithManagers().ToList();
+
+                #region notification test
+                string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                string messege = $"*{HttpContext.User.Identity.Name}=* -Admin- has added *{name}=* as a new Department at *{DateTime.Now}=*.";
+                Notification Notification = new Notification
+                {
+                    messege = messege,
+                    seen = false
+                };
+                Notification Savednotification = unitOfWork.Notification.Add(Notification);
+                NotificationUsers notificationUsers = new NotificationUsers
+                {
+                    NotificationId = Savednotification.Id,
+                    userID = currentUserId
+                };
+                unitOfWork.NotificationUsers.Add(notificationUsers);
+
+                hubContext.Clients.All.SendAsync("newNotification", messege, false, Savednotification.Id);
+                #endregion
+
+                // List<Department> depts = unitOfWork.Departments.GetAllDeptWithManagers().ToList();
                 return PartialView("_DepartmentPartial", newDept);
             }
             return null;

@@ -4,20 +4,28 @@ using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
+using ITI.CEI40.Monitor.Hubs;
 using ITI.CEI40.Monitor.Models.View_Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ITI.CEI40.Monitor.Controllers
 {
     public class DepManagerController : Controller
     {
         private readonly IUnitOfWork unitofwork;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly IHubContext<NotificationsHub> hubContext;
 
-        public DepManagerController(IUnitOfWork unitofwork)
+        public DepManagerController(IUnitOfWork unitofwork, UserManager<ApplicationUser> userManager, IHubContext<NotificationsHub> hubContext)
         {
             this.unitofwork = unitofwork;
+            this.userManager = userManager;
+            this.hubContext = hubContext;
         }
+
         public IActionResult Index()
         {
             return View();
@@ -58,6 +66,30 @@ namespace ITI.CEI40.Monitor.Controllers
                 task.FK_TeamId = teamId;
                 var team = unitofwork.Teams.GetById(teamId);
                 unitofwork.Complete();
+
+                //--------Add Notification to DataBase
+
+                string messege = $" New Task " +
+                    $"{HttpContext.User.Identity.Name} -Department Manager- has assigned new task" +
+                    $" -{task.Name}- to your Team at {DateTime.Now}";
+
+                Notification Notification = new Notification
+                {
+                    messege = messege,
+                    seen = false
+                };
+                Notification Savednotification = unitofwork.Notification.Add(Notification);
+                NotificationUsers notificationUsers = new NotificationUsers
+                {
+                    NotificationId = Savednotification.Id,
+                    userID = team.FK_TeamLeaderId
+                };
+                unitofwork.NotificationUsers.Add(notificationUsers);
+
+                //---------Send Notification to Team
+                hubContext.Clients.User(notificationUsers.userID).SendAsync("newNotification", messege);
+
+
                 return Json(new { teamName=team.Name});
             }
             return Json(new {  });

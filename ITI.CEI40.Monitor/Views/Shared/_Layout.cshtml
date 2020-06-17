@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -27,53 +30,53 @@
 <body>
     <header>
         @*<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-            <a class="navbar-brand" asp-action="Index" asp-controller="Home"><img src="~/img/Monitor.PNG" class="rounded-circle " alt="Monitor" width="40" height="40" />Monitor</a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav ml-auto ">
-                    <li class="nav-item">
-                        <a class="nav-link px-3 py-3 " asp-area="" asp-controller="Home" asp-action="Index"><i id="i" class="fas fa-home"></i> Home</a>
-                    </li>
-
-
+                <a class="navbar-brand" asp-action="Index" asp-controller="Home"><img src="~/img/Monitor.PNG" class="rounded-circle " alt="Monitor" width="40" height="40" />Monitor</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ml-auto ">
                         <li class="nav-item">
-                            <a class="nav-link px-3 py-3  " asp-controller="Project" asp-action="Index"><i id="i" class="fas fa-tasks"></i> projects</a>
+                            <a class="nav-link px-3 py-3 " asp-area="" asp-controller="Home" asp-action="Index"><i id="i" class="fas fa-home"></i> Home</a>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link px-3 py-3  " asp-controller="SubTask" asp-action="Index"><i id="i" class="fas fa-id-badge"></i> Engineer</a>
-                        </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link px-3 py-3  " asp-controller="Project" asp-action="Index"><i id="i" class="fas fa-tasks"></i> projects</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link px-3 py-3  " asp-controller="SubTask" asp-action="Index"><i id="i" class="fas fa-id-badge"></i> Engineer</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link px-3 py-3  " asp-controller="depmanager" asp-action="teamsview"><i class="fas fa-users"></i> Teams</a>
+                            </li>
 
                         <li class="nav-item">
-                            <a class="nav-link px-3 py-3  " asp-controller="depmanager" asp-action="teamsview"><i class="fas fa-users"></i> Teams</a>
+                            <a class="nav-link px-3 py-3  " asp-controller="Department" asp-action="ViewDepartments"><i id="i" class="fas fa-chart-area"></i> Admin</a>
+                        </li>
+                        <li class="dropdown nav-item">
+                            <a href="#" class="dropdown-toggle nav-link px-3 py-3 " data-toggle="dropdown" role="button"
+                               aria-haspopup="true" aria-expanded="false"><i id="i" class="fas fa-tasks"></i> Projects <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" asp-controller="Project" asp-action="Index">Active</a></li>
+                                <li><a class="dropdown-item" asp-controller="Project" asp-action="CompletedProjects">Completed</a></li>
+                                <li><a class="dropdown-item" asp-controller="Project" asp-action="Index">Canceled</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item w-25">
+                            <form id="logoutForm" class="form-inline d-flex justify-content-center" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                <button id="logout" type="submit" style="font-size:medium" class="nav-link btn btn-link">Logout</button>
+                            </form>
                         </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link px-3 py-3  " asp-controller="Department" asp-action="ViewDepartments"><i id="i" class="fas fa-chart-area"></i> Admin</a>
-                    </li>
-                    <li class="dropdown nav-item">
-                        <a href="#" class="dropdown-toggle nav-link px-3 py-3 " data-toggle="dropdown" role="button"
-                           aria-haspopup="true" aria-expanded="false"><i id="i" class="fas fa-tasks"></i> Projects <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" asp-controller="Project" asp-action="Index">Active</a></li>
-                            <li><a class="dropdown-item" asp-controller="Project" asp-action="CompletedProjects">Completed</a></li>
-                            <li><a class="dropdown-item" asp-controller="Project" asp-action="Index">Canceled</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item w-25">
-                        <form id="logoutForm" class="form-inline d-flex justify-content-center" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                            <button id="logout" type="submit" style="font-size:medium" class="nav-link btn btn-link">Logout</button>
-                        </form>
-                    </li>
-
-                </ul>
-            </div>
-        </nav>*@
+                    </ul>
+                </div>
+            </nav>*@
         <partial name="_LoginPartial.cshtml" />
     </header>
-    <div class="container" >
+    <div class="container">
         <partial name="_CookieConsentPartial" />
         <main role="main" style="margin-top :68px;" class="pb-3">
             @RenderBody()
@@ -100,22 +103,132 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/lib/signalr/dist/browser/signalr.js"></script>
     <script>
-        window.onload = function () {
+       @if (SignInManager.IsSignedIn(User)) {
+           <text>
+            var c = 3; // step to number of notifications
+            var ul; // create the notification list
+            ul = document.createElement("ul");
+            ul.setAttribute('id', 'notify-list');
+            ul.setAttribute('class', 'notification-list');
+
+            var loadMoreBtn = document.createElement("input");
+            loadMoreBtn.setAttribute('type', 'button');
+            loadMoreBtn.setAttribute('value', 'load more..');
+            loadMoreBtn.setAttribute('class', 'loadmorebtn');
+
+            // add the ul to the notification bar
+            $('.notifications').popover({
+                html: true,
+                title: "Notifications",
+                animation: true,
+                content: ul,
+                placement: "bottom",
+                //trigger: 'focus'
+            });
+
+            //establishing connection
             connection = new signalR.HubConnectionBuilder().withUrl("/notificationsHub").build();
             connection.start();
 
-            connection.on("newNotification", function (msg) {
-                console.log(msg);
-                //document.getElementById("NotificationList").innerHTML += "<li>" + msg + "</li>";
+            //invoked by the server
+            connection.on("newNotification", function (msg, seen, id) {
+                //console.log(msg);
+                //console.log(seen);
+                //console.log(id);
+                var li = document.createElement('li');
+                li.setAttribute('id', `${id}`);
+                if (seen == false || seen == undefined) {
+                    li.setAttribute('class', 'unseen');
+                    var count = parseInt($('#notify-count').val()) + 1;
+                    $('#notify-count').val(count);
+                };
+                //li.setAttribute('style', ' border-radius: 10px;');
+                li.appendChild(styling(msg));
+                //console.log(li.className);
+                $(ul).prepend(li)
             });
+            // add the button to load more notification from database
+            ul.appendChild(loadMoreBtn);
+            // load more old notifications
+        $(loadMoreBtn).click(function () {
+            $.getJSON(`../../Notification/LoadMore/`, { c: c }, function (list) {
+                //console.log(list);
+                //console.log($(ul).children("li"));
+                list.forEach(function (user) {
+                    //console.log(user.notification);
+                    var li = document.createElement('li');
+                    li.setAttribute('id', `${user.notification.id}`);
+                    if (user.notification.seen == false || user.notification.seen == undefined) {
+                        li.setAttribute('class', 'unseen');
+                        var count = parseInt($('#notify-count').val()) + 1;
+                        $('#notify-count').val(count);
+                    };
+                    li.appendChild(styling(user.notification.messege));
+                    var countLi = $(ul).children("li").length;
+                    $(ul).children("li")[countLi - 1].after(li);
+                });
+                c += 3;
+            });
+        });
+        </text>
         }
 
+        // styling the string message
+        function styling(rowMsg) {
+            var msgParts = rowMsg.split("*");
+            var messege = document.createElement("div");
+            var x = document.createElement("HR");
+            msgParts.forEach(function (p) {
+                var styled = p.split("=");
+                if (styled[1] == "") {
+                    var sp = document.createElement("SPAN");
+                    sp.innerText = styled[0];
+                    //sp.style.color = "red";
+                    sp.style.fontWeight = "bold";
+                    p = sp;
+                } else {
+                    var sp = document.createElement("SPAN");
+                    sp.innerText = p;
+                    p = sp;
+                }
+                messege.appendChild(p);
+            });
+            messege.appendChild(x);
+            return messege
+        }
 
-        //function send() {
-        //    var message = document.getElementById("txt").value;
-        //    console.log(message);
-        //    connection.invoke("sendMessages", message);
-        //}
+        // reset the counter and assigne alert class (the event wait the append)
+        $(".notifications").on("shown.bs.popover", function () {
+            $('#notify-count').val(0);
+            //console.log($('#notify-list'));
+            //console.log($('.unseen').length);
+            $(".unseen").each(function (i, ele) {
+                $(ele).removeClass("unseen");
+                $(ele).addClass("newnotification");
+                var id = ele.id;
+                console.log(id);
+                 $.ajax({
+                    type: "POST",
+                    url: "/Notification/SeeMessege/" + id,
+                    //data: {id: id},
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (msg) {
+                         console.log("after seen: " + msg);
+                    }
+                 });
+            });
+        });
+
+        // remove the alert class
+        $(".notifications").on("hide.bs.popover", function () {
+            //console.log($('.newnotification').length);
+            $(".newnotification").each(function (i, ele) {
+                $(ele).removeClass("newnotification");
+            });
+
+
+        });
 
     </script>
     @RenderSection("Scripts", required: false)

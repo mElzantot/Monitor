@@ -1,3 +1,10 @@
+.container {
+    margin: 0;
+    padding: 0;
+    max-width:100%;
+}
+
+
 body {
     margin: 0;
     padding: 0;
@@ -112,11 +119,24 @@ input {
     position: absolute;
     display: block;
     background-color: rgb(145, 145, 145);
-    width: 4px;
+    width: 5px;
     top: 0;
     left: 50%;
     z-index: 3;
 }
+
+    /*.handle div {
+        height: 10%;
+        position: absolute;
+        display: block;
+        background-color: rgba(0, 0, 0, 0.5);
+        width: 5px;
+        top: 50%;
+        left: 50%;
+        z-index: 0;
+        user-select: none;
+        -moz-user-select: none;
+    }*/
 
     .handle:hover {
         cursor: e-resize;

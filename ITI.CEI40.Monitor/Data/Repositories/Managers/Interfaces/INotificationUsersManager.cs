@@ -8,5 +8,6 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers.Interfaces
 {
     public interface INotificationUsersManager :IRepository<NotificationUsers>
     {
+        IEnumerable<NotificationUsers> GetNotificationsByUserId(string userId);
     }
 }
