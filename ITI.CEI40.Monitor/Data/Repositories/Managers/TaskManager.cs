@@ -82,5 +82,11 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Where(t => t.Id == taskId).Include(t => t.Team).Include(t=>t.Project).FirstOrDefault();
         }
 
+        public IEnumerable<Activity> Archive(int depid)
+        {
+            return set.Where(a => a.FK_DepID == depid).Where(s => s.Status == Status.Cancelled || s.Status == Status.Completed)
+                .Include(a => a.Team).Include(p => p.Project);
+        }
+
     }
 }

@@ -21,6 +21,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         IEnumerable<Activity> GetDepCancelledTasks(int depid);
         Activity GetTaskWithComments(int taskId);
         Activity GetTaskWithProjectAndTeam(int taskId);
+        IEnumerable<Activity> Archive(int depid);
 
 
     }

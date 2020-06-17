@@ -35,6 +35,9 @@
                     <li class="nav-item">
                         <a class="nav-link px-3 py-0  " asp-controller="Project" asp-action="CompletedProjects"><i class="fas fa-tasks"></i> Archive</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 py-3  " asp-controller="Project" asp-action="Archive"><i class="fas fa-archive"></i> Archive</a>
+                    </li>
 
                 }
 
@@ -58,6 +61,9 @@
                     <li class="nav-item">
                         <a class="nav-link px-3 py-0  " asp-controller="TeamLeader" asp-action="EngineersView"><i class="fas fa-users"></i> Team</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 py-3  " asp-controller="TeamLeader" asp-action="EngineersChart"><i class="fas fa-chart-area"></i>team charts</a>
+                    </li>
                 }
                 @if (User.IsInRole(Roles.Engineer.ToString()))
                 {
@@ -69,6 +75,9 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link px-3 py-0 " asp-controller="TeamLeader" asp-action="EngineerChart"><i class="fas fa-chart-area"></i> DashBoard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 py-3 " asp-controller="TeamLeader" asp-action="ArchivedSubTasks"><i class="fas fa-archive"></i> Archive</a>
                     </li>
                 }
 
