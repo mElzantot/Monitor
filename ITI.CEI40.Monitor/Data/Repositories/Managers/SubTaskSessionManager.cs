@@ -20,7 +20,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         public IEnumerable<SubTaskSession> GetTimeSheetForEmp(string empId)
         {
-            return set.Where(st => st.EmpId == empId).Include(st => st.SubTask).ToList();
+            return set.Where(st => st.EmpId == empId && st.SessEndtDate != null).Include(st => st.SubTask).ToList();
         }
 
         public IEnumerable<SubTaskSession> GetReportBySpecificDate(int teamId  ,DateTime date)
