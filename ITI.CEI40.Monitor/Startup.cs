@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ITI.CEI40.Monitor.Entities;
 using Microsoft.AspNetCore.Internal;
+using ITI.CEI40.Monitor.Hubs;
 
 namespace ITI.CEI40.Monitor
 {
@@ -59,8 +60,9 @@ namespace ITI.CEI40.Monitor
                 .AddJsonOptions(
             options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
         );
-            ;
+            
             services.AddScoped<IUnitOfWork,UnitOfWork>();
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -83,6 +85,12 @@ namespace ITI.CEI40.Monitor
 
             app.UseAuthentication();
             SeedData.Initialize(roleManager);
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<NotificationsHub>("/notificationsHub");
+            });
+
 
             app.UseMvc(routes =>
             {

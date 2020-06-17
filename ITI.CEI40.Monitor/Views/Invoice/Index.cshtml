@@ -4,22 +4,34 @@
     int invoType = (int)TempData["InvoiceType"];
 }
 
-<h1>Invoices</h1>
+<link href="~/css/style.css" />
+<h4>    @Model.Project.Name Invoices</h4>
 <br />
+
+@*<div class="projectinfo">
+        <div class="proname">
+            <label asp-for="@Model.Project.Name"></label>
+            <input asp-for="@Model.Project.Name" readonly />
+        </div>
+        <div class="prodescripe">
+            <label asp-for="@Model.Project.Description"></label>
+            <input asp-for="@Model.Project.Description" readonly />
+        </div>
+    </div>*@
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#addInvoiceModal">
+<button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#addInvoiceModal" style="display: inherit;">
     Add Invoice
 </button>
 
 <div id="invoContainer" style="text-align:center;">
     @if (Model.Invoices.Count > 0 && Model.Invoices != null)
     {
-        <table class="table">
-            <thead class="alert-info">
+        <table class="table table-sm text-center">
+            <thead class="alert-info thead-dark">
                 <tr>
                     <th scope="col">Name</th>
                     <th scope="col">Value</th>
-                    <th scope="col">Ivoice Date</th>
+                    <th scope="col">Invoice Date</th>
                     <th scope="col">Payment Date</th>
                     <th scope="col"></th>
                 </tr>
@@ -29,20 +41,19 @@
                 {
                     <partial name="_InvoicePartialView" model="Model.Invoices[i]" />
                 }
-
             </tbody>
+            <tr style="font-weight:bold">
+                <td>Total</td>
+                <td><input style="font-weight:bold; border:none; text-align:center;" id="totalValues" readonly /></td>
+            </tr>
         </table>
-
     }
     else
     {
         <div class="alert alert-info">There are no Invoices for this Project </div>
     }
 </div>
-<div style="display:flex">
-    <h3>Total:   </h3>
-    <h3><input id="totalValues" style="border:none;" readonly /></h3>
-</div>
+
 
 
 <!-- Add Invoice -->
@@ -59,20 +70,29 @@
                 </div>
                 <div class="modal-body">
                     <input hidden type="text" asp-for="@Model.Invoice.FK_ProjectId" value="@Model.ProjectId" />
+                    <input hidden type="text" asp-for="@Model.Invoice.CurrentUser" value="@Model.CurrentUser" />
                     <input hidden type="number" asp-for="@Model.Invoice.InvoicesType" value="@invoType" />
-                    <div class="form-group">
+                    <div class="form-group invoname">
                         <label asp-for="@Model.Invoice.Name"></label>
                         <input asp-for="@Model.Invoice.Name" class="form-control" />
                         <span asp-validation-for="@Model.Invoice.Name" class="text-danger"></span>
                     </div>
-                    <div class="form-group">
-                        <label asp-for="@Model.Invoice.Value"></label>
-                        <input asp-for="@Model.Invoice.Value" class="form-control" />
-                        <span asp-validation-for="@Model.Invoice.Value" class="text-danger"></span>
+                    <div class="row">
+                        <div class="form-group col-6">
+                            <label asp-for="@Model.Invoice.InvoiceDate" style="font-weight:bold;"></label>
+                            <input asp-for="@Model.Invoice.InvoiceDate" class="form-control" />
+                            <span asp-validation-for="@Model.Invoice.InvoiceDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group col-6">
+                            <label asp-for="@Model.Invoice.PaymentDate" style="font-weight:bold;"></label>
+                            <input asp-for="@Model.Invoice.PaymentDate" class="form-control" />
+                            <span asp-validation-for="@Model.Invoice.PaymentDate" class="text-danger"></span>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <div class="row" style="text-align:center;">
-                            <table class="table-condensed">
+
+                    <div class="form-group invoitems">
+                        <div class="row">
+                            <table class="table-condensed table-sm invoitemtable">
                                 <thead>
                                     <tr>
                                         <td>Qunatity</td>
@@ -82,51 +102,33 @@
                                     </tr>
                                 </thead>
                                 <tbody id="itemtbody">
-                                    @if (Model.Invoice != null)
+                                    @for (int i = 0; i < 1; i++)
                                     {
-                                        foreach (var item in Model.InvoiceItems)
-                                        {
-                                            <tr>
-                                                <td><input asp-for="@item.Quantity" type="number" /></td>
-                                                <td><input asp-for="@item.Description" class="descripe" type="text" /></td>
-                                                <td><input asp-for="@item.UnitPrice" type="number" /></td>
-                                                <td><input class="totalprice" readonly /></td>
-                                            </tr>
-                                        }
+                                        <tr>
+                                            <td><input asp-for="@Model.InvoiceItems[i].Quantity" type="number" /></td>
+                                            <td><input asp-for="@Model.InvoiceItems[i].Description" class="descripe" type="text" style="width:400px;" /></td>
+                                            <td><input asp-for="@Model.InvoiceItems[i].UnitPrice" type="number" /></td>
+                                            <td><input id="itt-@i" class="totalprice" readonly /></td>
+                                        </tr>
                                     }
-                                    else
-                                    {
-                                        for (int i = 0; i < 1; i++)
-                                        {
-                                            <tr>
-                                                <td><input id="itq-@i" asp-for="@Model.InvoiceItems[i].Quantity" type="number" /></td>
-                                                <td><input id="itd-@i" asp-for="@Model.InvoiceItems[i].Description" class="descripe" type="text" /></td>
-                                                <td><input id="itu-@i" asp-for="@Model.InvoiceItems[i].UnitPrice" type="number" /></td>
-                                                <td><input id="itt-@i" class="totalprice" readonly /></td>
-                                            </tr>
-                                        }
-                                    }
+
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    <div class="form-group">
-                        <input type="button" class="btn btn-outline-primary" id="additem" value="Add Invoice Item" />
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="@Model.Invoice.InvoiceDate"></label>
-                        <input asp-for="@Model.Invoice.InvoiceDate" class="form-control" />
-                        <span asp-validation-for="@Model.Invoice.InvoiceDate" class="text-danger"></span>
-                    </div>
-                    <br />
-                    <div class="form-group">
-                        <label asp-for="@Model.Invoice.PaymentDate"></label>
-                        <input asp-for="@Model.Invoice.PaymentDate" class="form-control" />
-                        <span asp-validation-for="@Model.Invoice.PaymentDate" class="text-danger"></span>
+                    <div class="invoitemfooter">
+                        <div class="form-group">
+                            <input type="button" class="btn btn-outline-primary btn-sm" id="additem" value="Add Invoice Item" />
+                        </div>
+                        <div class="form-group ivovalue">
+                            <label asp-for="@Model.Invoice.Value">Invoice Total Value</label>
+                            <input asp-for="@Model.Invoice.Value" class="form-control" id="invoicevlaue" readonly />
+                            <span asp-validation-for="@Model.Invoice.Value" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">Add</button>
                     <button type="reset" class="btn btn-secondary" data-dismiss="modal">Close</button>
                 </div>
             </form>
@@ -142,10 +144,12 @@
     <script>
 
         function addInvoice(result, status) {
+            console.log(result);
             if (status == "success") {
                 $('#addInvoiceModal').modal('hide');
                 document.getElementById("InvoiceForm").reset();
-                alert("Employee added Successfully");
+                alert("Invoice added Successfully");
+                calculatTotal();
             }
             else {
                 alert("Error While Adding Invoice");
@@ -153,17 +157,43 @@
             }
         }
 
+        function submitData() { }
+        $("").click(function (e) {
+            //Serialize the form datas.
+            var valdata = $("#InvoiceForm").serialize();
+            //to get alert popup
+            //alert(valdata);
+            $.ajax({
+                url: "/Invoice/AddInvoice",
+                type: "POST",
+                //dataType: 'json',
+                contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+                data: valdata,
+                success: function (res) {
+                    console.log("sasa");
+                    //alert(res);
+                },
+                error: function (xhr, ops, err) {
+                    alert(err);
+                }
+            });
+            // reload the current page
+            window.location.reload();
+        });
+
+
         function deleteInvoice(id) {
             let reponse = confirm("Are You Sure ? ");
             if (reponse) {
                 $.ajax({
-                    url: "Invoice/Delete",
+                    url: "../../Invoice/Delete",
                     type: "POST",
                     data: { id: id },
                     success: function (result) {
                         if (result) {
                             $("#" + id).remove();
                             console.log($("#" + id));
+                            calculatTotal();
                         } else {
                             alert("an error occurred");
                         }
@@ -199,6 +229,8 @@
             var contentCollection = document.getElementsByClassName('modal-content');
             $(contentCollection[0].firstElementChild).show();
             if (contentCollection[0].children.length > 1) { contentCollection[0].lastElementChild.remove(); }
+            invoiceItemsCount = 1; // reset the counter for the invoice items
+            document.getElementById("InvoiceForm").reset(); // reset the form when close it
         });
         // claculate total price
         $('#itemtbody').on('change', function (e) {
@@ -206,23 +238,35 @@
             var quantity = targetRow.children[0].firstChild.value;
             var unitPrice = targetRow.children[2].firstChild.value;
             targetRow.lastElementChild.firstChild.value = (quantity * unitPrice);
+            invoiceValue(); // calculate the total value of the Invoice
         });
+        // calculate the value of the Invoice
+        function invoiceValue() {
+            var total = 0;
+            for (var i = 0; i < invoiceItemsCount; i++) {
+                total += parseInt($(`#itt-${i}`).val());
+                $('#invoicevlaue').val(total);
+            }
+
+        }
         // add invoice item row
+        var invoiceItemsCount = 1; //the default number of items
         $('#additem').on('click', function (e) {
             var nextIndex = $(".descripe").length;
             var c = `<tr> <td><input type="number" data-val="true" data-val-required="The Quantity field is required."                id="InvoiceItems_${nextIndex}__Quantity" name="InvoiceItems[${nextIndex}].Quantity" value="" class="input-validation-             error" aria-describedby="InvoiceItems_${nextIndex}__Quantity-error"></td>
-                                                                    <td><input class="descripe valid" type="text" id="InvoiceItems_${nextIndex}__Description" name="InvoiceItems[${nextIndex}].Description" value="" aria-invalid="false"></td>
-                                                                    <td><input type="number" data-val="true" data-val-required="The UnitPrice field is required." id="InvoiceItems_${nextIndex}__UnitPrice" name="InvoiceItems[${nextIndex}].UnitPrice" value="" class="input-validation-error" aria-describedby="InvoiceItems_${nextIndex}__UnitPrice-error"></td>
-                                                                    <td><input class="totalprice" readonly=""></td> </tr>`
+                                                                                                                        <td><input style="width:400px;" class="descripe valid" type="text" id="InvoiceItems_${nextIndex}__Description" name="InvoiceItems[${nextIndex}].Description" value="" aria-invalid="false"></td>
+                                                                                                                        <td><input type="number" data-val="true" data-val-required="The UnitPrice field is required." id="InvoiceItems_${nextIndex}__UnitPrice" name="InvoiceItems[${nextIndex}].UnitPrice" value="" class="input-validation-error" aria-describedby="InvoiceItems_${nextIndex}__UnitPrice-error"></td>
+                                                                                                                        <td><input class="totalprice" readonly="" id="itt-${nextIndex}"></td> </tr>`
             $('#itemtbody').append(c);
+            invoiceItemsCount++;
         });
         // clculate total Invoices' value
-        var total = 0;
         function calculatTotal() {
+            var total = 0;
             $('.invoValues').each(function (index, inp) {
                 total += parseInt(inp.value);
-                $('#totalValues').val(total);
             });
+            $('#totalValues').val(total);
         }
         $('#tableBody').ready(function () {
             calculatTotal();

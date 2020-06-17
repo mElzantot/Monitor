@@ -37,6 +37,11 @@ namespace ITI.CEI40.Monitor.Entities
 
         public Project Project { get; set; }
 
+        [ForeignKey("applicationUser")]
+        public string CurrentUser { get; set; }
+
+        public ApplicationUser applicationUser { get; set; }
+
         public ICollection<InvoiceItem> invoiceItems { get; set; }
     }
 }

@@ -61,6 +61,20 @@ namespace ITI.CEI40.Monitor.Data
              .WithMany(t => t.TeamTasks)
              .HasForeignKey(pt => pt.TaskID); */
 
+            //----------User/ Notification Many to Many
+
+            modelBuilder.Entity<NotificationUsers>()
+                .HasKey(TT => new { TT.userID, TT.NotificationId });
+
+            modelBuilder.Entity<NotificationUsers>()
+                .HasOne(t => t.User)
+                .WithMany(tt => tt.NotificationUsers)
+                .HasForeignKey(pt => pt.userID);
+
+            modelBuilder.Entity<NotificationUsers>()
+             .HasOne(pt => pt.Notification)
+             .WithMany(t => t.NotificationUsers)
+             .HasForeignKey(pt => pt.NotificationId);
 
             //-------Department Projects many to many Relship
             modelBuilder.Entity<DepartmentProjects>()
