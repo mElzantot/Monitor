@@ -11,7 +11,7 @@
     <div class="row " style="border: 2px solid rgb(219, 219, 219) ; border-radius: 8px;">
         <div class="col-3  innerleft pt-4" style="border-right:2px solid rgb(219, 219, 219);">
             <table class="table table-hover text-center" id="teamTable">
-                
+
                 <tbody>
                     @for (int i = 0; i < Model.Tasks.Count(); i++)
                     {
@@ -36,14 +36,13 @@
 
 
 <!-- File Modal -->
-<div class="modal fade" id="FileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="FileModal" tabindex="-1" role="dialog" aria-labelledby="FileModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Submit Task</h5>
+                <h5 class="modal-title" id="FileModalLabel">Files</h5>
             </div>
-            <form id="FileForm" enctype="multipart/form-data"
-                  method="post" asp-action="AddFile" asp-controller="Task">
+            <form id="fileForm" enctype="multipart/form-data" method="post">
                 <div class="modal-body">
                     <label>Upload File</label>
                     <div class="custom-file">
@@ -54,7 +53,7 @@
                 </div>
                 <div class="modal-footer">
                     <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
-                    <button id="upload" type="submit" class="btn btn-primary">Upload</button>
+                    <button onclick="shakerFun()" type="button" class="btn btn-primary">Upload</button>
                 </div>
             </form>
         </div>
@@ -65,30 +64,30 @@
 <!-- Assign Team -->
 @if (User.IsInRole(Roles.DepartmentManager.ToString()))
 {
-<div class="modal fade" id="AssignTeamModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLongTitle">Add Team</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body" id="teamList">
-                <div class="form-group">
-                    <label asp-for="Team.Name"></label>
-                    <select id="teams" class="form-control" asp-for="Team.Id"
-                            asp-items="new SelectList(Model.Teams,nameof(Team.Id),nameof(Team.Name))"></select>
-                    <span asp-validation-for="Team.Id" class="text-danger"></span>
+    <div class="modal fade" id="AssignTeamModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Add Team</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="assignTeams()">Submit</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <div class="modal-body" id="teamList">
+                    <div class="form-group">
+                        <label asp-for="Team.Name"></label>
+                        <select id="teams" class="form-control" asp-for="Team.Id"
+                                asp-items="new SelectList(Model.Teams,nameof(Team.Id),nameof(Team.Name))"></select>
+                        <span asp-validation-for="Team.Id" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="assignTeams()">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 }
 
 
@@ -165,17 +164,49 @@
             })
         }
 
-        //--------Add File
+
+
+        //----------Add File----------//
+
         function AddFile(taskId) {
+            isHighLevel = true;
+            console.log($("#toggleBtn").val());
+            console.log(isHighLevel);
+            if ($("#toggleBtn").val() == "Med")
+                isHighLevel = false
             $('#task_Id').attr("value", taskId);
+            $('#isHighLevelBool').attr("value", isHighLevel);
             $('#FileModal').modal('show');
-            $('input[type="file"]').change(function (e) {
-                let fileName = e.target.files[0].name;
-                $(".custom-file-label").html(fileName);
-            });
+            console.log(isHighLevel);
         }
 
-        //----------Add Comment
+        $('input[type="file"]').change(function (e) {
+             fileName = e.target.files[0].name;
+            $(".custom-file-label").html(fileName);
+        });
+
+        function shakerFun() {
+            let form = $('#fileForm')[0];
+            let data = new FormData(form);
+            if (fileName) {
+                $.ajax({
+                    type: 'post',
+                    url: `/comment/AddFileForTask?isHighLevel=` + `${isHighLevel}`,
+                    processData: false,  // Important!
+                    contentType: false,
+                    cache: false,
+                    data: data,
+                    success: function (response) {
+                        $("#FileModal").modal('hide');
+                        console.log(response.msg);
+                    }
+                })
+            }
+        }
+
+
+
+        //----------Add Comment-----------//
 
         function AddComment(taskId) {
             let comment = $('#commentArea').val();
@@ -197,7 +228,6 @@
                     error: function (x, y, err) {
                         console.log(err);
                     }
-
                 })
             }
         }
@@ -229,8 +259,8 @@
         }
 
         function assignTeams() {
+            debugger;
             var team = $('#teams').val();
-
             $.post({
                 type: "POST",
                 url: `/DepManager/AssignTasks`,

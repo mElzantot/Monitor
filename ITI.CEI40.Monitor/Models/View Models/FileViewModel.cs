@@ -20,6 +20,9 @@ namespace ITI.CEI40.Monitor.Models.View_Models
         [Required]
         public int taskId { get; set; }
 
+        [Required]
+        public int subTaskId { get; set; }
+
 
     }
 }
