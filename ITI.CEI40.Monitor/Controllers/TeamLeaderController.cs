@@ -66,12 +66,23 @@ namespace ITI.CEI40.Monitor.Controllers
             //unitofwork.SubTasks.Edit(subtask);  
         }
 
-        //omar
         [Authorize(Roles = "Engineer")]
-        public IActionResult EngineerChart()
+        [HttpGet]
+        public IActionResult ArchivedSubTasks()
         {
             string engId = userManager.GetUserId(HttpContext.User);
+            var subtasks = unitofwork.SubTasks.Archive(engId).ToList();
+            return View("ArchivedSubTasks", subtasks);
+        }
+
+        //omar
+        [Authorize(Roles = "Engineer")]
+        public IActionResult EngineerChart(string engid=null)
+        {
+            
+            string engId = userManager.GetUserId(HttpContext.User);
             List<SubTask> subtasks = unitofwork.SubTasks.GetEngineerComletedSubTasks(engId);
+
 
             List<string> months = new List<string>();
             List<int> quality = new List<int>();
@@ -126,6 +137,8 @@ namespace ITI.CEI40.Monitor.Controllers
                 Complexity = complexity
             };
             return View("EngineerChart", engineerChrtView);
+            
+            
         }
 
 
@@ -134,6 +147,8 @@ namespace ITI.CEI40.Monitor.Controllers
         {
             int teamId = unitofwork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
             List<ApplicationUser> team = unitofwork.Engineers.GetEngineersInsideTeamWithSubTasks(teamId);
+            List<string> Ids = new List<string>();
+
             
             List<string> names = new List<string>();
             List<List<float>> avg = new List<List<float>>();
@@ -141,6 +156,7 @@ namespace ITI.CEI40.Monitor.Controllers
             foreach (var item in team)
             {
                 names.Add(item.UserName);
+                Ids.Add(item.Id);
                 if (item.SubTasks != null)
                 {
                    avg.Add(EngineerPerformence(item.SubTasks.ToList()));
@@ -153,7 +169,8 @@ namespace ITI.CEI40.Monitor.Controllers
             TeamChartViewModel teamChart = new TeamChartViewModel
             {
                 Names= names,
-                Values= avg
+                Values= avg,
+                EngIds=Ids
             };
             return View("TeamChart", teamChart);
         }
@@ -162,13 +179,14 @@ namespace ITI.CEI40.Monitor.Controllers
 
         private List<float> EngineerPerformence(List<SubTask> subTasks)
         {
-            List<float> result = new List<float>();
+            List<float> result = new List<float>() { 0,0,0,0,0};
             foreach (var item in subTasks)
             {
                 result[0] += item.ActualDuration;
                 result[1] += item.Complexity;
                 result[2] += item.Quality * item.Complexity;
                 result[3] += item.TimeManagement * item.Complexity;
+                result[4] += 1;
             }
             result[2] = result[2] / result[1];
             result[3] = result[3] / result[1];
@@ -251,6 +269,9 @@ namespace ITI.CEI40.Monitor.Controllers
 
             return PartialView(subtasks);
         }
+
+
+        
 
     }
 }

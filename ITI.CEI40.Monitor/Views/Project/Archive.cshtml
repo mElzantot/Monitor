@@ -1,0 +1,150 @@
+﻿@model List<Project>
+
+
+    <div id="mainPage" class="mb-2">
+        <div class="row">
+            <h3 class="text-muted m-3">Archived Projects</h3>
+        </div>
+        <span>
+            <button class="btn alert-success" onclick="comp()">
+                Completed
+            </button>
+            <button class="btn alert-danger" onclick="canc()">
+                Cancelled
+            </button>
+            @*<a class="btn alert-primary" asp-controller="project" asp-action="index">
+                Back To List
+            </a>*@
+        </span>
+
+    </div>
+    @if (Model.Count(p => p.Status == Status.Completed) == 0)
+    {
+        <div id="completed" style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px; margin:auto">
+            <h3 class="text-muted m-3" style="text-align:center">No Completed Projects </h3>
+        </div>
+    }
+    else
+    {
+        <div id="completed">
+            <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
+
+                <table class="table table-hover text-center" id="teamTable">
+                    <thead class="tableh alert alert-success">
+                        <tr>
+                            <th scope="col">Project Name</th>
+                            @*<th scope="col">Task Name</th>*@
+                            <th scope="col">Owner</th>
+                            <th scope="col">From</th>
+                            <th scope="col">To</th>
+                            @*<th scope="col">Progress</th>*@
+                            <th scope="col">Income </th>
+                            <th scope="col">Outcome </th>
+                            <th scope="col">Status </th>
+
+
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Count(); i++)
+                        {
+                            if (Model[i].Status == Status.Completed)
+                            {
+
+
+                                <tr>
+                                    <td>@Model[i].Name</td>
+                                    @*<td>@Model[i].Task.Name</td>*@
+                                    <td>@Model[i].Owner</td>
+                                    <td>@Model[i].StartDate.Value.ToString("dd/MM/yyyy")</td>
+                                    <td>@Model[i].EndDate.Value.ToString("dd/MM/yyyy")</td>
+                                    @*<td><div class="progress"><div class="progress-bar" role="progressbar" style="width: @Model[i].Progress%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@Model[i].Progress%</div></div></td>*@
+
+                                    <td>@Model[i].Income</td>
+                                    <td>@Model[i].Outcome</td>
+                                    <td>@Model[i].Status</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+
+    @if (Model.Count(p => p.Status == Status.Cancelled) == 0)
+    {
+        <div id="cancelled" style="display:none; border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px; margin:auto">
+            <h3 class="text-muted m-3" style="text-align:center">No Cancelled Projects </h3>
+        </div>
+    }
+    else
+    {
+
+        <div id="cancelled" style="display:none;  ">
+            <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
+                <table class="table table-hover text-center" id="teamTable">
+                    <thead class="tableh alert alert-danger">
+                        <tr>
+                            <th scope="col">Project Name</th>
+                            @*<th scope="col">Task Name</th>*@
+                            <th scope="col">Owner </th>
+                            <th scope="col">From</th>
+                            <th scope="col">To</th>
+                            @*<th scope="col">Progress</th>*@
+                            <th scope="col">Income </th>
+                            <th scope="col">Outcome </th>
+                            <th scope="col">Status </th>
+
+
+
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Count(); i++)
+                        {
+                            if (Model[i].Status == Status.Cancelled)
+                            {
+
+
+                                <tr>
+                                    <td>@Model[i].Name</td>
+                                    @*<td>@Model[i].Task.Name</td>*@
+                                    <td>@Model[i].Owner</td>
+                                    <td>@Model[i].StartDate.Value.ToString("dd/MM/yyyy")</td>
+                                    <td>@Model[i].EndDate.Value.ToString("dd/MM/yyyy")</td>
+                                    @*<td><div class="progress"><div class="progress-bar" role="progressbar" style="width: @Model[i].Progress%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@Model[i].Progress%</div></div></td>*@
+
+                                    <td>@Model[i].Income</td>
+                                    <td>@Model[i].Outcome</td>
+                                    <td>@Model[i].Status</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    }
+
+    @section scripts{
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script>
+            function comp() {
+                $('#cancelled').hide();
+                $('#completed').show();
+            }
+            function canc() {
+                $('#completed').hide();
+                $('#cancelled').show();
+            }
+        </script>
+
+    }
+
+
+    

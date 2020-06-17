@@ -283,7 +283,7 @@
 
 
         function parseDate(s) {
-            var b = s.split(/\D/);
+            var b = s.split("/");
             return new Date(b[0], --b[1], b[2]);
         }
 
@@ -446,10 +446,12 @@
              
 
                 var options = {
-                    colors: ['#cbb69d', '#603913', '#c69c6e'],
+                    forceIFrame: true,
+                    backgroundColor: 'paige',
+                    colors: ['red', 'yellow', 'green', 'blue'],
                     timeline: {
-                        rowLabelStyle: { fontName: 'Helvetica', fontSize: 24, color: '#603913' },
-                        barLabelStyle: { fontName: 'Garamond', fontSize: 14 }
+                        rowLabelStyle: { fontName: 'Helvetica', fontSize: 18, color: 'black' },
+                        barLabelStyle: { fontName: 'italic', fontSize: 14 }
                     }
                 };
                 chart.draw(dataTable, options);
