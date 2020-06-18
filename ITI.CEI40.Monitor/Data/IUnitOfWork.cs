@@ -24,6 +24,7 @@ namespace ITI.CEI40.Monitor.Data
         IDependencyManager Dependency { get; }
         INotificationManager Notification { get; }
         INotificationUsersManager NotificationUsers { get; }
+        IHolidayManager Holiday { get; }
         int Complete();
 
     }

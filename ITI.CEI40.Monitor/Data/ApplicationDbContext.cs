@@ -27,6 +27,7 @@ namespace ITI.CEI40.Monitor.Data
         public virtual DbSet<Claim> Claims { get; set; }  
         public virtual DbSet<Invoice> Invoices { get; set; }  
         public virtual DbSet<InvoiceItem> InvoiceItems { get; set; }  
+        public virtual DbSet<Holiday> Holidays { get; set; }  
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

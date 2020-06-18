@@ -55,8 +55,8 @@
                                 <tr id="@item.ID" onclick="OpenEditSec(@item.ID)">
                                     <td class="text-center font-weight-bold">@item.Name</td>
                                     <td style="text-align:right">
-                                        <a href="/Activity/Index/@item.ID" class="btn alert-info" ><i id="i" class="fas fa-chart-area"></i> Chart</a>
-                                        
+                                        <a href="/Activity/Index/@item.ID" class="btn alert-info"><i id="i" class="fas fa-chart-area"></i> Chart</a>
+
                                         @if (item.EndDate != null)
                                         {
                                             <button onclick="Dashboard(@item.ID)" type="button" class="btn alert-warning">Dashboard</button>
@@ -72,6 +72,9 @@
                                                 </div>
                                             </div>
                                         }
+
+                                        <a href="/Invoice/Index_Income/@item.ID" class="btn btn-outline-primary">Income</a>
+                                        <a href="/Invoice/Index_Expense/@item.ID" class="btn btn-outline-info">Outcome</a>
                                     </td>
                                 </tr>
                             }
@@ -146,18 +149,18 @@
                     success: function (response) {
                         $('#tablebody').append(
                             `<tr id="${response.id}" onclick="Edit(${response.id})">
-                                                                                    <td class="text-center font-weight-bold">${response.name}</td>
-                                                                                    <td style="text-align:right">
-                                                                                    <a href="/Activity/Index/${response.id}" class="btn alert-info" ><i id="i" class="fas fa-chart-area"></i> Chart</a>
-                                                                                    <div class="btn-group dropleft">
-                                                        <button type="button" class="btn alert-warning " data-toggle="dropdown" >
-                                                            Dashboard
-                                                        </button>
-                                                        <div class="dropdown-menu px-2 alert-danger">
-                                                            Lets goto charts and create tasks
+                                                                                        <td class="text-center font-weight-bold">${response.name}</td>
+                                                                                        <td style="text-align:right">
+                                                                                        <a href="/Activity/Index/${response.id}" class="btn alert-info" ><i id="i" class="fas fa-chart-area"></i> Chart</a>
+                                                                                        <div class="btn-group dropleft">
+                                                            <button type="button" class="btn alert-warning " data-toggle="dropdown" >
+                                                                Dashboard
+                                                            </button>
+                                                            <div class="dropdown-menu px-2 alert-danger">
+                                                                Lets goto charts and create tasks
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                                            </tr>`
+                                                                                </tr>`
                         );
                         //For first time if there is no project in the table (Hide the sec of No Project is created)
                         $('#noProject').hide();

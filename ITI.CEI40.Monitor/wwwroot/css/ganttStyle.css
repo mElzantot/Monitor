@@ -125,7 +125,7 @@ input {
     z-index: 3;
 }
 
-    .handle div {
+    /*.handle img {
         position:relative;
         height: 10%;
         background-color: rgba(0, 0, 0, 0.5);
@@ -135,7 +135,7 @@ input {
         z-index: 0;
         user-select: none;
         -moz-user-select: none;
-    }
+    }*/
 
     .handle:hover {
         cursor: e-resize;

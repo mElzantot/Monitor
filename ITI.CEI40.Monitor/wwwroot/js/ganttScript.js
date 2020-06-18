@@ -83,7 +83,7 @@ function parseDate(s) {
 
 function isHoliday(date) {
     var h_date = new Date(date);
-    if (h_date.getDay() == 5 || h_date.getDay() == 6) {
+    if (disableAllTheseDays(h_date) || h_date.getDay() == 5 || h_date.getDay() == 6) {
         return true;
     }
     return false;
@@ -141,6 +141,20 @@ function formatDate(date) {
     return [day, month, year].join('/');
 }
 
+// the disabled days
+var disabledDays = [];
+function disableAllTheseDays(date) {
+    stringdate = formatDate(date);
+    for (let i = 0; i < disabledDays.length; i++) {
+        if (disabledDays[i] === stringdate) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+
 // the body
 function createRowTask(num) {
     num = num + preRowsNo;
@@ -169,7 +183,7 @@ function tableRow(n) {
         dateFormat: 'dd/mm/yy',
         firstDay: 0,   //---Set The First Day in the Week ( Saturday)
         beforeShowDay: function (dt) {
-            return [dt.getDay() == 5 || dt.getDay() == 6 ? false : true];
+            return [disableAllTheseDays(dt) || dt.getDay() == 5 || dt.getDay() == 6 ? false : true];
         }, //----   (Disable The Week Ends in Datepicker  )
         //minDate: 0, //-----Disable the previous Days 
         onSelect: function () {
@@ -196,7 +210,7 @@ function tableRow(n) {
         dateFormat: 'dd/mm/yy',
         firstDay: 0,   //---Set The First Day in the Week ( Saturday)
         beforeShowDay: function (dt) {
-            return [dt.getDay() == 5 || dt.getDay() == 6 ? false : true];
+            return [disableAllTheseDays(dt) || dt.getDay() == 5 || dt.getDay() == 6 ? false : true];
         }, //----   (Disable The Week Ends in Datepicker  )
         //minDate: 0, //-----Disable the previous Days 
         onSelect: function () {

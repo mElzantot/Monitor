@@ -30,6 +30,7 @@ namespace ITI.CEI40.Monitor.Data
             Dependency = new DependencyManager(context);
             Notification = new NotificationManager(context);
             NotificationUsers = new NotificationUsersManager(context);
+            Holiday = new HolidayManager(context);
 
         }
         public IClaimManager Claims { get; }
@@ -48,6 +49,7 @@ namespace ITI.CEI40.Monitor.Data
         public IDependencyManager Dependency { get; }
         public INotificationManager Notification { get; }
         public INotificationUsersManager NotificationUsers { get; }
+        public IHolidayManager Holiday { get; }
 
 
 
