@@ -25,7 +25,6 @@
                     <div class="cont">
                         <input type="range" asp-for="@Model.Progress" onchange="ChangeProgress(@Model.Id,this.value)" min="0" max="100" step="10" class="slider" id="myRange">
                     </div>
-
                 </div>
 
                 <a class="btn btn-sm btn-outline-info" href="/comment/activitylog?taskId=@Model.FK_TaskId">Task Details <i class="fas fa-info"></i></a>             

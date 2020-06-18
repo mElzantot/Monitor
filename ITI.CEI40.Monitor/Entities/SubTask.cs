@@ -22,6 +22,7 @@ namespace ITI.CEI40.Monitor.Entities
             this.Complexity = 0;
         }
 
+
         [Key]
         public int Id { get; set; }
 

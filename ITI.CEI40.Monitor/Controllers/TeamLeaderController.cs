@@ -77,7 +77,7 @@ namespace ITI.CEI40.Monitor.Controllers
 
         //omar
         [Authorize(Roles = "Engineer")]
-        public IActionResult EngineerChart(string engid=null)
+        public IActionResult EngineerChart()
         {
             
             string engId = userManager.GetUserId(HttpContext.User);
