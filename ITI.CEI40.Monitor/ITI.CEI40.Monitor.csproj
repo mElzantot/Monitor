@@ -40,6 +40,8 @@
     <Compile Remove="Migrations\20200615195138_subenddata.Designer.cs" />
     <Compile Remove="Migrations\20200616182729_firstt.cs" />
     <Compile Remove="Migrations\20200616182729_firstt.Designer.cs" />
+    <Compile Remove="Migrations\20200618195504_RolesUpdate.cs" />
+    <Compile Remove="Migrations\20200618195504_RolesUpdate.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

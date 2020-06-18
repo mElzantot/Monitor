@@ -15,6 +15,8 @@ namespace ITI.CEI40.Monitor.Entities.Enums
         ProjectManager,
         [Display(Name ="Team Leader")]
         TeamLeader,
-        Engineer
+        Engineer,
+        [Display(Name = "Finance")]
+        Finance
     }
 }

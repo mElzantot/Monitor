@@ -99,9 +99,6 @@ namespace ITI.CEI40.Monitor
                 routes.MapHub<NotificationsHub>("/notificationsHub");
             });
 
-           
-
-
 
             app.UseMvc(routes =>
             {
