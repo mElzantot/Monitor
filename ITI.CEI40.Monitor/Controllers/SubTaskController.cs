@@ -22,16 +22,15 @@ namespace ITI.CEI40.Monitor.Controllers
         private readonly IUnitOfWork unitOfWork;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IHubContext<NotificationsHub> hubContext;
-    
+
 
         public SubTaskController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IHubContext<NotificationsHub> hubContext)
         {
             this.unitOfWork = unitOfWork;
             this.userManager = userManager;
             this.hubContext = hubContext;
-           
-        }
 
+        }
 
 
         [Authorize(Roles = "Engineer")]
@@ -43,7 +42,7 @@ namespace ITI.CEI40.Monitor.Controllers
 
             return View("Engineer", subTasks);
         }
-
+        س
         [Authorize(Roles = "Engineer")]
         public IActionResult DisplayRow(int ID)
         {
@@ -122,7 +121,6 @@ namespace ITI.CEI40.Monitor.Controllers
             // $"");
         }
 
-
         [Authorize(Roles = "Engineer")]
         public void EditPriority(int ID, Priority priority)
         {
@@ -130,7 +128,6 @@ namespace ITI.CEI40.Monitor.Controllers
             task.Priority = priority;
             unitOfWork.Tasks.Edit(task);
         }
-
 
         [Authorize(Roles = "TeamLeader")]
         [HttpGet]
@@ -214,6 +211,71 @@ namespace ITI.CEI40.Monitor.Controllers
 
                 return PartialView("_NewSubTaskPartialView", newSubTask);
 
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        [Authorize(Roles = "TeamLeader")]
+        [HttpGet]
+        public IActionResult EditSubTask(int subtaskId)
+        {
+            Team team = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User));
+            SubTask subTask = unitOfWork.SubTasks.GetSubTaskWithEngineer(subtaskId);
+            var subTaskVM = new SubTaskViewModel
+            {
+                SubTaskId = subtaskId,
+                Name = subTask.Name,
+                Description = subTask.Description,
+                StartDate = subTask.StartDate.Value.Date.ToShortDateString() ?? "",
+                EndDate = subTask.EndDate.Value.Date.ToShortDateString() ?? "",
+                Assignee = subTask.Engineer.Id,
+                Status = subTask.Status,
+                Priority = subTask.Priority,
+                TeamMembers = unitOfWork.Engineers.GetEngineersInsideTeam(team.Id).ToList()
+            };
+
+            var index = subTaskVM.TeamMembers.FindIndex(x => x.Id == subTaskVM.Assignee.ToString());
+            var item = subTaskVM.TeamMembers[index];
+            subTaskVM.TeamMembers[index] = subTaskVM.TeamMembers[0];
+            subTaskVM.TeamMembers[0] = item;
+
+            //subTaskVM.TeamMembers.OrderBy(x => x.Id == subTask.FK_EngineerID).ToList();
+
+            return PartialView("_SubTaskModal", subTaskVM);
+        }
+
+        [Authorize(Roles = "TeamLeader")]
+        [HttpPost]
+        public IActionResult EditSubTask(SubTaskViewModel newSubTask)
+        {
+
+            if (ModelState.IsValid)
+            {
+                int[] startDate = new int[3];
+                int[] endDate = new int[3];
+                SubTask originalSubTask = unitOfWork.SubTasks.GetSubTaskWithEngineer(newSubTask.SubTaskId);
+                originalSubTask.Name = newSubTask.Name;
+                originalSubTask.Description = newSubTask.Description;
+                originalSubTask.Priority = newSubTask.Priority;
+                originalSubTask.Status = newSubTask.Status;
+                originalSubTask.FK_EngineerID = newSubTask.Assignee;
+
+                if (newSubTask.StartDate.Contains('/'))
+                {
+                    startDate = newSubTask.StartDate.Split('/').Select(Int32.Parse).ToArray();
+                    originalSubTask.StartDate = new DateTime(startDate[2], startDate[1], startDate[0]);
+                }
+                if (newSubTask.EndDate.Contains('/'))
+                {
+                    endDate = newSubTask.EndDate.Split('/').Select(Int32.Parse).ToArray();
+                    originalSubTask.EndDate = new DateTime(endDate[2], endDate[1], endDate[0]);
+                }
+                originalSubTask = unitOfWork.SubTasks.Edit(originalSubTask);
+                originalSubTask = unitOfWork.SubTasks.GetSubTaskWithEngineer(originalSubTask.Id);
+                return PartialView("_NewSubTaskPartialView", originalSubTask);
             }
             else
             {

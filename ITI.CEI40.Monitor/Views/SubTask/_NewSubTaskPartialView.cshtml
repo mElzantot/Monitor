@@ -1,14 +1,60 @@
 ﻿@model SubTask
 
-<tr id="@Model.Id">
+@if (Model.Id > 0)
+{
     <td>@Model.Name</td>
     <td>@Model.Priority</td>
-    <td>@Model.StartDate.Value.ToShortDateString()</td>
-    <td>@Model.EndDate.Value.ToShortDateString()</td>
+    @if (Model.StartDate.HasValue)
+    {
+        <td>@Model.StartDate.Value.ToShortDateString()</td>
+    }
+    @if (Model.EndDate.HasValue)
+    {
+        <td>@Model.EndDate.Value.ToShortDateString()</td>
+    }
     <td>@Model.Status</td>
-    <td>@Model.Progress</td>
+    <td>
+        <div class="progress">
+            <div class="progress-bar" role="progressbar" style="width:@Model.Progress%;"
+                 aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                @Model.Progress%
+            </div>
+        </div>
+    </td>
     @if (@Model.Engineer != null)
     {
         <td>@Model.Engineer.UserName</td>
     }
-</tr>
+    <td><button class="btn btn-sm btn-dark" onclick="getEditSubTaskModal(@Model.Id)"><i class="fas fa-edit"></i></button></td>
+
+}
+else
+{
+    <tr id="@Model.Id">
+        <td>@Model.Name</td>
+        <td>@Model.Priority</td>
+        @if (Model.StartDate.HasValue)
+        {
+            <td>@Model.StartDate.Value.ToShortDateString()</td>
+        }
+        @if (Model.EndDate.HasValue)
+        {
+            <td>@Model.EndDate.Value.ToShortDateString()</td>
+        }
+        <td>@Model.Status</td>
+        <td>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width:@Model.Progress%;"
+                     aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                    @Model.Progress%
+                </div>
+            </div>
+        </td>
+        @if (@Model.Engineer != null)
+        {
+            <td>@Model.Engineer.UserName</td>
+        }
+        <td><button class="btn btn-sm btn-dark" onclick="getEditSubTaskModal(@Model.Id)"><i class="fas fa-edit"></i></button></td>
+
+    </tr>
+}
