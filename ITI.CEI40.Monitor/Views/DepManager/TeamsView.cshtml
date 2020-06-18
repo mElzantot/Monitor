@@ -51,6 +51,10 @@
     </div>
 </div>
 
+
+
+
+
 <button type="button" id="togleBtn" class="btn btn-primary d-none" data-toggle="modal" data-target="#exampleModal">
     Launch demo modal
 </button>
@@ -84,7 +88,6 @@
 
     <script>
         function EditPriority(id, value) {
-
             $.ajax({
                 type: "GET",
                 url: `/Subtask/EditPriority`,
@@ -144,6 +147,32 @@
             })
         }
 
+
+        function ChangeStatus(Id, value) {
+            var meassage;
+            switch (value) {
+                case 2:
+                    meassage = 'Do you want to submit this task';
+                    break;
+                case 3:
+                    meassage = 'Do you want to cancel this task';
+                    break;
+            }
+
+            if (confirm(meassage)) {
+                $.ajax({
+                    url: "/DepManager/EditStatus",
+                    type: "Get",
+                    data: {
+                        id: Id,
+                        status: value
+                    },
+                    success: function () {
+                        $(`#${Id}`).hide();
+                    }
+                })
+            }
+        }
     </script>
 }
 

@@ -26,7 +26,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         public IEnumerable<ApplicationUser> GetEngineersInsideTeam(int teamId)
         {
-            return set.Where(e => e.FK_TeamID == teamId).ToList();
+            return set.Where(e => e.FK_TeamID == teamId).Include(e=>e.Team).ToList();
         }
 
         public IEnumerable<ApplicationUser> GetEngineersWithSubtasks(int teamId)
@@ -34,5 +34,14 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Where(e => e.FK_TeamID == teamId).Include(t=>t.SubTasks);
         }
 
+        public List<ApplicationUser> GetEngineersInsideTeamWithSubTasks(int teamId)
+        {
+            List<ApplicationUser> applicationUsers= set.Where(e => e.FK_TeamID == teamId).Include(e=>e.SubTasks)
+                .Include(s=>s.SubTasks).Select(e=>new ApplicationUser{
+                UserName=e.UserName,
+                SubTasks=e.SubTasks.Where(s=>s.Status==Status.Completed && s.ActualEndDate.Value.Month==DateTime.Now.Month).ToList()
+                }).ToList();
+            return applicationUsers;
+        }
     }
 }

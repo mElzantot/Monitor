@@ -16,6 +16,15 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         List<SubTask> GetSubTasksByTaskId(int taskId);
         SubTask GetSubTaskIncludingTask(int subTaskId);
         SubTask GetSubTaskIncludingProject(int subTaskId);
+
+        List<SubTask> GetEngineerSubTasks(string EngineerId);
+        SubTask GetSubTaskWithEngineer(int id);
+        IEnumerable<SubTask> GetEngineerCancelledSubTasks(string EngineerId);
+        SubTask GetSubTaskWithTeam(int id);
+        IEnumerable<SubTask> Get_Not_C_SubTasksFromTask(int taskId);
+        List<SubTask> GetEngineerComletedSubTasks(string EngineerId);
+        List<SubTask> GetAllSubTasksWithTask(int taskId);
+        IEnumerable<SubTask> Archive(string EngineerId);
     }
 
     

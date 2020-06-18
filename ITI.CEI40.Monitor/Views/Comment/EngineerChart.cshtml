@@ -1,0 +1,279 @@
+﻿@model EngineerChrtViewModel
+
+@foreach (var item in Model.Months)
+{
+    <input class="months" hidden asp-for="@item" />
+}
+
+@foreach (var item in Model.Quality)
+{
+    <input class="quality" hidden asp-for="@item" />
+}
+
+@foreach (var item in Model.Time)
+{
+    <input class="time" hidden asp-for="@item" />
+}
+
+@foreach (var item in Model.Complexity)
+{
+    <input class="complexity" hidden asp-for="@item" />
+}
+
+@foreach (var item in Model.LastTasks)
+{
+
+    <input class="taskd" hidden asp-for="@item.ActualDuration" />
+    <input class="taskq" hidden asp-for="@item.Quality" />
+    <input class="taskt" hidden asp-for="@item.TimeManagement" />
+    <input class="taskn" hidden asp-for="@item.Name" />
+}
+
+
+<div class="py-2" style="display:flex; justify-content:space-between">
+
+    <div class="slice" style="width:39%">
+        <div id="Complexity" style="height:400px;"></div>
+    </div>
+    <div class="slice" style="width:60%">
+        <div id="Time_Quality" style=" height:400px;"></div>
+    </div>
+</div>
+
+
+<div style="display:flex; justify-content:space-between">
+
+    <div class="slice" style="width:60%">
+        <div id="hrs" style="height:400px;"></div>
+    </div>
+
+    <div class="slice" style="width:39%">
+        <div id="donutchart" style=" height: 400px;"></div>
+    </div>
+</div>
+
+
+
+@section Scripts{
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['bar'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+
+
+        var month = [];
+        var quality = [];
+        var time = [];
+        var complexity = [];
+
+        var TaskDuration = [];
+        var TaskQulaity = [];
+        var TaskTime = [];
+        var TaskName = [];
+
+
+        var end = $('.months')
+        var qual = $('.quality')
+        var ti = $('.time')
+        var comp = $('.complexity')
+
+        var TaskD = $('.taskd')
+        var TaskQ = $('.taskq')
+        var TaskT = $('.taskt')
+        var TaskN = $('.taskn')
+
+
+        for (var i = 0; i < end.length; i++) {
+            month.push(end[i].defaultValue)
+            quality.push(qual[i].defaultValue)
+            time.push(ti[i].defaultValue)
+            complexity.push(comp[i].defaultValue)
+
+            TaskDuration.push(TaskD[i].defaultValue)
+            TaskQulaity.push(TaskQ[i].defaultValue)
+            TaskTime.push(TaskT[i].defaultValue)
+            TaskName.push(TaskN[i].defaultValue)
+        }
+
+
+        function drawChart() {
+            var dataTime = new google.visualization.DataTable();
+            dataTime.addColumn('string', 'Month');
+            dataTime.addColumn('number', 'Qulaity');
+            dataTime.addColumn('number', 'Time Management');
+
+            dataTime.addRows([
+                [`${month[0]}`, Number(quality[0]), Number(time[0])]
+            ]);
+
+            for (let j = 1; j < time.length; j++) {
+                dataTime.addRows([
+                    [`${month[j]}`, Number(quality[j]), Number(time[j])]
+                ]);
+            }
+
+            var options = {
+                chart: {
+                    title: 'Performance',
+                    hAxis: { textStyle: { bold: true } },
+                    vAxis: { minValue: 0, maxValue: 100 },
+                    animation: {
+                        startup: true,
+                        duration: 2500,
+                        easing: 'in',
+                    },
+                    bar: { groupWidth: "70%" },
+                    legend: { position: "none" },
+                }
+            };
+
+            var chart = new google.charts.Bar(document.getElementById('Time_Quality'));
+
+            chart.draw(dataTime, google.charts.Bar.convertOptions(options));
+
+            /**------------------------------------ */
+            /**------------------------------------ */
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Month');
+            data.addColumn('number', 'Complexity');
+
+            data.addRows([
+                [`${month[0]}`, Number(complexity[0])]
+            ]);
+
+            for (let j = 1; j < time.length; j++) {
+                data.addRows([
+                    [`${month[j]}`, Number(complexity[j])]
+                ]);
+            }
+
+            var optionsComp = {
+                chart: {
+                    title: 'Tasks Complexity',
+                    hAxis: { textStyle: { bold: true } },
+                    animation: {
+                        startup: true,
+                        duration: 2500,
+                        easing: 'in',
+                    },
+                    bar: { groupWidth: "70%" },
+                    legend: { position: "none" },
+                }
+            };
+            var chartcomp = new google.charts.Bar(document.getElementById('Complexity'));
+            chartcomp.draw(data, google.charts.Bar.convertOptions(optionsComp));
+
+
+
+            /**------------------------------------ */
+            /**------------------------------------ */
+
+            var datahrs = new google.visualization.DataTable();
+            datahrs.addColumn('string', 'Task');
+            datahrs.addColumn('number', 'Quality');
+            datahrs.addColumn('number', 'Time Management');
+
+            datahrs.addRows([
+                [`${TaskName[0]}`, Number(TaskQulaity[0]), Number(TaskTime[0])]
+            ]);
+
+            for (let j = 1; j < TaskName.length; j++) {
+                datahrs.addRows([
+                    [`${TaskName[j]}`, Number(TaskQulaity[j]), Number(TaskTime[j])]
+                ]);
+            }
+
+            var optionsComp = {
+                chart: {
+                    title: 'Month Tasks',
+                    hAxis: { textStyle: { bold: true } },
+                    vAxis: { minValue: 0, maxValue: 100 },
+                    animation: {
+                        startup: true,
+                        duration: 2500,
+                        easing: 'in',
+                    },
+                }
+            };
+            var chartcomp = new google.charts.Bar(document.getElementById('hrs'));
+            chartcomp.draw(datahrs, google.charts.Bar.convertOptions(optionsComp));
+
+            /*----------------------------------*/
+            /*----------------------------------*/
+
+
+            //var datadonut = new google.visualization.DataTable();
+            //datadonut.addColumn('string', 'Task');
+            //datadonut.addColumn('number', 'Hrs');
+
+            //datadonut.addRows([
+            //    [`${TaskName[0]}`, Number(TaskDuration[0])]
+            //]);
+
+            //for (let j = 1; j < TaskName.length; j++) {
+            //    datadonut.addRows([
+            //        [`${TaskName[j]}`, Number(TaskDuration[j])]
+            //    ]);
+            //}
+
+            //var optionsDonut = {
+            //    title: 'TaskDuration',
+            //    pieHole: 0.4,
+            //};
+
+            //var chartdonut = new google.visualization.PieChart(document.getElementById('donutchart'));
+            //chartdonut.draw(datadonut, optionsDonut);
+
+        }
+
+        function drawCharto() {
+            var data = google.visualization.arrayToDataTable([
+                ['Language', 'Speakers (in millions)'],
+                ['Assamese', 13], ['Bengali', 83], ['Bodo', 1.4],
+                ['Dogri', 2.3], ['Gujarati', 46], ['Hindi', 300],
+                ['Kannada', 38], ['Kashmiri', 5.5], ['Konkani', 5],
+                ['Maithili', 20], ['Malayalam', 33], ['Manipuri', 1.5],
+                ['Marathi', 72], ['Nepali', 2.9], ['Oriya', 33],
+                ['Punjabi', 29], ['Sanskrit', 0.01], ['Santhali', 6.5],
+                ['Sindhi', 2.5], ['Tamil', 61], ['Telugu', 74], ['Urdu', 52]
+            ]);
+
+            var options = {
+                title: 'Indian Language Use',
+                legend: 'none',
+                pieSliceText: 'label',
+                slices: {
+                    4: { offset: 0.2 },
+                    12: { offset: 0.3 },
+                    14: { offset: 0.4 },
+                    15: { offset: 0.5 },
+                },
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+            chart.draw(data, options);
+        }
+    </script>
+
+
+}
+
+
+@section Style{
+    <style>
+        body {
+            background-color: #e6f5ea;
+        }
+
+        .slice {
+            border: 1px solid white;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0 0px 0;
+            background: white;
+        }
+    </style>
+}

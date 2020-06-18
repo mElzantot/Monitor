@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
@@ -8,9 +8,12 @@ using ITI.CEI40.Monitor.Entities;
 using ITI.CEI40.Monitor.Hubs;
 using ITI.CEI40.Monitor.Models.View_Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using Newtonsoft.Json;
 
 namespace ITI.CEI40.Monitor.Controllers
 {
@@ -27,23 +30,25 @@ namespace ITI.CEI40.Monitor.Controllers
             this.hubContext = hubContext;
         }
 
+
         [Authorize(Roles = "Engineer")]
         public IActionResult Index()
         {
             //----------- Get user Id from UserManager ---------//
             string engId = userManager.GetUserId(HttpContext.User);
-            List<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByEngineerId(engId).ToList();      
-            return View("Engineer",subTasks);
-        }
+            List<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByEngineerId(engId).ToList();
 
-        [Authorize(Roles ="Engineer")]
+            return View("Engineer", subTasks);
+        }
+        
+        [Authorize(Roles = "Engineer")]
         public IActionResult DisplayRow(int ID)
         {
-            SubTask subTask = unitOfWork.SubTasks.GetById(ID);
+            SubTask subTask = unitOfWork.SubTasks.GetSubTaskIncludingTask(ID);
             return PartialView("_SubTaskDataPartial", subTask);
         }
 
-        [Authorize(Roles ="Engineer")]
+        [Authorize(Roles = "Engineer")]
         public void EditProgress(int ID, int progress)        {            SubTask subTask = unitOfWork.SubTasks.GetSubTaskIncludingTask(ID);
 
             int subTaskLastProgress = subTask.Progress;
@@ -55,18 +60,19 @@ namespace ITI.CEI40.Monitor.Controllers
             List<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByTaskId(subTask.FK_TaskId);            int totalSubTaskDuration = 0;            foreach (var item in subTasks)            {                totalSubTaskDuration += (int)(item.EndDate - item.StartDate).Value.TotalDays;            }            int subtaskDuration = (int)(subTask.EndDate - subTask.StartDate).Value.TotalDays;            task.Progress += ((progress - subTaskLastProgress) * (subtaskDuration)) / (totalSubTaskDuration);            task = unitOfWork.Tasks.Edit(task);
             subTask.Progress = progress;            subTask = unitOfWork.SubTasks.Edit(subTask);        }
 
-        [Authorize(Roles ="Engineer")]  
+        [Authorize(Roles = "Engineer")]
         public void EditIsUnderWork(int ID, bool Is)
         {
             SubTask subTask = unitOfWork.SubTasks.GetSubTaskIncludingProject(ID);
             subTask.IsUnderWork = Is;
-           
+
             if (Is)
             {
                 SubTaskSession subTaskSession = new SubTaskSession()
                 {
                     FK_SubTaskID = ID,
-                    SessStartDate = DateTime.Now
+                    SessStartDate = DateTime.Now,
+                    EmpId = userManager.GetUserId(HttpContext.User)
                 };
                 subTaskSession = unitOfWork.SubTaskSessions.Add(subTaskSession);
             }
@@ -81,7 +87,7 @@ namespace ITI.CEI40.Monitor.Controllers
                 subTask.ActualDuration += subTaskSession.SessDuration;
 
                 Activity task = unitOfWork.Tasks.GetById(subTask.FK_TaskId);
-                int LastTaskDuaration = task.ActualDuratoin;
+                float LastTaskDuaration = task.ActualDuratoin;
                 task.ActualDuratoin += subTask.ActualDuration;
                 task = unitOfWork.Tasks.Edit(task);
                 Project project = unitOfWork.Projects.GetById(task.FK_ProjectId);
@@ -93,11 +99,24 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [Authorize(Roles = "Engineer")]
-        public void EditStatus(int ID, Status status)
+        public void EditStatus(int id, int status, string reason)
         {
-            SubTask subTask = unitOfWork.SubTasks.GetById(ID);
-            subTask.Status = status;
+            SubTask subTask = unitOfWork.SubTasks.GetSubTaskWithTeam(id);
+            subTask.Status = (Status)status;
             unitOfWork.SubTasks.Edit(subTask);
+
+            Comment comment = new Comment
+            {
+                FK_sender = userManager.GetUserId(HttpContext.User),
+                FK_TaskID = subTask.FK_TaskId,
+                commentTime = DateTime.Now
+            };
+            comment.comment = $"{subTask.Name} status has changed to {subTask.Status.ToString()}";
+            comment.comment += reason;
+            comment = unitOfWork.Comments.Add(comment);
+
+            //hubContext.Clients.User(subTask.Task.Team.FK_TeamLeaderId).SendAsync("newNotification",
+            // $"");
         }
 
         [Authorize(Roles = "Engineer")]
@@ -108,14 +127,15 @@ namespace ITI.CEI40.Monitor.Controllers
             unitOfWork.Tasks.Edit(task);
         }
 
-
         [Authorize(Roles = "TeamLeader")]
         [HttpGet]
         public IActionResult displaySubTasks(int taskID)
         {
+
             var taskVM = new TaskViewModel
             {
                 TaskId = taskID,
+                TaskName = unitOfWork.Tasks.GetById(taskID).Name,
                 taskDescription = unitOfWork.Tasks.GetById(taskID).Description,
                 SubTasks = unitOfWork.SubTasks.GetSubTasksByTaskId(taskID),
             };
@@ -135,7 +155,7 @@ namespace ITI.CEI40.Monitor.Controllers
             return PartialView("_SubTaskModal", subTask);
         }
 
-        [Authorize(Roles = "Team Leader")]
+        [Authorize(Roles = "TeamLeader")]
         [HttpPost]
         public IActionResult AddSubTask(SubTaskViewModel subTask)
         {
@@ -143,6 +163,7 @@ namespace ITI.CEI40.Monitor.Controllers
             {
                 var startDate = subTask.StartDate.Split('/').Select(Int32.Parse).ToList();
                 var endDate = subTask.EndDate.Split('/').Select(Int32.Parse).ToList();
+                subTask.Description = subTask.Description.Replace("\r\n", "<br>");
                 var newSubTask = new SubTask
                 {
                     Name = subTask.Name,
@@ -182,6 +203,71 @@ namespace ITI.CEI40.Monitor.Controllers
 
                 return PartialView("_NewSubTaskPartialView", newSubTask);
 
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        [Authorize(Roles = "TeamLeader")]
+        [HttpGet]
+        public IActionResult EditSubTask(int subtaskId)
+        {
+            Team team = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User));
+            SubTask subTask = unitOfWork.SubTasks.GetSubTaskWithEngineer(subtaskId);
+            var subTaskVM = new SubTaskViewModel
+            {
+                SubTaskId = subtaskId,
+                Name = subTask.Name,
+                Description = subTask.Description,
+                StartDate = subTask.StartDate.Value.Date.ToShortDateString() ?? "",
+                EndDate = subTask.EndDate.Value.Date.ToShortDateString() ?? "",
+                Assignee = subTask.Engineer.Id,
+                Status = subTask.Status,
+                Priority = subTask.Priority,
+                TeamMembers = unitOfWork.Engineers.GetEngineersInsideTeam(team.Id).ToList()
+            };
+
+            var index = subTaskVM.TeamMembers.FindIndex(x => x.Id == subTaskVM.Assignee.ToString());
+            var item = subTaskVM.TeamMembers[index];
+            subTaskVM.TeamMembers[index] = subTaskVM.TeamMembers[0];
+            subTaskVM.TeamMembers[0] = item;
+
+            //subTaskVM.TeamMembers.OrderBy(x => x.Id == subTask.FK_EngineerID).ToList();
+
+            return PartialView("_SubTaskModal", subTaskVM);
+        }
+
+        [Authorize(Roles = "TeamLeader")]
+        [HttpPost]
+        public IActionResult EditSubTask(SubTaskViewModel newSubTask)
+        {
+
+            if (ModelState.IsValid)
+            {
+                int[] startDate = new int[3];
+                int[] endDate = new int[3];
+                SubTask originalSubTask = unitOfWork.SubTasks.GetSubTaskWithEngineer(newSubTask.SubTaskId);
+                originalSubTask.Name = newSubTask.Name;
+                originalSubTask.Description = newSubTask.Description;
+                originalSubTask.Priority = newSubTask.Priority;
+                originalSubTask.Status = newSubTask.Status;
+                originalSubTask.FK_EngineerID = newSubTask.Assignee;
+
+                if (newSubTask.StartDate.Contains('/'))
+                {
+                    startDate = newSubTask.StartDate.Split('/').Select(Int32.Parse).ToArray();
+                    originalSubTask.StartDate = new DateTime(startDate[2], startDate[1], startDate[0]);
+                }
+                if (newSubTask.EndDate.Contains('/'))
+                {
+                    endDate = newSubTask.EndDate.Split('/').Select(Int32.Parse).ToArray();
+                    originalSubTask.EndDate = new DateTime(endDate[2], endDate[1], endDate[0]);
+                }
+                originalSubTask = unitOfWork.SubTasks.Edit(originalSubTask);
+                originalSubTask = unitOfWork.SubTasks.GetSubTaskWithEngineer(originalSubTask.Id);
+                return PartialView("_NewSubTaskPartialView", originalSubTask);
             }
             else
             {

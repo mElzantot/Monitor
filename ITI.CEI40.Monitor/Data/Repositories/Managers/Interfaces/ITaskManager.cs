@@ -16,7 +16,13 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         IEnumerable<Activity> GetDepartmentTasks(int depid);
         IEnumerable<Activity> GetByProjectId(int id);
-        IEnumerable<Activity> GetByProIdAndViewOrder(int proId, int viewOrder);
+        Activity GetByProIdAndViewOrder(int proId, int viewOrder);
+        List<Activity> GetHoldActiveTasks(int teamId);
+        IEnumerable<Activity> GetDepCancelledTasks(int depid);
+        Activity GetTaskWithComments(int taskId);
+        Activity GetTaskWithProjectAndTeam(int taskId);
+        IEnumerable<Activity> Archive(int depid);
+
 
     }
 

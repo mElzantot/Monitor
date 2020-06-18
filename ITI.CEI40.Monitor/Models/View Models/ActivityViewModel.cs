@@ -10,9 +10,9 @@ namespace ITI.CEI40.Monitor.Models.View_Models
     {
         public int FK_TeamId { get; set; }
 
-        public IEnumerable<Activity> Tasks { get; set; }
+        public List<Activity> Tasks { get; set; }
 
-        public IEnumerable< Team> Teams { get; set; }
+        public List< Team> Teams { get; set; }
         public Team Team { get; set; }
 
         public Project Project { get; set; }

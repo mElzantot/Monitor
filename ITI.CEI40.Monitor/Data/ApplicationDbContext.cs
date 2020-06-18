@@ -12,8 +12,6 @@ namespace ITI.CEI40.Monitor.Data
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole, string>
     {
 
-
-
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -24,14 +22,22 @@ namespace ITI.CEI40.Monitor.Data
         public virtual DbSet<Activity> Tasks { get; set; }
         public virtual DbSet<SubTask> SubTasks { get; set; }
         public virtual DbSet<SubTaskSession> SubTaskSessions { get; set; }
-        public virtual DbSet<Claim> Claims { get; set; }  
-        public virtual DbSet<Invoice> Invoices { get; set; }  
-        public virtual DbSet<InvoiceItem> InvoiceItems { get; set; }  
+        public virtual DbSet<Claim> Claims { get; set; }
+        public virtual DbSet<Invoice> Invoices { get; set; }
+        public virtual DbSet<InvoiceItem> InvoiceItems { get; set; }
+        public virtual DbSet<Notification> Notifications { get; set; }
+        public virtual DbSet<Comment> Comments { get; set; }
+        public virtual DbSet<Files> Files { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
+            //-----One To one Optional Between Files and Comments
+            modelBuilder.Entity<Comment>()
+            .HasOne(a => a.File)
+            .WithOne(b => b.Comment)
+             .HasForeignKey<Files>(b => b.CommentID);
 
             //------One To Many RelationShip Between User and Team
             modelBuilder.Entity<ApplicationUser>()
@@ -50,19 +56,20 @@ namespace ITI.CEI40.Monitor.Data
                     .WithMany()
                    .HasForeignKey(x => x.FK_TeamLeaderId);
 
-            //Team Tasks many to many Relship
-            /*modelBuilder.Entity<TeamTasks>()
-                .HasKey(TT => new { TT.TeamID, TT.TaskID });
+            //----------User/ Notification Many to Many
 
-            modelBuilder.Entity<TeamTasks>()
-                .HasOne(t => t.Team)
-                .WithMany(tt => tt.TeamTasks)
-                .HasForeignKey(pt => pt.TeamID);
+            modelBuilder.Entity<NotificationUsers>()
+                .HasKey(TT => new { TT.userID, TT.NotificationId });
 
-            modelBuilder.Entity<TeamTasks>()
-             .HasOne(pt => pt.Task)
-             .WithMany(t => t.TeamTasks)
-             .HasForeignKey(pt => pt.TaskID); */
+            modelBuilder.Entity<NotificationUsers>()
+                .HasOne(t => t.User)
+                .WithMany(tt => tt.NotificationUsers)
+                .HasForeignKey(pt => pt.userID);
+
+            modelBuilder.Entity<NotificationUsers>()
+             .HasOne(pt => pt.Notification)
+             .WithMany(t => t.NotificationUsers)
+             .HasForeignKey(pt => pt.NotificationId);
 
             //----------User/ Notification Many to Many
 

@@ -15,13 +15,13 @@ namespace ITI.CEI40.Monitor.Controllers
 {
     public class DepManagerController : Controller
     {
-        private readonly IUnitOfWork unitofwork;
+        private readonly IUnitOfWork unitOfWork;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IHubContext<NotificationsHub> hubContext;
 
-        public DepManagerController(IUnitOfWork unitofwork, UserManager<ApplicationUser> userManager, IHubContext<NotificationsHub> hubContext)
+        public DepManagerController(IUnitOfWork unitofwork , UserManager<ApplicationUser> userManager , IHubContext<NotificationsHub> hubContext)
         {
-            this.unitofwork = unitofwork;
+            this.unitOfWork = unitofwork;
             this.userManager = userManager;
             this.hubContext = hubContext;
         }
@@ -30,39 +30,39 @@ namespace ITI.CEI40.Monitor.Controllers
         {
             return View();
         }
-        public IActionResult TeamsView(int DepId)
+        public IActionResult TeamsView()
         {
-            IEnumerable<Team> teams= unitofwork.Teams.getTeamsinsideDept(DepId);
+            int DepId = unitOfWork.Departments.GetDepartmentWithManagerID(userManager.GetUserId(HttpContext.User)).Id;
+            IEnumerable<Team> teams= unitOfWork.Teams.getTeamsinsideDept(DepId);
             return View(teams);
         }
 
         [HttpGet]
         public IActionResult displayTasks(int teamId)
         {
-            var task = unitofwork.Tasks.GetAllTaskWithTheirProject(teamId);
-            return PartialView("_TaskPartialView", task);
+            var tasks = unitOfWork.Tasks.GetHoldActiveTasks(teamId);
+            return PartialView("_TaskPartialView", tasks);
         }
 
         [HttpGet]
-        public IActionResult AssignTasks(int depid)
+        public IActionResult AssignTasks()
         {
+            int DepId = unitOfWork.Departments.GetDepartmentWithManagerID(userManager.GetUserId(HttpContext.User)).Id;
             var activityVM = new ActivityViewModel();
-            
-            activityVM.Tasks = unitofwork.Tasks.GetDepartmentTasks(depid);
+            activityVM.Tasks = unitOfWork.Tasks.GetDepartmentTasks(DepId).ToList();
+            activityVM.Teams = unitOfWork.Teams.getTeamsinsideDept(DepId).ToList();
 
-            activityVM.Teams = unitofwork.Teams.getTeamsinsideDept(depid).ToList();
-
-            return View(activityVM);
+            return View("/Views/Project/Details.cshtml",activityVM);
         }
 
-        
+
 
         [HttpPost]
-        public JsonResult AssignTasks(int taskId,int teamId)
+        public  JsonResult AssignTasks(int taskId,int teamId)
         {
             if (ModelState.IsValid)
             {
-                var task = unitofwork.Tasks.GetById(taskId);
+                var task = unitOfWork.Tasks.GetById(taskId);
                 task.FK_TeamId = teamId;
                 var team = unitofwork.Teams.GetById(teamId);
                 unitofwork.Complete();
@@ -92,7 +92,42 @@ namespace ITI.CEI40.Monitor.Controllers
 
                 return Json(new { teamName=team.Name});
             }
+
             return Json(new {  });
+        }
+
+        //Omar to edit status if the Departement manager submit the subtask
+        public void EditStatus(int id, int status)
+        {
+            var task = unitOfWork.Tasks.GetById(id);
+            task.Status = (Status)status;
+            if (task.Status == Status.Cancelled)
+            {
+                List<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByTaskId(task.Id);
+                foreach (var item in subTasks)
+                {
+                    item.Status = Status.Cancelled;
+                    //Want to Edit // Make Edit for List of items
+                    unitOfWork.SubTasks.Edit(item);
+                }
+            }
+            unitOfWork.Tasks.Edit(task);
+        }
+
+
+
+        [HttpGet]
+        public IActionResult CancelledTasks(int depid)
+        {
+            var tasks = unitOfWork.Tasks.GetDepCancelledTasks(depid).ToList();
+            return View( tasks);
+        }
+
+        [HttpGet]
+        public IActionResult ArchivedTasks(int depid)
+        {
+            var tasks = unitOfWork.Tasks.Archive(depid).ToList();
+            return View(tasks);
         }
 
         [HttpGet]
@@ -101,8 +136,6 @@ namespace ITI.CEI40.Monitor.Controllers
             var subtask = unitofwork.SubTasks.GetSubTasksFromTask(taskId);
             return View("_DashBoardPartial", subtask);
         }
-
-
 
     }
 }

@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
 using ITI.CEI40.Monitor.Entities.Enums;
+using ITI.CEI40.Monitor.Hubs;
 using ITI.CEI40.Monitor.Models.View_Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ITI.CEI40.Monitor.Controllers
 {
@@ -17,31 +19,28 @@ namespace ITI.CEI40.Monitor.Controllers
     public class EmployeeController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;
+        private readonly IHubContext<NotificationsHub> hubContext;
         private readonly IUnitOfWork unitofwork;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public EmployeeController(RoleManager<IdentityRole> roleManager,
+        public EmployeeController(RoleManager<IdentityRole> roleManager,IHubContext<NotificationsHub> hubContext,
            UserManager<ApplicationUser> userManager, IUnitOfWork unitofwork)
         {
             this.roleManager = roleManager;
+            this.hubContext = hubContext;
             this.unitofwork = unitofwork;
             this.userManager = userManager;
         }
 
         [HttpGet]
-        public IActionResult ViewEmployees(int id)
+        public IActionResult ViewEmployees()
         {
-            if (unitofwork.Teams.GetById(id) != null)
-            {
                 var EmploeeVm = new EmployeeViewModel
                 {
-                    Employees = unitofwork.Engineers.GetEngineersInsideTeam(id).ToList(),
-                    FK_TeamId = id
+                    Departments = unitofwork.Departments.GetAll().ToList(),
+                    Employees = unitofwork.Engineers.GetAll().ToList()
                 };
                 return View(EmploeeVm);
-            }
-
-            return BadRequest();
         }
 
         [HttpPost]
@@ -53,16 +52,18 @@ namespace ITI.CEI40.Monitor.Controllers
                 {
                     UserName = employee.UserName,
                     Email = employee.Email,
-                    FK_TeamID = employee.FK_TeamId,
+                    FK_TeamID = employee.TeamId,
                     SalaryRate = employee.Salary / (30 * 8)
                 };
 
                 var result = await userManager.CreateAsync(newEmp, employee.Password);
+
                 if (result.Succeeded)
                 {
                     return PartialView("_EmployeePartialView", newEmp);
                 }
             }
+
             //-------Not Acceptable ( Need solution ) ------//
             return null;
 
@@ -122,6 +123,7 @@ namespace ITI.CEI40.Monitor.Controllers
                     var addedToRoles = await userManager.AddToRoleAsync(Emp, item.role.ToString());
                 }
             }
+
             return Json(Emp); ;
         }
 
@@ -129,7 +131,6 @@ namespace ITI.CEI40.Monitor.Controllers
 
 
         #region Edit Employee Data
-
 
         [HttpGet]
         public async Task<IActionResult> EditEmployee(string id)
@@ -167,8 +168,6 @@ namespace ITI.CEI40.Monitor.Controllers
 
                 throw;
             }
-
-
             return Json(teams);
         }
 
@@ -236,6 +235,18 @@ namespace ITI.CEI40.Monitor.Controllers
             }
             return Json(new { Complete = false });
         }
+
+
+        //-----------Employee TimeSheet
+        [Authorize(Roles = "Engineer")]
+        [HttpGet]
+        public IActionResult EmployeeTimeSheet()
+        {
+            List<SubTaskSession> EmpSessions = unitofwork.SubTaskSessions.GetTimeSheetForEmp(userManager.GetUserId(HttpContext.User)).Reverse().ToList();
+
+            return View(EmpSessions);
+        }
+
 
     }
 }

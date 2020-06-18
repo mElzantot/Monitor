@@ -1,19 +1,30 @@
 ﻿@model TaskViewModel
 
-<div class="col-12" id="subTaskView">
+<div id="subTaskView">
     <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
         <div class="righthead">
-            <div>
+            <div class="ml-4 mb-3">
                 <input type="text" value="@Model.TaskId" id="taskID" hidden />
-                <h5>
-                    Task Description
-                </h5>
-                @Model.taskDescription
+                <div class="row">
+                    <h4 class="mr-3 pt-2">
+                        @Model.TaskName
+                    </h4>
+                    @if (Model.SubTasks != null)
+                    {
+                        <span class="alert alert-danger">@Model.SubTasks.Count() Sub Tasks</span>
+                    }
+                    <span>
+                        <button onclick="Dashboard(@Model.TaskId)" class=" ml-2 alert alert-info ">
+                            <i class="fas fa-chart-area">Dashboard</i>
+                        </button>
+                    </span>
+                </div>
+                <div class="text-muted"> @Model.taskDescription</div>
             </div>
-            <hr />
+
             <div class="row" id="tasks">
-                <table class="table table-hover">
-                    <thead>
+                <table class="table table-hover text-center table-sm ">
+                    <thead class="alert-info thead-dark">
                         <tr>
                             <th>Name</th>
                             <th>Priority</th>
@@ -22,29 +33,44 @@
                             <th>Status</th>
                             <th>Progress</th>
                             <th>Assigned to</th>
+                            <th></th>
                         </tr>
                     </thead>
-                    <tbody id="tableBody">
-                        @for (int i = 0; i < Model.SubTasks.Count(); i++)
-                        {
-                            <tr id="@Model.SubTasks[i].Id">
-                                <td>@Model.SubTasks[i].Name</td>
-                                <td>@Model.SubTasks[i].Priority</td>
-                                <td>@Model.SubTasks[i].StartDate.ToString()</td>
-                                <td>@Model.SubTasks[i].EndDate.ToString()</td>
-                                <td>@Model.SubTasks[i].Status</td>
-                                <td>@Model.SubTasks[i].Progress</td>
-                                @if (@Model.SubTasks[i].Engineer != null)
-                                {
-                                    <td>@Model.SubTasks[i].Engineer.UserName</td>
+                    @if (Model.SubTasks != null)
+                    {
+                        <tbody id="tableBody">
+                            @for (int i = 0; i < Model.SubTasks.Count(); i++)
+                            {
+                                <tr id="@Model.SubTasks[i].Id">
+                                    <td>@Model.SubTasks[i].Name</td>
+                                    <td>@Model.SubTasks[i].Priority</td>
+                                    <td>@Model.SubTasks[i].StartDate.Value.Date.ToShortDateString()</td>
+                                    <td>@Model.SubTasks[i].EndDate.Value.ToShortDateString()</td>
+                                    <td>@Model.SubTasks[i].Status</td>
+
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" style="width:@Model.SubTasks[i].Progress%;"
+                                                 aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@Model.SubTasks[i].Progress%</div>
+                                            </div>
+                                        </td>
+                                        @if (@Model.SubTasks[i].Engineer != null)
+                                        {
+                                            <td>@Model.SubTasks[i].Engineer.UserName</td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                        }
+                                    <td><button class="btn btn-sm btn-dark" onclick="getEditSubTaskModal(@Model.SubTasks[i].Id)"><i class="fas fa-edit"></i></button></td>
+                                    </tr>
                                 }
-                            </tr>
-                        }
-                    </tbody>
+                        </tbody>
+                    }
                 </table>
             </div>
             <hr />
-            <button onclick="getSubTaskModal(@Model.TaskId)" type="button" class="btn btn-outline-success" >
+            <button onclick="getAddSubTaskModal(@Model.TaskId)" type="button" class="btn btn-outline-success">
                 Add SubTask
             </button>
             <button type="button" class="btn btn-outline-primary" onclick="BacktoList()">Back to Tasks</button>

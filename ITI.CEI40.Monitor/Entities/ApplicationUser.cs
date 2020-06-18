@@ -17,6 +17,9 @@ namespace ITI.CEI40.Monitor.Entities
             this.SubTasks = new HashSet<SubTask>();
             this.ManagedProjects = new HashSet<Project>();
             this.SubTaskSessions = new HashSet<SubTaskSession>();
+            this.SentNotifications = new HashSet<Notification>();
+            this.NotificationUsers = new HashSet<NotificationUsers>();
+            this.SentComments = new HashSet<Comment>();
         }
 
         public int? FK_TeamID { get; set; }
@@ -38,6 +41,10 @@ namespace ITI.CEI40.Monitor.Entities
         public ICollection<SubTask> SubTasks { get; set; }
         public ICollection<Project> ManagedProjects { get; set; }
         public ICollection<SubTaskSession> SubTaskSessions { get; set; }
+        public ICollection<Notification> SentNotifications { get; set; }
+        public ICollection<NotificationUsers> NotificationUsers { get; set; }
+
+        public ICollection<Comment> SentComments { get; set; }
 
         public ICollection<Invoice> Invoices { get; set; }
 

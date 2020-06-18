@@ -1,0 +1,246 @@
+﻿
+@model TeamChartViewModel
+
+@for (int i = 0; i < Model.Names.Count; i++)
+{
+    <input class="engname" id="e-@i" value="@Model.Names[i]" hidden="hidden" />
+}
+@for (int i = 0; i < Model.Values.Count; i++)
+{
+    <input class="comp" id="c-@i" value="@Model.Values[i][1]" hidden="hidden" />
+    <input class="qual" id="q-@i" value="@Model.Values[i][2]" hidden="hidden" />
+    <input class="time" id="t-@i" value="@Model.Values[i][3]" hidden="hidden" />
+    <input class="actdur" id="a-@i" value="@Model.Values[i][0]" hidden="hidden" />
+    <input class="stcount" id="s-@i" value="@Model.Values[i][4]" hidden="hidden" />
+}
+@for (int i = 0; i < Model.EngIds.Count; i++)
+{
+
+}
+
+
+
+
+<div class="py-2" style="display:flex; justify-content:space-between">
+
+    <div class="slice" style="width:44%">
+        <div id="Complexity" style="height:400px;"></div>
+    </div>
+    <div class="slice" style="width:55%">
+        <div id="Time_Quality" style=" height:400px;"></div>
+    </div>
+</div>
+
+
+<div style="display:flex; justify-content:space-between">
+
+    <div class="slice" style="width:49%">
+        <div id="donutchart" style=" height: 400px;"></div>
+    </div>
+
+    <div class="slice" style="width:50%">
+        <div id="count" style="height:400px;"></div>
+    </div>
+
+</div>
+
+
+
+
+    @section Scripts{
+
+        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+        <script type="text/javascript">
+            google.charts.load('current', { 'packages': ['bar'] });
+            google.charts.load("current", { packages: ["corechart"] });
+            google.charts.setOnLoadCallback(drawChart);
+
+
+            var Eng = [];
+            var Comp = [];
+            var Qual = [];
+            var TM = [];
+            var ActDur = [];
+            var TasksCou = [];
+
+            var en = $('.engname');
+            var co = $('.comp');
+            var qu = $('.qual');
+            var tm = $('.time');
+            var ad = $('.actdur');
+            var tc = $('.stcount');
+
+
+            for (var i = 0; i < en.length; i++) {
+                Eng.push(en[i].defaultValue)
+                Comp.push(co[i].defaultValue)
+                Qual.push(qu[i].defaultValue)
+                TM.push(tm[i].defaultValue)
+                ActDur.push(ad[i].defaultValue)
+                TasksCou.push(tc[i].defaultValue)
+            }
+
+
+
+            function drawChart() {
+                var dataTime = new google.visualization.DataTable();
+                dataTime.addColumn('string', 'Engineer');
+                dataTime.addColumn('number', 'Qulaity');
+                dataTime.addColumn('number', 'Time Management');
+
+                dataTime.addRows([
+                    [`${Eng[0]}`, Number(Qual[0]), Number(TM[0])]
+                ]);
+
+                for (let j = 1; j < Eng.length; j++) {
+                    dataTime.addRows([
+                        [`${Eng[j]}`, Number(Qual[j]), Number(TM[j])]
+                    ]);
+                }
+
+                var options = {
+                    chart: {
+                        title: 'Performance',
+                        hAxis: { textStyle: { bold: true } },
+                        vAxis: { minValue: 0, maxValue: 100 },
+                        animation: {
+                            startup: true,
+                            duration: 2500,
+                            easing: 'in',
+                        },
+                        bar: { groupWidth: "70%" },
+                        legend: { position: "none" },
+                    }, animation: {
+                        startup: true,
+                        duration: 2500,
+                        easing: 'in',
+                    }
+                };
+
+                var chart = new google.charts.Bar(document.getElementById('Time_Quality'));
+
+                chart.draw(dataTime, google.charts.Bar.convertOptions(options));
+
+                //    /**------------------------------------ */
+                //    /**------------------------------------ */
+
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Engineer');
+                data.addColumn('number', 'Complexity');
+
+                data.addRows([
+                    [`${Eng[0]}`, Number(Comp[0])]
+                ]);
+
+                for (let j = 1; j < Eng.length; j++) {
+                    data.addRows([
+                        [`${Eng[j]}`, Number(Comp[j])]
+                    ]);
+                }
+
+                var optionsComp = {
+                    chart: {
+                        title: 'Tasks Complexity',
+                        hAxis: { textStyle: { bold: true } },
+                        animation: {
+                            startup: true,
+                            duration: 2500,
+                            easing: 'in',
+                        },
+                        bar: { groupWidth: "70%" },
+                        legend: { position: "none" },
+                    }, animation: {
+                        startup: true,
+                        duration: 2500,
+                        easing: 'in',
+                    }
+                };
+                var chartcomp = new google.charts.Bar(document.getElementById('Complexity'));
+                chartcomp.draw(data, google.charts.Bar.convertOptions(optionsComp));
+
+
+
+                //    /**------------------------------------ */
+                //    /**------------------------------------ */
+
+
+
+                var datadonut = new google.visualization.DataTable();
+                datadonut.addColumn('string', 'Task');
+                datadonut.addColumn('number', 'Hrs');
+
+                datadonut.addRows([
+                    [`${Eng[0]} Tasks`, Number(ActDur[0])]
+                ]);
+
+                for (let j = 1; j < Eng.length; j++) {
+                    datadonut.addRows([
+                        [`${Eng[j]} Tasks`, Number(ActDur[j])]
+                    ]);
+                }
+
+                var optionsDonut = {
+                    title: 'Tasks Duration (Hours)',
+                    pieHole: 0.4,
+                    chartArea: { width: 350, height: 350 }
+                };
+
+                var chartdonut = new google.visualization.PieChart(document.getElementById('donutchart'));
+                chartdonut.draw(datadonut, optionsDonut);
+
+                //    /**------------------------------------ */
+                //    /**------------------------------------ */
+
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Engineer');
+                data.addColumn('number', 'Tasks');
+
+                data.addRows([
+                    [`${Eng[0]}`, Number(TasksCou[0])]
+                ]);
+
+                for (let j = 1; j < Eng.length; j++) {
+                    data.addRows([
+                        [`${Eng[j]}`, Number(TasksCou[j])]
+                    ]);
+                }
+
+                var optionsComp = {
+                    chart: {
+                        title: 'Number of tasks for each employee',
+                        hAxis: { textStyle: { bold: true } },                      
+                        bar: { groupWidth: "70%"},
+                        legend: { position: "none" },
+                    }, animation: {
+                        startup: 'true',
+                        duration: 3000,
+                        easing: 'in',
+                    }
+                };
+                var chartcomp = new google.charts.Bar(document.getElementById('count'));
+                chartcomp.draw(data, google.charts.Bar.convertOptions(optionsComp));
+
+
+            }
+
+        </script>
+
+
+    }
+
+
+    @section Style{
+        <style>
+            body {
+                background-color: #e6f5ea;
+            }
+
+            .slice {
+                border: 1px solid white;
+                border-radius: 10px;
+                padding: 10px;
+                margin: 10px 0 0px 0;
+                background: white;
+            }
+        </style>
+    }

@@ -22,64 +22,33 @@
     @* Font-awesome *@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css" />
-    <link rel="stylesheet" href="~/css/style.css" />
+    <link rel="stylesheet" href="~/css/style.css"  />
+
+
+    <style>
+        * {
+            font-family: "Times New Roman", Times, serif;
+        }
+
+        pre {
+            font-family: "Times New Roman", Times, serif;
+        }
+    </style>
 
     @RenderSection("Style", required: false)
 
 </head>
 <body>
     <header>
-        @*<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-                <a class="navbar-brand" asp-action="Index" asp-controller="Home"><img src="~/img/Monitor.PNG" class="rounded-circle " alt="Monitor" width="40" height="40" />Monitor</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ml-auto ">
-                        <li class="nav-item">
-                            <a class="nav-link px-3 py-3 " asp-area="" asp-controller="Home" asp-action="Index"><i id="i" class="fas fa-home"></i> Home</a>
-                        </li>
-
-
-                            <li class="nav-item">
-                                <a class="nav-link px-3 py-3  " asp-controller="Project" asp-action="Index"><i id="i" class="fas fa-tasks"></i> projects</a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link px-3 py-3  " asp-controller="SubTask" asp-action="Index"><i id="i" class="fas fa-id-badge"></i> Engineer</a>
-                            </li>
-
-                            <li class="nav-item">
-                                <a class="nav-link px-3 py-3  " asp-controller="depmanager" asp-action="teamsview"><i class="fas fa-users"></i> Teams</a>
-                            </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link px-3 py-3  " asp-controller="Department" asp-action="ViewDepartments"><i id="i" class="fas fa-chart-area"></i> Admin</a>
-                        </li>
-                        <li class="dropdown nav-item">
-                            <a href="#" class="dropdown-toggle nav-link px-3 py-3 " data-toggle="dropdown" role="button"
-                               aria-haspopup="true" aria-expanded="false"><i id="i" class="fas fa-tasks"></i> Projects <span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" asp-controller="Project" asp-action="Index">Active</a></li>
-                                <li><a class="dropdown-item" asp-controller="Project" asp-action="CompletedProjects">Completed</a></li>
-                                <li><a class="dropdown-item" asp-controller="Project" asp-action="Index">Canceled</a></li>
-                            </ul>
-                        </li>
-                        <li class="nav-item w-25">
-                            <form id="logoutForm" class="form-inline d-flex justify-content-center" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                                <button id="logout" type="submit" style="font-size:medium" class="nav-link btn btn-link">Logout</button>
-                            </form>
-                        </li>
-
-                    </ul>
-                </div>
-            </nav>*@
         <partial name="_LoginPartial.cshtml" />
     </header>
     <div class="container">
         <partial name="_CookieConsentPartial" />
-        <main role="main" style="margin-top :68px;" class="pb-3">
-            @RenderBody()
+        <main role="main" style="margin-top :70px;" >
+            <div id="main">
+                @RenderBody()
+            </div>
+
         </main>
     </div>
     <environment include="Development">

@@ -22,7 +22,7 @@ namespace ITI.CEI40.Monitor.Controllers
         private readonly IUnitOfWork unitofwork;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public ProjectController(UserManager<ApplicationUser> userManager,IUnitOfWork unitOfWork)
+        public ProjectController(UserManager<ApplicationUser> userManager, IUnitOfWork unitOfWork)
         {
             this.unitofwork = unitOfWork;
             this.userManager = userManager;
@@ -30,12 +30,22 @@ namespace ITI.CEI40.Monitor.Controllers
 
         public IActionResult Index()
         {
+
             ProjectViewModel projectView = new ProjectViewModel
             {
                 Projects = unitofwork.Projects.GetRunningProjects(userManager.GetUserId(HttpContext.User)),
             };
 
             return View("_CreateProject", projectView);
+        }
+
+        [HttpGet]
+        public IActionResult Details(int Id)
+        {
+            ActivityViewModel activityVM = new ActivityViewModel();
+            activityVM.Tasks = unitofwork.Tasks.GetActivitiesFromProject(Id).ToList();
+
+            return View(activityVM);
         }
 
 
@@ -82,6 +92,7 @@ namespace ITI.CEI40.Monitor.Controllers
             }
         }
 
+        //shaker
         [HttpGet]
         public IActionResult CompletedProjects()
         {
@@ -112,13 +123,18 @@ namespace ITI.CEI40.Monitor.Controllers
             return PartialView("_DashBoardPartial", tasks);
         }
 
+
+
         public IActionResult ProjectDailyReport(int Id)
         {
             Project project = unitofwork.Projects.GetProjectForReport(Id);
             return View(project);
         }
 
-
-
+        public IActionResult Archive()
+        {
+            var projects = unitofwork.Projects.Archive().ToList();
+            return View(projects);
+        }
     }
 }

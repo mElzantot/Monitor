@@ -1,6 +1,7 @@
 ﻿@model SubTaskViewModel
 
 <input hidden type="text" asp-for="FK_TaskId" value="@Model.FK_TaskId" />
+<input hidden type="number" asp-for="SubTaskId" value="@Model.SubTaskId" />
 <div class="row">
     <div class="form-group col-6">
         <label asp-for="Name"></label>
@@ -10,7 +11,10 @@
     <div class="form-group col-6">
         <label asp-for="Assignee"></label>
         <select asp-for="Assignee" asp-items="new SelectList(Model.TeamMembers ,nameof(ApplicationUser.Id), nameof(ApplicationUser.UserName))" class="form-control">
+            @if (Model.Assignee == null)
+            {
             <option value=@null>--- Select Assignee ---</option>
+            }
         </select>
         <span asp-validation-for="Assignee" class="text-danger"></span>
     </div>
@@ -20,19 +24,19 @@
     <textarea asp-for="Description" class="form-control"></textarea>
     <span asp-validation-for="Description" class="text-danger"></span>
 </div>
-<div class="row">
-    <div class="form-group col-6">
+@*<div class="row">
+    <div class="form-group col-12">
         <label asp-for="Status"></label>
         <select asp-for="Status" asp-items="Html.GetEnumSelectList<Status>()" class="form-control">
         </select>
         <span asp-validation-for="Status" class="text-danger"></span>
     </div>
-    <div class="form-group col-6">
+    <div class="form-group col-6" hidden>
         <label asp-for="Priority"></label>
         <select asp-for="Priority" asp-items="Html.GetEnumSelectList<Priority>()" class="form-control"></select>
         <span asp-validation-for="Priority" class="text-danger"></span>
     </div>
-</div>
+</div>*@
 <div class="row">
     <div class="form-group col-6">
         <label asp-for="StartDate"></label>

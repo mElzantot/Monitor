@@ -13,6 +13,8 @@ namespace ITI.CEI40.Monitor.Entities
         public Activity()
         {
             this.ActualDuratoin = 0;
+            this.Complexity = 0;
+            this.Comments = new HashSet<Comment>();
         }
         [Key]
         public int Id { get; set; }
@@ -56,10 +58,17 @@ namespace ITI.CEI40.Monitor.Entities
 
         public ICollection<Dependencies> ActivitiesToFollow { set; get; }
         public ICollection<Dependencies> FollowingActivities { set; get; }
+        public ICollection<Comment> Comments { get; set; }
+
+        public string Story { get; set; }
 
         public int Progress { get; set; }
-        public int ActualDuratoin { get; set; }
-        public int SumOfSubTasksDurations { get; set; }
+        public float ActualDuratoin { get; set; }
+        public float SumOfSubTasksDurations { get; set; }
+
+        [Range(0, 100)]
+        public float Complexity { get; set; }
+
 
         public Status Status { get; set; }
         public Priority Priority { get; set; }

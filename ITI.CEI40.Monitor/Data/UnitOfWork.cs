@@ -30,6 +30,8 @@ namespace ITI.CEI40.Monitor.Data
             Dependency = new DependencyManager(context);
             Notification = new NotificationManager(context);
             NotificationUsers = new NotificationUsersManager(context);
+            Files = new FilesManager(context);
+            Comments = new CommentManager(context);
 
         }
         public IClaimManager Claims { get; }
@@ -46,9 +48,10 @@ namespace ITI.CEI40.Monitor.Data
         public IInvoicesManager Invoices { get; }
         public IInoviceItemManger InoviceItems { get; }
         public IDependencyManager Dependency { get; }
-        public INotificationManager Notification { get; }
+        public INotificationManager Notification { get;}
         public INotificationUsersManager NotificationUsers { get; }
-
+        public IFilesManager Files { get; }
+        public ICommentManager Comments { get; }
 
 
 

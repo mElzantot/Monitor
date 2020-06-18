@@ -5,44 +5,49 @@
 
 
 <div>
-    <div >
+    <div>
         <h3 class="text-muted m-3">Engineers</h3>
     </div>
     <div class="row " style="border: 2px solid rgb(219, 219, 219) ; border-radius: 8px;">
         <div class="col-3  innerleft pt-4" style="border-right:2px solid rgb(219, 219, 219);">
-                <table class="table table-hover text-center" id="teamTable">
-                    <thead class="table-hover">
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Total Evaluation </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @for (int i = 0; i < Model.Count(); i++)
+            <table class="table table-hover text-center" id="teamTable">
+                <thead class="table-hover">
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Total Evaluation </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.Count(); i++)
+                    {
+                        if (Model[i].Id != Model.FirstOrDefault().Team.FK_TeamLeaderId)
                         {
-                           
-                            <tr id="@Model[i].Id" onclick='displaySubTasks("@Model[i].Id")'>
-                                <td>@Model[i].UserName</td>
-                                <td>@Model[i].TotalEvaluation</td>
-                                @*<td><button class="btn btn-info" onclick='displayCharts("@Model[i].Id")'>Charts</button></td>*@
 
-
-                            </tr>
+                        <tr id="@Model[i].Id" onclick='displaySubTasks("@Model[i].Id")'>
+                            <td>@Model[i].UserName</td>
+                            <td>@Model[i].TotalEvaluation</td>
+                            @*<td><button class="btn btn-info" onclick='displayCharts("@Model[i].Id")'>Charts</button></td>*@
+                        </tr>
                         }
-                    </tbody>
-                </table>
+                    }
+                </tbody>
+            </table>
         </div>
         <div class="col-9 innerright ">
             <div style=" padding: 15px; border-radius: 8px;">
                 <div class="row" style="margin:auto;" id="tasks">
                     <h4 id="alertdiv" class="text-muted text-center mt-5" style="margin:auto;">Select Engineer to Show Data</h4>
-                    <div id="tableBody" class="table table-hover">
+                    <div id="tableBody" class="table table-hover align-middle">
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+
+
 
 
 <!-- #endregion -->
@@ -112,10 +117,8 @@
                             drawChart();
                             flag = false;
                         }
-
                     }
                 }
-
             })
         }
 
@@ -136,6 +139,45 @@
             })
         }
 
+
+
+        function Submit(Id) {
+            $("#SubmitModal").modal('show');
+            $("#id").val(Id);
+        }
+
+
+
+
+        function SubmitTask(e) {
+            e.preventDefault();
+            debugger
+           // console.log($('#subtaskSubmit').serialize());
+            $.ajax({
+                url: "/TeamLeader/SubmitSubTask",
+                method: "POST",
+                contentType: "Application/json",
+                data: JSON.stringify($('#subtaskSubmit').serialize())
+            })
+        }
+
+
+
+
+        function Cancele(Id) {
+            if (confirm('Do you want to cancel this task')) {
+                $.ajax({
+                    url: "/TeamLeader/CancelSubTask",
+                    type: "Get",
+                    data: {
+                        id: Id,
+                    },
+                    success: function () {
+                        $(`#${Id}`).hide();
+                    }
+                })
+            }
+        }
     </script>
 }
 

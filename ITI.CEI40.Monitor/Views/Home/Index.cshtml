@@ -1,40 +1,156 @@
-﻿@{
+﻿
+@{
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center">
-        <h1 class="display-4">Welcome</h1>
-        <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-    </div>
 
-@*<html>
-<head>
-    <title>Chat</title>
-    <script src="~/lib/signalr/dist/browser/signalr.js"></script>
-    <script>
-        window.onload = function () {
-            connection = new signalR.HubConnectionBuilder().withUrl("/notificationsHub").build();
-            connection.start();
-            connection.on("newMessage",function (msg) {
-                console.log(arguments);
-                document.getElementById("NotificationList").innerHTML += "<li>" + msg + "</li>";
-            });
+
+
+
+
+
+
+
+<!-- Login -->
+<section id="Login" class="section">
+    <div class="container ">
+        <div class="row" style="display:flex;justify-content:space-between">
+
+            <div class="col-6">
+                <div class="about-info">
+                    <h2>Start your journey to a better life with online practical courses</h2>
+
+                    <figure>
+                        <span><i class="fa fa-users"></i></span>
+                        <figcaption>
+                            <h3>Professional Trainers</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint ipsa voluptatibus.</p>
+                        </figcaption>
+                    </figure>
+
+                    <figure>
+                        <span><i class="fa fa-certificate"></i></span>
+                        <figcaption>
+                            <h3>International Certifications</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint ipsa voluptatibus.</p>
+                        </figcaption>
+                    </figure>
+
+                    <figure>
+                        <span><i class="fa fa-bar-chart-o"></i></span>
+                        <figcaption>
+                            <h3>Free for 3 months</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint ipsa voluptatibus.</p>
+                        </figcaption>
+                    </figure>
+                </div>
+            </div>
+
+            <div class=" ">
+                <div class="entry-form">
+                    @*<form action="#" method="post">*@
+                    @*<form id="account" method="post">
+                        <h2>Login</h2>
+
+                        <input asp-for="Input.Email" class="form-control" />
+                        <span asp-validation-for="Input.Email" class="text-danger" placeholder="Your email address"></span>
+
+                        <input asp-for="Input.Password" class="form-control" />
+                        <span asp-validation-for="Input.Password" class="text-danger" placeholder="Your password"></span>
+
+                        <button class="submit-btn form-control" id="form-submit">Get started</button>
+                    </form>*@
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+@*<div style="display:flex">
+        <div style=" width:45%; background:red ;border:0 solid red; border-radius:20px; height:100px"> hello wo</div>
+    </div>*@
+
+
+
+
+
+@section Style{
+    <style>
+        .section-btn {
+            background: transparent;
+            border-radius: 50px;
+            border: 1px solid var(--green);
+            color: #ffffff;
+            font-size: 25px;
+            font-weight: normal;
+            padding: 15px 25px;
+            transition: 1s;
         }
 
-
-            function send() {
-                var message = document.getElementById("txt").value;
-                console.log(message);
-                 connection.invoke("sendMessages", message);
+            .section-btn:hover {
+                background: var(--green);
+                border-color: transparent;
             }
 
-    </script>
-</head>
-<body>
-    <input type="text" id="txt" />
-    <input type="button"  value="send" onclick="send()" />
-    <ul id="NotificationList">
+        .about-info {
+            margin-bottom: 50px;
+        }
 
-    </ul>
-</body>
-</html>*@
+        .entry-form {
+            display: block;
+            margin: 0 auto;
+            border-radius: 0;
+            padding: 2em;
+            max-width: 100%;
+            max-height: 100%;
+            width: inherit;
+            height: inherit;
+        }
+
+        .entry-form {
+            background: #252020;
+            border-radius: 100%;
+            text-align: center;
+            padding: 6em;
+            width: 450px;
+            height: 450px;
+        }
+
+            .entry-form h2 {
+                color: #ffffff;
+                margin: 0;
+            }
+
+            .entry-form .form-control {
+                background: transparent;
+                border: 0;
+                border-bottom: 1px solid;
+                border-radius: 0;
+                box-shadow: none;
+                height: 45px;
+                margin: 10px 0;
+            }
+
+            .entry-form .submit-btn {
+                background: #ffffff;
+                border-radius: 50px;
+                border: 0;
+                color: #252020;
+                width: 50%;
+                height: 50px;
+                margin: 30px auto;
+                margin-bottom: 10px;
+            }
+
+                .entry-form .submit-btn:hover {
+                    background: #3f51b5;
+                    color: #ffffff;
+                }
+
+        .section {
+            margin: 12rem 0 0;
+        }
+    </style>
+}

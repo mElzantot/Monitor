@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 {
-    public class TaskManager:Reposiotry<ApplicationDbContext,Activity>,ITaskManager
+    public class TaskManager : Reposiotry<ApplicationDbContext, Activity>, ITaskManager
     {
-        public TaskManager(ApplicationDbContext context):base(context)
+        public TaskManager(ApplicationDbContext context) : base(context)
         {
 
         }
@@ -17,7 +17,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         {
             return set.Include(t => t.Project).Include(t => t.Team);
         }
-        
+
 
         public IEnumerable<Activity> GetTasksByTeamID(int teamId)
         {
@@ -34,7 +34,16 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         public IEnumerable<Activity> GetAllTaskWithTheirProject(int teamId)
         {
-            return set.Where(t => t.FK_TeamId == teamId).Include(t => t.Project).Include(t=>t.Team).ToList();
+            return set.Where(t => t.FK_TeamId == teamId).Include(t => t.Project).Include(t => t.Team).ToList();
+        }
+
+
+        //Omar //Get only task where status == on hold or active
+        public List<Activity> GetHoldActiveTasks(int teamId)
+        {
+            return set.Where(t => t.FK_TeamId == teamId)
+               .Where(t => t.Status == Status.OnHold || t.Status == Status.Active)
+               .Include(t => t.Project).Include(t => t.Team).ToList();
         }
 
 
@@ -46,7 +55,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         public IEnumerable<Activity> GetDepartmentTasks(int depid)
         {
-            return set.Where(a => a.FK_DepID == depid).Include(a => a.Team).Include(a=>a.Project).ToList();
+            return set.Where(a => a.FK_DepID == depid).Include(a => a.Team).Include(a => a.Project).ToList();
         }
         public IEnumerable<Activity> GetByProjectId(int id)
         {
@@ -55,6 +64,28 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         public IEnumerable<Activity> GetByProIdAndViewOrder(int proId, int viewOrder)
         {
             return set.Where(t => t.FK_ProjectId == proId).Where(t => t.ViewOrder == viewOrder);
+        }
+        public IEnumerable<Activity> GetDepCancelledTasks(int depid)
+        {
+            return set.Where(a => a.FK_DepID == depid).Where(s => s.Status == Status.Cancelled)
+                .Include(a => a.Team).Include(p => p.Project);
+        }
+
+        public Activity GetTaskWithComments(int taskId)
+        {
+
+            return set.Where(t => t.Id == taskId).Include(t => t.Comments).FirstOrDefault();
+        }
+
+        public Activity GetTaskWithProjectAndTeam(int taskId)
+        {
+            return set.Where(t => t.Id == taskId).Include(t => t.Team).Include(t=>t.Project).FirstOrDefault();
+        }
+
+        public IEnumerable<Activity> Archive(int depid)
+        {
+            return set.Where(a => a.FK_DepID == depid).Where(s => s.Status == Status.Cancelled || s.Status == Status.Completed)
+                .Include(a => a.Team).Include(p => p.Project);
         }
 
     }

@@ -38,14 +38,14 @@
                     new { @class = "form-control" })
                 </div>
                 <span asp-validation-for="@Model.Status" class="text-danger"></span>
-                <div class="form-group col-lg-6">
+                @*<div class="form-group col-lg-6">
                     <label asp-for="@Model.Status">Status</label>
                     @Html.DropDownList("Status",
                     new SelectList(Enum.GetValues(typeof(Status))),
                     "Select Status",
                     new { @class = "form-control" })
                 </div>
-                <span asp-validation-for="@Model.Status" class="text-danger"></span>
+                <span asp-validation-for="@Model.Status" class="text-danger"></span>*@
             </div>
 
             <hr />

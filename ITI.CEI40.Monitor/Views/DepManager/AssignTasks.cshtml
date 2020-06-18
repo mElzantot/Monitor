@@ -6,8 +6,8 @@
 
 @if (Model.Tasks.Count() == 0)
 {
-    <div class="row " style="border: 2px solid rgb(219, 219, 219) ; border-radius: 8px;">
-        <h4>No Tasks Assigned to this Department</h4>
+    <div class="row col-8" style="border: 2px solid rgb(219, 219, 219) ; border-radius: 8px; margin:auto;">
+        <h4 class="text-muted " style="margin:auto;margin-top:15px;margin-bottom:15px">No Tasks Assigned to Your Department</h4>
     </div>
 }
 else
@@ -17,20 +17,19 @@ else
             <h3 class="text-muted m-3">Tasks</h3>
         </div>
         <div class="row " style="border: 2px solid rgb(219, 219, 219) ; border-radius: 8px;">
-            <div class="col-12 " style="border-right:2px solid rgb(219, 219, 219);">
+            <div class="col-12  " style="border-right:2px solid rgb(219, 219, 219); margin-top:15px">
                 <table class="table table-hover" id="teamTable">
 
-                    <thead class="table-hover">
+                    <thead class="tableh alert-primary">
                         <tr>
                             <th>Name</th>
                             <th>Project</th>
-                            <th>Progress</th>
                             <th>From </th>
                             <th>To </th>
                             <th>Priority</th>
                             <th>Working Hours</th>
-                            <th>Description</th>
-                            <th>Dashboard</th>
+                            <th></th>
+                            <th>Progress</th>
                             <th>Assigned To</th>
                         </tr>
                     </thead>
@@ -41,13 +40,6 @@ else
                             <tr id="@item.Id">
                                 <td>@item.Name</td>
                                 <td>@item.Project.Name</td>
-                                <td>
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" style="width: @item.Progress%; " aria-valuemin="0" aria-valuemax="100">@item.Progress%</div>
-                                    </div>
-                                </td>
-
-                                @*<td><div class="progress"><div class="progress-bar" role="progressbar" style="width: @item%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@item.Progress%</div></div></td>*@
                                 <td>@item.StartDate.Date.ToShortDateString()</td>
                                 <td>@item.EndDate.Date.ToShortDateString()</td>
                                 <td>@item.Priority</td>
@@ -59,25 +51,27 @@ else
                                         </button>
                                         <div class="dropdown-menu">
                                             @item.Description
-                                            @item.Id
                                         </div>
                                     </div>
-
                                 </td>
-                                <td>
-                                    <button onclick="Dashboard(@item.Id)" class="font-weight-bold  alert alert-info ">
-                                        <i class="fas fa-chart-area"></i>
-                                    </button>
-                                </td>
+                                @if (item.Progress == 100)
+                                {
+                                    <td>
+                                        <button class="btn btn-success">
+                                            Submit
+                                        </button>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" style="width: @item.Progress%; " aria-valuemin="0" aria-valuemax="100">@item.Progress%</div>
+                                        </div>
+                                    </td>
+                                }
                                 @if (item.FK_TeamId == null)
                                 {
-
-                                    @*<td>
-                                            <select id="teamlist" asp-for="FK_TeamId" asp-items="new SelectList(Model.Teams,nameof(Model.Team.Id),nameof(Model.Team.Name)) ">
-                                                <option value="">--  Select Team  --</option>
-                                            </select>
-
-                                        </td>*@
                                     <td id="chId"><button onclick="viewModal(@item.Id)" class="btn btn-secondary" type="submit">Assign</button></td>
                                 }
                                 else
@@ -91,6 +85,9 @@ else
             </div>
         </div>
     </div>
+
+
+
 
     <!-- Assign Team -->
     <div class="modal fade" id="AssignTeamModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
@@ -122,11 +119,11 @@ else
     </div>
 
 }
+
+
 @section Scripts{
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    
-
 
     <script>
 
@@ -135,12 +132,11 @@ else
         function viewModal(id) {
             taskID = id;
             $('#AssignTeamModal').modal('show');
-
         }
 
         function assignTeams() {
             var team = $('#teams').val();
-
+                
             $.post({
                 type: "POST",
                 url: `/DepManager/AssignTasks`,
@@ -161,155 +157,6 @@ else
                     console.log(arguments)
                 }
             })
-        }
-
-        ////DashBoard
-        function Dashboard(id) {
-            $.ajax({
-                type: "GET",
-                url: `/DepManager/DashBoard`,
-                data: { taskId: id },
-                success: function (response) {
-                    $('#MainView').hide();
-                    $('#Board').prepend(response);
-                    LoadData();
-
-                    //$('#Board').show();
-                },
-                error: function (x, y, err) {
-                    console.log(arguments)
-                }
-            })
-        }
-
-        function BackToList() {
-            $('#DashBoard').remove();
-            //$('#Board').hide();
-            $('#MainView').show();
-        }
-
-        function BackToList2() {
-            $('#notasks').remove();
-            //$('#Board').hide();
-            $('#MainView').show();
-        }
-
-        function LoadData() {
-            //debugger;
-            var ns = [];
-            var ps = [];
-            var dur = [];
-            var names = $('.staskname')
-            var progress = $('.staskprog')
-            var durations = $('.staskdur')
-            for (var i = 0; i < names.length; i++) {
-                //console.log(names[i].defaultValue)
-                ns.push(names[i].defaultValue)
-            }
-            for (var i = 0; i < progress.length; i++) {
-                //console.log(progress[i].defaultValue)
-                ps.push(progress[i].defaultValue)
-            }
-            for (var i = 0; i < durations.length; i++) {
-                //console.log(progress[i].defaultValue)
-                dur.push(durations[i].defaultValue)
-            }
-            console.log(ns);
-            console.log(ps);
-            console.log(dur);
-
-
-
-            google.charts.load("current", { packages: ['corechart'] });
-            google.charts.setOnLoadCallback(drawChart);
-            google.charts.setOnLoadCallback(drawChart2);
-            google.charts.setOnLoadCallback(drawChart3);
-
-
-            function drawChart() {
-
-                var data = new google.visualization.DataTable();
-                data.addColumn('string', 'Name');
-                data.addColumn('number', 'Progress');
-                data.addColumn({ role: "style" });
-                data.addRows([
-                    [`${ns[0]}`, parseInt(ps[0]), "#4da76b"],
-                ]);
-
-                for (let j = 1; j < ns.length; j++) {
-                    data.addRows([
-                        [`${ns[j]}`, parseInt(ps[j]), "#4da76b"],
-                    ]);
-                }
-
-                var options = {
-                    title: "Tasks Progress",
-                    hAxis: { textStyle: { bold: true } },
-                    vAxis: { minValue: 0, maxValue: 100 },
-                    animation: {
-                        startup: true,
-                        duration: 2500,
-                        easing: 'in',
-                    },
-                    bar: { groupWidth: "70%" },
-                    legend: { position: "none" },
-                };
-                var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
-                chart.draw(data, options);
-            }
-
-            function drawChart2() {
-                var data = new google.visualization.DataTable();
-                data.addColumn('string', 'Name');
-                data.addColumn('number', 'Time Spent');
-
-                data.addRows([
-                    [`${ns[0]}`, parseInt(dur[0])],
-                ]);
-
-                for (let j = 1; j < ns.length; j++) {
-                    data.addRows([
-                        [`${ns[j]}`, parseInt(dur[j])],
-                    ]);
-                }
-
-                var options = {
-                    title: 'Tasks Actual Durations',
-                    pieHole: 0.4,
-                    //chartArea: { left: 20, top: 0, width: '50%', height: '75%' }
-                    chartArea: { left: 150, height: '80%' }
-
-                };
-
-                var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
-                chart.draw(data, options);
-            }
-
-            function drawChart3() {
-                var data = google.visualization.arrayToDataTable([
-                    ['Year', 'Sales', 'Expenses'],
-                    ['2013', 1000, 400],
-                    ['2014', 1170, 460],
-                    ['2015', 660, 1120],
-                    ['2016', 1030, 540]
-                ]);
-
-                var options = {
-                    title: 'Company Performance',
-                    hAxis: { title: 'Year', titleTextStyle: { color: 'green' } },
-                    vAxis: { minValue: 0 }
-                };
-
-                var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
-                chart.draw(data, options);
-            }
-        }
-
-        function Show(divName) {
-            $(`#${divName}`).removeClass('d-none');
-        }
-        function Hide(divName) {
-            $(`#${divName}`).addClass('d-none');
         }
 
     </script>

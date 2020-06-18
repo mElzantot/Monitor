@@ -15,11 +15,11 @@
             }
             else
             {
-                <table class="table table-hover text-center">
-                    <thead>
+                <table class="table table-hover text-center table-sm">
+                    <thead class="thead-dark">
                         <tr>
                             <th scope="col">Department</th>
-                            <th scope="col">Manager</th>
+                            <th scope="col">Department Manager</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -39,8 +39,8 @@
                                 <td class="text-right">
                                     <div class="btn-group" role="group" aria-label="Basic example">
                                         @*<a class="btn btn-outline-primary btn-sm" asp-controller="Team" asp-action="viewTeams" asp-route-id="@item.Id"><i class="fas fa-users"></i></a>*@
-                                        <button type="button" class="btn btn-outline-success " onclick="AssignManager(@item.Id)"><i class="fas fa-male"></i></button>
-                                        <button type="button" class="btn btn-danger" onclick="deleteDept(@item.Id)"><i class="far fa-trash-alt"></i></button>
+                                        <button type="button" class="btn btn-outline-success btn-sm" onclick="AssignManager(@item.Id)"><i class="fas fa-male"></i></button>
+                                        <button type="button" class="btn btn-danger btn-sm" onclick="deleteDept(@item.Id)"><i class="far fa-trash-alt"></i></button>
                                     </div>
                                 </td>
                             </tr>
@@ -62,8 +62,6 @@
         <!--#endregion -->
     </div>
 </div>
-
-<div>Test For SignalR</div>
 
 
 <!-- Add Department Modal -->
@@ -200,6 +198,8 @@
                         if (status == "success") {
                             console.log(data);
                             var tbody = $("#tablebody");
+                            var msg = "RealTest";
+                            connection.invoke("sendNotification", msg);
                             $('#addDeptModel').modal('hide');
                             tbody.append(data);
                             setTimeout(function () {
@@ -243,12 +243,12 @@
         //--------
         //Open the right window which contain the form
         //this function is called from (Edit function , Add function)
-        function viewTeams(DeptId,DepName) {
+        function viewTeams(DeptId, DepName) {
             DepartmentId = DeptId;
             $.ajax({
                 type: "GET",
                 url: `/Team/ViewTeams`,
-                data: { id: DeptId , Name : DepName },
+                data: { id: DeptId, Name: DepName },
                 success: function (response) {
 
                     $('#teamTables').empty();
@@ -267,7 +267,7 @@
             $.ajax({
                 url: "/Employee/AssignManager",
                 type: "GET",
-                data: { role: "Department Manager" },
+                data: { role: "DepartmentManager" },
                 success: function (result, status) {
                     if (result && status == "success") {
                         $("#managers").empty();
@@ -372,7 +372,7 @@
             $.ajax({
                 url: "/Employee/AssignManager",
                 type: "GET",
-                data: { role: "Team Leader" },
+                data: { role: "TeamLeader" },
                 success: function (result, status) {
                     if (result && status == "success") {
                         $("#leaders").empty();

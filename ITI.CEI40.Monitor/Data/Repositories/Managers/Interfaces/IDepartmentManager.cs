@@ -20,6 +20,8 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         IEnumerable<Department> GetAllDeptWithManagers();
 
+        Department GetDepartmentWithManagerID(string managerId);
+
 
 
     }

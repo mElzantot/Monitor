@@ -7,29 +7,34 @@ using System.Threading.Tasks;
 
 namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 {
-    public class TeamManager:Reposiotry<ApplicationDbContext,Team>,ITeamManager
+    public class TeamManager : Reposiotry<ApplicationDbContext, Team>, ITeamManager
     {
-        public TeamManager(ApplicationDbContext context):base(context)
+        public TeamManager(ApplicationDbContext context) : base(context)
         {
 
         }
-
+        
         public List<Team> getTeamsinsideDept(int deptID)
         {
-            return set.Where(e => e.FK_DepartmentId == deptID).Include(t=>t.TeamLeader).ToList();
+            return set.Where(e => e.FK_DepartmentId == deptID).Include(t => t.TeamLeader).ToList();
         }
 
         public Team GetTeamWithAttributes(int id)
         {
             return set.Where(t => t.Id == id).Include(t => t.Department).Include(t => t.TeamLeader)
-               .Include(t=>t.Engineers).Include(t=>t.Tasks).FirstOrDefault();
+               .Include(t => t.Engineers).Include(t => t.Tasks).FirstOrDefault();
         }
 
 
         public IEnumerable<Team> GetAllWithAttributes(int id)
         {
-            return set.Where(t=>t.FK_DepartmentId == id).Include(t => t.Department).Include(t => t.TeamLeader)
+            return set.Where(t => t.FK_DepartmentId == id).Include(t => t.Department).Include(t => t.TeamLeader)
                .Include(t => t.Engineers).Include(t => t.Tasks);
+        }
+
+        public Team GetTeamWithTasksAndEngineers(int id)
+        {
+            return set.Where(t => t.Id == id).Include(t => t.Engineers).Include(t => t.Tasks).FirstOrDefault();
         }
 
         public Team FindByName(string name)
@@ -42,11 +47,17 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Where(t => t.Id == id).Include(t => t.TeamLeader).Include(t => t.Engineers).FirstOrDefault();
         }
 
-        public Team GetTeamWithTasksAndEngineers(int id)
-        {
-            return set.Where(t => t.Id == id).Include(t => t.Engineers).Include(t => t.Tasks).FirstOrDefault();
-        }
-            
 
+
+        public Team GetTeamWithTeamLeaderId(string teamLeaderId)
+        {
+            return set.Where(t => t.FK_TeamLeaderId == teamLeaderId).FirstOrDefault();
+        }
+
+        public Team GetTeamWithSubtasksAndEngineers(int id)
+        {
+            return set.Where(t => t.Id == id).Include(t => t.Engineers)
+                .ThenInclude(e => e.SubTasks).FirstOrDefault();
+        }
     }
 }

@@ -58,7 +58,11 @@ namespace ITI.CEI40.Monitor
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-            services.AddSignalR();
+            services.AddMvc().AddRazorPagesOptions(options => {
+                options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "");
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(
             options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
@@ -66,12 +70,6 @@ namespace ITI.CEI40.Monitor
 
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, UserClaimsPrincipalFactory<ApplicationUser, IdentityRole>>();
-            services.AddAuthentication(options =>
-            {
-                options.DefaultAuthenticateScheme = IdentityConstants.ApplicationScheme;
-                options.DefaultChallengeScheme = IdentityConstants.ApplicationScheme;
-                options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
-            });
             services.AddSignalR();
         }
 
@@ -100,6 +98,7 @@ namespace ITI.CEI40.Monitor
             {
                 routes.MapHub<NotificationsHub>("/notificationsHub");
             });
+
 
             app.UseMvc(routes =>
             {
