@@ -1,0 +1,34 @@
+﻿@model List<Project>
+
+@{
+    ViewData["Title"] = "ControlInvoice";
+}
+
+<h1>Control Invoices</h1>
+<br />
+<div style="text-align:center;">
+    <table class="table table-sm text-center holiday-table">
+        <thead class="alert-info thead-dark">
+            <tr>
+                <th scope="col">Project Name</th>
+                <th scope="col">Project Describtion</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody id="tableBody" class="table-sm">
+            @if (Model.Count > 0 && Model != null)
+            {
+                @for (int i = 0; i < Model.Count(); i++)
+                {
+                    <tr>
+                        <td>@Model[i].Name</td>
+                        <td>@Model[i].Description</td>
+                        <td><a href="/Invoice/Index_Income/@Model[i].ID" class="btn alert-info btn-sm">Income</a></td>
+                        <td><a href="/Invoice/Index_Expense/@Model[i].ID" class="btn btn-outline-info btn-sm">Outcome</a></td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>

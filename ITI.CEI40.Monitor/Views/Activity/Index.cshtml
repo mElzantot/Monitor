@@ -236,6 +236,20 @@
             console.log(model);*@
         }
 
+
+         function fillHolidays() {
+            @foreach (var date in Model.Holidays)
+            {
+                <text>
+             dt = new Date(@date.HolidayDate.Date.Year, @(date.HolidayDate.Date.Month - 1), @date.HolidayDate.Date.Day); // create JS Date object
+             dt = `${formatDate(dt)}`
+             disabledDays.push(dt);
+                </text>
+             }
+        }
+
+        fillHolidays(); // fill the arrayof disabled days 
+
         //////////////////////////////////////
 
         document.addEventListener("DOMContentLoaded", table(dataArray, noData), false);
@@ -243,10 +257,6 @@
             // then start fill the data
             startEdit();
         });
-
-        // add the Department assignees to the tables
-        //$.when($.ajax(table())).then(function () {
-        //});
 
     </script>
 }

@@ -30,7 +30,8 @@ namespace ITI.CEI40.Monitor.Controllers
             {
                 ProjectId = id,
                 Activities = unitOfWork.Tasks.GetByProjectId(id).OrderBy(t => t.ViewOrder).ToList(),
-                Departments = unitOfWork.Departments.GetAll().ToList()
+                Departments = unitOfWork.Departments.GetAll().ToList(),
+                Holidays = unitOfWork.Holiday.GetAll().ToList()
             };
             return View(activityVM);
         }

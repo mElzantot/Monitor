@@ -20,6 +20,13 @@ namespace ITI.CEI40.Monitor.Controllers
             this.userManager = userManager;
         }
 
+
+        public IActionResult ControlInvoice()
+        {
+            List<Project> projects = unitOfWork.Projects.GetAll().ToList();
+            return View(projects);
+        }
+
         public IActionResult Index_Income(int id)
         {
             InvoiceViewModel invoiceVM = new InvoiceViewModel

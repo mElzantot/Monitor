@@ -1,0 +1,89 @@
+﻿
+@model HolidayViewModel
+
+<h1>Holidays</h1>
+<br />
+<div style="text-align:center;">
+    <table class="table table-sm text-center holiday-table">
+        <thead class="alert-info thead-dark">
+            <tr>
+                <th scope="col">Holiday Name</th>
+                <th scope="col">Holiday Date</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody id="tableBody" class="table-sm">
+            @if (Model.Holidays.Count > 0 && Model.Holidays != null)
+            {
+                @for (int i = 0; i < Model.Holidays.Count(); i++)
+                {
+                    <partial name="_HolidayPartialView" model="Model.Holidays[i]" />
+                }
+            }
+        </tbody>
+    </table>
+    <form method="post" data-ajax-url="/Holiday/AddHoliday" data-ajax="true" data-ajax-method="Post" data-ajax-complete="addHoliday"
+          data-ajax-update="#tableBody" data-ajax-mode="after" id="HolidayForm">
+        <div class="holiday-body">
+            <div class="form-group col-4">
+                <input asp-for="@Model.Holiday.HolidayName" class="form-control" />
+                <span asp-validation-for="@Model.Holiday.HolidayName" class="text-danger"></span>
+            </div>
+            <div class="form-group col-4">
+                <input asp-for="@Model.Holiday.HolidayDate" class="form-control" />
+                <span asp-validation-for="@Model.Holiday.HolidayDate" class="text-danger"></span>
+            </div>
+            <div class="form-group col-4">
+                <div class="btn-group" role="group" aria-label="Basic example" style="margin-left:-90px">
+                    <button type="submit" class="btn btn-primary btn-sm" >Add</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+
+
+
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/lib/jquery-validation-unobtrusive-ajax/dist/jquery.unobtrusive-ajax.js"></script>
+    <script>
+        function addHoliday(result, status) {
+            if (status == "success") {
+                document.getElementById("HolidayForm").reset();
+                //alert("Holiday added Successfully");
+            }
+            else {
+                alert("Error While Adding Holiday");
+                document.getElementById("HolidayForm").reset();
+            }
+        }
+
+        function deleteHoliday(id) {
+            let reponse = confirm("Are You Sure ? ");
+            if (reponse) {
+                $.ajax({
+                    url: "../../Holiday/DeleteHoliday",
+                    type: "POST",
+                    data: { id: id },
+                    success: function (result) {
+                        if (result) {
+                            $("#" + id).remove();
+                            console.log($("#" + id));
+                            calculatTotal();
+                        } else {
+                            alert("an error occurred");
+                        }
+                    },
+                    error: function (x, y, err) {
+                        console.log(err);
+                    }
+                });
+            }
+        }
+
+    </script>
+
+}
