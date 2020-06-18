@@ -64,8 +64,8 @@ namespace ITI.CEI40.Monitor.Controllers
             {
                 var task = unitOfWork.Tasks.GetById(taskId);
                 task.FK_TeamId = teamId;
-                var team = unitofwork.Teams.GetById(teamId);
-                unitofwork.Complete();
+                var team = unitOfWork.Teams.GetById(teamId);
+                unitOfWork.Complete();
 
                 //--------Add Notification to DataBase
 
@@ -78,13 +78,13 @@ namespace ITI.CEI40.Monitor.Controllers
                     messege = messege,
                     seen = false
                 };
-                Notification Savednotification = unitofwork.Notification.Add(Notification);
+                Notification Savednotification = unitOfWork.Notification.Add(Notification);
                 NotificationUsers notificationUsers = new NotificationUsers
                 {
                     NotificationId = Savednotification.Id,
                     userID = team.FK_TeamLeaderId
                 };
-                unitofwork.NotificationUsers.Add(notificationUsers);
+                unitOfWork.NotificationUsers.Add(notificationUsers);
 
                 //---------Send Notification to Team
                 hubContext.Clients.User(notificationUsers.userID).SendAsync("newNotification", messege);
@@ -133,7 +133,7 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpGet]
         public IActionResult Dashboard(int taskId)
         {
-            var subtask = unitofwork.SubTasks.GetSubTasksFromTask(taskId);
+            var subtask = unitOfWork.SubTasks.GetSubTasksFromTask(taskId);
             return View("_DashBoardPartial", subtask);
         }
 
