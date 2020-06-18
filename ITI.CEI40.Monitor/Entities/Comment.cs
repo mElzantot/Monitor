@@ -25,7 +25,6 @@ namespace ITI.CEI40.Monitor.Entities
         public int? FK_SubTaskId { get; set; }
         public SubTask subTask { get; set; }
 
-
         public string comment { get; set; }
 
         [Required]

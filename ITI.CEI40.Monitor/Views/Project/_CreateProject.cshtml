@@ -44,20 +44,25 @@
 
                 @if (Model.Projects.Count<Project>() <= 0)
                 {
-                    <h4 id="noProject" style="padding:45px 20px " class="text-muted text-center">Create your first project </h4>
+                    <table class="table table-hover">
+                        <tbody id="tablebody">
+                            <tr>
+                                <h4 id="noProject" style="padding:45px 20px " class="text-muted text-center">Create your first project </h4>
+                            </tr>
+                        </tbody>
+                    </table>
                 }
                 else
-                {
-                    <table class="table table-hover">
+                { <table class="table table-hover">
                         <tbody id="tablebody">
                             @foreach (var item in Model.Projects)
                             {
                                 <tr id="@item.ID" onclick="OpenEditSec(@item.ID)">
                                     <td class="text-center font-weight-bold">@item.Name</td>
                                     <td style="text-align:right">
-                                        <a href="/Project/Details/@item.ID" class="btn btn-outline-info" ><i id="i" class="fas fa-chart-area"></i> Details</a>
-                                        <a href="/Activity/Index/@item.ID" class="btn alert-info" ><i id="i" class="fas fa-chart-area"></i> Chart</a>
-                                        
+                                        <a href="/Project/Details/@item.ID" class="btn btn-outline-info"><i id="i" class="fas fa-chart-area"></i> Details</a>
+                                        <a href="/Activity/Index/@item.ID" class="btn alert-info"><i id="i" class="fas fa-chart-area"></i> Chart</a>
+
                                         @if (item.EndDate != null)
                                         {
                                             <button onclick="Dashboard(@item.ID)" type="button" class="btn alert-warning">Dashboard</button>
@@ -79,10 +84,11 @@
                         </tbody>
                     </table>
                 }
-            </div>
-            <!--#endregion -->
-        </div>
 
+                <!--#endregion -->
+            </div>
+
+        </div>
 
         <div id="formSec" class="col-6">
             <!--#region Form Section  -->
@@ -147,18 +153,18 @@
                     success: function (response) {
                         $('#tablebody').append(
                             `<tr id="${response.id}" onclick="Edit(${response.id})">
-                                                                                    <td class="text-center font-weight-bold">${response.name}</td>
-                                                                                    <td style="text-align:right">
-                                                                                    <a href="/Activity/Index/${response.id}" class="btn alert-info" ><i id="i" class="fas fa-chart-area"></i> Chart</a>
-                                                                                    <div class="btn-group dropleft">
-                                                        <button type="button" class="btn alert-warning " data-toggle="dropdown" >
-                                                            Dashboard
-                                                        </button>
-                                                        <div class="dropdown-menu px-2 alert-danger">
-                                                            Lets goto charts and create tasks
-                                                        </div>
-                                                    </div>
-                                                                            </tr>`
+                                                                                                                                    <td class="text-center font-weight-bold">${response.name}</td>
+                                                                                                                                    <td style="text-align:right">
+                                                                                                                                    <a href="/Activity/Index/${response.id}" class="btn alert-info" ><i id="i" class="fas fa-chart-area"></i> Chart</a>
+                                                                                                                                    <div class="btn-group dropleft">
+                                                                                                        <button type="button" class="btn alert-warning " data-toggle="dropdown" >
+                                                                                                            Dashboard
+                                                                                                        </button>
+                                                                                                        <div class="dropdown-menu px-2 alert-danger">
+                                                                                                            Lets goto charts and create tasks
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                                            </tr>`
                         );
                         //For first time if there is no project in the table (Hide the sec of No Project is created)
                         $('#noProject').hide();

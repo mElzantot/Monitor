@@ -19,7 +19,7 @@
     @* Font-awesome *@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css" />
-    <link rel="stylesheet" href="~/css/style.css"  />
+    <link rel="stylesheet" href="~/css/style.css" />
 
 
     <style>
@@ -39,9 +39,9 @@
     <header>
         <partial name="_LoginPartial.cshtml" />
     </header>
-    <div class="container">
-        <partial name="_CookieConsentPartial" />
-        <main role="main" style="margin-top :70px;" >
+    <div class="">
+        <partial name="_CookieConsentPartial"/>
+        <main role="main" style="margin-top :70px;">
             <div id="main">
                 @RenderBody()
             </div>
@@ -80,11 +80,11 @@
             });
         }
 
-                                    //function send() {
-                                    //    var message = document.getElementById("txt").value;
-                                    //    console.log(message);
-                                    //    connection.invoke("sendMessages", message);
-                                    //}
+                                        //function send() {
+                                        //    var message = document.getElementById("txt").value;
+                                        //    console.log(message);
+                                        //    connection.invoke("sendMessages", message);
+                                        //}
 
 
     </script>

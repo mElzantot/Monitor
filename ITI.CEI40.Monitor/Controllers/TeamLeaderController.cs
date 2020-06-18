@@ -194,14 +194,6 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
 
-
-
-
-
-
-
-
-
         public JsonResult TryJson()
         {
             string engId = userManager.GetUserId(HttpContext.User);
