@@ -1,8 +1,12 @@
 ﻿@model SubTask
 
-<div class="col-5 rightcont" id="rightSec" >
-    <div style="border: 2px solid white ; padding: 20px; border-radius: 8px; background:white" >
-        <div class="righthead " >
+<div class="col-5 rightcont" id="rightSec">
+    <div style="        border: 2px solid white;
+        padding: 20px;
+        border-radius: 8px;
+        background: white;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+        <div style=" display:flex;justify-content:space-between">
 
             <div class="dropdown">
                 <button class="btn-light btn btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -12,49 +16,80 @@
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <div class="text-muted p-2"><pre>@Model.Description</pre></div>
                 </div>
+
+            </div>
+            <div class="rounded-circle">
+                <a class="btn btn-sm btn-outline-info rounded-circle" href="/comment/activitylog?taskId=@Model.FK_TaskId"> <i class="fas fa-info fa-2x mx-1"></i> </a>
             </div>
         </div>
 
 
 
-        <hr />
-        <div class="row">
-            <div class="col-lg-7 innerleft" style="border-right:2px solid rgb(219, 219, 219)">
-                <div class="prog">
-                    <div class="font-weight-bold">Progress</div>
-                    <div class="cont">
-                        <input type="range" asp-for="@Model.Progress" onchange="ChangeProgress(@Model.Id,this.value)" min="0" max="100" step="10" class="slider" id="myRange">
-                    </div>
+        @{
+            int startDay = Model.StartDate.Value.Day;
+            int startMonth = Model.StartDate.Value.Month;
+            int startYear = Model.StartDate.Value.Year;
+
+            DateTime subStart = new DateTime(startYear, startMonth, startDay - 1);
+            DateTime preStart = new DateTime(startYear, startMonth, startDay + 1);
+
+            int endDay = Model.EndDate.Value.Day;
+            int endtMonth = Model.EndDate.Value.Month;
+            int endYear = Model.EndDate.Value.Year;
+
+            DateTime subEnd = new DateTime(endYear, endtMonth, endDay - 1);
+            DateTime preEnd = new DateTime(endYear, endtMonth, endDay + 1);
+        }
+
+        <div style="display:flex;justify-content:space-around;margin-top:20px">
+            <div style=" background:;display:inline-block;padding:15px;">
+
+                <div style="display:flex;justify-content:center;color:#e2e2e2; font-size:18px">
+                    @subStart.Day @subStart.ToString("MMM") @subStart.Year
+                </div>
+                <div style=" font-size:25px;color:green">
+                    @startDay @Model.StartDate.Value.ToString("MMM") @startYear
+                </div>
+                <div style="display:flex;justify-content:center;color:#e2e2e2; font-size:18px">
+                    @preStart.Day @preStart.ToString("MMM") @preStart.Year
+                </div>
+            </div>
+
+            <div style=" background:;display:inline-block;padding:15px">
+                <div style="display:flex;justify-content:center;color:#e2e2e2; font-size:18px">
+                    @subEnd.Day @subEnd.ToString("MMM") @subEnd.Year
+                </div>
+                <div style=" font-size:25px;color:#ea0404">
+                    @endDay @Model.EndDate.Value.ToString("MMM") @endYear
+                </div>
+                <div style="display:flex;justify-content:center;color:#e2e2e2; font-size:18px">
+                    @preEnd.Day @preEnd.ToString("MMM") @preEnd.Year
                 </div>
 
-                <a class="btn btn-sm btn-outline-info" href="/comment/activitylog?taskId=@Model.FK_TaskId">Task Details <i class="fas fa-info"></i></a>             
-            </div>
-            <div class="col-lg-5 innerright ">
-
-                <div class="font-weight-bold">Start Data</div>
-                <div class="text-muted mb-2">@Model.StartDate.Value.Date.ToShortDateString()</div>
-
-
-                <div class="font-weight-bold">End Data</div>
-                <div class="text-muted mb-2">@Model.EndDate.Value.Date.ToShortDateString()</div>
-                @{
-                    int duration = (int)(Model.EndDate - Model.StartDate).Value.TotalDays * 8;
-                }
-                <div class="font-weight-bold">Task Duration</div>
-                <div class="text-muted mb-2">@duration hour</div>
-
-                <div class="font-weight-bold">Actual Duration</div>
-                <div class="text-muted"> @Model.ActualDuration hour</div>
-                @*<br />
-                    <button class="btn btn-success w-100" onclick="SubmitSunTask()">Submit</button>*@
             </div>
         </div>
-   
-            <textarea id="commentArea" class="col-12 mt-3" placeholder="Add Comment Here......"></textarea>
+
+        <div style="display:flex; justify-content:space-between;margin-top:20px">
+            <div class="prog" style="width:49%">
+                <div style="margin-bottom:5px;font-size:20px;display:flex;justify-content:center"><i class="fas fa-chart-line"></i> 	&nbsp Progress</div>
+                <div class="cont">
+                    <input type="range" asp-for="@Model.Progress" onchange="ChangeProgress(@Model.Id,this.value)" min="0" max="100" step="10" class="slider" id="myRange">
+                </div>
+            </div>
+            <div style="width:49% ;font-size:20px;">
+                <div style="display:flex;justify-content:center;margin-bottom:5px"><i class="fas fa-hourglass-start"></i> 	&nbsp Actual duration</div>
+                <div style="display:flex;justify-content:center" class="text-muted"> @Model.ActualDuration hour</div>
+            </div>
+        </div>
+      
+
+        <div style="margin-top:40px">
+            <textarea id="commentArea" class="col-12 " placeholder="Add Comment Here......"></textarea>
             <div style="display:flex;justify-content:flex-end">
                 <button class="btn btn-sm btn-outline-secondary mr-2" onclick="UploadFile(@Model.Id,@Model.FK_TaskId)"> Upload File <i class="fas fa-paperclip"></i></button>
                 <button class="btn btn-sm btn-outline-info float-sm-right" type="button" id="AddComment" onclick="AddComment(@Model.Id,@Model.FK_TaskId)">Comment</button>
             </div>
+        </div>
     </div>
 </div>
 
