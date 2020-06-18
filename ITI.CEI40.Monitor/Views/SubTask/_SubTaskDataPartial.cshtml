@@ -15,8 +15,6 @@
             </div>
         </div>
 
-
-
         <hr />
         <div class="row">
             <div class="col-lg-7 innerleft" style="border-right:2px solid rgb(219, 219, 219)">
@@ -32,16 +30,12 @@
             <div class="col-lg-5 innerright ">
 
                 <div class="font-weight-bold">Start Data</div>
-                <div class="text-muted mb-2">@Model.StartDate.Value.Date.ToShortDateString()</div>
-
+                <div class="text-muted mb-2" id="startDate">@Model.StartDate.Value.Date.ToString("dd/MM/yyyy")</div>
 
                 <div class="font-weight-bold">End Data</div>
-                <div class="text-muted mb-2">@Model.EndDate.Value.Date.ToShortDateString()</div>
-                @{
-                    int duration = (int)(Model.EndDate - Model.StartDate).Value.TotalDays * 8;
-                }
+                <div class="text-muted mb-2" id="endDate">@Model.EndDate.Value.Date.ToString("dd/MM/yyyy")</div>
                 <div class="font-weight-bold">Task Duration</div>
-                <div class="text-muted mb-2">@duration hour</div>
+                <div class="text-muted mb-2" id="SubTaskDuration"></div>
 
                 <div class="font-weight-bold">Actual Duration</div>
                 <div class="text-muted"> @Model.ActualDuration hour</div>
