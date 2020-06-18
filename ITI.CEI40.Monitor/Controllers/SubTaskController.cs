@@ -42,7 +42,7 @@ namespace ITI.CEI40.Monitor.Controllers
 
             return View("Engineer", subTasks);
         }
-        س
+        
         [Authorize(Roles = "Engineer")]
         public IActionResult DisplayRow(int ID)
         {
