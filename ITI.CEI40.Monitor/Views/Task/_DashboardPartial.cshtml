@@ -24,8 +24,8 @@
                 <input class="staskprog" id="p-@i" value="@Model[i].Progress" hidden="hidden" />
                 <input class="staskdur" id="d-@i" value="@(Model[i].ActualDuration)" hidden="hidden" />
                 <input class="engname" id="e-@i" value="@(Model[i].Engineer.UserName)" hidden="hidden" />
-                <input class="ststartdate" id="sd-@i" value="@(Model[i].StartDate)" hidden="hidden" />
-                <input class="stenddate" id="ed-@i" value="@(Model[i].EndDate)" hidden="hidden" />
+                <input class="ststartdate" id="sd-@i" value="@(Model[i].StartDate.Value.ToString("yyyy/MM/dd"))" hidden="hidden" />
+                <input class="stenddate" id="ed-@i" value="@(Model[i].EndDate.Value.ToString("yyyy/MM/dd"))" hidden="hidden" />
             }
 
             @{

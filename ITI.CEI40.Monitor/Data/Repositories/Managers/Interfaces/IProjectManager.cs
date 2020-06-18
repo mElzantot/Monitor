@@ -15,6 +15,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         IEnumerable<Project> GetCancelledProjects(string managerId = null);
         IEnumerable<Project> GetRunningProjects(string managerId = null);
         Project GetProjectForReport(int Projid);
+        IEnumerable<Project> Archive();
 
 
     }

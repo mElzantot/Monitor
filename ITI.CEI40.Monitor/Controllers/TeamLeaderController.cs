@@ -66,17 +66,28 @@ namespace ITI.CEI40.Monitor.Controllers
             //unitofwork.SubTasks.Edit(subtask);  
         }
 
+        [Authorize(Roles = "Engineer")]
+        [HttpGet]
+        public IActionResult ArchivedSubTasks()
+        {
+            string engId = userManager.GetUserId(HttpContext.User);
+            var subtasks = unitofwork.SubTasks.Archive(engId).ToList();
+            return View("ArchivedSubTasks", subtasks);
+        }
+
         //omar
         [Authorize(Roles = "Engineer")]
-        public IActionResult EngineerChart()
+        public IActionResult EngineerChart(string engid=null)
         {
+            
             string engId = userManager.GetUserId(HttpContext.User);
             List<SubTask> subtasks = unitofwork.SubTasks.GetEngineerComletedSubTasks(engId);
 
+
             List<string> months = new List<string>();
-            List<int> quality = new List<int>();
-            List<int> complexity = new List<int>();
-            List<int> time = new List<int>();
+            List<float> quality = new List<float>();
+            List<float> complexity = new List<float>();
+            List<float> time = new List<float>();
             List<SubTask> subs = new List<SubTask>();
             string engName = subtasks[0].Engineer.UserName;
             string month;
@@ -126,6 +137,8 @@ namespace ITI.CEI40.Monitor.Controllers
                 Complexity = complexity
             };
             return View("EngineerChart", engineerChrtView);
+            
+            
         }
 
 
@@ -134,6 +147,8 @@ namespace ITI.CEI40.Monitor.Controllers
         {
             int teamId = unitofwork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
             List<ApplicationUser> team = unitofwork.Engineers.GetEngineersInsideTeamWithSubTasks(teamId);
+            List<string> Ids = new List<string>();
+
             
             List<string> names = new List<string>();
             List<List<float>> avg = new List<List<float>>();
@@ -141,6 +156,7 @@ namespace ITI.CEI40.Monitor.Controllers
             foreach (var item in team)
             {
                 names.Add(item.UserName);
+                Ids.Add(item.Id);
                 if (item.SubTasks != null)
                 {
                    avg.Add(EngineerPerformence(item.SubTasks.ToList()));
@@ -153,7 +169,8 @@ namespace ITI.CEI40.Monitor.Controllers
             TeamChartViewModel teamChart = new TeamChartViewModel
             {
                 Names= names,
-                Values= avg
+                Values= avg,
+                EngIds=Ids
             };
             return View("TeamChart", teamChart);
         }
@@ -162,7 +179,7 @@ namespace ITI.CEI40.Monitor.Controllers
 
         private List<float> EngineerPerformence(List<SubTask> subTasks)
         {
-            List<float> result = new List<float>();
+            List<float> result = new List<float>() { 0,0,0,0,0};
             foreach (var item in subTasks)
             {
                 result[0] += item.ActualDuration;
@@ -183,12 +200,12 @@ namespace ITI.CEI40.Monitor.Controllers
             List<SubTask> subtasks = unitofwork.SubTasks.GetEngineerComletedSubTasks(engId);
 
             List<string> months = new List<string>();
-            List<int> quality = new List<int>();
-            List<int> complexity = new List<int>();
-            List<int> time = new List<int>();
+            List<float> quality = new List<float>();
+            List<float> complexity = new List<float>();
+            List<float> time = new List<float>();
             List<int> subNo = new List<int>();
-            List<int> totalDuration = new List<int>();
-            List<int> tasksDuration = new List<int>();
+            List<float> totalDuration = new List<float>();
+            List<float> tasksDuration = new List<float>();
 
             string engName = subtasks[0].Engineer.UserName;
             string month;
@@ -244,6 +261,9 @@ namespace ITI.CEI40.Monitor.Controllers
 
             return PartialView(subtasks);
         }
+
+
+        
 
     }
 }

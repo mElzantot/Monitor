@@ -8,12 +8,16 @@
 
   <ItemGroup>
     <Compile Remove="Data\Migrations\**" />
+    <Compile Remove="Views\SubTaskSessions\**" />
     <Compile Remove="wwwroot\lib\%2540microsoft\**" />
     <Content Remove="Data\Migrations\**" />
+    <Content Remove="Views\SubTaskSessions\**" />
     <Content Remove="wwwroot\lib\%2540microsoft\**" />
     <EmbeddedResource Remove="Data\Migrations\**" />
+    <EmbeddedResource Remove="Views\SubTaskSessions\**" />
     <EmbeddedResource Remove="wwwroot\lib\%2540microsoft\**" />
     <None Remove="Data\Migrations\**" />
+    <None Remove="Views\SubTaskSessions\**" />
     <None Remove="wwwroot\lib\%2540microsoft\**" />
   </ItemGroup>
 
@@ -34,6 +38,8 @@
     <Compile Remove="Migrations\20200615195050_subenddata.Designer.cs" />
     <Compile Remove="Migrations\20200615195138_subenddata.cs" />
     <Compile Remove="Migrations\20200615195138_subenddata.Designer.cs" />
+    <Compile Remove="Migrations\20200616182729_firstt.cs" />
+    <Compile Remove="Migrations\20200616182729_firstt.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -62,7 +68,6 @@
 
 
   <ItemGroup>
-    <Folder Include="Views\SubTaskSessions\" />
     <Folder Include="wwwroot\files\" />
   </ItemGroup>
 

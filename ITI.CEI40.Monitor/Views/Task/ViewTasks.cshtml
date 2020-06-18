@@ -12,8 +12,8 @@
     <input type="number" hidden id="teamId" value="@ViewBag.TeamId" />
     <div id="tasksView">
         <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
-            <table class="table table-hover text-center" id="teamTable">
-                <thead class="tableh alert-info">
+            <table class="table table-hover text-center table-sm" id="teamTable">
+                <thead class="tableh alert-info thead-dark">
                     <tr>
                         <th scope="col">Task Name</th>
                         <th scope="col">Project</th>
@@ -182,7 +182,6 @@
             }
         }
 
-
         $('#addSubTaskModal').on('shown.bs.modal', function () {
 
             $('#startDate').datepicker({
@@ -283,7 +282,7 @@
 
 
         function parseDate(s) {
-            var b = s.split(/\D/);
+            var b = s.split("/");
             return new Date(b[0], --b[1], b[2]);
         }
 
@@ -446,10 +445,12 @@
              
 
                 var options = {
-                    colors: ['#cbb69d', '#603913', '#c69c6e'],
+                    forceIFrame: true,
+                    backgroundColor: 'paige',
+                    colors: ['red', 'yellow', 'green', 'blue'],
                     timeline: {
-                        rowLabelStyle: { fontName: 'Helvetica', fontSize: 24, color: '#603913' },
-                        barLabelStyle: { fontName: 'Garamond', fontSize: 14 }
+                        rowLabelStyle: { fontName: 'Helvetica', fontSize: 18, color: 'black' },
+                        barLabelStyle: { fontName: 'italic', fontSize: 14 }
                     }
                 };
                 chart.draw(dataTable, options);

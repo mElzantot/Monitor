@@ -6,9 +6,9 @@
 }
 else
 {
-    <h3 class="p-3"> @Model.DepName</h3>
-    <table class="table table-hover text-center">
-        <thead>
+    <h3 class="p-3"><button disabled class="btn btn-dark"><strong>@Model.DepName</strong></button></h3>
+    <table class="table table-hover text-center table-sm ">
+        <thead class="thead-dark">
             <tr>
                 <th scope="col">Team</th>
                 <th scope="col">Team Leader</th>
@@ -30,9 +30,9 @@ else
                     }
                     <td class="text-right">
                         <div class="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" class="btn btn-outline-success " onclick="AssignLeader(@item.Id)"><i class="fas fa-male"></i></button>
-                            <a class="btn btn-outline-primary" asp-controller="Employee" asp-action="ViewEmployees" asp-route-id="@item.Id"><i class="fas fa-users"></i></a>
-                            <button type="button" class="btn btn-danger" onclick="deleteTeam(@item.Id)"><i class="far fa-trash-alt"></i></button>
+                            <button type="button" class="btn btn-outline-success btn-sm" onclick="AssignLeader(@item.Id)"><i class="fas fa-male"></i></button>
+                            @*<a class="btn btn-outline-primary" asp-controller="Employee" asp-action="ViewEmployees" asp-route-id="@item.Id"><i class="fas fa-users"></i></a>*@
+                            <button type="button" class="btn btn-danger btn-sm" onclick="deleteTeam(@item.Id)"><i class="far fa-trash-alt"></i></button>
                         </div>
                     </td>
                 </tr>

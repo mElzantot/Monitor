@@ -131,5 +131,10 @@ namespace ITI.CEI40.Monitor.Controllers
             return View(project);
         }
 
+        public IActionResult Archive()
+        {
+            var projects = unitofwork.Projects.Archive().ToList();
+            return View(projects);
+        }
     }
 }

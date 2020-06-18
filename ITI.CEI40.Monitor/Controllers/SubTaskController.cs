@@ -90,7 +90,7 @@ namespace ITI.CEI40.Monitor.Controllers
                 subTask.ActualDuration += subTaskSession.SessDuration;
 
                 Activity task = unitOfWork.Tasks.GetById(subTask.FK_TaskId);
-                int LastTaskDuaration = task.ActualDuratoin;
+                float LastTaskDuaration = task.ActualDuratoin;
                 task.ActualDuratoin += subTask.ActualDuration;
                 task = unitOfWork.Tasks.Edit(task);
                 Project project = unitOfWork.Projects.GetById(task.FK_ProjectId);

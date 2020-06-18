@@ -9,5 +9,6 @@ namespace ITI.CEI40.Monitor.Models
     {
         public List<string> Names { get; set; }
         public List<List<float>> Values { get; set; }
+        public List<string> EngIds { get; set; }
     }
 }
