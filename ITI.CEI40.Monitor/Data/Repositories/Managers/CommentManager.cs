@@ -51,12 +51,10 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         {
             return set.Where(c => c.FK_TaskID == taskId && c.commentLevel == CommentLevels.Med).Include(c => c.File).ToList();
         }
+
         public IEnumerable<Comment> GetLowCommentforTask(int taskId)
         {
-            return set.Where(c => c.FK_TaskID == taskId && c.commentLevel == CommentLevels.low).Include(c => c.File).ToList();
+            return set.Where(c => c.FK_TaskID == taskId && c.commentLevel == CommentLevels.low).Include(s=>s.Sender).Include(c => c.File).ToList();
         }
-
-
-
     }
 }

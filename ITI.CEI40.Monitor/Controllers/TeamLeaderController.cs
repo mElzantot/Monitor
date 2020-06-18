@@ -169,19 +169,12 @@ namespace ITI.CEI40.Monitor.Controllers
                 result[1] += item.Complexity;
                 result[2] += item.Quality * item.Complexity;
                 result[3] += item.TimeManagement * item.Complexity;
+                result[4] += 1;
             }
             result[2] = result[2] / result[1];
             result[3] = result[3] / result[1];
             return result;
         }
-
-
-
-
-
-
-
-
 
 
         public JsonResult TryJson()

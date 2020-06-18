@@ -53,16 +53,16 @@ namespace ITI.CEI40.Monitor.Controllers
         {
             string userId = usermanager.GetUserId(HttpContext.User);
 
-            List<Comment> comments = unitOfWork.Comments.GetCommentsForTask(taskId).ToList();
-            List<SubTask> subTasks = unitOfWork.SubTasks.Get_Not_C_SubTasksFromTask(taskId).ToList();
+            //List<Comment> comments = unitOfWork.Comments.GetLowCommentforTask(taskId).ToList();
 
-            CommentViewModel commentView = new CommentViewModel
-            {
-                Comments = comments,
-                Sender = userId,
-                SubTasks = subTasks
-            };
-            return View("_Comments", commentView);
+            List<SubTask> subTasks = unitOfWork.SubTasks.GetAllSubTasksWithTask(taskId);
+
+            //CommentViewModel commentView = new CommentViewModel
+            //{
+            //    Comments = comments,
+            //    SubTasks = subTasks
+            //};
+            return View("ActivityLog", subTasks);
         }
 
 
@@ -85,9 +85,7 @@ namespace ITI.CEI40.Monitor.Controllers
                 };
                 return Json(new { result = true, msg = "Comment Added Successfully" });
             }
-
             return Json(new { result = false, msg = "Model Is not Valid" });
-
         }
 
 

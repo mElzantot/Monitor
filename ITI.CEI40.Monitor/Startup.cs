@@ -58,6 +58,11 @@ namespace ITI.CEI40.Monitor
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
+            services.AddMvc().AddRazorPagesOptions(options => {
+                options.Conventions.AddAreaPageRoute("Identity", "/Account/Login", "");
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+
             services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(
@@ -94,6 +99,10 @@ namespace ITI.CEI40.Monitor
             {
                 routes.MapHub<NotificationsHub>("/notificationsHub");
             });
+
+           
+
+
 
             app.UseMvc(routes =>
             {

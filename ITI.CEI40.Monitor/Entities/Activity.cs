@@ -59,6 +59,8 @@ namespace ITI.CEI40.Monitor.Entities
         public ICollection<Dependencies> FollowingActivities { set; get; }
         public ICollection<Comment> Comments { get; set; }
 
+        public string Story { get; set; }
+
         public int Progress { get; set; }
         public int ActualDuratoin { get; set; }
         public int SumOfSubTasksDurations { get; set; }

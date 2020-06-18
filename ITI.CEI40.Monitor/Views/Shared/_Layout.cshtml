@@ -19,7 +19,9 @@
     @* Font-awesome *@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css" />
-    <link rel="stylesheet" href="~/css/style.css" />
+    <link rel="stylesheet" href="~/css/style.css"  />
+
+
     <style>
         * {
             font-family: "Times New Roman", Times, serif;
@@ -37,9 +39,9 @@
     <header>
         <partial name="_LoginPartial.cshtml" />
     </header>
-    <div class="container">
+    <div class="">
         <partial name="_CookieConsentPartial" />
-        <main role="main" style="margin-top :70px;" class="pb-3">
+        <main role="main" style="margin-top :70px;" >
             <div id="main">
                 @RenderBody()
             </div>
@@ -83,6 +85,7 @@
                                     //    console.log(message);
                                     //    connection.invoke("sendMessages", message);
                                     //}
+
 
     </script>
     @RenderSection("Scripts", required: false)

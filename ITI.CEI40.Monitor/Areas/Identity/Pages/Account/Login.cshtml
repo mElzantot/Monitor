@@ -1,36 +1,518 @@
 ﻿@page
 @model LoginModel
+@*@{
+        ViewData["Title"] = "Log in";
+    }
+
+
+    <div class="row justify-content-md-center pt-5 border-success">
+        <div class="col-md-4 align-items-center border-success border-success">
+            <form id="account" method="post">
+                <div class="form-group">
+                    <label asp-for="Input.Email"></label>
+                    <input asp-for="Input.Email" class="form-control" />
+                    <span asp-validation-for="Input.Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Input.Password"></label>
+                    <input asp-for="Input.Password" class="form-control" />
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Log in</button>
+                </div>
+                <div class="form-group">
+                    <p>
+                        <a id="forgot-password" asp-page="./ForgotPassword">Forgot password?</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>*@
+
 
 @{
-    ViewData["Title"] = "Log in";
+    ViewData["Title"] = "Home Page";
 }
 
-@*<h1>@ViewData["Title"]</h1>*@
-<div class="row justify-content-md-center pt-5 border-success">
-    <div class="col-md-4 align-items-center border-success border-success">
-        <form id="account" method="post">
-            <div class="form-group">
-                <label asp-for="Input.Email"></label>
-                <input asp-for="Input.Email" class="form-control" />
-                <span asp-validation-for="Input.Email" class="text-danger"></span>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+
+<section class="">
+    <h1 class="text-center" style="margin:2.5em 0 1em 0 ;color: rgb(50, 146, 82) ">Discover a better way to track time and get work done</h1>
+    <div style="display:flex;">
+        <h3 style="margin-left:1em; margin:2em 0.5em 1em 0">
+            <p style="text-align:center">
+                Take control of your projects and find out where your time is going with customizable workflows and detailed, meaningful reports.
+            </p>
+
+            <div style="display:flex;justify-content:center; margin-top:1.5em">
+                <a class="section-btn btn btn-default" style="color:black" href="#feature">Discover more</a>
             </div>
-            <div class="form-group">
-                <label asp-for="Input.Password"></label>
-                <input asp-for="Input.Password" class="form-control" />
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
+        </h3>
+
+        <img src="~/img/7.jpeg" style="margin:0 1.5em 0em 0;">
+    </div>
+</section>
+
+
+
+<!-- Login -->
+<section id="Login" class="section">
+    <div class="container ">
+        <div class="row" style="display:flex;justify-content:space-between">
+
+            <div class="col-6" style="display:flex;align-items:center">
+                <div class="about-info">
+
+                    <figure class="Logicon">
+                        <span><i class="fa fa-users"></i></span>
+                        <figcaption>
+                            <h3>Professional Trainers</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint ipsa voluptatibus.</p>
+                        </figcaption>
+                    </figure>
+
+                    <figure class="Logicon">
+                        <span><i class="fa fa-certificate"></i></span>
+                        <figcaption>
+                            <h3>International Certifications</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint ipsa voluptatibus.</p>
+                        </figcaption>
+                    </figure>
+
+
+                    <figure class="Logicon">
+                        <span><i class="fa fa-certificate"></i></span>
+                        <figcaption>
+                            <h3>International Certifications</h3>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint ipsa voluptatibus.</p>
+                        </figcaption>
+                    </figure>
+
+                </div>
             </div>
 
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Log in</button>
+            <div class=" ">
+                <div class="entry-form">
+                    <form id="account" method="post">
+                        <h2 class="mb-4">Login</h2>
+
+                        <input asp-for="Input.Email" class="form-control" placeholder="Your email address" />
+                        <span asp-validation-for="Input.Email" class="text-danger"></span>
+
+                        <input asp-for="Input.Password" class="form-control" placeholder="Your password" />
+                        <span asp-validation-for="Input.Password" class="text-danger"></span>
+
+                        <p class="mt-4">
+                            <a id="forgot-password" asp-page="./ForgotPassword">Forgot password?</a>
+                        </p>
+                        <button type="submit" class="submit-btn form-control" id="form-submit">Get started</button>
+                    </form>
+                </div>
             </div>
-            <div class="form-group">
-                <p>
-                    <a id="forgot-password" asp-page="./ForgotPassword">Forgot password?</a>
-                </p>
-            </div>
-        </form>
+
+        </div>
     </div>
-</div>
+</section>
+
+
+
+
+<section class="section" id="feature">
+
+    <div class="feature-container">
+        <figure class="feature">
+            <img src="~/img/time.png" />
+            <figcaption>
+                <h3>Time tracking</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint ipsa voluptatibus.</p>
+            </figcaption>
+        </figure>
+
+
+        <figure class="feature">
+            <img src="~/img/graphic.png" />
+            <figcaption>
+                <h3>Free for 3 months</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint ipsa voluptatibus.</p>
+            </figcaption>
+        </figure>
+
+        <figure class="feature">
+            <img src="~/img/bill.png" />
+            <figcaption>
+                <h3>Free for 3 months</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint ipsa voluptatibus.</p>
+            </figcaption>
+        </figure>
+    </div>
+
+    <div class="feature-container">
+        <figure class="feature">
+            <img src="~/img/checklist.png" />
+            <figcaption>
+                <h3>Free for 3 months</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint ipsa voluptatibus.</p>
+            </figcaption>
+        </figure>
+
+        <figure class="feature">
+            <img src="~/img/maths.png" />
+            <figcaption>
+                <h3>Free for 3 months</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint ipsa voluptatibus.</p>
+            </figcaption>
+        </figure>
+
+        <figure class="feature">
+            <img src="~/img/files-and-folders.png" />
+            <figcaption>
+                <h3>Free for 3 months</h3>
+                <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Sint ipsa voluptatibus.</p>
+            </figcaption>
+        </figure>
+    </div>
+</section>
+
+
+
+<!-- FOOTER -->
+<footer id="footer" class="section">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-sm-6">
+                <div class="footer-info">
+                    <div class="section-title">
+                        <h2>Headquarter</h2>
+                    </div>
+                    <address>
+                        <p>1800 dapibus a tortor pretium,<br> Integer nisl dui, ABC 12000</p>
+                    </address>
+
+                    <ul class="social-icon">
+                        <li><a href="#" class="fab fa-facebook" attr="facebook icon"></a></li>
+                        <li><a href="#" class="fab fa-twitter"></a></li>
+                        <li><a href="#" class="fab fa-linkedin-in"></a></li>
+
+                    </ul>
+
+                    <div class="copyright-text">
+                        <p>Copyright &copy; 2019 Company Name</p>
+
+                        <p>Design: TemplateMo</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-6">
+                <div class="footer-info">
+                    <div class="section-title">
+                        <h2>Contact Info</h2>
+                    </div>
+                    <address>
+                        <p>+65 2244 1100, +66 1800 1100</p>
+                        <p><a href="mailto:youremail.co">hello@youremail.co</a></p>
+                    </address>
+
+                    <div class="footer_menu">
+                        <h2>Quick Links</h2>
+                        <ul>
+                            <li><a href="#">Career</a></li>
+                            <li><a href="#">Investor</a></li>
+                            <li><a href="#">Terms & Conditions</a></li>
+                            <li><a href="#">Refund Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4 col-sm-12">
+                <div class="footer-info newsletter-form">
+                    <div class="section-title">
+                        <h2>Newsletter Signup</h2>
+                    </div>
+                    <div>
+                        <div class="form-group">
+                            <form action="#" method="get">
+                                <input type="email" class="form-control" placeholder="Enter your email" name="email" id="email" required="">
+                                <input type="submit" class="form-control" name="submit" id="form-submit" value="Send me">
+                            </form>
+                            <span><sup>*</sup> Please note - we do not spam your email.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</footer>
+
+
+
+
+@section Style{
+    <style>
+        .section-btn {
+            background: transparent;
+            border-radius: 50px;
+            border: 1px solid var(--green);
+            color: #ffffff;
+            font-size: 25px;
+            font-weight: normal;
+            padding: 15px 25px;
+            transition: 1s;
+        }
+
+            .section-btn:hover {
+                background: var(--green);
+                border-color: transparent;
+            }
+
+        .about-info {
+            margin-bottom: 50px;
+        }
+
+        .entry-form {
+            display: block;
+            margin: 0 auto;
+            border-radius: 0;
+            padding: 2em;
+            max-width: 100%;
+            max-height: 100%;
+            width: inherit;
+            height: inherit;
+        }
+
+        .entry-form {
+            background: #252020;
+            border-radius: 100%;
+            text-align: center;
+            padding: 6em;
+            width: 450px;
+            height: 450px;
+        }
+
+            .entry-form h2 {
+                color: #ffffff;
+                margin: 0;
+            }
+
+            .entry-form .form-control {
+                background: transparent;
+                border: 0;
+                border-bottom: 1px solid;
+                border-radius: 0;
+                box-shadow: none;
+                height: 45px;
+                margin: 10px 0;
+            }
+
+            .entry-form .submit-btn {
+                background: #ffffff;
+                border-radius: 50px;
+                border: 0;
+                color: #252020;
+                width: 50%;
+                height: 50px;
+                margin: 30px auto;
+                margin-bottom: 10px;
+            }
+
+                .entry-form .submit-btn:hover {
+                    background: var(--green);
+                    color: #ffffff;
+                }
+
+
+        /*---------------------------------------
+     FOOTER              
+  -----------------------------------------*/
+
+        footer {
+            background: #252020;
+            padding: 120px 0;
+        }
+
+            footer .section-title {
+                padding-bottom: 10px;
+            }
+
+            footer h2 {
+                font-size: 20px;
+            }
+
+            footer a,
+            footer p {
+                color: #909090;
+            }
+
+            footer strong {
+                color: #d9d9d9;
+            }
+
+            footer address p {
+                margin-bottom: 0;
+            }
+
+            footer .social-icon {
+                margin-top: 25px;
+            }
+
+        .footer-info {
+            margin-right: 2em;
+        }
+
+            .footer-info h2 {
+                color: #ffffff;
+                padding: 0;
+            }
+
+        .footer_menu h2 {
+            margin-top: 2em;
+        }
+
+        .footer_menu ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        .footer_menu li {
+            display: inline-block;
+            list-style: none;
+            margin: 5px 10px 5px 0;
+        }
+
+        .newsletter-form .form-control {
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
+            border: 0;
+            border-bottom: 1px solid #303030;
+            height: 50px;
+            margin: 5px 0;
+        }
+
+        .newsletter-form input[type="submit"] {
+            background: transparent;
+            border: 1px solid #f9f9f9;
+            border-radius: 50px;
+            color: #ffffff;
+            display: block;
+            margin-top: 20px;
+            outline: none;
+            width: 50%;
+        }
+
+            .newsletter-form input[type="submit"]:hover {
+                background: #29ca8e;
+                border-color: transparent;
+            }
+
+        .newsletter-form .form-group span {
+            color: #909090;
+            display: block;
+            font-size: 12px;
+            margin-top: 20px;
+        }
+
+
+
+        /*---------------------------------------
+     SOCIAL ICON              
+  -----------------------------------------*/
+
+        .social-icon {
+            position: relative;
+            padding: 0;
+            margin: 0;
+        }
+
+            .social-icon li {
+                display: inline-block;
+                list-style: none;
+                margin-bottom: 5px;
+            }
+
+                .social-icon li a {
+                    border-radius: 100px;
+                    color: #29ca8e;
+                    font-size: 15px;
+                    width: 35px;
+                    height: 35px;
+                    line-height: 35px;
+                    text-decoration: none;
+                    text-align: center;
+                    transition: all 0.4s ease-in-out;
+                    position: relative;
+                    margin: 5px 5px 5px 0;
+                }
+
+                    .social-icon li a:hover {
+                        background: #29ca8e;
+                        color: #ffffff;
+                    }
+
+
+
+                .social-icon li a {
+                    border-radius: 100px;
+                    color: #29ca8e;
+                    font-size: 15px;
+                    width: 35px;
+                    height: 35px;
+                    line-height: 35px;
+                    text-decoration: none;
+                    text-align: center;
+                    transition: all 0.4s ease-in-out;
+                    position: relative;
+                    margin: 5px 5px 5px 0;
+                }
+                    /*---------------*/
+
+        .section {
+            margin: 12rem 0 0;
+        }
+
+        .Logicon {
+            display: flex;
+            border: 0 solid #ccdece;
+            background: #ccdece;
+            border-radius: 10px;
+            padding: 15px 0 15px 20px;
+        }
+
+        .feature-container {
+            display: flex;
+            justify-content: space-evenly;
+            margin: 15px 0 0 0;
+        }
+
+        .feature {
+            border: .25px solid #e4e4e4;
+            border-radius: 5px;
+            padding: 15px 0 15px 20px;
+            width: 30%;
+        }
+
+        p {
+            margin: 0;
+        }
+
+        body {
+            background: #fdfdfd;
+        }
+
+
+
+    </style>
+}
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
