@@ -28,7 +28,6 @@
                                 <span>@Model[0].Task.EndDate.Day</span>
                             </time>
                         </div>
-
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             @{ int filesNum = 0;}
                             @foreach (var item in Model)
@@ -57,543 +56,392 @@
                     <div class="row lower-container">
 
                         <div class="col-6 task-container">
-
-                            <div style="height:19.5rem;background-color:white;border:0px solid white ;border-radius:10px ;">
-                                <div style="position:absolute;border:0 solid #e6f5ea;border-radius:0 0 7px 7px;margin-left:30px;background:#e6f5ea;padding:5px 20px;font-size:25px;display:inline-flex">Departement Manager</div>
-
-                                <div style="overflow-y:auto; height:14.8em;padding:3em 0 0 0">
-                                    <div style="margin: 0 .3em 1em .5em; ">
-                                        <div class="message-text">
-                                            @foreach (var item in Model[0].Task.Comments)
+                            <div>
+                                <div class="text-muted" style="position:absolute;border:0 solid #e6f5ea;border-radius:0 0 7px 7px;margin-left:30px;background:#e6f5ea;padding:5px 20px;font-size:22px;display:inline-flex">Departement Manager</div>
+                                <div style="overflow-y:auto;background-color:white ;height:15em;padding:3em 0 0 0;border:0 solid;border-radius:10px 10px 0 0">
+                                    <div id="depManComment">
+                                        @foreach (var item in Model[0].Task.Comments)
+                                        {
+                                            if (item.commentLevel == CommentLevels.Med)
                                             {
-                                                if (item.commentLevel == CommentLevels.Med)
-                                                {
-                                                    <div style="margin: 0 .3em 1em .5em;">
-                                                        <div class="message-text">
-                                                            @item.comment
-                                                            @if (item.File != null)
-                                                            {
-                                                                <br>
-                                                                <a href="#" download="">@item.File.FilePath</a>
-                                                            }
-                                                        </div>
-                                                        <div class="message-time">@item.commentTime</div>
-                                                    </div>
-                                                }
+                                                <partial name="_CommentPartial" model="item" />
                                             }
-                                        </div>
-                                        <div class="message-time"></div>
-                                    </div>
-                                </div>
-                                <div style="padding:.4em; display:flex; justify-content:space-between; background-color:var(--green) ;border: 0 solid var(--green);border-radius: 0 0 10px 10px;">
-                                    <textarea id="commentArea" class="form-control " placeholder="Add Comment Here..."></textarea>
-
-                                    <div style="align-items:center; display:flex; justify-content:space-between">
-                                        <button class="btn btn-sm mx-2 " type="button" id="AddFile" style="font-size:20px;color:white" onclick="AddFile(@Model[0].Task.Id,0)"><i class="fas fa-paperclip "></i></button>
-                                        <button class="btn btn-sm " type="button" id="AddComment" style="font-size:20px; color:white" onclick="AddComment(@Model[0].Task.Id)"><i class="fas fa-paper-plane "></i></button>
+                                        }
                                     </div>
                                 </div>
                             </div>
+                            <div style="padding:.4em; display:flex; justify-content:space-between; background-color:var(--green) ;border: 0 solid var(--green);border-radius: 0 0 10px 10px;">
+                                <textarea id="commentArea" class="form-control " placeholder="Add Comment Here..."></textarea>
+                                <div style="align-items:center; display:flex; justify-content:space-between">
+                                    <button class="btn btn-sm mx-2 " type="button" id="AddFile" style="font-size:20px;color:white" onclick="AddFile(@Model[0].Task.Id,0,'depManComment')"><i class="fas fa-paperclip "></i></button>
+                                    <button class="btn btn-sm " type="button" id="AddComment" style="font-size:20px; color:white" onclick="AddComment(@Model[0].Task.Id,'depManComment')"><i class="fas fa-paper-plane "></i></button>
+                                </div>
+                            </div>
                         </div>
-
                         <div class="col-6 task-container">
-                            <div style="height:19.5rem;background-color:white;border:0px solid white ;border-radius:10px ;">
-                                <div style="position:absolute;border:0 solid #e6f5ea;border-radius:0 0 7px 7px;margin-left:30px;background:#e6f5ea;padding:5px 20px;font-size:25px;display:inline-flex">Task Story</div>
-
+                            <div style="height:19.7rem;background-color:white;border:0px solid white ;border-radius:10px ;">
+                                <div class="text-muted" style="position:absolute;border:0 solid #e6f5ea;border-radius:0 0 7px 7px;margin-left:30px;background:#e6f5ea;padding:5px 20px;font-size:22px;display:inline-flex">Task Story</div>
                             </div>
                         </div>
                     </div>
+                </div>
 
-                    <div class="lower-container row">
+                <div class="lower-container row">
 
-                        @for (int i = 0; i < Model.Count(); i++)
-                        {
-                            <div class="col-6 task-container">
-                                <div style="height:19.5rem;background-color:white;border:0px solid white ;border-radius:10px ;">
-                                    @if (Model[i].Status == Status.OnHold)
-                                    {
-                                        <div style="position:absolute;border:0 solid #ffc107;border-radius:0 0 7px 7px;margin-left:30px;background:#ffc107;padding:3px 10px;font-size:20px;display:inline-flex" onmouseover="display(@Model[i].Id,@i)" onmouseout="hide(@Model[i].Id, @i)">@Model[i].Name</div>
-                                    }
-                                    else
-                                    {
-                                        <div style="position:absolute;border:0 solid #e6f5ea;border-radius:0 0 7px 7px;margin-left:30px;background:#e6f5ea;padding:3px 10px;font-size:20px;display:inline-flex" onmouseover="display(@Model[i].Id,@i)" onmouseout="hide(@Model[i].Id, @i)">@Model[i].Name</div>
-                                    }
-                                    <div style="height:14.9em; overflow-y:auto;padding:3em 0 0 0">
-                                        <div id="@i">
-                                            <div style="margin: 0 .3em 1em .5em; ">
-                                                <div class="message-text">
-                                                    @foreach (var comment in Model[i].Comments)
-                                                    {
-                                                        <div style="margin: 0 .3em 1em .5em;">
-                                                            <div class="message-text">
-                                                                @comment.comment
-                                                                @if (comment.File != null)
-                                                                {
-                                                                    <br>
-                                                                    <a href="#" download="">@comment.File.FilePath</a>
-                                                                }
-                                                            </div>
-                                                            <div class="message-time">@comment.commentTime</div>
-                                                        </div>
-                                                    }
-                                                </div>
-                                                <div class="message-time"></div>
-                                            </div>
-                                        </div>
+                    @for (int i = 0; i < Model.Count(); i++)
+                    {
+                        <div class="col-6 task-container">
+                            <div>
+                                @if (Model[i].Status == Status.OnHold)
+                                {
+                                    <div style="position:absolute;border:0 solid #ffc107;border-radius:0 0 7px 7px;margin-left:30px;background:#ffc107;padding:3px 10px;font-size:20px;display:inline-flex" onmouseover="display(@Model[i].Id,@i)" onmouseout="hide(@Model[i].Id, @i)">@Model[i].Name</div>
+                                }
+                                else
+                                {
+                                    <div class="text-muted" style="position:absolute;border:0 solid #e6f5ea;border-radius:0 0 7px 7px;margin-left:30px;background:#e6f5ea;padding:3px 10px;font-size:20px;display:inline-flex" onmouseover="display(@Model[i].Id,@i)" onmouseout="hide(@Model[i].Id, @i)">@Model[i].Name</div>
+                                }
+                                <div style="height:15em;background:white; overflow-y:auto;padding:3em 0 0 0">
+                                    <div id='@("subtaskComments"+Model[i].Id)'>
+                                        @foreach (var comment in Model[i].Comments)
+                                        {
+                                            <partial name="_CommentPartial" model="comment" />
+                                        }
                                     </div>
-                                    <section id="@Model[i].Id" class="d-none">
-                                        <div class="single-chart">
-                                            <svg viewbox="0 0 36 36" class="circular-chart blue">
-                                                <path class="circle-bg"
-                                                      d="M18 2.0845
+                                </div>
+                                <section id="@Model[i].Id" class="d-none">
+                                    <div class="single-chart">
+                                        <svg viewbox="0 0 36 36" class="circular-chart blue">
+                                            <path class="circle-bg"
+                                                  d="M18 2.0845
                                     a 15.9155 15.9155 0 0 1 0 31.831
                                     a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                                <path class="circle"
-                                                      stroke-dasharray="@Model[i].Progress, 100"
-                                                      d="M18 2.0845
+                                            <path class="circle"
+                                                  stroke-dasharray="@Model[i].Progress, 100"
+                                                  d="M18 2.0845
                                   a 15.9155 15.9155 0 0 1 0 31.831
                                   a 15.9155 15.9155 0 0 1 0 -31.831" />
-                                                <text x="18" y="20.35" class="percentage">@Model[i].Progress%</text>
-                                            </svg>
-                                        </div>
-                                    </section>
-
-                                    <div style="padding:.4em; display:flex; justify-content:space-between; background-color:var(--green) ;border: 0 solid var(--green);border-radius: 0 0 10px 10px;">
-                                        <textarea class="form-control " placeholder="Add Comment Here..." id=@("subComment"+Model[i].Id)></textarea>
-                                        <div style="align-items:center; display:flex; justify-content:space-between">
-                                            <button class="btn btn-sm mx-2 " type="button" style="font-size:20px;color:white" onclick="AddFile(@Model[i].FK_TaskId,@Model[i].Id)"><i class="fas fa-paperclip "></i></button>
-                                            <button class="btn btn-sm " type="button" style="font-size:20px; color:white" onclick="AddsubComment(@Model[i].Id,@Model[i].FK_TaskId)"><i class="fas fa-paper-plane "></i></button>
-                                        </div>
+                                            <text x="18" y="20.35" class="percentage">@Model[i].Progress%</text>
+                                        </svg>
+                                    </div>
+                                </section>
+                                <div style="padding:.4em; display:flex; justify-content:space-between; background-color:var(--green) ;border: 0 solid var(--green);border-radius: 0 0 10px 10px;">
+                                    <textarea class="form-control " placeholder="Add Comment Here..." id=@("subComment"+Model[i].Id)></textarea>
+                                    <div style="align-items:center; display:flex; justify-content:space-between">
+                                        <button class="btn btn-sm mx-2 " type="button" style="font-size:20px;color:white" onclick="AddFile(@Model[i].FK_TaskId,@Model[i].Id,'@("subtaskComments" + Model[i].Id)')"><i class="fas fa-paperclip"></i></button>
+                                        <button class="btn btn-sm " type="button" style="font-size:20px; color:white" onclick="AddsubComment(@Model[i].Id,@Model[i].FK_TaskId,'@("subtaskComments" + Model[i].Id)')"><i class="fas fa-paper-plane"></i></button>
                                     </div>
                                 </div>
-                            </div>
-                        }
-
-                    </div>
-
-                    <!-- File Modal -->
-                    <div class="modal fade" id="FileModal" tabindex="-1" role="dialog" aria-labelledby="FileModalLabel" aria-hidden="true">
-                        <div class="modal-dialog" role="document">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id="FileModalLabel">Files</h5>
-                                </div>
-                                <form id="fileForm" enctype="multipart/form-data" method="post">
-                                    <div class="modal-body">
-                                        <label>Upload File</label>
-                                        <div class="custom-file">
-                                            <input name="file" class="form-control custom-file-input" type="file" />
-                                            <label class="custom-file-label">Choose File...</label>
-                                        </div>
-                                        <input id="task_Id" name="taskId" value="" hidden />
-                                        <input id="subTask_Id" name="subTaskId" value="" hidden />
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
-                                        <button onclick="uploadFile()" type="button" class="btn btn-primary">Upload</button>
-                                    </div>
-                                </form>
                             </div>
                         </div>
-                    </div>
-
-
-
-                    @*<div class="row " style="        border: 2px solid rgb(219, 219, 219);
-                            border-radius: 8px;">
-                            <div class="col-3  innerleft pt-4" style="border-right:2px solid rgb(219, 219, 219);">
-                                @foreach (var item in Model)
-                                {
-
-                                    <div class="font-weight-bold mb-2">@item</div>
-                                }
-                            </div>
-                            <div class="col-9 innerright " style="overflow-y:scroll; height:28rem">
-                                @foreach (var item in Model.Comments)
-                                {
-                                    if (item.FK_sender == Model.Sender)
-                                    {
-                                        <div class="message-row you-message">
-                                            <div class="message-text">
-                                                @item.comment
-                                                <br>
-                                                @if (item.File != null)
-                                                {
-                                                    <a href="#" download="" class="">@item.File.FilePath</a>
-                                                }
-                                            </div>
-                                            <div class="message-time">@item.commentTime</div>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <div class="message-row other-message">
-                                            <div class="message-text">
-                                                <div class="user-name">@item.Sender.UserName</div>
-
-                                                @item.comment
-                                                <br>
-                                                @if (item.File != null)
-                                                {
-                                                    <a href="#" download="" class="">@item.File.FilePath</a>
-                                                }
-                                            </div>
-                                            <div class="message-time">@item.commentTime</div>
-                                        </div>
-                                    }
-                                }
-                            </div>
-                        </div>*@
-
-
-                    @section Style{
-                        <style>
-                            /*.message-row {
-                                        margin-bottom: 20px;
-                                        display: grid;
-                                        grid-template-columns: 70%;
-                                    }*/
-
-                            .message-text {
-                                padding: 20px, 14px;
-                                font-size: 1rem;
-                                margin-bottom: 0px;
-                            }
-
-                            .message-time {
-                                font-size: .8rem;
-                                color: #777;
-                            }
-
-
-                            .you-message .message-text {
-                                background-color: rgb(47, 136, 76);
-                                color: #eee;
-                                border: 1px solid rgb(47, 136, 76);
-                                border-radius: 7px 7px 0 7px;
-                            }
-
-                            .user-name {
-                                font-size: 1rem;
-                            }
-
-                            .other-message .message-text {
-                                background-color: #eee;
-                                color: #111;
-                                border: 1px solid #eee;
-                                border-radius: 7px 7px 7px 0;
-                            }
-
-                            .you-message {
-                                justify-content: end;
-                                justify-items: end;
-                            }
-
-                            .other-message {
-                                justify-items: start;
-                            }
-
-
-
-
-                            /* Time */
-
-                            time.icon {
-                                font-size: 1em; /* change icon size */
-                                display: block;
-                                position: relative;
-                                width: 5em;
-                                height: 5em;
-                                background-color: #fff;
-                                margin: .4em auto;
-                                border-radius: 0.6em;
-                                box-shadow: 0 1px 0 #bdbdbd, 0 2px 0 #fff, 0 3px 0 #bdbdbd, 0 4px 0 #fff, 0 5px 0 #bdbdbd, 0 0 0 1px #bdbdbd;
-                                overflow: hidden;
-                            }
-
-                                time.icon * {
-                                    display: block;
-                                    width: 100%;
-                                    font-size: 0.9em;
-                                    font-weight: bold;
-                                    font-style: normal;
-                                    text-align: center;
-                                }
-
-                                time.icon strong {
-                                    position: absolute;
-                                    top: 0;
-                                    padding: 0.1em 0;
-                                    color: #fff;
-                                    background-color: var(--green);
-                                    border-bottom: 1px dashed #154826;
-                                    box-shadow: 0 2px 0 var(--green);
-                                }
-
-                                time.icon em {
-                                    position: absolute;
-                                    bottom: 0.3em;
-                                    color: var(--green);
-                                }
-
-                                time.icon span {
-                                    width: 100%;
-                                    font-size: 1.7em;
-                                    letter-spacing: -0.05em;
-                                    padding-top: 0.8em;
-                                    color: #2f2f2f;
-                                }
-
-
-                            /*My*/
-
-                            .upper-container {
-                                background-color: #e6f5ea;
-                                margin-top: 7rem;
-                                padding: 7px;
-                                border: 0 solid #e6f5ea;
-                                border-radius: 12px;
-                            }
-
-                            .lower-container {
-                                background-color: #e6f5ea;
-                                margin-top: 20px;
-                                border: 0 solid #e6f5ea;
-                                border-radius: 12px;
-                            }
-
-                            .upper-icon {
-                                border-right: 2px solid #cce2d3;
-                            }
-
-                            .Eng-Name {
-                                font-size: 1.3em;
-                                border-bottom: 1px solid black;
-                                margin: .2em 0em 0em .4em;
-                            }
-
-                            .sub-name {
-                                background-color: var(--green);
-                                height: 3rem;
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                                border: 1px solid var(--green);
-                                border-radius: 0 0 10px 10px;
-                                font-size: 1.4em;
-                                color: white;
-                                transition: .8s;
-                            }
-
-
-                            .task-container {
-                                margin: 1.2rem 0 1.2rem 0;
-                                cursor: pointer;
-                            }
-
-                            section {
-                                width: 30em;
-                                position: absolute;
-                                z-index: 1;
-                                left: 55px;
-                                top: 63px;
-                            }
-
-                            .dropdown-menu {
-                                max-height: 25rem;
-                                width: 17.7rem;
-                                overflow-y: auto;
-                            }
-                        </style>
-                        <link rel="stylesheet" href="~/css/circle.css" />
                     }
+                </div>
 
 
-                    @section Scripts{
+                <!-- File Modal -->
+                <div class="modal fade" id="FileModal" tabindex="-1" role="dialog" aria-labelledby="FileModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="FileModalLabel">Files</h5>
+                            </div>
+                            <form id="fileForm" enctype="multipart/form-data" method="post">
+                                <div class="modal-body">
+                                    <label>Upload File</label>
+                                    <div class="custom-file">
+                                        <input name="file" class="form-control custom-file-input" type="file" />
+                                        <label class="custom-file-label">Choose File...</label>
+                                    </div>
+                                    <input id="task_Id" name="taskId" value="" hidden />
+                                    <input id="subTask_Id" name="subTaskId" value="" hidden />
+                                </div>
+                                <div class="modal-footer">
+                                    <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
+                                    <button onclick="uploadFile()" type="button" class="btn btn-primary">Upload</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
 
-                        <script>
 
-                            function display(id, i) {
-                                $(`#${i}`).addClass('d-none')
-                                $(`#${id}`).removeClass('d-none')
+
+
+                @section Scripts{
+
+                    <script>
+
+                        function display(id, i) {
+                            $(`#${i}`).addClass('d-none')
+                            $(`#${id}`).removeClass('d-none')
+                        }
+
+                        function hide(id, i) {
+                            $(`#${id}`).addClass('d-none')
+                            $(`#${i}`).removeClass('d-none')
+                        }
+
+
+
+                        //-----------Add Description
+                        function updateDesc(taskId) {
+                            $.ajax({
+                                url: "/Task/AddTaskDesc",
+                                type: "Post",
+                                data: { taskId: taskId, taskDesc: $("#taskDesc").val() },
+                                success: function (result) {
+                                    $('#tableBody').empty();
+                                    $('#tableBody').append(result);
+                                },
+                                error: function (x, y, err) {
+                                    console.log(err);
+                                }
+                            })
+                        }
+
+                        //-------------Add File and Comments for Dept Manager
+
+                        function AddFile(taskId, SubTaskId, divId) {
+                            targetDiv = $(`#${divId}`);
+                            $('#task_Id').attr("value", taskId);
+                            if (SubTaskId == 0) {
+                                isTaskCheck = 'true'
                             }
-
-                            function hide(id, i) {
-                                $(`#${id}`).addClass('d-none')
-                                $(`#${i}`).removeClass('d-none')
+                            else {
+                                isTaskCheck = 'false'
+                                $('#subTask_Id').attr("value", SubTaskId);
                             }
+                            isHighLevel = false
+                            $('#isHighLevelBool').attr("value", isHighLevel);
+                            $('#FileModal').modal('show');
+                            console.log(isTaskCheck);
+                        }
 
+                        $('input[type="file"]').change(function (e) {
+                            fileName = e.target.files[0].name;
+                            $(".custom-file-label").html(fileName);
+                        });
 
-
-                            //-----------Add Description
-                            function updateDesc(taskId) {
+                        function uploadFile() {
+                            let URL;
+                            if (isTaskCheck == 'true') { URL = `/comment/AddFileForTask?isHighLevel=` + `${isHighLevel}`; }
+                            else { URL = "/comment/AddFileForSubTask"; }
+                            console.log(URL);
+                            let form = $('#fileForm')[0];
+                            let data = new FormData(form);
+                            console.log(form);
+                            console.log(data);
+                            if (fileName) {
                                 $.ajax({
-                                    url: "/Task/AddTaskDesc",
-                                    type: "Post",
-                                    data: { taskId: taskId, taskDesc: $("#taskDesc").val() },
-                                    success: function (result) {
-                                        $('#tableBody').empty();
-                                        $('#tableBody').append(result);
-                                    },
-                                    error: function (x, y, err) {
-                                        console.log(err);
+                                    type: 'post',
+                                    url: URL,
+                                    processData: false,  // Important!
+                                    contentType: false,
+                                    cache: false,
+                                    data: data,
+                                    success: function (response) {
+                                        $("#FileModal").modal('hide');
+                                        targetDiv.append(response);
                                     }
                                 })
                             }
-
-                            //-------------Add File and Comments for Dept Manager
-
-                            function AddFile(taskId, SubTaskId) {
-                                $('#task_Id').attr("value", taskId);
-                                if (SubTaskId == 0) {
-                                    isTaskCheck = 'true'
-                                }
-                                else {
-                                    isTaskCheck = 'false'
-                                    $('#subTask_Id').attr("value", SubTaskId);
-                                }
-                                isHighLevel = false
-                                $('#isHighLevelBool').attr("value", isHighLevel);
-                                $('#FileModal').modal('show');
-                                console.log(isTaskCheck);
-                            }
-
-                            $('input[type="file"]').change(function (e) {
-                                fileName = e.target.files[0].name;
-                                $(".custom-file-label").html(fileName);
-                            });
-
-                            function uploadFile() {
-                                console.log(isTaskCheck)
-                                let URL;
-                                if (isTaskCheck == 'true') { URL = `/comment/AddFileForTask?isHighLevel=` + `${isHighLevel}`; }
-                                else { URL = "/comment/AddFileForSubTask"; }
-                                console.log(URL);
-                                let form = $('#fileForm')[0];
-                                let data = new FormData(form);
-                                console.log(form);
-                                console.log(data);
-                                if (fileName) {
-                                    $.ajax({
-                                        type: 'post',
-                                        url: URL,
-                                        processData: false,  // Important!
-                                        contentType: false,
-                                        cache: false,
-                                        data: data,
-                                        success: function (response) {
-                                            $("#FileModal").modal('hide');
-                                            console.log(response.msg);
-                                        }
-                                    })
-                                }
-                            }
+                        }
 
 
-                            $('#FileModal').on('hidden.bs.modal', function (e) {
-                                $(".custom-file-label").html("");
-                            });
+                        $('#FileModal').on('hidden.bs.modal', function (e) {
+                            $(".custom-file-label").html("");
+                        });
 
 
-                            function AddComment(taskId) {
-                                let comment = $('#commentArea').val();
-                                isHighLevel = false
-                                console.log(isHighLevel);
-                                if (comment) {
-                                    $.ajax({
-                                        type: "Post",
-                                        url: `/Comment/AddCommentForTask/`,
-                                        data: {
-                                            comment: comment,
-                                            taskId: taskId,
-                                            isHighLevel: isHighLevel
-                                        },
-                                        success: function (res) {
-                                            $('#commentArea').val("");
-                                            console.log(res);
-                                        },
-                                        error: function (x, y, err) {
-                                            console.log(err);
-                                        }
-                                    })
-                                }
-                            }
-
-                            //---------Add File and  Comment To SubTask Thread-------//
-
-                            //function uploadFile() {
-                            //    let form = $('#fileForm')[0];
-                            //    let data = new FormData(form);
-                            //    console.log(form);
-                            //    console.log(data);
-                            //    if (fileName) {
-                            //        $.ajax({
-                            //            type: 'post',
-                            //            url: "/comment/AddFileForSubTask",
-                            //            processData: false,  // Important!
-                            //            contentType: false,
-                            //            cache: false,
-                            //            data: data,
-                            //            success: function (response) {
-                            //                $("#FileModal").modal('hide');
-                            //                console.log(response.msg);
-                            //            }
-                            //        })
-                            //    }
-                            //}
-
-                            $('#upload').click(function () {
-                                var form = $('#fileForm')[0];
-                                var data = new FormData(form);
-                                console.log(form);
-                                if (fileName) {
-                                    $.ajax({
-                                        type: 'post',
-                                        url: `/comment/AddFileForSubTask`,
-                                        data: data,
-                                        processData: false,  // Important!
-                                        contentType: false,
-                                        cache: false,
-                                        success: function (response) {
-                                            $("#FileModal").modal('hide');
-                                            console.log(response.msg);
-                                        }
-                                    })
-                                }
-                            });
-
-
-
-
-
-
-
-
-                            function AddsubComment(subTaskId, taskId) {
-                                let comment = $(`#subComment${subTaskId}`);
-                                console.log(comment);
+                        function AddComment(taskId, divId) {
+                            targetDiv = $(`#${divId}`);
+                            console.log(targetDiv);
+                            let comment = $('#commentArea').val();
+                            isHighLevel = false
+                            console.log(isHighLevel);
+                            if (comment) {
                                 $.ajax({
                                     type: "Post",
-                                    url: `/Comment/AddCommentForSubTask`,
+                                    url: `/Comment/AddCommentForTask/`,
                                     data: {
-                                        subTaskId: subTaskId,
+                                        comment: comment,
                                         taskId: taskId,
-                                        comment: comment.val()
+                                        isHighLevel: isHighLevel
                                     },
                                     success: function (res) {
+                                        $('#commentArea').val("");
+                                        targetDiv.append(res);
                                         console.log(res);
-                                        comment.val("");
                                     },
                                     error: function (x, y, err) {
                                         console.log(err);
                                     }
-
                                 })
+                            }
+                        }
+
+                        //---------Add File and  Comment To SubTask Thread-------//
+
+
+                        function AddsubComment(subTaskId, taskId, divId) {
+                            targetDiv = $(`#${divId}`);
+                            console.log(targetDiv);
+                            let comment = $(`#subComment${subTaskId}`);
+                            console.log(comment);
+                            $.ajax({
+                                type: "Post",
+                                url: `/Comment/AddCommentForSubTask`,
+                                data: {
+                                    subTaskId: subTaskId,
+                                    taskId: taskId,
+                                    comment: comment.val()
+                                },
+                                success: function (res) {
+                                    comment.val("");
+                                    targetDiv.append(res);
+                                },
+                                error: function (x, y, err) {
+                                    console.log(err);
+                                }
+
+                            })
+                        }
+
+
+                    </script>
+                }
+
+
+
+
+
+
+                @section Style{
+                    <style>
+                        .message-text {
+                            padding: 20px, 14px;
+                            font-size: 1rem;
+                        }
+
+                        .message-time {
+                            font-size: .8rem;
+                            color: #777;
+                            margin: 4px 0 0 2px;
+                        }
+
+                        /* Time */
+
+                        time.icon {
+                            font-size: 1em; /* change icon size */
+                            display: block;
+                            position: relative;
+                            width: 5em;
+                            height: 5em;
+                            background-color: #fff;
+                            margin: .4em auto;
+                            border-radius: 0.6em;
+                            box-shadow: 0 1px 0 #bdbdbd, 0 2px 0 #fff, 0 3px 0 #bdbdbd, 0 4px 0 #fff, 0 5px 0 #bdbdbd, 0 0 0 1px #bdbdbd;
+                            overflow: hidden;
+                        }
+
+                            time.icon * {
+                                display: block;
+                                width: 100%;
+                                font-size: 0.9em;
+                                font-weight: bold;
+                                font-style: normal;
+                                text-align: center;
+                            }
+
+                            time.icon strong {
+                                position: absolute;
+                                top: 0;
+                                padding: 0.1em 0;
+                                color: #fff;
+                                background-color: var(--green);
+                                border-bottom: 1px dashed #154826;
+                                box-shadow: 0 2px 0 var(--green);
+                            }
+
+                            time.icon em {
+                                position: absolute;
+                                bottom: 0.3em;
+                                color: var(--green);
+                            }
+
+                            time.icon span {
+                                width: 100%;
+                                font-size: 1.7em;
+                                letter-spacing: -0.05em;
+                                padding-top: 0.8em;
+                                color: #2f2f2f;
                             }
 
 
-                        </script>
-                    }
+                        /*My*/
+
+                        .upper-container {
+                            background-color: #e6f5ea;
+                            margin-top: 7rem;
+                            padding: 7px;
+                            border: 0 solid #e6f5ea;
+                            border-radius: 12px;
+                        }
+
+                        .lower-container {
+                            background-color: #e6f5ea;
+                            margin-top: 20px;
+                            border: 0 solid #e6f5ea;
+                            border-radius: 12px;
+                        }
+
+                        .upper-icon {
+                            border-right: 2px solid #cce2d3;
+                        }
+
+                        .Eng-Name {
+                            font-size: 1.3em;
+                            border-bottom: 1px solid black;
+                            margin: .2em 0em 0em .4em;
+                        }
+
+                        .sub-name {
+                            background-color: var(--green);
+                            height: 3rem;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            border: 1px solid var(--green);
+                            border-radius: 0 0 10px 10px;
+                            font-size: 1.4em;
+                            color: white;
+                            transition: .8s;
+                        }
+
+
+                        .task-container {
+                            margin: 1.2rem 0 1.2rem 0;
+                            cursor: pointer;
+                        }
+
+                        section {
+                            width: 30em;
+                            position: absolute;
+                            z-index: 1;
+                            left: 55px;
+                            top: 63px;
+                        }
+
+                        .dropdown-menu {
+                            max-height: 25rem;
+                            width: 17.7rem;
+                            overflow-y: auto;
+                        }
+                    </style>
+                    <link rel="stylesheet" href="~/css/circle.css" />
+                }
+
+
+
 
 
 

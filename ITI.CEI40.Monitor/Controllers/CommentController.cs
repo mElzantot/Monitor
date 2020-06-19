@@ -56,21 +56,12 @@ namespace ITI.CEI40.Monitor.Controllers
         public IActionResult ActivityLog(int taskId)
         {
             string userId = usermanager.GetUserId(HttpContext.User);
-
-            //List<Comment> comments = unitOfWork.Comments.GetLowCommentforTask(taskId).ToList();
-
             List<SubTask> subTasks = unitOfWork.SubTasks.GetAllSubTasksWithTask(taskId);
-
-            //CommentViewModel commentView = new CommentViewModel
-            //{
-            //    Comments = comments,
-            //    SubTasks = subTasks
-            //};
             return View("ActivityLog", subTasks);
         }
 
         [HttpPost]
-        public JsonResult AddFileForSubTask(FileViewModel addedFile)
+        public IActionResult AddFileForSubTask(FileViewModel addedFile)
         {
             string userId = usermanager.GetUserId(HttpContext.User);
 
@@ -110,12 +101,13 @@ namespace ITI.CEI40.Monitor.Controllers
 
             newFile = unitOfWork.Files.Add(newFile);
 
-            return Json(new { result = true, msg = "File Uploaded Successfully" });
+            fileComment.File = newFile;
+            return PartialView("_CommentPartial", fileComment);
         }
 
         //-----------Link Between Engineer and Team Leader
         [HttpPost]
-        public JsonResult AddCommentForSubTask(string comment, int subTaskId, int taskId)
+        public IActionResult AddCommentForSubTask(string comment, int subTaskId, int taskId)
         {
             if (ModelState.IsValid)
             {
@@ -132,14 +124,14 @@ namespace ITI.CEI40.Monitor.Controllers
                 };
 
                 Comment = unitOfWork.Comments.Add(Comment);
-                return Json(new { result = true, msg = "Comment Added Successfully" });
+                return PartialView("_CommentPartial", Comment);
             }
-            return Json(new { result = false, msg = "Model Is not Valid" });
+            return null;
         }
 
         //--------Comments That invisible for Engineers
         [HttpPost]
-        public JsonResult AddCommentForTask(string comment, int taskId, bool isHighLevel)
+        public IActionResult AddCommentForTask(string comment, int taskId, bool isHighLevel)
         {
             if (ModelState.IsValid)
             {
@@ -155,13 +147,14 @@ namespace ITI.CEI40.Monitor.Controllers
                 if (isHighLevel) { Comment.commentLevel = CommentLevels.High; }
                 else { Comment.commentLevel = CommentLevels.Med; }
                 Comment = unitOfWork.Comments.Add(Comment);
-                return Json(new { result = true, msg = "Comment Added Successfully" });
+                return PartialView("_CommentPartial", Comment);
+
             }
-            return Json(new { result = false, msg = "Model Is not Valid" });
+            return null;
         }
 
         [HttpPost]
-        public JsonResult AddFileForTask([FromForm]FileViewModel addedFile, [FromQuery]bool isHighLevel)
+        public IActionResult AddFileForTask([FromForm]FileViewModel addedFile, [FromQuery]bool isHighLevel)
         {
             string userId = usermanager.GetUserId(HttpContext.User);
 
@@ -198,8 +191,10 @@ namespace ITI.CEI40.Monitor.Controllers
                 CommentID = fileComment.Id
             };
             newFile = unitOfWork.Files.Add(newFile);
+            fileComment.File = newFile;
 
-            return Json(new { result = true, msg = "File uploaded Successfully" });
+            return PartialView("_CommentPartial", fileComment);
+
 
         }
 
