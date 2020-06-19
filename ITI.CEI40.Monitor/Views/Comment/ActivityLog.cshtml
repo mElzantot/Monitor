@@ -29,7 +29,6 @@
                             </time>
                         </div>
 
-
                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                             @{ int filesNum = 0;}
                             @foreach (var item in Model)
@@ -50,19 +49,11 @@
                                 }
                             }
                         </div>
-
-
                         <div class="col " style="display:flex;align-items:center; justify-content:center;"
                              data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <h4 class="text-muted text-center">@filesNum Files</h4>
                         </div>
-
-
                     </div>
-
-
-
-
                     <div class="row lower-container">
 
                         <div class="col-6 task-container">
@@ -94,21 +85,16 @@
                                         <div class="message-time"></div>
                                     </div>
                                 </div>
-
-
                                 <div style="padding:.4em; display:flex; justify-content:space-between; background-color:var(--green) ;border: 0 solid var(--green);border-radius: 0 0 10px 10px;">
                                     <textarea id="commentArea" class="form-control " placeholder="Add Comment Here..."></textarea>
 
                                     <div style="align-items:center; display:flex; justify-content:space-between">
-                                        <button class="btn btn-sm mx-2 " type="button" id="AddFile" style="font-size:20px;color:white" onclick="AddFile(@Model[0].Task.Id)"><i class="fas fa-paperclip "></i></button>
+                                        <button class="btn btn-sm mx-2 " type="button" id="AddFile" style="font-size:20px;color:white" onclick="AddFile(@Model[0].Task.Id,0)"><i class="fas fa-paperclip "></i></button>
                                         <button class="btn btn-sm " type="button" id="AddComment" style="font-size:20px; color:white" onclick="AddComment(@Model[0].Task.Id)"><i class="fas fa-paper-plane "></i></button>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-
-
 
                         <div class="col-6 task-container">
                             <div style="height:19.5rem;background-color:white;border:0px solid white ;border-radius:10px ;">
@@ -117,9 +103,6 @@
                             </div>
                         </div>
                     </div>
-
-
-
 
                     <div class="lower-container row">
 
@@ -135,36 +118,29 @@
                                     {
                                         <div style="position:absolute;border:0 solid #e6f5ea;border-radius:0 0 7px 7px;margin-left:30px;background:#e6f5ea;padding:3px 10px;font-size:20px;display:inline-flex" onmouseover="display(@Model[i].Id,@i)" onmouseout="hide(@Model[i].Id, @i)">@Model[i].Name</div>
                                     }
-
-                                <div style="height:14.9em; overflow-y:auto;padding:3em 0 0 0">
-                                    
-                                    <div id="@i">
-                                        <div style="margin: 0 .3em 1em .5em; ">
-                                            <div class="message-text">
-                                                @foreach (var comment in Model[i].Comments)
-                                                {
-                                                    <div style="margin: 0 .3em 1em .5em;">
-                                                        <div class="message-text">
-                                                            @comment.comment
-
-                                                            @if (comment.File != null)
-                                                            {
-                                                                <br>
-                                                                <a href="#" download="">@comment.File.FilePath</a>
-                                                            }
+                                    <div style="height:14.9em; overflow-y:auto;padding:3em 0 0 0">
+                                        <div id="@i">
+                                            <div style="margin: 0 .3em 1em .5em; ">
+                                                <div class="message-text">
+                                                    @foreach (var comment in Model[i].Comments)
+                                                    {
+                                                        <div style="margin: 0 .3em 1em .5em;">
+                                                            <div class="message-text">
+                                                                @comment.comment
+                                                                @if (comment.File != null)
+                                                                {
+                                                                    <br>
+                                                                    <a href="#" download="">@comment.File.FilePath</a>
+                                                                }
+                                                            </div>
+                                                            <div class="message-time">@comment.commentTime</div>
                                                         </div>
-                                                        <div class="message-time">@comment.commentTime</div>
-                                                    </div>
-                                                }
+                                                    }
+                                                </div>
+                                                <div class="message-time"></div>
                                             </div>
-                                            <div class="message-time"></div>
                                         </div>
                                     </div>
-                                </div>
-
-
-
-
                                     <section id="@Model[i].Id" class="d-none">
                                         <div class="single-chart">
                                             <svg viewbox="0 0 36 36" class="circular-chart blue">
@@ -182,37 +158,27 @@
                                         </div>
                                     </section>
 
-
-
                                     <div style="padding:.4em; display:flex; justify-content:space-between; background-color:var(--green) ;border: 0 solid var(--green);border-radius: 0 0 10px 10px;">
-                                        <textarea id="commentArea"  class="form-control " placeholder="Add Comment Here..."></textarea>
-
+                                        <textarea class="form-control " placeholder="Add Comment Here..." id=@("subComment"+Model[i].Id)></textarea>
                                         <div style="align-items:center; display:flex; justify-content:space-between">
-                                            <button class="btn btn-sm mx-2 " type="button" id="AddFile" style="font-size:20px;color:white" onclick="AddFile(@Model[0].Task.Id)"><i class="fas fa-paperclip "></i></button>
-                                            <button class="btn btn-sm " type="button" id="AddComment" style="font-size:20px; color:white" onclick="AddComment(@Model[0].Task.Id)"><i class="fas fa-paper-plane "></i></button>
+                                            <button class="btn btn-sm mx-2 " type="button" style="font-size:20px;color:white" onclick="AddFile(@Model[i].FK_TaskId,@Model[i].Id)"><i class="fas fa-paperclip "></i></button>
+                                            <button class="btn btn-sm " type="button" style="font-size:20px; color:white" onclick="AddsubComment(@Model[i].Id,@Model[i].FK_TaskId)"><i class="fas fa-paper-plane "></i></button>
                                         </div>
                                     </div>
                                 </div>
-
-
                             </div>
                         }
 
                     </div>
 
-
-
-
-
                     <!-- File Modal -->
-                    <div class="modal fade" id="FileModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal fade" id="FileModal" tabindex="-1" role="dialog" aria-labelledby="FileModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <h5 class="modal-title" id="exampleModalLabel">Submit Task</h5>
+                                    <h5 class="modal-title" id="FileModalLabel">Files</h5>
                                 </div>
-                                <form id="FileForm" enctype="multipart/form-data"
-                                      method="post" asp-action="AddFile" asp-controller="Task">
+                                <form id="fileForm" enctype="multipart/form-data" method="post">
                                     <div class="modal-body">
                                         <label>Upload File</label>
                                         <div class="custom-file">
@@ -220,20 +186,16 @@
                                             <label class="custom-file-label">Choose File...</label>
                                         </div>
                                         <input id="task_Id" name="taskId" value="" hidden />
+                                        <input id="subTask_Id" name="subTaskId" value="" hidden />
                                     </div>
                                     <div class="modal-footer">
                                         <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
-                                        <button id="upload" type="submit" class="btn btn-primary">Upload</button>
+                                        <button onclick="uploadFile()" type="button" class="btn btn-primary">Upload</button>
                                     </div>
                                 </form>
                             </div>
                         </div>
                     </div>
-
-
-
-
-
 
 
 
@@ -479,22 +441,64 @@
                                 })
                             }
 
-                            //--------Add File
-                            function AddFile(taskId) {
+                            //-------------Add File and Comments for Dept Manager
+
+                            function AddFile(taskId, SubTaskId) {
                                 $('#task_Id').attr("value", taskId);
+                                if (SubTaskId == 0) {
+                                    isTaskCheck = 'true'
+                                }
+                                else {
+                                    isTaskCheck = 'false'
+                                    $('#subTask_Id').attr("value", SubTaskId);
+                                }
+                                isHighLevel = false
+                                $('#isHighLevelBool').attr("value", isHighLevel);
                                 $('#FileModal').modal('show');
-                                $('input[type="file"]').change(function (e) {
-                                    let fileName = e.target.files[0].name;
-                                    $(".custom-file-label").html(fileName);
-                                });
+                                console.log(isTaskCheck);
                             }
 
-                            //----------Add Comment
+                            $('input[type="file"]').change(function (e) {
+                                fileName = e.target.files[0].name;
+                                $(".custom-file-label").html(fileName);
+                            });
+
+                            function uploadFile() {
+                                console.log(isTaskCheck)
+                                let URL;
+                                if (isTaskCheck == 'true') { URL = `/comment/AddFileForTask?isHighLevel=` + `${isHighLevel}`; }
+                                else { URL = "/comment/AddFileForSubTask"; }
+                                console.log(URL);
+                                let form = $('#fileForm')[0];
+                                let data = new FormData(form);
+                                console.log(form);
+                                console.log(data);
+                                if (fileName) {
+                                    $.ajax({
+                                        type: 'post',
+                                        url: URL,
+                                        processData: false,  // Important!
+                                        contentType: false,
+                                        cache: false,
+                                        data: data,
+                                        success: function (response) {
+                                            $("#FileModal").modal('hide');
+                                            console.log(response.msg);
+                                        }
+                                    })
+                                }
+                            }
+
+
+                            $('#FileModal').on('hidden.bs.modal', function (e) {
+                                $(".custom-file-label").html("");
+                            });
+
+
                             function AddComment(taskId) {
                                 let comment = $('#commentArea').val();
-                                let isHighLevel = true;
-                                //if ($("#toggleBtn").val() == "Med")
-                                //    isHighLevel = false
+                                isHighLevel = false
+                                console.log(isHighLevel);
                                 if (comment) {
                                     $.ajax({
                                         type: "Post",
@@ -505,15 +509,88 @@
                                             isHighLevel: isHighLevel
                                         },
                                         success: function (res) {
+                                            $('#commentArea').val("");
                                             console.log(res);
                                         },
                                         error: function (x, y, err) {
                                             console.log(err);
                                         }
-
                                     })
                                 }
                             }
+
+                            //---------Add File and  Comment To SubTask Thread-------//
+
+                            //function uploadFile() {
+                            //    let form = $('#fileForm')[0];
+                            //    let data = new FormData(form);
+                            //    console.log(form);
+                            //    console.log(data);
+                            //    if (fileName) {
+                            //        $.ajax({
+                            //            type: 'post',
+                            //            url: "/comment/AddFileForSubTask",
+                            //            processData: false,  // Important!
+                            //            contentType: false,
+                            //            cache: false,
+                            //            data: data,
+                            //            success: function (response) {
+                            //                $("#FileModal").modal('hide');
+                            //                console.log(response.msg);
+                            //            }
+                            //        })
+                            //    }
+                            //}
+
+                            $('#upload').click(function () {
+                                var form = $('#fileForm')[0];
+                                var data = new FormData(form);
+                                console.log(form);
+                                if (fileName) {
+                                    $.ajax({
+                                        type: 'post',
+                                        url: `/comment/AddFileForSubTask`,
+                                        data: data,
+                                        processData: false,  // Important!
+                                        contentType: false,
+                                        cache: false,
+                                        success: function (response) {
+                                            $("#FileModal").modal('hide');
+                                            console.log(response.msg);
+                                        }
+                                    })
+                                }
+                            });
+
+
+
+
+
+
+
+
+                            function AddsubComment(subTaskId, taskId) {
+                                let comment = $(`#subComment${subTaskId}`);
+                                console.log(comment);
+                                $.ajax({
+                                    type: "Post",
+                                    url: `/Comment/AddCommentForSubTask`,
+                                    data: {
+                                        subTaskId: subTaskId,
+                                        taskId: taskId,
+                                        comment: comment.val()
+                                    },
+                                    success: function (res) {
+                                        console.log(res);
+                                        comment.val("");
+                                    },
+                                    error: function (x, y, err) {
+                                        console.log(err);
+                                    }
+
+                                })
+                            }
+
 
                         </script>
                     }

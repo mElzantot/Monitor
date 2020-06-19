@@ -130,6 +130,8 @@ namespace ITI.CEI40.Monitor.Controllers
                     commentLevel = CommentLevels.low,
                     comment = comment
                 };
+
+                Comment = unitOfWork.Comments.Add(Comment);
                 return Json(new { result = true, msg = "Comment Added Successfully" });
             }
             return Json(new { result = false, msg = "Model Is not Valid" });

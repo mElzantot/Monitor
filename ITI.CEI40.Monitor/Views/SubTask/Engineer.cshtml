@@ -267,7 +267,6 @@
         $('#upload').click(function () {
             var form = $('#fileForm')[0];
             var data = new FormData(form);
-
             console.log(form);
             if (fileName) {
                 $.ajax({
@@ -329,9 +328,7 @@
                 error: function (x, y, err) {
                     console.log(err);
                 }
-
             })
-
         })
 
         $('#close').click(function () {
