@@ -1,7 +1,7 @@
 ﻿@model SubTask
 
 <div class="col-5 rightcont" id="rightSec">
-    <div style="        border: 2px solid white;
+    <div style=" border: 2px solid white;
         padding: 20px;
         border-radius: 8px;
         background: white;
@@ -71,14 +71,14 @@
 
         <div style="display:flex; justify-content:space-between;margin-top:20px">
             <div class="prog" style="width:49%">
-                <div style="margin-bottom:5px;font-size:20px;display:flex;justify-content:center"><i class="fas fa-chart-line"></i> 	&nbsp Progress</div>
+                <div style="margin-bottom:5px;font-size:20px;display:flex;justify-content:center"><i class="fas fa-chart-line"></i>&nbsp Progress</div>
                 <div class="cont">
                     <input type="range" asp-for="@Model.Progress" onchange="ChangeProgress(@Model.Id,this.value)" min="0" max="100" step="10" class="slider" id="myRange">
                 </div>
             </div>
             <div style="width:49% ;font-size:20px;">
                 <div style="display:flex;justify-content:center;margin-bottom:5px"><i class="fas fa-hourglass-start"></i> 	&nbsp Actual duration</div>
-                <div style="display:flex;justify-content:center" class="text-muted"> @Model.ActualDuration hour</div>
+                <div style="display:flex;justify-content:center" class="text-muted"> @Model.ActualDuration hours</div>
             </div>
         </div>
       

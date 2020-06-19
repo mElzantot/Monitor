@@ -136,33 +136,15 @@
                                         <div style="position:absolute;border:0 solid #e6f5ea;border-radius:0 0 7px 7px;margin-left:30px;background:#e6f5ea;padding:3px 10px;font-size:20px;display:inline-flex" onmouseover="display(@Model[i].Id,@i)" onmouseout="hide(@Model[i].Id, @i)">@Model[i].Name</div>
                                     }
 
-                                <div style="height:14.9em; overflow-y:auto;padding:3em 0 0 0">
-                                    
-                                    <div id="@i">
-                                        <div style="margin: 0 .3em 1em .5em; ">
-                                            <div class="message-text">
-                                                @foreach (var comment in Model[i].Comments)
-                                                {
-                                                    <div style="margin: 0 .3em 1em .5em;">
-                                                        <div class="message-text">
-                                                            @comment.comment
+                                    <div style="height:14.9em; overflow-y:auto;padding:3em 0 0 0">
 
-                                                            @if (comment.File != null)
-                                                            {
-                                                                <br>
-                                                                <a href="#" download="">@comment.File.FilePath</a>
-                                                            }
-                                                        </div>
-                                                        <div class="message-time">@comment.commentTime</div>
-                                                    </div>
-                                                }
-                                            </div>
-                                            <div class="message-time"></div>
+                                        <div id="@i">
+                                            @foreach (var comment in Model[i].Comments)
+                                            {
+                                                <partial name="_CommentPartial"  model="comment"/>    
+                                            }
                                         </div>
                                     </div>
-                                </div>
-
-
 
 
                                     <section id="@Model[i].Id" class="d-none">
@@ -185,7 +167,7 @@
 
 
                                     <div style="padding:.4em; display:flex; justify-content:space-between; background-color:var(--green) ;border: 0 solid var(--green);border-radius: 0 0 10px 10px;">
-                                        <textarea id="commentArea"  class="form-control " placeholder="Add Comment Here..."></textarea>
+                                        <textarea id="commentArea" class="form-control " placeholder="Add Comment Here..."></textarea>
 
                                         <div style="align-items:center; display:flex; justify-content:space-between">
                                             <button class="btn btn-sm mx-2 " type="button" id="AddFile" style="font-size:20px;color:white" onclick="AddFile(@Model[0].Task.Id)"><i class="fas fa-paperclip "></i></button>
@@ -231,108 +213,19 @@
                     </div>
 
 
-
-
-
-
-
-
-                    @*<div class="row " style="        border: 2px solid rgb(219, 219, 219);
-                            border-radius: 8px;">
-                            <div class="col-3  innerleft pt-4" style="border-right:2px solid rgb(219, 219, 219);">
-                                @foreach (var item in Model)
-                                {
-
-                                    <div class="font-weight-bold mb-2">@item</div>
-                                }
-                            </div>
-                            <div class="col-9 innerright " style="overflow-y:scroll; height:28rem">
-                                @foreach (var item in Model.Comments)
-                                {
-                                    if (item.FK_sender == Model.Sender)
-                                    {
-                                        <div class="message-row you-message">
-                                            <div class="message-text">
-                                                @item.comment
-                                                <br>
-                                                @if (item.File != null)
-                                                {
-                                                    <a href="#" download="" class="">@item.File.FilePath</a>
-                                                }
-                                            </div>
-                                            <div class="message-time">@item.commentTime</div>
-                                        </div>
-                                    }
-                                    else
-                                    {
-                                        <div class="message-row other-message">
-                                            <div class="message-text">
-                                                <div class="user-name">@item.Sender.UserName</div>
-
-                                                @item.comment
-                                                <br>
-                                                @if (item.File != null)
-                                                {
-                                                    <a href="#" download="" class="">@item.File.FilePath</a>
-                                                }
-                                            </div>
-                                            <div class="message-time">@item.commentTime</div>
-                                        </div>
-                                    }
-                                }
-                            </div>
-                        </div>*@
-
-
                     @section Style{
                         <style>
-                            /*.message-row {
-                                        margin-bottom: 20px;
-                                        display: grid;
-                                        grid-template-columns: 70%;
-                                    }*/
-
                             .message-text {
                                 padding: 20px, 14px;
                                 font-size: 1rem;
-                                margin-bottom: 0px;
+                                
                             }
 
                             .message-time {
                                 font-size: .8rem;
                                 color: #777;
+                                margin: 4px 0 0 2px;
                             }
-
-
-                            .you-message .message-text {
-                                background-color: rgb(47, 136, 76);
-                                color: #eee;
-                                border: 1px solid rgb(47, 136, 76);
-                                border-radius: 7px 7px 0 7px;
-                            }
-
-                            .user-name {
-                                font-size: 1rem;
-                            }
-
-                            .other-message .message-text {
-                                background-color: #eee;
-                                color: #111;
-                                border: 1px solid #eee;
-                                border-radius: 7px 7px 7px 0;
-                            }
-
-                            .you-message {
-                                justify-content: end;
-                                justify-items: end;
-                            }
-
-                            .other-message {
-                                justify-items: start;
-                            }
-
-
-
 
                             /* Time */
 
