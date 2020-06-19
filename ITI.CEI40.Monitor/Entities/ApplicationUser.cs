@@ -48,6 +48,5 @@ namespace ITI.CEI40.Monitor.Entities
 
         public ICollection<Invoice> Invoices { get; set; }
 
-        public ICollection<NotificationUsers> NotificationUsers { get; set; }
     }
 }
