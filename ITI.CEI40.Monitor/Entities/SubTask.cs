@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.ML.Data;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -57,6 +58,7 @@ namespace ITI.CEI40.Monitor.Entities
         public DateTime? ActualEndDate { get; set; }
 
         //----------Actual Working Hours
+        [LoadColumn(2)]
         public float ActualDuration { get; set; }
 
         public bool IsUnderWork { get; set; }
@@ -67,14 +69,17 @@ namespace ITI.CEI40.Monitor.Entities
 
         [Range(0, 100)]
         [Required]
+
         public float TimeManagement { get; set; }
 
         [Range(0, 100)]
         [Required]
+        [LoadColumn(0)]
         public float Complexity { get; set; }
 
         [Range(0, 100)]
         [Required]
+        [LoadColumn(1)]
         public float Quality { get; set; }
 
         //public ICollection<EngineerSubTasks> EngineerSubTasks { get; set; }
