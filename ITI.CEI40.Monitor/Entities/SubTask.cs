@@ -99,7 +99,6 @@ namespace ITI.CEI40.Monitor.Entities
         [NoColumn]
         public ApplicationUser Engineer { get; set; }
         [ForeignKey("Engineer")]
-        [LoadColumn(0)]
         public string FK_EngineerID { get; set; }
 
     }

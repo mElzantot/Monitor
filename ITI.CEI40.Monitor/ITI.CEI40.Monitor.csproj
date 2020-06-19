@@ -28,6 +28,8 @@
     <Compile Remove="Migrations\20200614174053_addEvaluation.Designer.cs" />
     <Compile Remove="Migrations\20200614174402_addEvaluation2.cs" />
     <Compile Remove="Migrations\20200614174402_addEvaluation2.Designer.cs" />
+    <Compile Remove="Migrations\20200619194706_MLTest2.cs" />
+    <Compile Remove="Migrations\20200619194706_MLTest2.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

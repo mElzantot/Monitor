@@ -14,4 +14,15 @@ namespace ITI.CEI40.Monitor.Entities
         public double Rsquared { get; set; }
 
     }
+
+
+    public class PredictedQuality
+    {
+        [ColumnName("Score")]
+        public float Quality { get; set; }
+
+        public double Rsquared { get; set; }
+
+    }
+
 }
