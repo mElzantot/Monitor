@@ -82,26 +82,26 @@ namespace ITI.CEI40.Monitor.Controllers
                     if (act.assignee == 0) { oldAct.FK_DepID = null; }
                     else if (oldassign != act.assignee) // notify about the assignment
                     {
-                        #region notifications to be
+                        #region notifications 
                         string DepmanagerId = unitOfWork.Departments.GetById(act.assignee).FK_ManagerID;
                         string messege = $"{HttpContext.User.Identity.Name}* -Project Manager- has assigned a new task -*{act.name}*- to your department at *{DateTime.Now.Date}";
 
-                        ////--------Add Notification to DataBase
-                        //Notification Notification = new Notification
-                        //{
-                        //    messege = messege,
-                        //    seen = false
-                        //};
-                        //Notification Savednotification = unitOfWork.Notification.Add(Notification);
-                        //NotificationUsers notificationUsers = new NotificationUsers
-                        //{
-                        //    NotificationId = Savednotification.Id,
-                        //    userID = DepmanagerId
-                        //};
-                        //unitOfWork.NotificationUsers.Add(notificationUsers);
+                        //--------Add Notification to DataBase
+                        Notification Notification = new Notification
+                        {
+                            messege = messege,
+                            seen = false
+                        };
+                        Notification Savednotification = unitOfWork.Notification.Add(Notification);
+                        NotificationUsers notificationUsers = new NotificationUsers
+                        {
+                            NotificationId = Savednotification.Id,
+                            userID = DepmanagerId
+                        };
+                        unitOfWork.NotificationUsers.Add(notificationUsers);
 
-                        ////---------Send Notification to Team
-                        //hubContext.Clients.User(DepmanagerId).SendAsync("newNotification", messege); 
+                        //---------Send Notification to Team
+                        hubContext.Clients.User(DepmanagerId).SendAsync("newNotification", messege);
                         #endregion
                     }
                     unitOfWork.Tasks.Edit(oldAct);
@@ -148,26 +148,26 @@ namespace ITI.CEI40.Monitor.Controllers
                     if (act.assignee == 0) { activity.FK_DepID = null; }
                     else // notify about the assignment
                     {
-                        #region  notifications to be
+                        #region  notifications 
                         string DepmanagerId = unitOfWork.Departments.GetById(act.assignee).FK_ManagerID;
                         string messege = $"{HttpContext.User.Identity.Name} -Project Manager- has assigned a new task -{act.name}- to your department at {DateTime.Now.Date}";
 
-                        ////--------Add Notification to DataBase
-                        //Notification Notification = new Notification
-                        //{
-                        //    messege = messege,
-                        //    seen = false
-                        //};
-                        //Notification Savednotification = unitOfWork.Notification.Add(Notification);
-                        //NotificationUsers notificationUsers = new NotificationUsers
-                        //{
-                        //    NotificationId = Savednotification.Id,
-                        //    userID = DepmanagerId
-                        //};
-                        //unitOfWork.NotificationUsers.Add(notificationUsers);
+                        //--------Add Notification to DataBase
+                        Notification Notification = new Notification
+                        {
+                            messege = messege,
+                            seen = false
+                        };
+                        Notification Savednotification = unitOfWork.Notification.Add(Notification);
+                        NotificationUsers notificationUsers = new NotificationUsers
+                        {
+                            NotificationId = Savednotification.Id,
+                            userID = DepmanagerId
+                        };
+                        unitOfWork.NotificationUsers.Add(notificationUsers);
 
-                        ////---------Send Notification to Team
-                        //hubContext.Clients.User(DepmanagerId).SendAsync("newNotification", messege); 
+                        //---------Send Notification to Team
+                        hubContext.Clients.User(DepmanagerId).SendAsync("newNotification", messege);
                         #endregion
                     }
                     unitOfWork.Tasks.Add(activity);

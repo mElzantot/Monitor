@@ -69,9 +69,8 @@ namespace ITI.CEI40.Monitor.Controllers
 
                 //--------Add Notification to DataBase
 
-                string messege = $" New Task " +
-                    $"{HttpContext.User.Identity.Name} -Department Manager- has assigned new task" +
-                    $" -{task.Name}- to your Team at {DateTime.Now}";
+                string messege = $"*{HttpContext.User.Identity.Name}=* -Department Manager- has assigned new task" +
+                    $" *{task.Name}=* to your Team at *{DateTime.Now}=*";
 
                 Notification Notification = new Notification
                 {
@@ -136,6 +135,8 @@ namespace ITI.CEI40.Monitor.Controllers
             var subtask = unitOfWork.SubTasks.GetSubTasksFromTask(taskId);
             return View("_DashBoardPartial", subtask);
         }
+
+
 
     }
 }

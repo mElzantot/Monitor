@@ -40,7 +40,7 @@ namespace ITI.CEI40.Monitor.Controllers
 
             return View("Engineer", subTasks);
         }
-        
+
         [Authorize(Roles = "Engineer")]
         public IActionResult DisplayRow(int ID)
         {
@@ -103,7 +103,30 @@ namespace ITI.CEI40.Monitor.Controllers
         {
             SubTask subTask = unitOfWork.SubTasks.GetSubTaskWithTeam(id);
             subTask.Status = (Status)status;
-            unitOfWork.SubTasks.Edit(subTask);
+            subTask = unitOfWork.SubTasks.Edit(subTask);
+
+            #region notification
+            //--------Add Notification to DataBase
+
+            string messege = $"*{subTask.Name}=*'s status has been updated to *{subTask.Status.ToString()}=* " +
+                $"at *{DateTime.Now}=* ";
+            Notification Notification = new Notification
+            {
+                messege = messege,
+                seen = false
+            };
+            Notification Savednotification = unitOfWork.Notification.Add(Notification);
+            NotificationUsers notificationUsers = new NotificationUsers
+            {
+                NotificationId = Savednotification.Id,
+                userID = subTask.Task.Team.FK_TeamLeaderId
+            };
+            unitOfWork.NotificationUsers.Add(notificationUsers);
+
+            //---------Send Notification to Employee
+            hubContext.Clients.User(subTask.Task.Team.FK_TeamLeaderId).SendAsync("newNotification", messege);
+            #endregion
+
 
             Comment comment = new Comment
             {
@@ -179,27 +202,15 @@ namespace ITI.CEI40.Monitor.Controllers
                 newSubTask = unitOfWork.SubTasks.Add(newSubTask);
                 newSubTask.Engineer = unitOfWork.Engineers.GetById(subTask.Assignee);
 
+                #region notification
 
                 //--------Add Notification to DataBase
 
-                string messege = $"New Task ," +
-                    $" There Is a new task -{newSubTask.Name}- assigned to you at {DateTime.Now} ";
-                Notification Notification = new Notification
-                {
-                    messege = messege,
-                    seen = false
-                };
-                Notification Savednotification = unitOfWork.Notification.Add(Notification);
-                NotificationUsers notificationUsers = new NotificationUsers
-                {
-                    NotificationId = Savednotification.Id,
-                    userID = newSubTask.FK_EngineerID
-                };
-                unitOfWork.NotificationUsers.Add(notificationUsers);
+                string messege = $" There Is a new task *{newSubTask.Name}=* had been assigned to you" +
+                    $" at *{DateTime.Now}=* ";
 
-                //---------Send Notification to Employee
-                hubContext.Clients.User(newSubTask.FK_EngineerID).SendAsync("newNotification", messege);
-
+                SendNotification(messege, newSubTask.FK_EngineerID);
+                #endregion
 
                 return PartialView("_NewSubTaskPartialView", newSubTask);
 
@@ -248,12 +259,20 @@ namespace ITI.CEI40.Monitor.Controllers
             {
                 int[] startDate = new int[3];
                 int[] endDate = new int[3];
+                bool ChangeAssign = false;
                 SubTask originalSubTask = unitOfWork.SubTasks.GetSubTaskWithEngineer(newSubTask.SubTaskId);
+                // check if the assigneed engineer had been changed
+                string oldAssigneeId = originalSubTask.FK_EngineerID;
+                if (originalSubTask.FK_EngineerID != newSubTask.Assignee)
+                {
+                    originalSubTask.FK_EngineerID = newSubTask.Assignee;
+                    ChangeAssign = true;
+                }
+                // edit the subtask
                 originalSubTask.Name = newSubTask.Name;
                 originalSubTask.Description = newSubTask.Description;
                 originalSubTask.Priority = newSubTask.Priority;
                 originalSubTask.Status = newSubTask.Status;
-                originalSubTask.FK_EngineerID = newSubTask.Assignee;
 
                 if (newSubTask.StartDate.Contains('/'))
                 {
@@ -266,6 +285,38 @@ namespace ITI.CEI40.Monitor.Controllers
                     originalSubTask.EndDate = new DateTime(endDate[2], endDate[1], endDate[0]);
                 }
                 originalSubTask = unitOfWork.SubTasks.Edit(originalSubTask);
+
+                // check if the subtask had been changed
+                if (!ChangeAssign)
+                {
+                    #region notification without assignee changed
+                    //--------Add Notification to DataBase
+
+                    string messege = $"Your Team Leader has updated *{originalSubTask.Name}=*'s details  at *{DateTime.Now}=* ";
+
+                    SendNotification(messege, originalSubTask.FK_EngineerID);
+                   
+                    #endregion
+                }
+                else
+                {
+                    #region notification for old employee
+                    //--------Add Notification to DataBase
+
+                    string messege1 = $"Your Team Leader has reassigned *{originalSubTask.Name}=* to another employee  at *{DateTime.Now}=* ";
+                    SendNotification(messege1, oldAssigneeId);
+                    #endregion
+
+                    #region notification for the new employee
+                    //--------Add Notification to DataBase
+
+                    string messege2 = $"Your Team Leader has updated *{originalSubTask.Name}=*'s details  at *{DateTime.Now}=* ";
+                    SendNotification(messege2, newSubTask.Assignee);
+                    #endregion
+
+                }
+
+
                 originalSubTask = unitOfWork.SubTasks.GetSubTaskWithEngineer(originalSubTask.Id);
                 return PartialView("_NewSubTaskPartialView", originalSubTask);
             }
@@ -273,6 +324,30 @@ namespace ITI.CEI40.Monitor.Controllers
             {
                 return null;
             }
+        }
+
+        public void SendNotification(string messege, params string[] usersId)
+        {
+            Notification Notification = new Notification
+            {
+                messege = messege,
+                seen = false
+            };
+            Notification Savednotification = unitOfWork.Notification.Add(Notification);
+
+            for (int i = 0; i < usersId.Length; i++)
+            {
+                NotificationUsers notificationUsers = new NotificationUsers
+                {
+                    NotificationId = Savednotification.Id,
+                    userID = usersId[i]
+                };
+                unitOfWork.NotificationUsers.Add(notificationUsers);
+
+                //---------Send Notification to Employee
+                hubContext.Clients.User(usersId[i]).SendAsync("newNotification", messege);
+            }
+
         }
 
     }
