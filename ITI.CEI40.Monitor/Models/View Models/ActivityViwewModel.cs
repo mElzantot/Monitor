@@ -14,6 +14,7 @@ namespace ITI.CEI40.Monitor.Models.View_Models
         public List<int> reDbId { set; get; }
         public List<DeletedDependecy> reDep { set; get; }
         public List<Department> Departments { set; get; }
+        public List<Holiday> Holidays { set; get; }
     }
 
     public class Act

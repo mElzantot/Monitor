@@ -8,20 +8,17 @@
 <h4>    @Model.Project.Name Invoices</h4>
 <br />
 
-@*<div class="projectinfo">
-        <div class="proname">
-            <label asp-for="@Model.Project.Name"></label>
-            <input asp-for="@Model.Project.Name" readonly />
-        </div>
-        <div class="prodescripe">
-            <label asp-for="@Model.Project.Description"></label>
-            <input asp-for="@Model.Project.Description" readonly />
-        </div>
-    </div>*@
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#addInvoiceModal" style="display: inherit;">
-    Add Invoice
-</button>
+<div style="display:flex;">
+    @if (true)
+    {
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#addInvoiceModal" style="display: inherit;">
+            Add Invoice
+        </button>
+        <a href="/Invoice/ControlInvoice" class="btn mb-3 btn-light">Back To List</a>
+    }
+        <a href="/Project/Index" class="btn mb-3 btn-light">Back To List</a>
+</div>
 
 <div id="invoContainer" style="text-align:center;">
     @if (Model.Invoices.Count > 0 && Model.Invoices != null)
@@ -254,9 +251,9 @@
         $('#additem').on('click', function (e) {
             var nextIndex = $(".descripe").length;
             var c = `<tr> <td><input type="number" data-val="true" data-val-required="The Quantity field is required."                id="InvoiceItems_${nextIndex}__Quantity" name="InvoiceItems[${nextIndex}].Quantity" value="" class="input-validation-             error" aria-describedby="InvoiceItems_${nextIndex}__Quantity-error"></td>
-                                                                                                                        <td><input style="width:400px;" class="descripe valid" type="text" id="InvoiceItems_${nextIndex}__Description" name="InvoiceItems[${nextIndex}].Description" value="" aria-invalid="false"></td>
-                                                                                                                        <td><input type="number" data-val="true" data-val-required="The UnitPrice field is required." id="InvoiceItems_${nextIndex}__UnitPrice" name="InvoiceItems[${nextIndex}].UnitPrice" value="" class="input-validation-error" aria-describedby="InvoiceItems_${nextIndex}__UnitPrice-error"></td>
-                                                                                                                        <td><input class="totalprice" readonly="" id="itt-${nextIndex}"></td> </tr>`
+                                                                                                                                        <td><input style="width:400px;" class="descripe valid" type="text" id="InvoiceItems_${nextIndex}__Description" name="InvoiceItems[${nextIndex}].Description" value="" aria-invalid="false"></td>
+                                                                                                                                        <td><input type="number" data-val="true" data-val-required="The UnitPrice field is required." id="InvoiceItems_${nextIndex}__UnitPrice" name="InvoiceItems[${nextIndex}].UnitPrice" value="" class="input-validation-error" aria-describedby="InvoiceItems_${nextIndex}__UnitPrice-error"></td>
+                                                                                                                                        <td><input class="totalprice" readonly="" id="itt-${nextIndex}"></td> </tr>`
             $('#itemtbody').append(c);
             invoiceItemsCount++;
         });

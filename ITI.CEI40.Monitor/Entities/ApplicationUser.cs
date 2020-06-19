@@ -47,6 +47,5 @@ namespace ITI.CEI40.Monitor.Entities
         public ICollection<Comment> SentComments { get; set; }
 
         public ICollection<Invoice> Invoices { get; set; }
-
     }
 }

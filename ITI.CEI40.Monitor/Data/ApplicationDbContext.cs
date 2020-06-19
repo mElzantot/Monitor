@@ -28,6 +28,8 @@ namespace ITI.CEI40.Monitor.Data
         public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<Files> Files { get; set; }
+        
+        public virtual DbSet<Holiday> Holidays { get; set; }  
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -56,20 +58,19 @@ namespace ITI.CEI40.Monitor.Data
                     .WithMany()
                    .HasForeignKey(x => x.FK_TeamLeaderId);
 
-            //----------User/ Notification Many to Many
+            //Team Tasks many to many Relship
+            /*modelBuilder.Entity<TeamTasks>()
+                .HasKey(TT => new { TT.TeamID, TT.TaskID });
 
-            modelBuilder.Entity<NotificationUsers>()
-                .HasKey(TT => new { TT.userID, TT.NotificationId });
+            modelBuilder.Entity<TeamTasks>()
+                .HasOne(t => t.Team)
+                .WithMany(tt => tt.TeamTasks)
+                .HasForeignKey(pt => pt.TeamID);
 
-            modelBuilder.Entity<NotificationUsers>()
-                .HasOne(t => t.User)
-                .WithMany(tt => tt.NotificationUsers)
-                .HasForeignKey(pt => pt.userID);
-
-            modelBuilder.Entity<NotificationUsers>()
-             .HasOne(pt => pt.Notification)
-             .WithMany(t => t.NotificationUsers)
-             .HasForeignKey(pt => pt.NotificationId);
+            modelBuilder.Entity<TeamTasks>()
+             .HasOne(pt => pt.Task)
+             .WithMany(t => t.TeamTasks)
+             .HasForeignKey(pt => pt.TaskID); */
 
             //----------User/ Notification Many to Many
 

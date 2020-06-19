@@ -4,9 +4,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
+using ITI.CEI40.Monitor.Hubs;
 using ITI.CEI40.Monitor.Models.View_Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ITI.CEI40.Monitor.Controllers
 {
@@ -14,10 +16,21 @@ namespace ITI.CEI40.Monitor.Controllers
     {
         private IUnitOfWork unitOfWork;
         private readonly UserManager<ApplicationUser> userManager;
-        public InvoiceController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager)
+        private readonly IHubContext<NotificationsHub> hubContext;
+
+        public InvoiceController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IHubContext<NotificationsHub> hubContext)
         {
             this.unitOfWork = unitOfWork;
             this.userManager = userManager;
+            this.hubContext = hubContext;
+
+        }
+
+
+        public IActionResult ControlInvoice()
+        {
+            List<Project> projects = unitOfWork.Projects.GetAll().ToList();
+            return View(projects);
         }
 
         public IActionResult Index_Income(int id)
@@ -49,7 +62,8 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpPost]
         public IActionResult AddInvoice(Invoice invoice, List<InvoiceItem> invoiceItems)
         {
-            //var s = Response;
+            Project project = unitOfWork.Projects.GetById(invoice.FK_ProjectId);
+
             if (ModelState.IsValid)
             {
                 Invoice newinvoice = unitOfWork.Invoices.Add(invoice);
@@ -67,6 +81,10 @@ namespace ITI.CEI40.Monitor.Controllers
                 }
                 else if (newinvoice.InvoicesType == Entities.Enums.InvoicesType.Expenses)
                 { SetProjectOutcome(newinvoice.FK_ProjectId); }
+
+                // notifications
+                string messege = $"The finance department has added a new invoice to project *{project.Name}=* at *{DateTime.Now}=*";
+                SendNotification(messege, project.FK_Manager);
 
                 return PartialView("_InvoicePartialView", newaddedinvoice);
             }
@@ -150,5 +168,30 @@ namespace ITI.CEI40.Monitor.Controllers
                 return false;
             }
         }
+
+        public void SendNotification(string messege, params string[] usersId)
+        {
+            Notification Notification = new Notification
+            {
+                messege = messege,
+                seen = false
+            };
+            Notification Savednotification = unitOfWork.Notification.Add(Notification);
+
+            for (int i = 0; i < usersId.Length; i++)
+            {
+                NotificationUsers notificationUsers = new NotificationUsers
+                {
+                    NotificationId = Savednotification.Id,
+                    userID = usersId[i]
+                };
+                unitOfWork.NotificationUsers.Add(notificationUsers);
+
+                //---------Send Notification to Employee
+                hubContext.Clients.User(usersId[i]).SendAsync("newNotification", messege);
+            }
+
+        }
+
     }
 }

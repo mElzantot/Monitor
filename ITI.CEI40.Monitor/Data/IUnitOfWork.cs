@@ -26,9 +26,7 @@ namespace ITI.CEI40.Monitor.Data
         INotificationUsersManager NotificationUsers { get; }
         IFilesManager Files { get; }
         ICommentManager Comments { get; }
-
-
-
+        IHolidayManager Holiday { get; }
         int Complete();
 
     }

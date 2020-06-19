@@ -312,3 +312,36 @@ body {
     text-align: center;
 }
 /**************************/
+
+/******Holiday*******/
+.holiday-table {
+    width: 60%;
+    margin:auto;
+}
+.holiday-table td{
+    width:30px;
+}
+
+
+.holiday-body {
+    display: flex;
+    width: 60%;
+    margin: auto;
+    margin-top: 15px;
+}
+
+    .holiday-body .form-group {
+        padding:0;
+        margin-left:30px;
+    }
+
+.holiday-body input{
+    width: 90%;
+    height:35px;
+}
+
+    .holiday-body button {
+        width: 41px;
+    }
+
+/*******************/
