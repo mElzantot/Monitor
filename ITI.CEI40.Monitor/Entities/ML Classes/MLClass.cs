@@ -12,9 +12,17 @@ namespace ITI.CEI40.Monitor.Entities
         {
             // ------------Create ML instance  "Similar To DB Context"
             var ctx = new MLContext();
-
+            IDataView trainData;
             //------Read My Data  for Training and Testing
-            var trainData = ctx.Data.LoadFromEnumerable<SubTask>(trainSet);
+            try
+            {
+             trainData = ctx.Data.LoadFromEnumerable<SubTask>(trainSet);
+            }
+            catch (Exception e )
+            {
+
+                throw;
+            }
             var testTrainSplit = ctx.Data.TrainTestSplit(trainData, testFraction: 0.2);
 
 
