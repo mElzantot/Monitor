@@ -6,7 +6,7 @@
 
 
 
-@if (Model != null)
+@if (Model.Employees != null)
 {
     <div style="padding:10px;border: 0px solid white; border-radius: 8px; background:white;
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" class="my-5">
@@ -134,9 +134,16 @@ box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" c
         });
 
          var options = {
-              colors: ['#cbb69d', '#603913', '#c69c6e'],
-              timeline: { rowLabelStyle: {fontName: 'Helvetica', fontSize: 24, color: '#603913' },
-                             barLabelStyle: { fontName: 'Garamond', fontSize: 14 } }
+              //colors: ['#cbb69d', '#603913', '#c69c6e'],
+             timeline: {
+                 rowLabelStyle: { fontName: 'Garamond', fontSize: 20, singleColor: '#8d8' },
+                 barLabelStyle: { fontName: 'Garamond', fontSize: 12 }
+             },
+             height: 500,
+             //width : 100%,
+             forceIFrame : false,
+            backgroundColor: '#ffffff'
+
          };
         chart.draw(dataTable, options);
     }
@@ -163,7 +170,7 @@ box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" c
                     success: function (res) {
                         console.log("Hrllo")
                         console.log(res.duration);
-                        $("approxDuration").attr("value",`${res.duration}`);
+                        $("approxDuration").attr("value", `${res.duration}`);
                     }
                 });
             }

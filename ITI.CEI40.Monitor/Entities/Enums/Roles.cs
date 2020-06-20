@@ -9,13 +9,15 @@ namespace ITI.CEI40.Monitor.Entities.Enums
     public enum Roles
     {
         Admin,
-        [Display(Name ="Department Manager")]
+        [Display(Name = "Department Manager")]
         DepartmentManager,
-        [Display(Name ="Project Manager")]
+        [Display(Name = "Project Manager")]
         ProjectManager,
-        [Display(Name ="Team Leader")]
+        [Display(Name = "Team Leader")]
         TeamLeader,
         Engineer,
+        [Display(Name = "Finance")]
         Finance
+
     }
 }

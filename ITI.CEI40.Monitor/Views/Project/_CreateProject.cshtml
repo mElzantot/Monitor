@@ -32,7 +32,6 @@
                            type="text" id="projectName" placeholder="Enter the name of new project">
                     <span asp-validation-for="@Model.Project.Name" class="text-danger"></span>
                 </div>
-
                 <div>
                     <button class="btn btn-success" id="Createprojrct"> create new project </button>
                     <button class="btn alert-danger" id="cancel">Cancel</button>
@@ -156,6 +155,7 @@
                             `<tr id="${response.id}" onclick="Edit(${response.id})">
                                                                                                                                                                     <td class="text-center font-weight-bold">${response.name}</td>
                                                                                                                                                                     <td style="text-align:right">
+                                                                                                                                                                    <a href="/Project/Details/${response.id}" class="btn btn-outline-info"><i id="i" class="fas fa-chart-area"></i> Details</a>
                                                                                                                                                                     <a href="/Activity/Index/${response.id}" class="btn alert-info" ><i id="i" class="fas fa-chart-area"></i> Chart</a>
                                                                                                                                                                     <div class="btn-group dropleft">
                                                                                                                                         <button type="button" class="btn alert-warning " data-toggle="dropdown" >
