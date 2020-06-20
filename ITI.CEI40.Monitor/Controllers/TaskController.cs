@@ -142,9 +142,7 @@ namespace ITI.CEI40.Monitor.Controllers
             };
             if (HttpContext.User.IsInRole(Roles.DepartmentManager.ToString()))
                 ActDetailsVM.MedComments = unitOfWork.Comments.GetMedCommentforTask(taskId).ToList();
-            return PartialView("_TaskDetailsPartialView", ActDetailsVM);
+            return PartialView("_TaskDetailsPartialView", ActDetailsVM); 
         }
-
-
     }
 }

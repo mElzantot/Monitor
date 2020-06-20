@@ -8,7 +8,7 @@
     <div style="height:70px">
 
     </div>
-    <div class="row " style="border: 2px solid rgb(219, 219, 219) ; border-radius: 8px;">
+    <div class="row " style="border: 0px solid white; border-radius: 8px; background:white; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
         <div class="col-3  innerleft pt-4" style="border-right:2px solid rgb(219, 219, 219);">
             <table class="table table-hover text-center" id="teamTable">
 
@@ -148,6 +148,7 @@
             })
         }
 
+
         //-----------Add Description
         function updateDesc(taskId) {
             $.ajax({
@@ -232,6 +233,8 @@
                 })
             }
         }
+
+
 
         function CommentsToggle() {
             if ($("#toggleBtn").val() == "High") {
