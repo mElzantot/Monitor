@@ -1,0 +1,46 @@
+Subtask 
+
+Mapped start date
+Mapped end date
+Mapped duration
+
+[Not Mapped in data base]
+Actual start date ---------
+Actual end date ----------
+Actual duartion--------
+
+
+Engineer subtask
+
+per work
+Actual start date ---------first row == Actual start date
+Actual end date ---------- last row == Actual end date
+Actual duartion----------- summition == Actual duration
+
+
+UI
+{
+  table / Engineer
+  Name Engineer -- Subtask -- start date -- end date -- duration
+}
+
+-------------------------------------------------------
+
+Active 
+
+on hold -- reason 
+{
+New table 
+1-Sub task
+2-Date
+3-Reason
+}          
+
+---
+UI
+{
+   //Later
+}
+
+
+

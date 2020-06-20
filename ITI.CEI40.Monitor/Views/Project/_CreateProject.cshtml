@@ -222,7 +222,6 @@
 
 
         //-----------Dash-------------//
-
         function Dashboard(id) {
             $.ajax({
                 type: "GET",
@@ -231,6 +230,8 @@
                 success: function (response) {
                     $('#MainView').hide();
                     $('#Board').prepend(response);
+                    $('#invo-btns').append(`<a href="/Invoice/Index_Income/${id}" class="btn btn-outline-primary">Income</a>
+                                                <a href="/Invoice/Index_Expense/${id}" class="btn btn-outline-info">Outcome</a>`)
                     LoadData();
 
                     //$('#Board').show();
@@ -273,7 +274,7 @@
 
 
 
-            google.charts.load("current", { packages: ['corechart'] });
+            google.charts.load("current", { packages: ['corechart','line'] });
             google.charts.setOnLoadCallback(drawChart);
             google.charts.setOnLoadCallback(drawChart2);
             google.charts.setOnLoadCallback(drawChart3);
@@ -338,25 +339,50 @@
             }
 
 
+            //modelInvoices
             function drawChart3() {
-                var data = google.visualization.arrayToDataTable([
-                    ['Year', 'Sales', 'Expenses'],
-                    ['2013', 1000, 400],
-                    ['2014', 1170, 460],
-                    ['2015', 660, 1120],
-                    ['2016', 1030, 540]
-                ]);
+                var data = new google.visualization.DataTable();
+                data.addColumn('string', 'Month');
+                data.addColumn('number', 'Sales');
+                data.addColumn('number', 'Expenses');
+                data.addColumn('number', 'Net');
+                // initial value
+                var month = modelInvoices[0].month;
+                var sales = modelInvoices[0].sales;
+                var expenses = modelInvoices[0].expenses;
+                var net = expenses - sales;
+                data.addRows([[`${month}`, sales, expenses, net]]);
+                // add the invices data
+                for (var i = 1; i < modelInvoices.length; i++) {
+                    sales += modelInvoices[i].sales;
+                    expenses = modelInvoices[i].expenses;
+                    net = expenses - sales;
+                    data.addRows([[`${modelInvoices[i].month}`, sales, expenses, net]]);
+                }
+
 
                 var options = {
-                    title: 'Company Performance',
-                    hAxis: { title: 'Year', titleTextStyle: { color: 'green' } },
-                    vAxis: { minValue: 0 }
+                    chart: {
+                        title: 'Project Financial Status',
+                        subtitle: 'in thousand of poundds (LE)'
+                    },
+                    hAxis: { title: 'Months', titleTextStyle: { color: 'green' } },
+                    vAxis: { title: 'Money' },
+                    legend: { position: 'bottom' },
+                    colors: ['#a52714', '#097138', '#003366'],
+                    width: 800,
+                    height: 300
                 };
 
-                var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+                //var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+                var chart = new google.charts.Line(document.getElementById('chart_div'));
                 chart.draw(data, options);
             }
         }
+
+
+
+
         function Show(divName) {
             $(`#${divName}`).removeClass('d-none');
         }

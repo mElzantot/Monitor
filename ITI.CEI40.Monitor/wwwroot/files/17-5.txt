@@ -1,0 +1,38 @@
+                           
+                           1-Project(Project Manager (All CRUD Operations)) 
+
+                           2.1-Task(Project Manager(All CRUD Operation)---(Departement Manager)(Edit Only) ( ) )
+                           
+                           2.2-Task(Team Leader(Edit))
+
+                           3-SubTask (Team leader (All CRUD Operation)---(Engineer)(Edit Only))
+
+                           4-Files
+
+                           5-Notifications
+                           
+                           6-Dash Board ()
+
+
+
+                           (phase two)
+
+                           7-Reports
+
+                           8-Money 
+ 
+
+
+                          - Gantt Chart Elaalem  (Create tasks - edtit - delete)
+
+                          - Engineer view () 
+                          
+                          - Managers()
+-------------------------------------------------
+
+17/5 
+project & Task Database (Safty & Alaam)
+Farag Managers Views (Dapartement Manager) (Farag - Sahker)
+Signal R (Shaker)
+
+

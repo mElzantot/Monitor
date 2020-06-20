@@ -1,28 +1,24 @@
 ﻿@model TaskViewModel
 
-<div id="subTaskView">
-    <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
+<div id="subTaskView" style="padding:8px;border: 0px solid white; border-radius: 8px; background:white; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+
+    <div>
         <div class="righthead">
             <div class="ml-4 mb-3">
                 <input type="text" value="@Model.TaskId" id="taskID" hidden />
-                <div class="row">
-                    <h4 class="mr-3 pt-2">
-                        @Model.TaskName
-                    </h4>
-                    @if (Model.SubTasks != null)
-                    {
-                        <span class="alert alert-danger">@Model.SubTasks.Count() Sub Tasks</span>
-                    }
-                    <span>
-                        <button onclick="Dashboard(@Model.TaskId)" class=" ml-2 alert alert-info ">
-                            <i class="fas fa-chart-area">Dashboard</i>
-                        </button>
-                    </span>
+                <div style="display:flex; justify-content:space-between">
+                    <button class="btn btn-light ">
+                        
+                            @Model.TaskName
+                        
+                    </button>
+                    <div style="margin:10px 10px 0 0">
+                        <a class="btn  btn-outline-info " href="/comment/activitylog?taskId=@Model.TaskId">Activitylog</a>
+                    </div>
                 </div>
-                <div class="text-muted"> @Model.taskDescription</div>
             </div>
 
-            <div class="row" id="tasks">
+            <div class="" id="tasks">
                 <table class="table table-hover text-center table-sm ">
                     <thead class="alert-info thead-dark">
                         <tr>
@@ -44,8 +40,13 @@
                                 <tr id="@Model.SubTasks[i].Id">
                                     <td>@Model.SubTasks[i].Name</td>
                                     <td>@Model.SubTasks[i].Priority</td>
-                                    <td>@Model.SubTasks[i].StartDate.Value.ToShortDateString()</td>
-                                    <td>@Model.SubTasks[i].EndDate.Value.ToShortDateString()</td>
+                                    @{
+                                        DateTime start = @Model.SubTasks[i].StartDate.Value;
+                                        DateTime end = @Model.SubTasks[i].EndDate.Value;
+                                    }
+                                    <td>@start.Day @start.ToString("MMM") @start.Year</td>
+                                    <td>@end.Day @end.ToString("MMM") @end.Year</td>
+
                                     <td>@Model.SubTasks[i].Status</td>
 
                                     <td>
@@ -62,7 +63,7 @@
                                         {
                                             <td></td>
                                         }
-                                    <td><button class="btn btn-sm btn-dark" onclick="getEditSubTaskModal(@Model.SubTasks[i].Id)"><i class="fas fa-edit"></i></button></td>
+                                        <td><button class="btn btn-sm btn-primary" onclick="getEditSubTaskModal(@Model.SubTasks[i].Id)"><i class="fas fa-edit"></i></button></td>
                                     </tr>
                                 }
                         </tbody>

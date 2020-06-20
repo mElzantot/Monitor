@@ -8,33 +8,25 @@
     <div>
         <h3 class="text-muted m-3">Engineers</h3>
     </div>
-    <div class="row " style="border: 2px solid rgb(219, 219, 219) ; border-radius: 8px;">
+    <div class="row " style="border: 0px solid white; border-radius: 8px; background:white; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" >
         <div class="col-3  innerleft pt-4" style="border-right:2px solid rgb(219, 219, 219);">
             <table class="table table-hover text-center" id="teamTable">
-                <thead class="table-hover">
-                    <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Total Evaluation </th>
-                    </tr>
-                </thead>
                 <tbody>
                     @for (int i = 0; i < Model.Count(); i++)
                     {
                         if (Model[i].Id != Model.FirstOrDefault().Team.FK_TeamLeaderId)
                         {
 
-                        <tr id="@Model[i].Id" onclick='displaySubTasks("@Model[i].Id")'>
-                            <td>@Model[i].UserName</td>
-                            <td>@Model[i].TotalEvaluation</td>
-                            @*<td><button class="btn btn-info" onclick='displayCharts("@Model[i].Id")'>Charts</button></td>*@
-                        </tr>
+                            <tr id="@Model[i].Id" onclick='displaySubTasks("@Model[i].Id")'>
+                                <td>@Model[i].UserName</td>
+                            </tr>
                         }
                     }
                 </tbody>
             </table>
         </div>
         <div class="col-9 innerright ">
-            <div style=" padding: 15px; border-radius: 8px;">
+            <div style="">
                 <div class="row" style="margin:auto;" id="tasks">
                     <h4 id="alertdiv" class="text-muted text-center mt-5" style="margin:auto;">Select Engineer to Show Data</h4>
                     <div id="tableBody" class="table table-hover align-middle">
@@ -152,7 +144,7 @@
         function SubmitTask(e) {
             e.preventDefault();
             debugger
-           // console.log($('#subtaskSubmit').serialize());
+            // console.log($('#subtaskSubmit').serialize());
             $.ajax({
                 url: "/TeamLeader/SubmitSubTask",
                 method: "POST",
@@ -181,3 +173,11 @@
     </script>
 }
 
+@section Style{
+    <style>
+
+        body {
+        background-color: #eef5f0;
+        }
+    </style>
+}

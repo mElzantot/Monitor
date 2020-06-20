@@ -11,7 +11,7 @@ else
         <h4 class="mr-3 pt-2">
             @Model[0].Engineer.UserName
         </h4>
-        <span class="alert alert-danger">@Model.Count Sub Tasks</span>
+  
     </div>
     <table class="table table-hover text-center">
         <thead class=" alert-info">
@@ -32,14 +32,40 @@ else
             if (Model[i].IsUnderWork)
             {
                 <tr id="@Model[i].Id" class="alert-warning">
-                    <td>@Model[i].Name</td>
-                    <td>@Model[i].Task.Name</td>
-                    <td>@Model[i].StartDate.Value.ToShortDateString()</td>
-                    <td>@Model[i].EndDate.Value.ToShortDateString()</td>
-                    <td><div class="progress"><div class="progress-bar" role="progressbar" style="width: @Model[i].Progress%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@Model[i].Progress%</div></div></td>
-                    <td>@Model[i].ActualDuration hours</td>
-                    <td>@Model[i].Status</td>
                     <td>
+                        @Model[i].Name
+                    <div class="btn-group dropright">
+                        <button type="button" class="btn btn-outline-info rounded-circle " style="padding:1px 8px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-info"></i>
+                        </button>
+                        <div class="dropdown-menu px-3 mx-1 text-muted">
+                            @Model[i].Description
+                        </div>
+                    </div>
+                </td>
+                <td>@Model[i].Task.Name</td>
+                @{
+                    DateTime start = Model[i].StartDate.Value;
+                    DateTime end = Model[i].EndDate.Value;
+                }
+
+                <td>@start.Day @start.ToString("MMM") @start.Year</td>
+                <td>@end.Day @end.ToString("MMM") @end.Year</td>
+
+                <td><div class="progress"><div class="progress-bar" role="progressbar" style="width: @Model[i].Progress%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@Model[i].Progress%</div></div></td>
+                <td>@Model[i].ActualDuration hours</td>
+                <td>@Model[i].Status</td>
+
+                <td>
+
+                    @if (@Model[i].Progress == 100)
+                    {
+                        <button onclick="ChangeStatus(@Model[i].Id,2)" class="btn btn-success " style="padding:1px 6px"><i class="fas fa-check"></i></button>
+                    }
+                    <button onclick="ChangeStatus(@Model[i].Id,3)" class="btn btn-danger " style="padding:1px 6px"><i class="fas fa-trash-alt"></i></button>
+                </td>
+
+                @*<td>
                         <div class="btn-group" role="group" aria-label="Basic example">
                             <div class="btn-group dropleft">
                                 <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -55,20 +81,40 @@ else
                             }
                             <button onclick="ChangeStatus(@Model[i].Id,3)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
                         </div>
-                    </td>
-                </tr>
-            }
-            else
-            {
-                <tr id="@Model[i].Id">
-                    <td>@Model[i].Name</td>
-                    <td>@Model[i].Task.Name</td>
-                    <td>@Model[i].StartDate.Value.ToShortDateString()</td>
-                    <td>@Model[i].EndDate.Value.ToShortDateString()</td>
-                    <td><div class="progress"><div class="progress-bar" role="progressbar" style="width: @Model[i].Progress%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@Model[i].Progress%</div></div></td>
-                    <td>@Model[i].ActualDuration hours</td>
-                    <td>@Model[i].Status</td>
-                    <td>
+                    </td>*@
+            </tr>
+        }
+        else
+        {
+            <tr id="@Model[i].Id">
+                <td>
+                    @Model[i].Name
+                    <div class="btn-group dropright">
+                        <button type="button" class="btn btn-outline-info rounded-circle " style="padding:1px 8px" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="fas fa-info"></i>
+                        </button>
+                        <div class="dropdown-menu px-3 mx-1 text-muted">
+                            @Model[i].Description
+                        </div>
+                    </div>
+                </td>
+                <td>@Model[i].Task.Name</td>
+                <td>@Model[i].StartDate.Value.ToShortDateString()</td>
+                <td>@Model[i].EndDate.Value.ToShortDateString()</td>
+                <td><div class="progress"><div class="progress-bar" role="progressbar" style="width: @Model[i].Progress%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@Model[i].Progress%</div></div></td>
+                <td>@Model[i].ActualDuration hours</td>
+                <td>@Model[i].Status</td>
+
+                <td>
+
+
+                    @if (@Model[i].Progress == 100)
+                    {
+                        <button onclick="ChangeStatus(@Model[i].Id,2)" class="btn btn-success " style="padding:1px 6px"><i class="fas fa-check"></i></button>
+                    }
+                    <button onclick="ChangeStatus(@Model[i].Id,3)" class="btn btn-danger " style="padding:1px 6px"><i class="fas fa-trash-alt"></i></button>
+                </td>
+                @*<td>
                         <div class="btn-group" role="group" aria-label="Basic example">
                             <div class="btn-group dropleft">
                                 <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -84,10 +130,10 @@ else
                             }
                             <button onclick="Cancele(@Model[i].Id)" class="btn btn-danger"><i class="fas fa-trash-alt"></i></button>
                         </div>
-                    </td>
-                </tr>
-            }
+                    </td>*@
+            </tr>
         }
+    }
     </table>
 
 
@@ -118,7 +164,7 @@ else
                             <label asp-for="@Model[0].TimeManagement"></label>
                             <input id="evaluation" asp-for="@Model[0].TimeManagement" type="number" class="form-control" />
                         </div>
-                        <button id="Submit"  type="submit" class="btn btn-primary">Submit</button>
+                        <button id="Submit" type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
                 <div class="modal-footer">

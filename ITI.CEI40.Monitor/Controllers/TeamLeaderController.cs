@@ -166,6 +166,7 @@ namespace ITI.CEI40.Monitor.Controllers
                     avg.Add(null);
                 }
             }
+
             TeamChartViewModel teamChart = new TeamChartViewModel
             {
                 Names= names,
@@ -194,65 +195,65 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
 
-        public JsonResult TryJson()
-        {
-            string engId = userManager.GetUserId(HttpContext.User);
-            List<SubTask> subtasks = unitofwork.SubTasks.GetEngineerComletedSubTasks(engId);
+        //public JsonResult TryJson()
+        //{
+        //    string engId = userManager.GetUserId(HttpContext.User);
+        //    List<SubTask> subtasks = unitofwork.SubTasks.GetEngineerComletedSubTasks(engId);
 
-            List<string> months = new List<string>();
-            List<float> quality = new List<float>();
-            List<float> complexity = new List<float>();
-            List<float> time = new List<float>();
-            List<int> subNo = new List<int>();
-            List<float> totalDuration = new List<float>();
-            List<float> tasksDuration = new List<float>();
+        //    List<string> months = new List<string>();
+        //    List<float> quality = new List<float>();
+        //    List<float> complexity = new List<float>();
+        //    List<float> time = new List<float>();
+        //    List<int> subNo = new List<int>();
+        //    List<float> totalDuration = new List<float>();
+        //    List<float> tasksDuration = new List<float>();
 
-            string engName = subtasks[0].Engineer.UserName;
-            string month;
-            int i = -1;
+        //    string engName = subtasks[0].Engineer.UserName;
+        //    string month;
+        //    int i = -1;
 
 
-            foreach (var item in subtasks)
-            {
-                month = item.EndDate.Value.ToString("MMMM");
-                if (!months.Contains(month))
-                {
-                    months.Add(month);
-                    complexity.Add(item.Complexity);
-                    quality.Add(item.Quality * item.Complexity);
-                    time.Add(item.TimeManagement * item.Complexity);
-                    totalDuration.Add(item.ActualDuration);
-                    subNo.Add(1);
-                    i++;
-                }
-                else
-                {
-                    complexity[i] += item.Complexity;
-                    quality[i] += item.Quality * item.Complexity;
-                    time[i] += item.TimeManagement * item.Complexity;
-                    totalDuration[i] += item.ActualDuration;
-                    subNo[i] += 1;
-                }
-            }
+        //    foreach (var item in subtasks)
+        //    {
+        //        month = item.EndDate.Value.ToString("MMMM");
+        //        if (!months.Contains(month))
+        //        {
+        //            months.Add(month);
+        //            complexity.Add(item.Complexity);
+        //            quality.Add(item.Quality * item.Complexity);
+        //            time.Add(item.TimeManagement * item.Complexity);
+        //            totalDuration.Add(item.ActualDuration);
+        //            subNo.Add(1);
+        //            i++;
+        //        }
+        //        else
+        //        {
+        //            complexity[i] += item.Complexity;
+        //            quality[i] += item.Quality * item.Complexity;
+        //            time[i] += item.TimeManagement * item.Complexity;
+        //            totalDuration[i] += item.ActualDuration;
+        //            subNo[i] += 1;
+        //        }
+        //    }
 
-            for (int j = 0; j < months.Count(); j++)
-            {
-                quality[j] = quality[j] / complexity[j];
-                time[j] = time[j] / complexity[j];
-            }
+        //    for (int j = 0; j < months.Count(); j++)
+        //    {
+        //        quality[j] = quality[j] / complexity[j];
+        //        time[j] = time[j] / complexity[j];
+        //    }
 
-            EngineerChrtViewModel engineerChrtView = new EngineerChrtViewModel
-            {
+        //    EngineerChrtViewModel engineerChrtView = new EngineerChrtViewModel
+        //    {
 
-                EngineerName = engName,
-                Months = months,
-                Quality = quality,
-                Time = time,
-                Complexity = complexity,
+        //        EngineerName = engName,
+        //        Months = months,
+        //        Quality = quality,
+        //        Time = time,
+        //        Complexity = complexity,
 
-            };
-            return Json(engineerChrtView);
-        }
+        //    };
+        //    return Json(engineerChrtView);
+        //}
 
         [HttpGet]
         public IActionResult displayCancellesSubTasks(string engId)
