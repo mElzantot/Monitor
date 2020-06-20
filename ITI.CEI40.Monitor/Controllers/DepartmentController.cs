@@ -62,22 +62,22 @@ namespace ITI.CEI40.Monitor.Controllers
                 newDept = unitOfWork.Departments.Add(newDept);
 
                 #region notification test
-                string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                string messege = $"*{HttpContext.User.Identity.Name}=* -Admin- has added *{name}=* as a new Department at *{DateTime.Now}=*.";
-                Notification Notification = new Notification
-                {
-                    messege = messege,
-                    seen = false
-                };
-                Notification Savednotification = unitOfWork.Notification.Add(Notification);
-                NotificationUsers notificationUsers = new NotificationUsers
-                {
-                    NotificationId = Savednotification.Id,
-                    userID = currentUserId
-                };
-                unitOfWork.NotificationUsers.Add(notificationUsers);
+                //string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                //string messege = $"*{HttpContext.User.Identity.Name}=* -Admin- has added *{name}=* as a new Department at *{DateTime.Now}=*.";
+                //Notification Notification = new Notification
+                //{
+                //    messege = messege,
+                //    seen = false
+                //};
+                //Notification Savednotification = unitOfWork.Notification.Add(Notification);
+                //NotificationUsers notificationUsers = new NotificationUsers
+                //{
+                //    NotificationId = Savednotification.Id,
+                //    userID = currentUserId
+                //};
+                //unitOfWork.NotificationUsers.Add(notificationUsers);
 
-                hubContext.Clients.All.SendAsync("newNotification", messege, false, Savednotification.Id);
+                //hubContext.Clients.All.SendAsync("newNotification", messege, false, Savednotification.Id);
                 #endregion
 
                 // List<Department> depts = unitOfWork.Departments.GetAllDeptWithManagers().ToList();
