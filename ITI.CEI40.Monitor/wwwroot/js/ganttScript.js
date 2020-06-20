@@ -878,10 +878,10 @@ function ganttChart() {
 function changeViewMode(vm) {
     if (vm == 1) {
         options.view_mode = "Day";
-        vm++;
+        //vm++;
     } else if (vm == 2) {
         options.view_mode = "Week";
-        vm++;
+        //vm++;
     } else {
         options.view_mode = "Month";
     }
