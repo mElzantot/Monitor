@@ -92,7 +92,7 @@
                 animation: true,
                 content: ul,
                 placement: "bottom",
-                //trigger: 'focus'
+                trigger: 'focus'
             });
 
             //establishing connection
@@ -101,9 +101,9 @@
 
             //invoked by the server
             connection.on("newNotification", function (msg, seen, id) {
-                //console.log(msg);
-                //console.log(seen);
-                //console.log(id);
+                console.log("1?"+msg);
+                console.log("1?"+seen);
+                console.log("1?"+id);
                 var li = document.createElement('li');
                 li.setAttribute('id', `${id}`);
                 if (seen == false || seen == undefined) {

@@ -7,7 +7,7 @@
 <h1>Resources Timeline</h1>
 
 
-@if (Model != null)
+@if (Model != null && Model.Count > 0)
 {
 
     <div id="timeline" style="height:100%"></div>
@@ -60,7 +60,9 @@ else
          var options = {
               colors: ['#cbb69d', '#603913', '#c69c6e'],
               timeline: { rowLabelStyle: {fontName: 'Helvetica', fontSize: 24, color: '#603913' },
-                             barLabelStyle: { fontName: 'Garamond', fontSize: 14 } }
+                 barLabelStyle: { fontName: 'Garamond', fontSize: 14 }
+             },
+              height:1000
          };
         chart.draw(dataTable, options);
     }

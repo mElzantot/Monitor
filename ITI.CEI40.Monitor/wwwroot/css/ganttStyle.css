@@ -47,7 +47,10 @@ body {
     }
 
 
-
+.buttons .btn{
+    margin-left: 2px;
+    margin-right: 2px;
+}
 
 
 
@@ -87,14 +90,14 @@ input {
     position: relative;
     width: 100%;
     min-height: 45vw;
-    overflow: auto;
+    overflow-x: auto;
 }
 
 .panel {
     position: absolute;
     width: 100vw;
     min-height: 45vw;
-    overflow: auto;
+    overflow-x: auto;
 }
 
 .tablecontent {

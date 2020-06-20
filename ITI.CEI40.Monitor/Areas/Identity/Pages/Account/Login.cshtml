@@ -37,7 +37,7 @@
 }
 
 @{
-    Layout = "~/Views/Shared/SecondLayout.cshtml";
+    Layout = "~/Views/Shared/Layout.cshtml";
 }
 
 
@@ -332,8 +332,8 @@
 
 
         /*---------------------------------------
-     FOOTER              
-  -----------------------------------------*/
+           FOOTER
+        -----------------------------------------*/
 
         footer {
             background: #252020;
@@ -425,8 +425,8 @@
 
 
         /*---------------------------------------
-     SOCIAL ICON              
-  -----------------------------------------*/
+           SOCIAL ICON
+        -----------------------------------------*/
 
         .social-icon {
             position: relative;
@@ -474,7 +474,7 @@
                     position: relative;
                     margin: 5px 5px 5px 0;
                 }
-                    /*---------------*/
+        /*---------------*/
 
         .section {
             margin: 12rem 0 0;
@@ -508,12 +508,17 @@
         body {
             background: #fdfdfd;
         }
-
-
-
     </style>
 }
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        $('#log').click(function () {
+            var offset = $('#Login').offset().top;
+            $('html,body').animate({
+                scrollTop: offset - 100
+            }, 1000);
+        });
+    </script>
 }

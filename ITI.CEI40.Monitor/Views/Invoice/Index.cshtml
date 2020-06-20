@@ -9,7 +9,7 @@
 <br />
 
 <div style="display:flex;">
-    @if (true)
+    @if (User.IsInRole(Roles.Finance.ToString()))
     {
         <!-- Button trigger modal -->
         <button type="button" class="btn btn-primary mb-3" data-toggle="modal" data-target="#addInvoiceModal" style="display: inherit;">
@@ -17,38 +17,43 @@
         </button>
         <a href="/Invoice/ControlInvoice" class="btn mb-3 btn-light">Back To List</a>
     }
+    @if (User.IsInRole(Roles.ProjectManager.ToString()))
+    {
         <a href="/Project/Index" class="btn mb-3 btn-light">Back To List</a>
+    }
 </div>
 
 <div id="invoContainer" style="text-align:center;">
-    @if (Model.Invoices.Count > 0 && Model.Invoices != null)
-    {
-        <table class="table table-sm text-center">
-            <thead class="alert-info thead-dark">
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Value</th>
-                    <th scope="col">Invoice Date</th>
-                    <th scope="col">Payment Date</th>
-                    <th scope="col"></th>
-                </tr>
-            </thead>
-            <tbody id="tableBody" class="table-sm">
+
+    <table class="table table-sm text-center">
+        <thead class="alert-info thead-dark">
+            <tr>
+                <th scope="col">Name</th>
+                <th scope="col">Value</th>
+                <th scope="col">Invoice Date</th>
+                <th scope="col">Payment Date</th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody id="tableBody" class="table-sm">
+            @if (Model.Invoices.Count > 0 && Model.Invoices != null)
+            {
                 @for (int i = 0; i < Model.Invoices.Count(); i++)
                 {
                     <partial name="_InvoicePartialView" model="Model.Invoices[i]" />
                 }
-            </tbody>
-            <tr style="font-weight:bold">
-                <td>Total</td>
-                <td><input style="font-weight:bold; border:none; text-align:center;" id="totalValues" readonly /></td>
-            </tr>
-        </table>
-    }
-    else
-    {
-        <div class="alert alert-info">There are no Invoices for this Project </div>
-    }
+            }
+            else
+            {
+                <div id="noinvo-alert" class="alert alert-info">There are no Invoices for this Project </div>
+            }
+        </tbody>
+        <tr style="font-weight:bold">
+            <td>Total</td>
+            <td><input style="font-weight:bold; border:none; text-align:center;" id="totalValues" readonly /></td>
+        </tr>
+    </table>
+
 </div>
 
 
@@ -145,6 +150,7 @@
             if (status == "success") {
                 $('#addInvoiceModal').modal('hide');
                 document.getElementById("InvoiceForm").reset();
+                $('#noinvo-alert').hide();
                 alert("Invoice added Successfully");
                 calculatTotal();
             }
@@ -251,9 +257,9 @@
         $('#additem').on('click', function (e) {
             var nextIndex = $(".descripe").length;
             var c = `<tr> <td><input type="number" data-val="true" data-val-required="The Quantity field is required."                id="InvoiceItems_${nextIndex}__Quantity" name="InvoiceItems[${nextIndex}].Quantity" value="" class="input-validation-             error" aria-describedby="InvoiceItems_${nextIndex}__Quantity-error"></td>
-                                                                                                                                        <td><input style="width:400px;" class="descripe valid" type="text" id="InvoiceItems_${nextIndex}__Description" name="InvoiceItems[${nextIndex}].Description" value="" aria-invalid="false"></td>
-                                                                                                                                        <td><input type="number" data-val="true" data-val-required="The UnitPrice field is required." id="InvoiceItems_${nextIndex}__UnitPrice" name="InvoiceItems[${nextIndex}].UnitPrice" value="" class="input-validation-error" aria-describedby="InvoiceItems_${nextIndex}__UnitPrice-error"></td>
-                                                                                                                                        <td><input class="totalprice" readonly="" id="itt-${nextIndex}"></td> </tr>`
+                                                                                                                                                        <td><input style="width:400px;" class="descripe valid" type="text" id="InvoiceItems_${nextIndex}__Description" name="InvoiceItems[${nextIndex}].Description" value="" aria-invalid="false"></td>
+                                                                                                                                                        <td><input type="number" data-val="true" data-val-required="The UnitPrice field is required." id="InvoiceItems_${nextIndex}__UnitPrice" name="InvoiceItems[${nextIndex}].UnitPrice" value="" class="input-validation-error" aria-describedby="InvoiceItems_${nextIndex}__UnitPrice-error"></td>
+                                                                                                                                                        <td><input class="totalprice" readonly="" id="itt-${nextIndex}"></td> </tr>`
             $('#itemtbody').append(c);
             invoiceItemsCount++;
         });

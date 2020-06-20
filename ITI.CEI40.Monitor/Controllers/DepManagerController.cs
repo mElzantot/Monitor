@@ -86,7 +86,7 @@ namespace ITI.CEI40.Monitor.Controllers
                 unitOfWork.NotificationUsers.Add(notificationUsers);
 
                 //---------Send Notification to Team
-                hubContext.Clients.User(notificationUsers.userID).SendAsync("newNotification", messege);
+                hubContext.Clients.User(notificationUsers.userID).SendAsync("newNotification", messege, false, Savednotification.Id);
 
 
                 return Json(new { teamName=team.Name});

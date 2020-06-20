@@ -114,16 +114,17 @@ namespace ITI.CEI40.Monitor.Controllers
             return View(project);
         }
 
-
         [HttpGet]
         public IActionResult DashBoard(int projId)
         {
             //Project project = unitofwork.Projects.GetProjectWithTasks(projId);
-            List<Activity> tasks = unitofwork.Tasks.GetActivitiesFromProject(projId).ToList();
-            return PartialView("_DashBoardPartial", tasks);
+            DashboardViewModel dashboard = new DashboardViewModel
+            {
+                Tasks = unitofwork.Tasks.GetActivitiesFromProject(projId).ToList(),
+                TotalInvoices = TotalInvoices(projId)
+            };
+            return PartialView("_DashBoardPartial", dashboard);
         }
-
-
 
         public IActionResult ProjectDailyReport(int Id)
         {
@@ -135,6 +136,52 @@ namespace ITI.CEI40.Monitor.Controllers
         {
             var projects = unitofwork.Projects.Archive().ToList();
             return View(projects);
+        }
+
+        // create invoices data for the chart
+        public List<TotalInvoicesViewModel> TotalInvoices(int id)
+        {
+            List<Invoice> ex_invoices = unitofwork.Invoices.GetExpensesByProjectId(id).ToList();
+            List<Invoice> in_invoices = unitofwork.Invoices.GetIncomeByProjectId(id).ToList();
+            List<TotalInvoicesViewModel> totalInvoices = new List<TotalInvoicesViewModel>();
+            // add the expenses to the total invoices
+            if (ex_invoices != null && ex_invoices.Count > 0)
+            {
+                foreach (var item in ex_invoices)
+                {
+                    TotalInvoicesViewModel totalInvoicesViewModel = new TotalInvoicesViewModel
+                    {
+                        Year = item.PaymentDate.Date.Year,
+                        Month = item.PaymentDate.Date.Month,
+                        Expenses = item.Value
+                    };
+                    totalInvoices.Add(totalInvoicesViewModel);
+                }
+            }
+            // add the sales to the total invoices
+            if (in_invoices != null && in_invoices.Count > 0)
+            {
+                foreach (var item in in_invoices)
+                {
+                    TotalInvoicesViewModel totalInvoicesViewModel = new TotalInvoicesViewModel
+                    {
+                        Year = item.PaymentDate.Date.Year,
+                        Month = item.PaymentDate.Date.Month,
+                        Sales = item.Value
+                    };
+                    totalInvoices.Add(totalInvoicesViewModel);
+                }
+            }
+
+            List<TotalInvoicesViewModel> FinalInvoices = totalInvoices.GroupBy(i => new { i.Year, i.Month }).OrderBy(g => g.Key.Year).ThenBy(g => g.Key.Month).Select(i => new TotalInvoicesViewModel
+            {
+                Year = i.Key.Year,
+                Month = i.Key.Month,
+                Expenses = i.Sum(e => e.Expenses),
+                Sales = i.Sum(e => e.Sales)
+            }).ToList();
+
+            return FinalInvoices;
         }
     }
 }

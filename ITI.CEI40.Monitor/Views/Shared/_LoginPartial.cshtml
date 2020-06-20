@@ -24,9 +24,19 @@
                     <li class="nav-item">
                         <a class="nav-link px-3 py-0  " asp-controller="Employee" asp-action="ViewEmployees"><i id="i" class="fas fa-chart-area"></i> Employees |</a>
                     </li>
-                }
+                    <li class="nav-item">
+                        <a class="nav-link px-3 py-0  " asp-controller="Holiday" asp-action="Index"><i id="i" class="fas fa-chart-area"></i> Holidays |</a>
+                    </li>
 
-                @if (User.IsInRole(Roles.ProjectManager.ToString()))
+                }
+                @if (User.IsInRole(Roles.Finance.ToString()))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link px-3 py-0  " asp-controller="Invoice" asp-action="ControlInvoice"><i class="fas fa-money-bill-wave"></i> Invoices</a>
+                    </li>
+                }
+                 
+                @if(User.IsInRole(Roles.ProjectManager.ToString()))
                 {
                     <li class="nav-item">
                         <a class="nav-link px-3 py-0  " asp-controller="Project" asp-action="Index"><i class="fas fa-tasks"></i> Projects</a>
@@ -99,7 +109,7 @@
             else
             {
                 <li class="nav-item">
-                    <a class="nav-link px-3 py-0 " asp-area="Identity" asp-page="/Account/Login">Login</a>
+                    <a id="log" class="nav-link px-3 py-0 " style="cursor: pointer;">Login</a>
                 </li>
             }
             <li class="nav-item">
@@ -107,6 +117,9 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link px-3 py-0  " asp-controller="Employee" asp-action="ViewEmployees"><i id="i" class="fas fa-chart-area"></i> Employees |</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link px-3 py-0  " asp-controller="Holiday" asp-action="Index"><i id="i" class="fas fa-chart-area"></i> Holidays |</a>
             </li>
         </ul>
     </div>

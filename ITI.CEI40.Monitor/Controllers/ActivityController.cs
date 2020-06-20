@@ -101,7 +101,7 @@ namespace ITI.CEI40.Monitor.Controllers
                         unitOfWork.NotificationUsers.Add(notificationUsers);
 
                         //---------Send Notification to Team
-                        hubContext.Clients.User(DepmanagerId).SendAsync("newNotification", messege);
+                        hubContext.Clients.User(DepmanagerId).SendAsync("newNotification", messege, false, Savednotification.Id);
                         #endregion
                     }
                     unitOfWork.Tasks.Edit(oldAct);
@@ -167,7 +167,7 @@ namespace ITI.CEI40.Monitor.Controllers
                         unitOfWork.NotificationUsers.Add(notificationUsers);
 
                         //---------Send Notification to Team
-                        hubContext.Clients.User(DepmanagerId).SendAsync("newNotification", messege);
+                        hubContext.Clients.User(DepmanagerId).SendAsync("newNotification", messege, false, Savednotification.Id);
                         #endregion
                     }
                     unitOfWork.Tasks.Add(activity);
