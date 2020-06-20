@@ -327,9 +327,23 @@ namespace ITI.CEI40.Monitor.Controllers
 
             PredictedDuration predictedDuration = MLClass.PredictDurationBasedonQualityandCompl(subTasks, newSubTask);
             return Json(predictedDuration);
+        }
 
+
+        public JsonResult GetApproximateQuaity(string engineerId, int complexity, int Duration)
+        {
+            IEnumerable<SubTask> subTasks = unitOfWork.SubTasks.GetEngineerComletedSubTasks(engineerId);
+            SubTask newSubTask = new SubTask
+            {
+                Complexity = complexity,
+                ActualDuration= Duration
+            };
+
+            PredictedQuality predictedQuality = MLClass.PredictQualityBasedonDurationandCompl(subTasks, newSubTask);
+            return Json(predictedQuality);
 
         }
+
 
 
     }

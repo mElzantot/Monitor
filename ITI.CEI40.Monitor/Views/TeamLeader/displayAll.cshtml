@@ -38,11 +38,11 @@ box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" c
             </div>
             <div style="display:flex" class="my-2">
                 <label asp-for="Complexity" style="width:12rem"></label>
-                <input asp-for="Complexity" id="CompForDuration" type="number" class="form-control form-control-sm" c />
+                <input id="CompForDuration" type="number" class="form-control form-control-sm" c />
             </div>
             <div style="display:flex" class="my-2">
                 <label asp-for="Quality" style="width:12rem"></label>
-                <input asp-for="Quality" id="QualForDuration" type="number" class="form-control form-control-sm" c />
+                <input id="QualForDuration" type="number" class="form-control form-control-sm" c />
             </div>
             <button class="btn btn-sm btn-success" onclick="GetApproximateDuration()">Click Here</button>
             <hr />
@@ -51,27 +51,45 @@ box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" c
                 <label style="width:20rem">Approximate Duration (Hrs)</label>
                 <input disabled value="" id="approxDuration" />
             </div>
-            <div style="display:flex" class="my-2">
-                <label style="width:20rem">Result accuracy </label>
-                <input disabled value="" id="ResultDuration" />
-            </div>
-
-
+            @*<div style="display:flex" class="my-2">
+                    <label style="width:20rem">Result accuracy </label>
+                    <input disabled value="" id="ResultDuration" />
+                </div>*@
         </div>
-
         <div class="col-2"></div>
-        <div class="col-5" style="padding:10px;border: 0px solid white; border-radius: 8px; background:white;
+        <div class="col-5 " style="padding:10px;border: 0px solid white; border-radius: 8px; background:white;
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
-            <h6><strong>   Get Approximate Quality</strong></h6>
-            <form asp-action="Get">
-                <label asp-for="EmployeeID"></label>
-                <select class="form-control form-control-sm" id="DepartmentId" asp-for="EmployeeID"
+            <h6><strong> Get Approximate Quality</strong></h6>
+            <br />
+            <div style="display:flex;" class="my-2">
+                <label asp-for="EmployeeID" style="display:inline;width:12rem"></label>
+                <select style="display:inline" class="form-control form-control-sm" id="QualityEmp" asp-for="EmployeeID"
                         asp-items="new SelectList(Model.Employees,nameof(ApplicationUser.Id),nameof(ApplicationUser.UserName))">
                     <option value="0">Select Employee</option>
                 </select>
-                <span asp-validation-for="EmployeeID" class="text-danger"></span>
-            </form>
+            </div>
+            <div style="display:flex" class="my-2">
+                <label asp-for="Complexity" style="width:12rem"></label>
+                <input id="CompForQualit" type="number" class="form-control form-control-sm" c />
+            </div>
+            <div style="display:flex" class="my-2">
+                <label asp-for="Duration" style="width:12rem"></label>
+                <input id="DurationForQual" type="number" class="form-control form-control-sm" c />
+            </div>
+            <button class="btn btn-sm btn-success" onclick="GetApproximateQuality()">Click Here</button>
+            <hr />
+            <h5><strong>Result</strong></h5>
+            <div style="display:flex" class="my-2">
+                <label style="width:20rem">Approximate Quality (%)</label>
+                <input disabled value="" id="approxQuality" />
+            </div>
+            @*<div style="display:flex" class="my-2">
+                    <label style="width:20rem">Result accuracy </label>
+                    <input disabled value="" id="ResultQuality" />
+                </div>*@
         </div>
+
+
     </div>
 </div>
 
@@ -132,6 +150,9 @@ box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" c
 
     </script>
     <script>
+
+        //----------Approximate Duration
+
         function GetApproximateDuration() {
             let engId = $("#durationEmp").val();
             let comp = $("#CompForDuration").val();
@@ -147,13 +168,42 @@ box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" c
                         Quality: Qual
                     },
                     success: function (res) {
-                        console.log(res)
+                        console.log("Hrllo")
+                        console.log(res.duration);
+                        $("approxDuration").attr("value",`${res.duration}`);
                     }
                 });
             }
-            
-
         }
+
+
+        //----------Approximate Quality
+
+        function GetApproximateQuality() {
+            let engId = $("#QualityEmp").val();
+            let comp = $("#CompForQualit").val();
+            let Dura = $("#DurationForQual").val();
+
+            if (engId && comp && Dura) {
+                $.ajax({
+                    url: "/TeamLeader/GetApproximateQuaity",
+                    type: "Get",
+                    data: {
+                        engineerId: engId,
+                        complexity: comp,
+                        Duration: Dura
+                    },
+                    success: function (res, status) {
+                        console.log("Hrllo")
+                        if (status == "success") {
+                            console.log(res);
+                            $("approxQuality").text(`${res.quality}`);
+                        }
+                    }
+                });
+            }
+        }
+
 
 
     </script>
