@@ -568,6 +568,7 @@ function addRow(rowid) {
     createdRowsIds.push(parseInt(id));
     // update the value of the dependency
     updateDependency();
+    addAssignOpts(n);
     preRowsNo++;
     // check if the row has data or delete it 
     checkFillingRow(id);

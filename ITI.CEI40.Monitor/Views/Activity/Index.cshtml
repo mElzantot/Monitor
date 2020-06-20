@@ -20,8 +20,9 @@
 <div class="buttons" style="display:flex;">
     <input disabled id="submitBtn" type="button" class="btn btn-primary" onclick="submit()" value="submit project" />
     <a style="width:130px; white-space: nowrap;" class="btn btn-light" href="/Project/Index">Back To List</a>
+    <a style="width:130px; white-space: nowrap;" class="btn btn-outline-secondary" href="/Project/Details/@Model.ProjectId">Project Details</a>
     <input hidden id="editBtn" type="button" class="btn btn-info" onclick="startEdit()" value="Edit project" />
-    <div class="viewmodes" style="margin-left:550px">
+    <div class="viewmodes" style="margin-left:405px">
         <span class="viewtext">View Mode : </span>
         <button onclick="changeViewMode(1)" class="btn btn-outline-dark">Days</button>
         <button onclick="changeViewMode(2)" class="btn btn-outline-dark">Weeks</button>

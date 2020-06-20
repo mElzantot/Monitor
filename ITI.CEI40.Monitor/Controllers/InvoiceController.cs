@@ -159,7 +159,7 @@ namespace ITI.CEI40.Monitor.Controllers
                     totaloutcome += outcome.Value;
                 }
                 Project project = unitOfWork.Projects.GetById(id);
-                project.Income = totaloutcome;
+                project.Outcome = totaloutcome;
                 unitOfWork.Projects.Edit(project);
                 return true;
             }
@@ -188,7 +188,7 @@ namespace ITI.CEI40.Monitor.Controllers
                 unitOfWork.NotificationUsers.Add(notificationUsers);
 
                 //---------Send Notification to Employee
-                hubContext.Clients.User(usersId[i]).SendAsync("newNotification", messege);
+                hubContext.Clients.User(usersId[i]).SendAsync("newNotification", messege, false, Savednotification.Id);
             }
 
         }
