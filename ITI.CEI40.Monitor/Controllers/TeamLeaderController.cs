@@ -58,7 +58,7 @@ namespace ITI.CEI40.Monitor.Controllers
 
             // notification
             string messege = $"Your Team Leader has cancelled *{subtask.Name}=* at *{DateTime.Now}=*";
-            SendNotification(messege, subtask.FK_EngineerID); 
+            SendNotification(messege, subtask.FK_EngineerID);
         }
 
         [Authorize(Roles = "TeamLeader")]
@@ -88,7 +88,7 @@ namespace ITI.CEI40.Monitor.Controllers
         [Authorize(Roles = "Engineer")]
         public IActionResult EngineerChart()
         {
-            
+
             string engId = userManager.GetUserId(HttpContext.User);
             List<SubTask> subtasks = unitOfWork.SubTasks.GetEngineerComletedSubTasks(engId);
 
@@ -146,8 +146,8 @@ namespace ITI.CEI40.Monitor.Controllers
                 Complexity = complexity
             };
             return View("EngineerChart", engineerChrtView);
-            
-            
+
+
         }
 
 
@@ -158,7 +158,7 @@ namespace ITI.CEI40.Monitor.Controllers
             List<ApplicationUser> team = unitOfWork.Engineers.GetEngineersInsideTeamWithSubTasks(teamId);
             List<string> Ids = new List<string>();
 
-            
+
             List<string> names = new List<string>();
             List<List<float>> avg = new List<List<float>>();
 
@@ -168,7 +168,7 @@ namespace ITI.CEI40.Monitor.Controllers
                 Ids.Add(item.Id);
                 if (item.SubTasks != null)
                 {
-                   avg.Add(EngineerPerformence(item.SubTasks.ToList()));
+                    avg.Add(EngineerPerformence(item.SubTasks.ToList()));
                 }
                 else
                 {
@@ -177,9 +177,9 @@ namespace ITI.CEI40.Monitor.Controllers
             }
             TeamChartViewModel teamChart = new TeamChartViewModel
             {
-                Names= names,
-                Values= avg,
-                EngIds=Ids
+                Names = names,
+                Values = avg,
+                EngIds = Ids
             };
             return View("TeamChart", teamChart);
         }
@@ -188,7 +188,7 @@ namespace ITI.CEI40.Monitor.Controllers
 
         private List<float> EngineerPerformence(List<SubTask> subTasks)
         {
-            List<float> result = new List<float>() { 0,0,0,0,0};
+            List<float> result = new List<float>() { 0, 0, 0, 0, 0 };
             foreach (var item in subTasks)
             {
                 result[0] += item.ActualDuration;
@@ -316,9 +316,17 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
 
-        public PredictedDuration GetApproximateDuration(string engineerId, int complexity, int Quality)
+        public JsonResult GetApproximateDuration(string engineerId, int complexity, int Quality)
         {
+            IEnumerable<SubTask> subTasks = unitOfWork.SubTasks.GetEngineerComletedSubTasks(engineerId);
+            SubTask newSubTask = new SubTask
+            {
+                Complexity = complexity,
+                Quality = Quality
+            };
 
+            PredictedDuration predictedDuration = MLClass.PredictDurationBasedonQualityandCompl(subTasks, newSubTask);
+            return Json(predictedDuration);
 
 
         }
