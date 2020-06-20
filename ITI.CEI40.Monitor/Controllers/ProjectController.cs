@@ -44,7 +44,6 @@ namespace ITI.CEI40.Monitor.Controllers
         {
             ActivityViewModel activityVM = new ActivityViewModel();
             activityVM.Tasks = unitofwork.Tasks.GetActivitiesFromProject(Id).ToList();
-
             return View(activityVM);
         }
 
@@ -125,6 +124,7 @@ namespace ITI.CEI40.Monitor.Controllers
                 TotalInvoices = TotalInvoices(projId)
             };
             return PartialView("_DashBoardPartial", dashboard);
+            //return View("DashBoard", dashboard);
         }
 
 

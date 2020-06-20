@@ -133,6 +133,7 @@ namespace ITI.CEI40.Monitor.Controllers
             return RedirectToAction(nameof(SetProjectDates), new { id = id }) ;
         }
 
+
         [Route("SetProjectDates/{id}")]
         public IActionResult SetProjectDates(int id)
         {

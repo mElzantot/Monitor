@@ -153,18 +153,18 @@
                     success: function (response) {
                         $('#tablebody').append(
                             `<tr id="${response.id}" onclick="Edit(${response.id})">
-                                                                                                                                    <td class="text-center font-weight-bold">${response.name}</td>
-                                                                                                                                    <td style="text-align:right">
-                                                                                                                                    <a href="/Activity/Index/${response.id}" class="btn alert-info" ><i id="i" class="fas fa-chart-area"></i> Chart</a>
-                                                                                                                                    <div class="btn-group dropleft">
-                                                                                                        <button type="button" class="btn alert-warning " data-toggle="dropdown" >
-                                                                                                            Dashboard
-                                                                                                        </button>
-                                                                                                        <div class="dropdown-menu px-2 alert-danger">
-                                                                                                            Lets goto charts and create tasks
+                                                                                                                                        <td class="text-center font-weight-bold">${response.name}</td>
+                                                                                                                                        <td style="text-align:right">
+                                                                                                                                        <a href="/Activity/Index/${response.id}" class="btn alert-info" ><i id="i" class="fas fa-chart-area"></i> Chart</a>
+                                                                                                                                        <div class="btn-group dropleft">
+                                                                                                            <button type="button" class="btn alert-warning " data-toggle="dropdown" >
+                                                                                                                Dashboard
+                                                                                                            </button>
+                                                                                                            <div class="dropdown-menu px-2 alert-danger">
+                                                                                                                Lets goto charts and create tasks
+                                                                                                            </div>
                                                                                                         </div>
-                                                                                                    </div>
-                                                                                                                            </tr>`
+                                                                                                                                </tr>`
                         );
                         //For first time if there is no project in the table (Hide the sec of No Project is created)
                         $('#noProject').hide();
@@ -231,7 +231,7 @@
                     $('#MainView').hide();
                     $('#Board').prepend(response);
                     $('#invo-btns').append(`<a href="/Invoice/Index_Income/${id}" class="btn btn-outline-primary">Income</a>
-                                                <a href="/Invoice/Index_Expense/${id}" class="btn btn-outline-info">Outcome</a>`)
+                                                    <a href="/Invoice/Index_Expense/${id}" class="btn btn-outline-info">Outcome</a>`)
                     LoadData();
 
                     //$('#Board').show();
@@ -274,7 +274,7 @@
 
 
 
-            google.charts.load("current", { packages: ['corechart','line'] });
+            google.charts.load("current", { packages: ['corechart', 'line'] });
             google.charts.setOnLoadCallback(drawChart);
             google.charts.setOnLoadCallback(drawChart2);
             google.charts.setOnLoadCallback(drawChart3);
@@ -393,3 +393,18 @@
 }
 
 
+@section Style{
+    <style>
+        body {
+            background-color: #e6f5ea;
+        }
+
+        .slice {
+            border: 1px solid white;
+            border-radius: 10px;
+            padding: 10px;
+            background: white;
+            margin: 10px 0 0px 0;
+        }
+    </style>
+}
