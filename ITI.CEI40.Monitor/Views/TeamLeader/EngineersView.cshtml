@@ -20,7 +20,7 @@
                 <tbody>
                     @for (int i = 0; i < Model.Count(); i++)
                     {
-                        if (Model[i].Id != Model.FirstOrDefault().Team.FK_TeamLeaderId)
+                        if (Model[i].Id != Model.FirstOrDefault().Team.FK_TeamLeaderId && Model[i].Id != Model.FirstOrDefault().Team.Department.FK_ManagerID)
                         {
 
                         <tr id="@Model[i].Id" onclick='displaySubTasks("@Model[i].Id")'>

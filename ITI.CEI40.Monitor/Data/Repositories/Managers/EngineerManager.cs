@@ -26,7 +26,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         public IEnumerable<ApplicationUser> GetEngineersInsideTeam(int teamId)
         {
-            return set.Where(e => e.FK_TeamID == teamId).Include(e=>e.Team).ToList();
+            return set.Where(e => e.FK_TeamID == teamId).Include(e=>e.Team).ThenInclude(e=>e.Department).ToList();
         }
 
         public IEnumerable<ApplicationUser> GetEngineersWithSubtasks(int teamId)

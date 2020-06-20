@@ -50,6 +50,9 @@
                     <li class="nav-item">
                         <a class="nav-link px-3 py-0  " asp-controller="DepManager" asp-action="teamsview"><i class="fas fa-users"></i> Teams</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 py-0  " asp-controller="DepManager" asp-action="ArchivedTasks"><i class="fas fa-archive"></i> Archive</a>
+                    </li>
                 }
 
                 @if (User.IsInRole(Roles.TeamLeader.ToString()))

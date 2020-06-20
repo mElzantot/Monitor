@@ -124,9 +124,10 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [HttpGet]
-        public IActionResult ArchivedTasks(int depid)
+        public IActionResult ArchivedTasks()
         {
-            var tasks = unitOfWork.Tasks.Archive(depid).ToList();
+            int DepId = unitOfWork.Departments.GetDepartmentWithManagerID(userManager.GetUserId(HttpContext.User)).Id;
+            var tasks = unitOfWork.Tasks.Archive(DepId).ToList();
             return View(tasks);
         }
 

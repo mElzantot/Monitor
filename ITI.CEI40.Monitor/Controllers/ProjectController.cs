@@ -30,11 +30,20 @@ namespace ITI.CEI40.Monitor.Controllers
 
         public IActionResult Index()
         {
+            //string ManagerId = userManager.GetUserId(HttpContext.User);
 
             ProjectViewModel projectView = new ProjectViewModel
             {
                 Projects = unitofwork.Projects.GetRunningProjects(userManager.GetUserId(HttpContext.User)),
+                
             };
+
+            //foreach (var item in projectView.Projects)
+            //{
+            //    item.FK_Manager = ManagerId;
+            //}
+            
+
 
             return View("_CreateProject", projectView);
         }
