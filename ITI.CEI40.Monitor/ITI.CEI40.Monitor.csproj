@@ -44,6 +44,8 @@
     <Compile Remove="Migrations\20200618195504_RolesUpdate.Designer.cs" />
     <Compile Remove="Migrations\20200620043726_displayTeam.cs" />
     <Compile Remove="Migrations\20200620043726_displayTeam.Designer.cs" />
+    <Compile Remove="Migrations\20200620055838_BefreEngMohey2.cs" />
+    <Compile Remove="Migrations\20200620055838_BefreEngMohey2.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>

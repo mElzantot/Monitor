@@ -29,8 +29,8 @@
         }
     }
 
-
     <br />
+
 
     <div class="d-flex">
         <div class="dropdown">
@@ -75,18 +75,25 @@
 
 
 
-    <div class="d-flex mb-4">
-        @* Bar Chart *@
-        <div class="w-50" style="border :.5px solid  rgb(219, 219, 219);" id="columnchart_values"></div>
+    <div class="py-2 row" style="display:flex; justify-content:space-between">
 
-        @* Donut Chart *@
-        <div class="w-50" id="donutchart" style="border :.5px solid  rgb(219, 219, 219); height:300px"></div>
+        <div class="slice" style="width:60%">
+            @* Bar Chart *@
+            <div style="height:400px" id="columnchart_values"></div>
+        </div>
+        <div class="slice" style="width:39%">
+            @* Donut Chart *@
+            <div id="donutchart" style=" height:400px"></div>
+        </div>
+
     </div>
 
 
-    <div class="d-flex">
+
+
+    <div class="d-flex row">
         @*Tasks Status*@
-        <div class="justify-content-center py-4 pl-3" style="border :.5px solid  rgb(219, 219, 219); width:20%">
+        <div class="justify-content-center slice py-4 pl-4" style=" width:19%">
             <table style=" border-collapse: separate; border-spacing: 5px 10px;">
                 <tbod>
                     <tr onmouseover="Show('active')" onmouseout="Hide('active')">
@@ -111,7 +118,6 @@
                     </tr>
                     <tr>
                         <td id="invo-btns">
-                            
                         </td>
                     </tr>
                 </tbod>
@@ -237,9 +243,10 @@
         </div>
 
         @* Cost Chart *@
-        <div style="border :.5px solid  rgb(219, 219, 219); width:80%">
+        <div  class="slice" style="width:80.5%;margin-left:5px">
             <div id="chart_div" style="padding-left:30px; padding-top:30px;"></div>
         </div>
+
     </div>
 
 </div>
@@ -247,3 +254,5 @@
 <script>
     var modelInvoices = @Html.Raw(Json.Serialize(Model.TotalInvoices));
 </script>
+
+

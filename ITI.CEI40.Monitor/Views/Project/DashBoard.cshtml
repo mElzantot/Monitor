@@ -1,0 +1,388 @@
+﻿@model DashboardViewModel
+
+@{
+    ViewData["Title"] = "DashBoard";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+
+
+
+@for (int i = 0; i < Model.Tasks.Count; i++)
+{
+    <input class="staskname" id="n-@i" value="@Model.Tasks[i].Name" hidden="hidden" />
+    <input class="staskprog" id="p-@i" value="@Model.Tasks[i].Progress" hidden="hidden" />
+    <input class="staskdur" id="d-@i" value="@(Model.Tasks[i].ActualDuratoin)" hidden="hidden" />
+}
+
+@foreach (var item in Model.TotalInvoices)
+{
+    <input class="i-months" hidden value="@item.Month" />
+    <input class="i-sales" hidden value="@item.Sales" />
+    <input class="i-expenses" hidden value="@item.Expenses" />
+}
+
+
+
+<div>
+    <div style="height:70px">
+
+    </div>
+    <div class="row " style="border: 2px solid rgb(219, 219, 219) ; border-radius: 8px;">
+        <div class="col-3  innerleft pt-4" style="border-right:2px solid rgb(219, 219, 219);">
+            <table class="table table-hover text-center" id="teamTable">
+
+                <tbody>
+                    @for (int i = 0; i < Model.Tasks.Count(); i++)
+                    {
+                        <tr id="@Model.Tasks[i]" onclick='displayTaskDetails("@Model.Tasks[i].Id")'>
+                            <td>@Model.Tasks[i].Name</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="col-9 innerright ">
+            <div style=" padding: 15px; border-radius: 8px;">
+                <div class="row" style="margin:auto;" id="tasks">
+                    <h4 id="alertdiv" class="text-muted text-center mt-5" style="margin:auto;">Select Task to Show Data</h4>
+                    <div id="tableBody" class="table table-hover align-middle">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="py-2 row" style="display:flex; justify-content:space-between">
+
+    <div class="slice" style="width:60%">
+        @* Bar Chart *@
+        <div style="border :.5px solid  rgb(219, 219, 219);height:400px" id="columnchart_values"></div>
+    </div>
+    <div class="slice" style="width:39%">
+        @* Donut Chart *@
+        <div id="donutchart" style="border :.5px solid  rgb(219, 219, 219); height:400px"></div>
+    </div>
+
+</div>
+
+
+
+@* Cost Chart *@
+<div class="row" style="border :.5px solid  rgb(219, 219, 219); ">
+    <div id="chart_div" style="padding-left:30px; padding-top:30px;height:400px"></div>
+</div>
+
+
+
+
+
+
+<!-- File Modal -->
+<div class="modal fade" id="FileModal" tabindex="-1" role="dialog" aria-labelledby="FileModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="FileModalLabel">Files</h5>
+            </div>
+            <form id="fileForm" enctype="multipart/form-data" method="post">
+                <div class="modal-body">
+                    <label>Upload File</label>
+                    <div class="custom-file">
+                        <input name="file" class="form-control custom-file-input" type="file" />
+                        <label class="custom-file-label">Choose File...</label>
+                    </div>
+                    <input id="task_Id" name="taskId" value="" hidden />
+                </div>
+                <div class="modal-footer">
+                    <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
+                    <button onclick="shakerFun()" type="button" class="btn btn-primary">Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+@section Scripts{
+    <script>
+    var modelInvoices = @Html.Raw(Json.Serialize(Model.TotalInvoices));
+
+
+    //-----------Dash-------------//
+    function Dashboard(id) {
+        $.ajax({
+            type: "GET",
+            url: `/Project/DashBoard`,
+            data: { projId: id },
+            success: function (response) {
+                $('#MainView').hide();
+                $('#Board').prepend(response);
+                $('#invo-btns').append(`<a href="/Invoice/Index_Income/${id}" class="btn btn-outline-primary">Income</a>
+                                                <a href="/Invoice/Index_Expense/${id}" class="btn btn-outline-info">Outcome</a>`)
+                LoadData();
+
+                //$('#Board').show();
+            },
+            error: function (x, y, err) {
+                console.log(arguments)
+            }
+        })
+    }
+
+    ////
+    function LoadData() {
+        var ns = [];
+        var ps = [];
+        var dur = [];
+        var names = $('.staskname')
+        var progress = $('.staskprog')
+        var durations = $('.staskdur')
+        for (var i = 0; i < names.length; i++) {
+            //console.log(names[i].defaultValue)
+            ns.push(names[i].defaultValue)
+        }
+        for (var i = 0; i < progress.length; i++) {
+            //console.log(progress[i].defaultValue)
+            ps.push(progress[i].defaultValue)
+        }
+        for (var i = 0; i < durations.length; i++) {
+            //console.log(progress[i].defaultValue)
+            dur.push(durations[i].defaultValue)
+        }
+        console.log(ns);
+        console.log(ps);
+        console.log(dur);
+
+
+
+        google.charts.load("current", { packages: ['corechart', 'line'] });
+        google.charts.setOnLoadCallback(drawChart);
+        google.charts.setOnLoadCallback(drawChart2);
+        google.charts.setOnLoadCallback(drawChart3);
+
+
+        function drawChart() {
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Name');
+            data.addColumn('number', 'Progress');
+            data.addColumn({ role: "style" });
+            data.addRows([
+                [`${ns[0]}`, parseInt(ps[0]), "#4da76b"],
+            ]);
+
+            for (let j = 1; j < ns.length; j++) {
+                data.addRows([
+                    [`${ns[j]}`, parseInt(ps[j]), "#4da76b"],
+                ]);
+            }
+
+            var options = {
+                title: "Tasks Progress",
+                hAxis: { textStyle: { bold: true } },
+                vAxis: { minValue: 0, maxValue: 100 },
+                animation: {
+                    startup: true,
+                    duration: 2500,
+                    easing: 'in',
+                },
+                bar: { groupWidth: "70%" },
+                legend: { position: "none" },
+            };
+            var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
+            chart.draw(data, options);
+        }
+
+        function drawChart2() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Name');
+            data.addColumn('number', 'Time Spent');
+
+            data.addRows([
+                [`${ns[0]}`, parseInt(dur[0])],
+            ]);
+
+            for (let j = 1; j < ns.length; j++) {
+                data.addRows([
+                    [`${ns[j]}`, parseInt(dur[j])],
+                ]);
+            }
+
+            var options = {
+                title: 'Tasks Actual Durations',
+                pieHole: 0.4,
+                //chartArea: { left: 20, top: 0, width: '50%', height: '75%' }
+                chartArea: { left: 150, height: '80%' }
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
+            chart.draw(data, options);
+        }
+
+
+        //modelInvoices
+        function drawChart3() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Month');
+            data.addColumn('number', 'Sales');
+            data.addColumn('number', 'Expenses');
+            data.addColumn('number', 'Net');
+            // initial value
+            var month = modelInvoices[0].month;
+            var sales = modelInvoices[0].sales;
+            var expenses = modelInvoices[0].expenses;
+            var net = expenses - sales;
+            data.addRows([[`${month}`, sales, expenses, net]]);
+            // add the invices data
+            for (var i = 1; i < modelInvoices.length; i++) {
+                sales += modelInvoices[i].sales;
+                expenses = modelInvoices[i].expenses;
+                net = expenses - sales;
+                data.addRows([[`${modelInvoices[i].month}`, sales, expenses, net]]);
+            }
+
+
+            var options = {
+                chart: {
+                    title: 'Project Financial Status',
+                    subtitle: 'in thousand of poundds (LE)'
+                },
+                hAxis: { title: 'Months', titleTextStyle: { color: 'green' } },
+                vAxis: { title: 'Money' },
+                legend: { position: 'bottom' },
+                colors: ['#a52714', '#097138', '#003366'],
+                width: 800,
+                height: 300
+            };
+
+            //var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+            var chart = new google.charts.Line(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+    }
+
+
+
+
+    </script>
+
+
+    @* Shaker _ Scripts *@
+    <script>
+        function displayTaskDetails(id) {
+            $.ajax({
+                url: "/Task/GetTask?taskid=" + id,
+                type: "Get",
+                //data: { engId: `${id}` },
+                success: function (result) {
+                    if (result) {
+                        $('#alertdiv').hide();
+                        $('#tableBody').empty();
+                        $('#tableBody').append(result);
+                    }
+                },
+                error: function (x, y, err) {
+                    console.log(err);
+                }
+            })
+        }
+  
+
+        //-----------Add Description
+        function updateDesc(taskId) {
+            $.ajax({
+                url: "/Task/AddTaskDesc",
+                type: "Post",
+                data: { taskId: taskId, taskDesc: $("#taskDesc").val() },
+                success: function (result) {
+                    $('#tableBody').empty();
+                    $('#tableBody').append(result);
+                },
+                error: function (x, y, err) {
+                    console.log(err);
+                }
+            })
+        }
+
+
+
+        //----------Add File----------//
+
+        function AddFile(taskId) {
+            isHighLevel = true;
+            console.log($("#toggleBtn").val());
+            console.log(isHighLevel);
+            if ($("#toggleBtn").val() == "Med")
+                isHighLevel = false
+            $('#task_Id').attr("value", taskId);
+            $('#isHighLevelBool').attr("value", isHighLevel);
+            $('#FileModal').modal('show');
+            console.log(isHighLevel);
+        }
+
+        $('input[type="file"]').change(function (e) {
+            fileName = e.target.files[0].name;
+            $(".custom-file-label").html(fileName);
+        });
+
+        function shakerFun() {
+            let form = $('#fileForm')[0];
+            let data = new FormData(form);
+            if (fileName) {
+                $.ajax({
+                    type: 'post',
+                    url: `/comment/AddFileForTask?isHighLevel=` + `${isHighLevel}`,
+                    processData: false,  // Important!
+                    contentType: false,
+                    cache: false,
+                    data: data,
+                    success: function (response) {
+                        $("#FileModal").modal('hide');
+                        console.log(response.msg);
+                    }
+                })
+            }
+        }
+
+
+
+        //----------Add Comment-----------//
+
+        function AddComment(taskId) {
+            let comment = $('#commentArea').val();
+            let isHighLevel = true;
+            if ($("#toggleBtn").val() == "Med")
+                isHighLevel = false
+            if (comment) {
+                $.ajax({
+                    type: "Post",
+                    url: `/Comment/AddCommentForTask/`,
+                    data: {
+                        comment: comment,
+                        taskId: taskId,
+                        isHighLevel: isHighLevel
+                    },
+                    success: function (res) {
+                        console.log(res);
+                    },
+                    error: function (x, y, err) {
+                        console.log(err);
+                    }
+                })
+            }
+        }
+
+    </script>
+}
