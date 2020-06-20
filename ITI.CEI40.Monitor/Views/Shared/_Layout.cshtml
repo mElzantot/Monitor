@@ -22,7 +22,7 @@
     @* Font-awesome *@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.standalone.min.css" />
-    <link rel="stylesheet" href="~/css/style.css"  />
+    <link rel="stylesheet" href="~/css/style.css" />
 
 
     <style>
@@ -44,11 +44,22 @@
     </header>
     <div class="container">
         <partial name="_CookieConsentPartial" />
-        <main role="main" style="margin-top :70px;" >
-            <div id="main">
-                @RenderBody()
+        <main role="main" style="margin-top :70px;">
+            <div id="main" style="position:relative">
+                <div class="toast" role="alert" aria-live="assertive" aria-atomic="true" id="MsgButton" style="position:absolute;top:10px;right:10px;">
+                    <div class="toast-header">
+                        @*<img src="..." class="rounded mr-2" alt="...">*@
+                        <strong class="mr-auto">MSG</strong>
+                        <button type="button" class="ml-2 mb-1 close" data-dismiss="toast" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="toast-body">
+                        Hello, world! This is a toast message.
+                    </div>
+                </div>
             </div>
-
+            @RenderBody()
         </main>
     </div>
     <environment include="Development">
@@ -195,9 +206,13 @@
             $(".newnotification").each(function (i, ele) {
                 $(ele).removeClass("newnotification");
             });
-
-
         });
+
+
+        $(document).ready(function(){
+    $("#MsgButton").toast('show');
+});
+
 
     </script>
     @RenderSection("Scripts", required: false)

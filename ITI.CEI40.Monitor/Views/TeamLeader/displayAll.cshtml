@@ -1,28 +1,104 @@
-﻿@model List<ApplicationUser>
+﻿@model ResourceChartVM
 
 @{
     ViewData["Title"] = "Resources Timeline";
 }
 
-<h1>Resources Timeline</h1>
 
 
-@if (Model != null)
+@if (Model.Employees != null)
 {
-
-    <div id="timeline" style="height:100%"></div>
+    <div style="padding:10px;border: 0px solid white; border-radius: 8px; background:white;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" class="my-5">
+        <h5><strong>Resouces Utilization Chart</strong></h5>
+        <hr />
+        <div id="timeline">
+        </div>
+    </div>
 }
 else
 {
     <h2 class="alert alert-info"> There is no Employees here </h2>
 }
+<div style="padding:10px;border: 0px solid white; border-radius: 8px; background:white;
+box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" class="mb-5">
+    <h4>Smart Helper</h4>
+    <hr />
+    <div class="row" style="padding:3rem">
+        <div class="col-5 " style="padding:10px;border: 0px solid white; border-radius: 8px; background:white;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+            <h6><strong> Get Approximate Duration</strong></h6>
+            <br />
+            <div style="display:flex;" class="my-2">
+                <label asp-for="EmployeeID" style="display:inline;width:12rem"></label>
+                <select style="display:inline" class="form-control form-control-sm" id="durationEmp" asp-for="EmployeeID"
+                        asp-items="new SelectList(Model.Employees,nameof(ApplicationUser.Id),nameof(ApplicationUser.UserName))">
+                    <option value="0">Select Employee</option>
+                </select>
+            </div>
+            <div style="display:flex" class="my-2">
+                <label asp-for="Complexity" style="width:12rem"></label>
+                <input id="CompForDuration" type="number" class="form-control form-control-sm" c />
+            </div>
+            <div style="display:flex" class="my-2">
+                <label asp-for="Quality" style="width:12rem"></label>
+                <input id="QualForDuration" type="number" class="form-control form-control-sm" c />
+            </div>
+            <button class="btn btn-sm btn-success" onclick="GetApproximateDuration()">Click Here</button>
+            <hr />
+            <h5><strong>Result</strong></h5>
+            <div style="display:flex" class="my-2">
+                <label style="width:20rem">Approximate Duration (Hrs)</label>
+                <input disabled value="" id="approxDuration" />
+            </div>
+            @*<div style="display:flex" class="my-2">
+                    <label style="width:20rem">Result accuracy </label>
+                    <input disabled value="" id="ResultDuration" />
+                </div>*@
+        </div>
+        <div class="col-2"></div>
+        <div class="col-5 " style="padding:10px;border: 0px solid white; border-radius: 8px; background:white;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+            <h6><strong> Get Approximate Quality</strong></h6>
+            <br />
+            <div style="display:flex;" class="my-2">
+                <label asp-for="EmployeeID" style="display:inline;width:12rem"></label>
+                <select style="display:inline" class="form-control form-control-sm" id="QualityEmp" asp-for="EmployeeID"
+                        asp-items="new SelectList(Model.Employees,nameof(ApplicationUser.Id),nameof(ApplicationUser.UserName))">
+                    <option value="0">Select Employee</option>
+                </select>
+            </div>
+            <div style="display:flex" class="my-2">
+                <label asp-for="Complexity" style="width:12rem"></label>
+                <input id="CompForQualit" type="number" class="form-control form-control-sm" c />
+            </div>
+            <div style="display:flex" class="my-2">
+                <label asp-for="Duration" style="width:12rem"></label>
+                <input id="DurationForQual" type="number" class="form-control form-control-sm" c />
+            </div>
+            <button class="btn btn-sm btn-success" onclick="GetApproximateQuality()">Click Here</button>
+            <hr />
+            <h5><strong>Result</strong></h5>
+            <div style="display:flex" class="my-2">
+                <label style="width:20rem">Approximate Quality (%)</label>
+                <input disabled value="" id="approxQuality" />
+            </div>
+            @*<div style="display:flex" class="my-2">
+                    <label style="width:20rem">Result accuracy </label>
+                    <input disabled value="" id="ResultQuality" />
+                </div>*@
+        </div>
+
+
+    </div>
+</div>
 
 
 
-
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<script type="text/javascript">
-    var model = @Html.Raw(Json.Serialize(Model));
+@section scripts{
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+    var model = @Html.Raw(Json.Serialize(Model.Employees));
     console.log(model);
 
     function parseDate(s) {
@@ -58,11 +134,85 @@ else
         });
 
          var options = {
-              colors: ['#cbb69d', '#603913', '#c69c6e'],
-              timeline: { rowLabelStyle: {fontName: 'Helvetica', fontSize: 24, color: '#603913' },
-                             barLabelStyle: { fontName: 'Garamond', fontSize: 14 } }
+              //colors: ['#cbb69d', '#603913', '#c69c6e'],
+             timeline: {
+                 rowLabelStyle: { fontName: 'Garamond', fontSize: 20, singleColor: '#8d8' },
+                 barLabelStyle: { fontName: 'Garamond', fontSize: 12 }
+             },
+             height: 500,
+             //width : 100%,
+             forceIFrame : false,
+            backgroundColor: '#ffffff'
+
          };
         chart.draw(dataTable, options);
     }
 
-</script>
+    </script>
+    <script>
+
+        //----------Approximate Duration
+
+        function GetApproximateDuration() {
+            let engId = $("#durationEmp").val();
+            let comp = $("#CompForDuration").val();
+            let Qual = $("#QualForDuration").val();
+
+            if (engId && comp && Qual) {
+                $.ajax({
+                    url: "/TeamLeader/GetApproximateDuration",
+                    type: "Get",
+                    data: {
+                        engineerId: engId,
+                        complexity: comp,
+                        Quality: Qual
+                    },
+                    success: function (res) {
+                        console.log("Hrllo")
+                        console.log(res.duration);
+                        $("approxDuration").attr("value",`${res.duration}`);
+                    }
+                });
+            }
+        }
+
+
+        //----------Approximate Quality
+
+        function GetApproximateQuality() {
+            let engId = $("#QualityEmp").val();
+            let comp = $("#CompForQualit").val();
+            let Dura = $("#DurationForQual").val();
+
+            if (engId && comp && Dura) {
+                $.ajax({
+                    url: "/TeamLeader/GetApproximateQuaity",
+                    type: "Get",
+                    data: {
+                        engineerId: engId,
+                        complexity: comp,
+                        Duration: Dura
+                    },
+                    success: function (res, status) {
+                        console.log("Hrllo")
+                        if (status == "success") {
+                            console.log(res);
+                            $("approxQuality").text(`${res.quality}`);
+                        }
+                    }
+                });
+            }
+        }
+
+
+
+    </script>
+}
+
+@*@section Style{
+        <style>
+            body {
+                background-color: #eef5f0;
+            }
+        </style>
+    }*@

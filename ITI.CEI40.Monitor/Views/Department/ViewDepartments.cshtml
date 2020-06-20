@@ -294,7 +294,8 @@
                         if (result && status == "success") {
                             console.log(result);
                             $("#managers").val("");
-                            $(`#${result.deptId} .ManagerName`).html(`${result.managerName}`);
+                            let test = $(`#${result.deptId} .ManagerName`).html(`${result.managerName}`);
+                            console.log(test);
                             $('#AssignManagerModal').modal('hide');
                             setTimeout(function () { alert("Updated Successfully") }, 500);
                         }

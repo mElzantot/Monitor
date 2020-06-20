@@ -53,7 +53,7 @@
                 </div>
                 <div class="modal-footer">
                     <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
-                    <button onclick="shakerFun()" type="button" class="btn btn-primary">Upload</button>
+                    <button onclick="uploadFile()" type="button" class="btn btn-primary">Upload</button>
                 </div>
             </form>
         </div>
@@ -185,7 +185,7 @@
             $(".custom-file-label").html(fileName);
         });
 
-        function shakerFun() {
+        function uploadFile() {
             let form = $('#fileForm')[0];
             let data = new FormData(form);
             if (fileName) {
@@ -223,6 +223,7 @@
                         isHighLevel: isHighLevel
                     },
                     success: function (res) {
+                        $('#commentArea').val("");
                         console.log(res);
                     },
                     error: function (x, y, err) {

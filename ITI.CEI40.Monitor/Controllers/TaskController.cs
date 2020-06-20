@@ -40,6 +40,8 @@ namespace ITI.CEI40.Monitor.Controllers
             Activity task = unitOfWork.Tasks.GetById(id);
             task.Status = (Status)status;
             unitOfWork.Tasks.Edit(task);
+
+
         }
 
         [HttpGet]

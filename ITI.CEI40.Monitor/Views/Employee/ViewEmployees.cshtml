@@ -3,7 +3,7 @@
     ViewData["Title"] = "View Employees";
 }
 
-<h1>View Employees</h1>
+@*<h4 class="btn btn-success">View Employees</h4>*@
 <br />
 <!-- Button trigger modal -->
 <button type="button" class="btn btn-info btn-sm mb-3" data-toggle="modal" data-target="#addEmployeeModal">
@@ -17,7 +17,6 @@
                 <th scope="col">E-Mail</th>
                 <th scope="col">Salary </th>
                 <th scope="col">Evaluation</th>
-                <th scope="col">Joined Date</th>
                 <th scope="col"></th>
             </tr>
         </thead>
@@ -30,7 +29,6 @@
                     <td class="email">@Model.Employees[i].Email</td>
                     <td class="salary">@(Model.Employees[i].SalaryRate * 30 * 8)</td>
                     <td>@Model.Employees[i].TotalEvaluation</td>
-                    <td></td>
                     <td>
                         <div class="btn-group" role="group" aria-label="Basic example">
                             <button type="button" class="btn btn-info btn-sm" onclick='UpdateEmpRoles("@Model.Employees[i].Id")'>Roles</button>

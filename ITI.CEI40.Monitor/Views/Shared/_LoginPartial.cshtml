@@ -2,53 +2,45 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
-    <a class="navbar-brand" asp-action="Index" asp-controller="Home"><img src="~/img/Monitor.PNG" alt="Monitor" width="150" height="35" /></a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top" style="height:4rem;max-height:4rem;">
+    <a class="navbar-brand"><img src="~/img/Monitor.PNG" alt="Monitor" width="150" height="35" /></a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto ">
             @if (SignInManager.IsSignedIn(User))
             {
-                <li class="nav-item">
-                    <a class="nav-link px-3 py-0 " asp-area="" asp-controller="Home" asp-action="Index"><i id="i" class="fas fa-home"></i> Home</a>
-                </li>
-
-
                 @if (User.IsInRole(Roles.Admin.ToString()))
                 {
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-0  " asp-controller="Department" asp-action="ViewDepartments"><i id="i" class="fas fa-chart-area"></i> Organization</a>
+                        <a class="nav-link px-3 py-1  " asp-controller="Department" asp-action="ViewDepartments"><i class="fas fa-sitemap"></i> Organization |</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-0  " asp-controller="Employee" asp-action="ViewEmployees"><i id="i" class="fas fa-chart-area"></i> Employees |</a>
+                        <a class="nav-link px-3 py-1  " asp-controller="Employee" asp-action="ViewEmployees"><i class="fas fa-users"></i> Employees |</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 py-1  " asp-controller="Holiday" asp-action="Index"><i id="i" class="fas fa-chart-area"></i> Holidays |</a>
                     </li>
                 }
-
                 @if (User.IsInRole(Roles.ProjectManager.ToString()))
                 {
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-0  " asp-controller="Project" asp-action="Index"><i class="fas fa-tasks"></i> Projects</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link px-3 py-0  " asp-controller="Project" asp-action="CompletedProjects"><i class="fas fa-tasks"></i> Archive</a>
+                        <a class="nav-link px-3 py-1  " asp-controller="Project" asp-action="Index"><i class="fas fa-tasks"></i> Projects |</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-3  " asp-controller="Project" asp-action="Archive"><i class="fas fa-archive"></i> Archive</a>
+                        <a class="nav-link px-3 py-1  " asp-controller="Project" asp-action="Archive"><i class="fas fa-archive"></i> Archive |</a>
                     </li>
-
                 }
 
                 @if (User.IsInRole(Roles.DepartmentManager.ToString()))
                 {
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-0 " asp-controller="DepManager" asp-action="assigntasks"><i id="i" class="fas fa-tasks"></i> Tasks</a>
+                        <a class="nav-link px-3 py-1 " asp-controller="DepManager" asp-action="assigntasks"><i id="i" class="fas fa-tasks"></i> Tasks |</a>
                     </li>
-
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-0  " asp-controller="DepManager" asp-action="teamsview"><i class="fas fa-users"></i> Teams</a>
+                        <a class="nav-link px-3 py-1  " asp-controller="DepManager" asp-action="teamsview"><i class="fas fa-users"></i> Teams |</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link px-3 py-0  " asp-controller="DepManager" asp-action="ArchivedTasks"><i class="fas fa-archive"></i> Archive</a>
@@ -58,59 +50,62 @@
                 @if (User.IsInRole(Roles.TeamLeader.ToString()))
                 {
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-0" asp-controller="task" asp-action="ViewTasks"><i id="i" class="fas fa-tasks"></i> Tasks</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link px-3 py-0  " asp-controller="TeamLeader" asp-action="EngineersView"><i class="fas fa-users"></i> Team</a>
+                        <a class="nav-link px-3 py-1" asp-controller="task" asp-action="ViewTasks"><i id="i" class="fas fa-tasks"></i> Tasks |</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-3  " asp-controller="TeamLeader" asp-action="EngineersChart"><i class="fas fa-chart-area"></i>team charts</a>
+                        <a class="nav-link px-3 py-1  " asp-controller="TeamLeader" asp-action="EngineersView"><i class="fas fa-users"></i> Team |</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 py-1  " asp-controller="TeamLeader" asp-action="EngineersChart"><i class="fas fa-chart-area"></i> DashBoard |</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 py-1  " asp-controller="TeamLeader" asp-action="DisplayAll"><i class="fas fa-stream"></i> Resources |</a>
                     </li>
                 }
                 @if (User.IsInRole(Roles.Engineer.ToString()))
                 {
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-0  " asp-controller="SubTask" asp-action="Index"><i id="i" class="fas fa-id-badge"></i> Tasks</a>
+                        <a class="nav-link px-3 py-1  " asp-controller="SubTask" asp-action="Index"><i id="i" class="fas fa-id-badge"></i> Tasks |</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-0  " asp-controller="Employee" asp-action="EmployeeTimeSheet"><i class="fas fa-users"></i> TimeSheet</a>
+                        <a class="nav-link px-3 py-1  " asp-controller="Employee" asp-action="EmployeeTimeSheet"><i class="fas fa-user-clock"></i> TimeSheet |</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-0 " asp-controller="TeamLeader" asp-action="EngineerChart"><i class="fas fa-chart-area"></i> DashBoard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link px-3 py-3 " asp-controller="TeamLeader" asp-action="ArchivedSubTasks"><i class="fas fa-archive"></i> Archive</a>
+                        <a class="nav-link px-3 py-1 " asp-controller="TeamLeader" asp-action="ArchivedSubTasks"><i class="fas fa-archive"></i> Archive |</a>
                     </li>
                 }
-
+                @if (User.IsInRole(Roles.Finance.ToString()))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link px-3 py-1  " asp-controller="Invoice" asp-action="ControlInvoice"><i class="fas fa-file-invoice-dollar"></i> Invoices |</a>
+                    </li>
+                }
+                <li class="nav-item notifications" style=" margin-top: 8px;margin-left: 3px;">
+                    <a href="#" class="">
+                        <i id="notify-icon" class="fa fa-bell" aria-hidden="true" style="font-size:20px;color:#4da76b"></i>
+                        <input value="0" style="position:relative; right:5px; top:-15px; color:#4da76b; border:none; background-color:inherit;
+                                        font:bold; font-size:medium; width:15px" disabled id="notify-count" />
+                    </a>
+                </li>
                 <li class="nav-item">
-                    <a class="nav-link px-3 py-0" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">@User.Identity.Name</a>
+                    <a class="nav-link px-3 py-1" href="/TeamLeader/EngineerChart" title="Manage"><strong>@User.Identity.Name</strong></a>
                 </li>
                 <li class="nav-item">
                     <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-                        <button type="submit" class="nav-link px-3 py-0"><i class="fas fa-door-open"></i></button>
+                        <button type="submit" style="border:none" class="btn btn-sm nav-link px-3 py-1"><i class="fas fa-sign-out-alt"></i></button>
                     </form>
-                </li>
-                <li class="nav-item notifications" style=" margin-top: 13px;margin-left: 3px;">
-                    <a href="#" class="">
-                        <i id="notify-icon" class="fa fa-bell fa-2x" aria-hidden="true" style="color:#4da76b"></i>
-                        <input value="0" style="position:relative; right:5px; top:-15px; color:#4da76b; border:none; background-color:inherit; font:bold; font-size:medium; width:15px" disabled id="notify-count" />
-                    </a>
                 </li>
             }
             else
             {
                 <li class="nav-item">
-                    <a class="nav-link px-3 py-0 " asp-area="Identity" asp-page="/Account/Login">Login</a>
+                    <a class="nav-link px-3 py-1 " asp-area="Identity" asp-page="/Account/Login"><i class="fas fa-sign-in-alt"></i> Login</a>
                 </li>
             }
-            <li class="nav-item">
-                <a class="nav-link px-3 py-0  " asp-controller="Department" asp-action="ViewDepartments"><i id="i" class="fas fa-chart-area"></i> Organization |</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link px-3 py-0  " asp-controller="Employee" asp-action="ViewEmployees"><i id="i" class="fas fa-chart-area"></i> Employees |</a>
-            </li>
+            @*<li class="nav-item">
+                <a class="nav-link px-3 py-1  " asp-controller="Employee" asp-action="ViewEmployees"><i class="fas fa-users"></i> Employees |</a>
+            </li>*@
+
         </ul>
     </div>
 </nav>

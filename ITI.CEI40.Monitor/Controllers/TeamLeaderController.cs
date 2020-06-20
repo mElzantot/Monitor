@@ -4,23 +4,27 @@ using System.Linq;
 using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
+using ITI.CEI40.Monitor.Hubs;
 using ITI.CEI40.Monitor.Models;
 using ITI.CEI40.Monitor.Models.View_Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ITI.CEI40.Monitor.Controllers
 {
     public class TeamLeaderController : Controller
     {
-        private readonly IUnitOfWork unitofwork;
+        private readonly IUnitOfWork unitOfWork;
         private readonly UserManager<ApplicationUser> userManager;
+        private readonly IHubContext<NotificationsHub> hubContext;
 
-        public TeamLeaderController(IUnitOfWork unitofwork, UserManager<ApplicationUser> userManager)
+        public TeamLeaderController(IUnitOfWork unitofwork, UserManager<ApplicationUser> userManager, IHubContext<NotificationsHub> hubContext)
         {
-            this.unitofwork = unitofwork;
+            this.unitOfWork = unitofwork;
             this.userManager = userManager;
+            this.hubContext = hubContext;
         }
 
         public IActionResult Index()
@@ -31,8 +35,8 @@ namespace ITI.CEI40.Monitor.Controllers
         [Authorize(Roles = "TeamLeader")]
         public IActionResult EngineersView()
         {
-            int teamId = unitofwork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
-            var engieers = unitofwork.Engineers.GetEngineersInsideTeam(teamId);
+            int teamId = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
+            var engieers = unitOfWork.Engineers.GetEngineersInsideTeam(teamId);
             return View(engieers);
         }
 
@@ -40,19 +44,24 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpGet]
         public IActionResult displaySubTasks(string engId)
         {
-            List<SubTask> subtask = unitofwork.SubTasks.GetEngineerSubTasks(engId);
+            List<SubTask> subtask = unitOfWork.SubTasks.GetEngineerSubTasks(engId);
             return PartialView("_SubTaskPartialView", subtask);
         }
 
-
+        [Authorize(Roles = "TeamLeader")]
         //Omar 
         public void CancelSubTask(int id)
         {
-            var subtask = unitofwork.SubTasks.GetById(id);
+            var subtask = unitOfWork.SubTasks.GetById(id);
             subtask.Status = Status.Cancelled;
-            unitofwork.SubTasks.Edit(subtask);
+            unitOfWork.SubTasks.Edit(subtask);
+
+            // notification
+            string messege = $"Your Team Leader has cancelled *{subtask.Name}=* at *{DateTime.Now}=*";
+            SendNotification(messege, subtask.FK_EngineerID);
         }
 
+        [Authorize(Roles = "TeamLeader")]
         //Omar 
         [HttpPost]
         public void SubmitSubTask(SubTask subTask)
@@ -71,7 +80,7 @@ namespace ITI.CEI40.Monitor.Controllers
         public IActionResult ArchivedSubTasks()
         {
             string engId = userManager.GetUserId(HttpContext.User);
-            var subtasks = unitofwork.SubTasks.Archive(engId).ToList();
+            var subtasks = unitOfWork.SubTasks.Archive(engId).ToList();
             return View("ArchivedSubTasks", subtasks);
         }
 
@@ -79,9 +88,9 @@ namespace ITI.CEI40.Monitor.Controllers
         [Authorize(Roles = "Engineer")]
         public IActionResult EngineerChart()
         {
-            
+
             string engId = userManager.GetUserId(HttpContext.User);
-            List<SubTask> subtasks = unitofwork.SubTasks.GetEngineerComletedSubTasks(engId);
+            List<SubTask> subtasks = unitOfWork.SubTasks.GetEngineerComletedSubTasks(engId);
 
 
             List<string> months = new List<string>();
@@ -137,19 +146,17 @@ namespace ITI.CEI40.Monitor.Controllers
                 Complexity = complexity
             };
             return View("EngineerChart", engineerChrtView);
-            
-            
         }
 
 
         [Authorize(Roles = "TeamLeader")]
         public IActionResult EngineersChart()
         {
-            int teamId = unitofwork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
-            List<ApplicationUser> team = unitofwork.Engineers.GetEngineersInsideTeamWithSubTasks(teamId);
+            int teamId = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
+            List<ApplicationUser> team = unitOfWork.Engineers.GetEngineersInsideTeamWithSubTasks(teamId);
             List<string> Ids = new List<string>();
 
-            
+
             List<string> names = new List<string>();
             List<List<float>> avg = new List<List<float>>();
 
@@ -159,7 +166,7 @@ namespace ITI.CEI40.Monitor.Controllers
                 Ids.Add(item.Id);
                 if (item.SubTasks != null)
                 {
-                   avg.Add(EngineerPerformence(item.SubTasks.ToList()));
+                    avg.Add(EngineerPerformence(item.SubTasks.ToList()));
                 }
                 else
                 {
@@ -168,9 +175,9 @@ namespace ITI.CEI40.Monitor.Controllers
             }
             TeamChartViewModel teamChart = new TeamChartViewModel
             {
-                Names= names,
-                Values= avg,
-                EngIds=Ids
+                Names = names,
+                Values = avg,
+                EngIds = Ids
             };
             return View("TeamChart", teamChart);
         }
@@ -179,7 +186,7 @@ namespace ITI.CEI40.Monitor.Controllers
 
         private List<float> EngineerPerformence(List<SubTask> subTasks)
         {
-            List<float> result = new List<float>() { 0,0,0,0,0};
+            List<float> result = new List<float>() { 0, 0, 0, 0, 0 };
             foreach (var item in subTasks)
             {
                 result[0] += item.ActualDuration;
@@ -197,7 +204,7 @@ namespace ITI.CEI40.Monitor.Controllers
         public JsonResult TryJson()
         {
             string engId = userManager.GetUserId(HttpContext.User);
-            List<SubTask> subtasks = unitofwork.SubTasks.GetEngineerComletedSubTasks(engId);
+            List<SubTask> subtasks = unitOfWork.SubTasks.GetEngineerComletedSubTasks(engId);
 
             List<string> months = new List<string>();
             List<float> quality = new List<float>();
@@ -257,24 +264,85 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpGet]
         public IActionResult displayCancellesSubTasks(string engId)
         {
-            List<SubTask> subtasks = unitofwork.SubTasks.GetEngineerSubTasks(engId);
+            List<SubTask> subtasks = unitOfWork.SubTasks.GetEngineerSubTasks(engId);
 
             return PartialView(subtasks);
         }
 
         [HttpGet]
-        public IActionResult displayAll(int teamid)
+        public IActionResult displayAll()
         {
-            List<ApplicationUser> engieers = unitofwork.Engineers.GetEngineersWithSubtasks(teamid).ToList();
-            return View(engieers);
+            Team team = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User));
+            List<ApplicationUser> Engineers = unitOfWork.Engineers.GetEngineersWithSubtasks(team.Id).ToList();
+            ResourceChartVM resourceChartVM = new ResourceChartVM
+            {
+                Employees = Engineers,
+            };
+
+            return View(resourceChartVM);
         }
 
         [HttpGet]
         public IActionResult displayCharts(string engId)
         {
-            var subtask = unitofwork.SubTasks.GetSubTasksByEngineerId(engId).ToList();
+            var subtask = unitOfWork.SubTasks.GetSubTasksByEngineerId(engId).ToList();
             return PartialView("_ChartsPartialView", subtask);
         }
+
+        public void SendNotification(string messege, params string[] usersId)
+        {
+            Notification Notification = new Notification
+            {
+                messege = messege,
+                seen = false
+            };
+            Notification Savednotification = unitOfWork.Notification.Add(Notification);
+
+            for (int i = 0; i < usersId.Length; i++)
+            {
+                NotificationUsers notificationUsers = new NotificationUsers
+                {
+                    NotificationId = Savednotification.Id,
+                    userID = usersId[i]
+                };
+                unitOfWork.NotificationUsers.Add(notificationUsers);
+
+                //---------Send Notification to Employee
+                hubContext.Clients.User(usersId[i]).SendAsync("newNotification", messege);
+            }
+
+        }
+
+
+        public JsonResult GetApproximateDuration(string engineerId, int complexity, int Quality)
+        {
+            IEnumerable<SubTask> subTasks = unitOfWork.SubTasks.GetEngineerComletedSubTasks(engineerId);
+            SubTask newSubTask = new SubTask
+            {
+                Complexity = complexity,
+                Quality = Quality
+            };
+
+            PredictedDuration predictedDuration = MLClass.PredictDurationBasedonQualityandCompl(subTasks, newSubTask);
+            return Json(predictedDuration);
+        }
+
+
+        public JsonResult GetApproximateQuaity(string engineerId, int complexity, int Duration)
+        {
+            IEnumerable<SubTask> subTasks = unitOfWork.SubTasks.GetEngineerComletedSubTasks(engineerId);
+            SubTask newSubTask = new SubTask
+            {
+                Complexity = complexity,
+                ActualDuration= Duration
+            };
+
+            PredictedQuality predictedQuality = MLClass.PredictQualityBasedonDurationandCompl(subTasks, newSubTask);
+            return Json(predictedQuality);
+
+        }
+
+
 
     }
 }

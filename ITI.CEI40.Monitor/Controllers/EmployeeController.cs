@@ -222,6 +222,9 @@ namespace ITI.CEI40.Monitor.Controllers
                     Department dept = unitofwork.Departments.GetById(id);
                     dept.FK_ManagerID = EmpId;
                     unitofwork.Complete();
+                    // notifications
+                    string messege = $"Congartulations you have been assigned as a Department manager to *{dept.Name}=* Department at *{DateTime.Now}=*";
+                    SendNotification(messege, EmpId);
                     return Json(new { complete = true, DeptId = id, ManagerName = Employee.UserName });
                 }
                 else
@@ -229,6 +232,9 @@ namespace ITI.CEI40.Monitor.Controllers
                     Team team = unitofwork.Teams.GetById(id);
                     team.FK_TeamLeaderId = EmpId;
                     int NoOfRows = unitofwork.Complete();
+                    // notifications
+                    string messege = $"Congartulations you have been assigned as a Leader to *{team.Name}=* Team at *{DateTime.Now}=*";
+                    SendNotification(messege, EmpId);
                     return Json(new { complete = true, teamtId = id, ManagerName = Employee.UserName });
 
                 }
@@ -247,6 +253,30 @@ namespace ITI.CEI40.Monitor.Controllers
             return View(EmpSessions);
         }
 
+
+        public void SendNotification(string messege, params string[] usersId)
+        {
+            Notification Notification = new Notification
+            {
+                messege = messege,
+                seen = false
+            };
+            Notification Savednotification = unitofwork.Notification.Add(Notification);
+
+            for (int i = 0; i < usersId.Length; i++)
+            {
+                NotificationUsers notificationUsers = new NotificationUsers
+                {
+                    NotificationId = Savednotification.Id,
+                    userID = usersId[i]
+                };
+                unitofwork.NotificationUsers.Add(notificationUsers);
+
+                //---------Send Notification to Employee
+                hubContext.Clients.User(usersId[i]).SendAsync("newNotification", messege);
+            }
+
+        }
 
     }
 }

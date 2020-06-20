@@ -19,9 +19,9 @@ namespace ITI.CEI40.Monitor.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IHubContext<NotificationsHub> hubContext;
 
-        public DepManagerController(IUnitOfWork unitofwork , UserManager<ApplicationUser> userManager , IHubContext<NotificationsHub> hubContext)
+        public DepManagerController(IUnitOfWork unitOfWork , UserManager<ApplicationUser> userManager , IHubContext<NotificationsHub> hubContext)
         {
-            this.unitOfWork = unitofwork;
+            this.unitOfWork = unitOfWork;
             this.userManager = userManager;
             this.hubContext = hubContext;
         }
@@ -69,9 +69,8 @@ namespace ITI.CEI40.Monitor.Controllers
 
                 //--------Add Notification to DataBase
 
-                string messege = $" New Task " +
-                    $"{HttpContext.User.Identity.Name} -Department Manager- has assigned new task" +
-                    $" -{task.Name}- to your Team at {DateTime.Now}";
+                string messege = $"*{HttpContext.User.Identity.Name}=* -Department Manager- has assigned new task" +
+                    $" *{task.Name}=* to your Team at *{DateTime.Now}=*";
 
                 Notification Notification = new Notification
                 {
@@ -137,6 +136,8 @@ namespace ITI.CEI40.Monitor.Controllers
             var subtask = unitOfWork.SubTasks.GetSubTasksFromTask(taskId);
             return View("_DashBoardPartial", subtask);
         }
+
+
 
     }
 }
