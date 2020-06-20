@@ -272,10 +272,16 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [HttpGet]
-        public IActionResult displayAll(int teamid)
+        public IActionResult displayAll()
         {
-            List<ApplicationUser> engieers = unitOfWork.Engineers.GetEngineersWithSubtasks(teamid).ToList();
-            return View(engieers);
+            Team team = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User));
+            List<ApplicationUser> Engineers = unitOfWork.Engineers.GetEngineersWithSubtasks(team.Id).ToList();
+            ResourceChartVM resourceChartVM = new ResourceChartVM
+            {
+                Employees = Engineers,
+            };
+
+            return View(resourceChartVM);
         }
 
         [HttpGet]
@@ -306,6 +312,14 @@ namespace ITI.CEI40.Monitor.Controllers
                 //---------Send Notification to Employee
                 hubContext.Clients.User(usersId[i]).SendAsync("newNotification", messege);
             }
+
+        }
+
+
+        public PredictedDuration GetApproximateDuration(string engineerId, int complexity, int Quality)
+        {
+
+
 
         }
 
