@@ -60,6 +60,7 @@ namespace ITI.CEI40.Monitor.Controllers
             return View("ActivityLog", subTasks);
         }
 
+
         [HttpPost]
         public IActionResult AddFileForSubTask(FileViewModel addedFile)
         {
@@ -197,11 +198,6 @@ namespace ITI.CEI40.Monitor.Controllers
 
 
         }
-
-
-
-
-
 
     }
 }

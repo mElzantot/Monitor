@@ -12,10 +12,10 @@
 
             @if (Model != null && Model.Count() > 0)
             {
-                <div style="border: 2px solid white ; padding: 20px; border-radius: 8px; background:white">
+                <div style="padding:10px;border: 0px solid white; border-radius: 8px; background:white; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" >
                     <div class="table-responsive">
-                        <table class="table table-hover text-center" id="Tasktable" style="width:100%;">
-                            <thead class="tableh alert-primary">
+                        <table class="table table-hover text-center "id="Tasktable" >
+                            <thead class="thead-dark" >
                                 <tr>
                                     <th></th>
                                     <th>Name</th>
@@ -25,6 +25,7 @@
                                     <th>Progress</th>
                                 </tr>
                             </thead>
+
                             <tbody>
 
                                 @foreach (var item in Model)
@@ -81,9 +82,9 @@
                                         }
 
 
-                                        <td>
-                                            <div class="progress">
-                                                <div class="progress-bar" role="progressbar" style="width: @item.Progress%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@item.Progress%</div>
+                                        <td >
+                                            <div class="progress align-self-center" >
+                                                <div class="progress-bar " role="progressbar" style="width: @item.Progress%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@item.Progress%</div>
                                             </div>
                                         </td>
                                     </tr>
@@ -109,17 +110,17 @@
 
 
 @*<div id="dashboard">
-        <div class="py-2" style="display:flex; justify-content:space-between">
+    <div class="py-2" style="display:flex; justify-content:space-between">
 
-            <div class="slice" style="width:39%">
-                <div id="Complexity" style="height:400px;"></div>
-            </div>
-            <div class="slice" style="width:60%">
-                <div id="Time_Quality" style=" height:400px;"></div>
-            </div>
-
+        <div class="slice" style="width:39%">
+            <div id="Complexity" style="height:400px;"></div>
         </div>
-    </div>*@
+        <div class="slice" style="width:60%">
+            <div id="Time_Quality" style=" height:400px;"></div>
+        </div>
+
+    </div>
+</div>*@
 
 
 
@@ -188,9 +189,6 @@
     <script>
 
         let rowId;
-        var startDate;
-        var endDate;
-
 
         function SelectRow(id) {
             rowId = id;
@@ -200,13 +198,9 @@
                 data: { ID: id },
                 success: function (response) {
                     $('#rightSec').replaceWith(response)
-                    $('#leftSec').removeClass('col-12');
+                    $('#leftSec').removeClass('col-12')
                     $('.remaining').hide();
-                    $('#leftSec').addClass('col-7');
-                    startDate = $("#startDate").text();
-                    endDate = $("#endDate").text();
-                    dt = computeDuration(parseDate(startDate), parseDate(endDate)) * 8;
-                    $("#SubTaskDuration").text(`${dt} Hours`);
+                    $('#leftSec').addClass('col-7')
                 },
                 error: function (x, y, err) {
                     console.log(arguments)
@@ -232,6 +226,7 @@
                 }
             })
         }
+
 
 
         function ChangeISUnderWork(id, value) {
@@ -379,160 +374,101 @@
         $('#FileModal').on('hidden.bs.modal', function (e) {
             $(".custom-file-label").html("");
         })
+                                                                                                     //function ChangeStatus(event, Id) {
+                                                                                                                //    event.stopPropagation();
+                                                                                                                //    var element = event.target;
+                                                                                                                //    var txtValue = element.innerText;
+
+                                                                                                                //    $("#status").val(txtValue);
+                                                                                                                //    $("#taskId").val(Id);
+                                                                                                                //    $("#ele").val(element);
+                                                                                                                //    $("#HoldModal").modal('show');
+                                                                                                                //}
 
 
-        //-----------Calculate SubTask Actual Duration
+                                                                                                                //$('#send').click(function () {
+                                                                                                                //    let Reason = $('#reason').val();
+                                                                                                                //    let txtValue = $("#status").val();
+                                                                                                                //    let Id = $("#taskId").val();
+                                                                                                                //    let element = $("#ele").val();
+                                                                                                                //    let value;
 
-        function isHoliday(date) {
-            var h_date = new Date(date);
-            if (h_date.getDay() == 5 || h_date.getDay() == 6) {
-                return true;
-            }
-            return false;
-        }
+                                                                                                                //    switch (txtValue) {
+                                                                                                                //        case 'Active':
+                                                                                                                //            value = 0;
+                                                                                                                //            //element.classList.remove('btn-warning')
+                                                                                                                //            //element.classList.add('btn-success')
+                                                                                                                //            //element.innerText = 'Active'
+                                                                                                                //            break;
+                                                                                                                //        case 'OnHold':
+                                                                                                                //            value = 1;
+                                                                                                                //            //element.classList.remove('btn-success')
+                                                                                                                //            //element.classList.add('btn-warning')
+                                                                                                                //            //element.innerText = 'OnHold'
+                                                                                                                //            break;
+                                                                                                                //    }
 
-        // s is format y-m-d
-        // Returns a date object for 00:00:00 local time
-        // on the specified date
-        function parseDate(s) {
-            var b = s.split(/\D/);
-            return new Date(b[2], --b[1], b[0]);
-        }
+                                                                                                                //    $('#reason').val('');
+                                                                                                                //    $("#exampleModal").modal('toggle');
 
-        function computeDuration(date1, date2) {
-            date2.setHours(23, 59, 59, 999);
-            var absDuration = Math.ceil((date2 - date1) / 86400000);
-            var d = new Date(date1);
-            var duration = 0;
-            for (let i = 0; i < absDuration; i++) {
-                if (!isHoliday(d)) {
-                    duration++;
-                }
-                d.setDate(d.getDate() + 1);
-            }
-            return duration;
-        }
+                                                                                                                //    $.ajax({
+                                                                                                                //        type: "get",
+                                                                                                                //        url: `/subtask/editstatus`,
+                                                                                                                //        data: {
+                                                                                                                //            id: Id,
+                                                                                                                //            status: value,
+                                                                                                                //            reason: Reason
+                                                                                                                //        },
+                                                                                                                //        success: function (response) {
+                                                                                                                //        },
+                                                                                                                //        error: function (x, y, err) {
+                                                                                                                //            console.log(arguments)
+                                                                                                                //        }
+                                                                                                                //    })
+                                                                                                                //})
 
+                                                                                                                //$('#send').click(function () {
+                                                                                                                //debugger
+                                                                                                                //var value;
+                                                                                                                //var text = $('#reason').val()
+                                                                                                                //$('#reason').val('');
+                                                                                                                //let txtValue = $("#status").val();
+                                                                                                                //let Id= $("#taskId").val();
 
+                                                                                                                ////console.log(text)//send reason in notification
 
-                        // the disabled days
-                        //var disabledDays = [];
-                        //function disableAllTheseDays(date) {
-                        //    stringdate = formatDate(date);
-                        //    for (let i = 0; i < disabledDays.length; i++) {
-                        //        if (disabledDays[i] === stringdate) {
-                        //            return true;
-                        //        }
-                        //    }
-                        //    return false;
-                        //}
+                                                                                                                //$("#exampleModal").modal('toggle');
 
-                        //fillHolidays();
-                        // fill the arrayof disabled days
-
-
-
-
-
-
-
-
-
-                                                                                                                             //function ChangeStatus(event, Id) {
-                                                                                                                                        //    event.stopPropagation();
-                                                                                                                                        //    var element = event.target;
-                                                                                                                                        //    var txtValue = element.innerText;
-
-                                                                                                                                        //    $("#status").val(txtValue);
-                                                                                                                                        //    $("#taskId").val(Id);
-                                                                                                                                        //    $("#ele").val(element);
-                                                                                                                                        //    $("#HoldModal").modal('show');
-                                                                                                                                        //}
-
-
-                                                                                                                                        //$('#send').click(function () {
-                                                                                                                                        //    let Reason = $('#reason').val();
-                                                                                                                                        //    let txtValue = $("#status").val();
-                                                                                                                                        //    let Id = $("#taskId").val();
-                                                                                                                                        //    let element = $("#ele").val();
-                                                                                                                                        //    let value;
-
-                                                                                                                                        //    switch (txtValue) {
-                                                                                                                                        //        case 'Active':
-                                                                                                                                        //            value = 0;
-                                                                                                                                        //            //element.classList.remove('btn-warning')
-                                                                                                                                        //            //element.classList.add('btn-success')
-                                                                                                                                        //            //element.innerText = 'Active'
-                                                                                                                                        //            break;
-                                                                                                                                        //        case 'OnHold':
-                                                                                                                                        //            value = 1;
-                                                                                                                                        //            //element.classList.remove('btn-success')
-                                                                                                                                        //            //element.classList.add('btn-warning')
-                                                                                                                                        //            //element.innerText = 'OnHold'
-                                                                                                                                        //            break;
-                                                                                                                                        //    }
-
-                                                                                                                                        //    $('#reason').val('');
-                                                                                                                                        //    $("#exampleModal").modal('toggle');
-
-                                                                                                                                        //    $.ajax({
-                                                                                                                                        //        type: "get",
-                                                                                                                                        //        url: `/subtask/editstatus`,
-                                                                                                                                        //        data: {
-                                                                                                                                        //            id: Id,
-                                                                                                                                        //            status: value,
-                                                                                                                                        //            reason: Reason
-                                                                                                                                        //        },
-                                                                                                                                        //        success: function (response) {
-                                                                                                                                        //        },
-                                                                                                                                        //        error: function (x, y, err) {
-                                                                                                                                        //            console.log(arguments)
-                                                                                                                                        //        }
-                                                                                                                                        //    })
-                                                                                                                                        //})
-
-                                                                                                                                        //$('#send').click(function () {
-                                                                                                                                        //debugger
-                                                                                                                                        //var value;
-                                                                                                                                        //var text = $('#reason').val()
-                                                                                                                                        //$('#reason').val('');
-                                                                                                                                        //let txtValue = $("#status").val();
-                                                                                                                                        //let Id= $("#taskId").val();
-
-                                                                                                                                        ////console.log(text)//send reason in notification
-
-                                                                                                                                        //$("#exampleModal").modal('toggle');
-
-                                                                                                                                        //$.ajax({
-                                                                                                                                        //    type: "get",
-                                                                                                                                        //    url: `/subtask/editstatus`,
-                                                                                                                                        //    data: {
-                                                                                                                                        //        id: Id,
-                                                                                                                                        //        status: value
-                                                                                                                                        //    },
-                                                                                                                                        //    success: function (response) {
-                                                                                                                                        //    },
-                                                                                                                                        //    error: function (x, y, err) {
-                                                                                                                                        //        console.log(arguments)
-                                                                                                                                        //    }
-                                                                                                                                        //})
-                                                                                                                                        //})
+                                                                                                                //$.ajax({
+                                                                                                                //    type: "get",
+                                                                                                                //    url: `/subtask/editstatus`,
+                                                                                                                //    data: {
+                                                                                                                //        id: Id,
+                                                                                                                //        status: value
+                                                                                                                //    },
+                                                                                                                //    success: function (response) {
+                                                                                                                //    },
+                                                                                                                //    error: function (x, y, err) {
+                                                                                                                //        console.log(arguments)
+                                                                                                                //    }
+                                                                                                                //})
+                                                                                                                //})
 
 
-                                                                                                                                        //function StatusColor(element) {
-                                                                                                                                        //    switch (element.innerText) {
-                                                                                                                                        //        case 'OnHold':
-                                                                                                                                        //            element.classList.remove('btn-warning')
-                                                                                                                                        //            element.classList.add('btn-success')
-                                                                                                                                        //            element.innerText = 'Active'
-                                                                                                                                        //            break;
-                                                                                                                                        //        case 'Active':
-                                                                                                                                        //            element.classList.remove('btn-success')
-                                                                                                                                        //            element.classList.add('btn-warning')
-                                                                                                                                        //            element.innerText = 'OnHold'
-                                                                                                                                        //            break;
-                                                                                                                                        //    }
-                                                                                                                                        //}
+                                                                                                                //function StatusColor(element) {
+                                                                                                                //    switch (element.innerText) {
+                                                                                                                //        case 'OnHold':
+                                                                                                                //            element.classList.remove('btn-warning')
+                                                                                                                //            element.classList.add('btn-success')
+                                                                                                                //            element.innerText = 'Active'
+                                                                                                                //            break;
+                                                                                                                //        case 'Active':
+                                                                                                                //            element.classList.remove('btn-success')
+                                                                                                                //            element.classList.add('btn-warning')
+                                                                                                                //            element.innerText = 'OnHold'
+                                                                                                                //            break;
+                                                                                                                //    }
+                                                                                                                //}
 
     </script>
 }
@@ -552,5 +488,56 @@
             margin: 10px 0 0px 0;
             background: white;
         }
+
+
+
+
+        /* Time */
+
+        time.icon {
+            font-size: 1em; /* change icon size */
+            display: block;
+            position: relative;
+            width: 5em;
+            height: 5em;
+            background-color: #fff;
+            margin: .4em auto;
+            border-radius: 0.6em;
+            box-shadow: 0 1px 0 #bdbdbd, 0 2px 0 #fff, 0 3px 0 #bdbdbd, 0 4px 0 #fff, 0 5px 0 #bdbdbd, 0 0 0 1px #bdbdbd;
+            overflow: hidden;
+        }
+
+            time.icon * {
+                display: block;
+                width: 100%;
+                font-size: 0.9em;
+                font-weight: bold;
+                font-style: normal;
+                text-align: center;
+            }
+
+            time.icon strong {
+                position: absolute;
+                top: 0;
+                padding: 0.1em 0;
+                color: #fff;
+                background-color: var(--green);
+                border-bottom: 1px dashed #154826;
+                box-shadow: 0 2px 0 var(--green);
+            }
+
+            time.icon em {
+                position: absolute;
+                bottom: 0.3em;
+                color: var(--green);
+            }
+
+            time.icon span {
+                width: 100%;
+                font-size: 1.7em;
+                letter-spacing: -0.05em;
+                padding-top: 0.8em;
+                color: #2f2f2f;
+            }
     </style>
 }

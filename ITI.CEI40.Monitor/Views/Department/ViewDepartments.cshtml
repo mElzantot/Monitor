@@ -15,38 +15,40 @@
             }
             else
             {
-                <table class="table table-hover text-center table-sm">
-                    <thead class="thead-dark">
-                        <tr>
-                            <th scope="col">Department</th>
-                            <th scope="col">Department Manager</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody id="tablebody">
-                        @foreach (var item in Model.Departments)
-                        {
-                            <tr id="@item.Id" onclick="viewTeams(@item.Id,'@item.Name')">
-                                <td class="text-center font-weight-bold">@item.Name</td>
-                                @if (item.FK_ManagerID != null)
-                                {
-                                    <td>@item.Manager.UserName</td>
-                                }
-                                else
-                                {
-                                    <td></td>
-                                }
-                                <td class="text-right">
-                                    <div class="btn-group" role="group" aria-label="Basic example">
-                                        @*<a class="btn btn-outline-primary btn-sm" asp-controller="Team" asp-action="viewTeams" asp-route-id="@item.Id"><i class="fas fa-users"></i></a>*@
-                                        <button type="button" class="btn btn-outline-success btn-sm" onclick="AssignManager(@item.Id)"><i class="fas fa-male"></i></button>
-                                        <button type="button" class="btn btn-danger btn-sm" onclick="deleteDept(@item.Id)"><i class="far fa-trash-alt"></i></button>
-                                    </div>
-                                </td>
+                <div class="p-3">
+                    <table class="table table-hover text-center table-sm ">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Department</th>
+                                <th scope="col">Department Manager</th>
+                                <th></th>
                             </tr>
-                        }
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody id="tablebody">
+                            @foreach (var item in Model.Departments)
+                            {
+                                <tr id="@item.Id" onclick="viewTeams(@item.Id,'@item.Name')">
+                                    <td class="text-center font-weight-bold">@item.Name</td>
+                                    @if (item.FK_ManagerID != null)
+                                    {
+                                        <td>@item.Manager.UserName</td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+                                    <td class="text-right">
+                                        <div class="btn-group" role="group" aria-label="Basic example">
+                                            @*<a class="btn btn-outline-primary btn-sm" asp-controller="Team" asp-action="viewTeams" asp-route-id="@item.Id"><i class="fas fa-users"></i></a>*@
+                                            <button type="button" class="btn btn-outline-success btn-sm" onclick="AssignManager(@item.Id)"><i class="fas fa-male"></i></button>
+                                            <button type="button" class="btn btn-danger btn-sm" onclick="deleteDept(@item.Id)"><i class="far fa-trash-alt"></i></button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             }
             <button type="button" class="btn btn-sm btn-primary mb-3 ml-3" onclick="addDept()">Add Department</button>
         </div>
@@ -56,7 +58,7 @@
 
     <div class="col-6">
         <!--#region Form Section  -->
-        <div id="teamTables" style="border: 2px solid rgb(219, 219, 219) ;  border-radius: 8px;">
+        <div id="teamTables" style="border: 2px solid rgb(219, 219, 219) ;  border-radius: 8px; padding:40px 0 40px 0">
             <h4 class="text-muted text-center">Choose Department To Display</h4>
         </div>
         <!--#endregion -->
