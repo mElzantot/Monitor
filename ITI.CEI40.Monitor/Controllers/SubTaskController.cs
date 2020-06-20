@@ -124,7 +124,7 @@ namespace ITI.CEI40.Monitor.Controllers
             unitOfWork.NotificationUsers.Add(notificationUsers);
 
             //---------Send Notification to Employee
-            hubContext.Clients.User(subTask.Task.Team.FK_TeamLeaderId).SendAsync("newNotification", messege);
+            hubContext.Clients.User(subTask.Task.Team.FK_TeamLeaderId).SendAsync("newNotification", messege, false, Savednotification.Id);
             #endregion
 
 
