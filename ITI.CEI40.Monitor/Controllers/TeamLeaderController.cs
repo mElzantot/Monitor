@@ -146,8 +146,6 @@ namespace ITI.CEI40.Monitor.Controllers
                 Complexity = complexity
             };
             return View("EngineerChart", engineerChrtView);
-
-
         }
 
 
