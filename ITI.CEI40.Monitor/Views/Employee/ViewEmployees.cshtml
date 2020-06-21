@@ -22,21 +22,10 @@
         </thead>
 
         <tbody id="tableBody">
+
             @for (int i = 0; i < Model.Employees.Count(); i++)
             {
-                <tr id="@Model.Employees[i].Id">
-                    <th>@Model.Employees[i].UserName</th>
-                    <td class="email">@Model.Employees[i].Email</td>
-                    <td class="salary">@(Model.Employees[i].SalaryRate * 30 * 8)</td>
-                    <td>@Model.Employees[i].TotalEvaluation</td>
-                    <td>
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" class="btn btn-info btn-sm" onclick='UpdateEmpRoles("@Model.Employees[i].Id")'>Roles</button>
-                            <button type="button" class="btn btn-light btn-sm" onclick='EditEmployeeInfo("@Model.Employees[i].Id")'><i class="fas fa-edit"></i></button>
-                            <button type="button" class="btn btn-danger btn-sm " onclick='deleteTeam("@Model.Employees[i].Id")'><i class="far fa-trash-alt"></i></button>
-                        </div>
-                    </td>
-                </tr>
+                <partial name="_EmployeePartialView" model="Model.Employees[i]" />
             }
         </tbody>
     </table>
