@@ -44,12 +44,12 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         public IEnumerable<Comment> GetHighCommentforTask(int taskId)
         {
-            return set.Where(c => c.FK_TaskID == taskId && c.commentLevel == CommentLevels.High).Include(c => c.File).ToList();
+            return set.Where(c => c.FK_TaskID == taskId && c.commentLevel == CommentLevels.High).Include(c => c.Sender).Include(c => c.File).ToList();
         }
 
         public IEnumerable<Comment> GetMedCommentforTask(int taskId)
         {
-            return set.Where(c => c.FK_TaskID == taskId && c.commentLevel == CommentLevels.Med).Include(c => c.File).ToList();
+            return set.Where(c => c.FK_TaskID == taskId && c.commentLevel == CommentLevels.Med).Include(c => c.Sender).Include(c => c.File).ToList();
         }
 
         public IEnumerable<Comment> GetLowCommentforTask(int taskId)

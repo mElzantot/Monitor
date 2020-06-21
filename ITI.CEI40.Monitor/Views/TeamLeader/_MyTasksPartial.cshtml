@@ -123,13 +123,11 @@
             <button onclick="HiCommentSec(@Model.Task.Id)" class="btn btn-sm" style="position:absolute;right: 14.3em;"><i class="fas fa-window-close"></i></button>
             @if (Model.Task.Comments != null)
             {
-
-                @foreach (var item in Model.Task.Comments)
+                foreach (var item in Model.Task.Comments)
                 {
-                    <partial name="_CommentPartial" model="item" />
+                    <partial name="~/Views/Comment/_CommentPartial.cshtml" model="item" />
                 }
             }
-
         </div>
 
         <textarea onfocus="ExCommentSec(@Model.Task.Id)" id="commentArea" class=" form-control mb-2" placeholder="Add Comment Here......"></textarea>
