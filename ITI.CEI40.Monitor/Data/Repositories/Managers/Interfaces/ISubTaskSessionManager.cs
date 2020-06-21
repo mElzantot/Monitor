@@ -11,6 +11,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         SubTaskSession GetLastSessBySubTaskID(int subTaskId);
         IEnumerable<SubTaskSession> GetTimeSheetForEmp(string empId);
         IEnumerable<SubTaskSession> GetReportBySpecificDate(int teamId, DateTime date);
+        SubTaskSession GetOpenSubTask(string empId);
 
     }
 }

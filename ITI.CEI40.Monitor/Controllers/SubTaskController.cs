@@ -68,6 +68,13 @@ namespace ITI.CEI40.Monitor.Controllers
 
             if (Is)
             {
+                SubTaskSession opensubtaskSession = unitOfWork.SubTaskSessions.GetOpenSubTask(userManager.GetUserId(HttpContext.User));
+                if (opensubtaskSession != null)
+                {
+                    CloseOpenSubTasksession(opensubtaskSession, opensubtaskSession.SubTask);
+                    unitOfWork.SubTasks.Edit(opensubtaskSession.SubTask);
+                }
+
                 SubTaskSession subTaskSession = new SubTaskSession()
                 {
                     FK_SubTaskID = ID,
@@ -79,20 +86,7 @@ namespace ITI.CEI40.Monitor.Controllers
             else
             {
                 SubTaskSession subTaskSession = unitOfWork.SubTaskSessions.GetLastSessBySubTaskID(ID);
-                subTaskSession.SessEndtDate = DateTime.Now;
-                double hourDuration = (double)(subTaskSession.SessEndtDate - subTaskSession.SessStartDate).Value.TotalHours;
-                subTaskSession.SessDuration = (int)Math.Round(hourDuration, 0);
-                subTaskSession = unitOfWork.SubTaskSessions.Edit(subTaskSession);
-
-                subTask.ActualDuration += subTaskSession.SessDuration;
-
-                Activity task = unitOfWork.Tasks.GetById(subTask.FK_TaskId);
-                float LastTaskDuaration = task.ActualDuratoin;
-                task.ActualDuratoin += subTask.ActualDuration;
-                task = unitOfWork.Tasks.Edit(task);
-                Project project = unitOfWork.Projects.GetById(task.FK_ProjectId);
-                project.ActualDuration += task.ActualDuratoin - LastTaskDuaration;
-                unitOfWork.Projects.Edit(project);
+                CloseOpenSubTasksession(subTaskSession, subTask);
 
             }
             subTask = unitOfWork.SubTasks.Edit(subTask);
@@ -355,6 +349,9 @@ namespace ITI.CEI40.Monitor.Controllers
             }
 
         }
+
+        public void CloseOpenSubTasksession(SubTaskSession subTaskSession, SubTask subTask)        {            subTaskSession.SessEndtDate = DateTime.Now;            double hourDuration = (double)(subTaskSession.SessEndtDate - subTaskSession.SessStartDate).Value.TotalHours;            subTaskSession.SessDuration = (int)Math.Round(hourDuration, 0);            subTaskSession = unitOfWork.SubTaskSessions.Edit(subTaskSession);            subTask.ActualDuration += subTaskSession.SessDuration;            subTask.IsUnderWork = false;            Activity task = unitOfWork.Tasks.GetById(subTask.FK_TaskId);            float LastTaskDuaration = task.ActualDuratoin;            task.ActualDuratoin += subTask.ActualDuration;            task = unitOfWork.Tasks.Edit(task);            Project project = unitOfWork.Projects.GetById(task.FK_ProjectId);            project.ActualDuration += task.ActualDuratoin - LastTaskDuaration;            unitOfWork.Projects.Edit(project);        }
+
 
     }
 }

@@ -23,7 +23,7 @@ namespace ITI.CEI40.Monitor.Controllers
         private readonly IUnitOfWork unitofwork;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public EmployeeController(RoleManager<IdentityRole> roleManager,IHubContext<NotificationsHub> hubContext,
+        public EmployeeController(RoleManager<IdentityRole> roleManager, IHubContext<NotificationsHub> hubContext,
            UserManager<ApplicationUser> userManager, IUnitOfWork unitofwork)
         {
             this.roleManager = roleManager;
@@ -35,12 +35,20 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpGet]
         public IActionResult ViewEmployees()
         {
-                var EmploeeVm = new EmployeeViewModel
-                {
-                    Departments = unitofwork.Departments.GetAll().ToList(),
-                    Employees = unitofwork.Engineers.GetAll().ToList()
-                };
-                return View(EmploeeVm);
+            var EmploeeVm = new EmployeeViewModel
+            {
+                Departments = unitofwork.Departments.GetAll().ToList(),
+                Employees = unitofwork.Engineers.GetAll().ToList()
+            };
+            return View(EmploeeVm);
+        }
+
+        [HttpGet]
+        public IActionResult ViewFilteredEmployees([FromForm]int teamId)
+        {
+            List<ApplicationUser> Employees = unitofwork.Engineers.GetEngineersInsideTeam(teamId).ToList();
+
+            return PartialView("_teamsEmployeePartialView", Employees);
         }
 
         [HttpPost]
@@ -124,7 +132,7 @@ namespace ITI.CEI40.Monitor.Controllers
                 }
             }
 
-            var isDeptManager =  userManager.IsInRoleAsync(Emp, Roles.DepartmentManager.ToString());
+            var isDeptManager = userManager.IsInRoleAsync(Emp, Roles.DepartmentManager.ToString());
 
             if (isDeptManager.Result)
             {
