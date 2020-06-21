@@ -65,15 +65,18 @@ namespace ITI.CEI40.Monitor.Controllers
         [Authorize(Roles = "TeamLeader")]
         //Omar 
         [HttpPost]
-        public void SubmitSubTask(SubTask subTask)
+        public void SubmitSubTask(SubmitModal submitModal)
         {
-            //var subtask = unitofwork.SubTasks.GetSubTaskWithEngineer(id);
-            //subtask.Status = Status.Completed;
-            //subtask.Complexity = complexity;
-            //subtask.TimeManagement = time;
-            //subtask.Quality = quality;
-            //subtask.Engineer.TotalEvaluation;
-            //unitofwork.SubTasks.Edit(subtask);  
+            var subtask = unitOfWork.SubTasks.GetSubTaskWithEngineer(submitModal.ID);
+            subtask.Status = Status.Completed;
+            subtask.Complexity = submitModal.Complexity;
+            subtask.TimeManagement = submitModal.TimeManagement;
+            subtask.Quality = submitModal.Quality;
+            unitOfWork.SubTasks.Edit(subtask);
+            
+            // notification
+            string messege = $"Congratulations Your Team Leader Submitted *{subtask.Name}=* at *{DateTime.Now}=*";
+            SendNotification(messege, subtask.FK_EngineerID);
         }
 
         [Authorize(Roles = "Engineer")]

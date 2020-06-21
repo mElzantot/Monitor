@@ -2,8 +2,6 @@
 @{
     ViewData["Title"] = "EngineersView";
 }
-
-
 <div>
     <div style="display:flex;justify-content:space-evenly">
         <div class="innerleft slice" style="width:30%; padding:50px 15px 15px 20px">
@@ -26,7 +24,6 @@
         <div class="innerright slice" style="width:67%;padding:15px">
             <div class="row" id="tasks" style="margin:auto">
                 <h4 id="alertdiv" class="text-muted text-center mt-5" style="margin:auto;">Select Engineer to Show Data</h4>
-
                 <div id="tableBody" class="table table-hover">
                 </div>
             </div>
@@ -34,9 +31,6 @@
 
     </div>
 </div>
-
-
-
 
 
 
@@ -131,26 +125,32 @@
 
 
 
-        function Submit(Id) {
+        function SubmitModal(Id) {
             $("#SubmitModal").modal('show');
             $("#id").val(Id);
         }
 
-
-
-
-        function SubmitTask(e) {
-            e.preventDefault();
-            debugger
-            // console.log($('#subtaskSubmit').serialize());
+        function AcceptSubmit() {
+            $("#id").val();
+            let time= $("#time").val();
+            let quality = $("#quality").val();
+            let complexity = $("#complex").val();
             $.ajax({
-                url: "/TeamLeader/SubmitSubTask",
-                method: "POST",
-                contentType: "Application/json",
-                data: JSON.stringify($('#subtaskSubmit').serialize())
-            })
-        }
+                url: ,
+                type: get,
+                    data:{
 
+                },
+                success: function () {
+                    $("#time").val('');
+                    $("#quality").val('');
+                    $("#complex").val('');
+                    $("#SubmitModal").modal('hide');
+                }
+            })
+
+            $("#SubmitModal").modal('hide');
+        }
 
 
 

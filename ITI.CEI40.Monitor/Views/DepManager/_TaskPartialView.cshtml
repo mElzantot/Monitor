@@ -48,7 +48,7 @@ else
                 <td>@Model[i].ActualDuratoin hours</td>
 
                 <td>
-                    @if (Model[i].Progress==100)
+                    @if (Model[i].Progress == 100)
                     {
                         <button onclick="ChangeStatus(@Model[i].Id,2)" class="btn btn-success " style="padding:1px 6px"><i class="fas fa-check"></i></button>
                     }
@@ -63,6 +63,8 @@ else
 
     </table>
 }
+
+
 
 <script>
     var id;
