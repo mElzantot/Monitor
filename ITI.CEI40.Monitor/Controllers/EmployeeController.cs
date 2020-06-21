@@ -71,10 +71,8 @@ namespace ITI.CEI40.Monitor.Controllers
                     return PartialView("_EmployeePartialView", newEmp);
                 }
             }
-
             //-------Not Acceptable ( Need solution ) ------//
             return null;
-
         }
 
         #region Edit Roles for Employees
