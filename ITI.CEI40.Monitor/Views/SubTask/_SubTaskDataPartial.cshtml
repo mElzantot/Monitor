@@ -6,70 +6,64 @@
         border-radius: 8px;
         background: white;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+        
         <div style=" display:flex;justify-content:space-between">
+            <button class="btn-light btn btn-lg">
+                @Model.Name
+            </button>
 
-            <div class="dropdown">
-                <button class="btn-light btn btn-lg" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    @Model.Name
-                </button>
+            <div class="dropleft">
+              
+                    <button class="btn btn-sm btn-outline-info rounded-circle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i style="font-size:16px" class="fas fa-info mx-1"></i></button>
+                
 
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <div class="text-muted p-2"><pre>@Model.Description</pre></div>
                 </div>
-
-            </div>
-            <div class="rounded-circle">
-                <a class="btn btn-sm btn-outline-info rounded-circle" href="/comment/activitylog?taskId=@Model.FK_TaskId"> <i class="fas fa-info fa-2x mx-1"></i> </a>
             </div>
         </div>
 
 
 
         @{
-            int startDay = Model.StartDate.Value.Day;
-            int startMonth = Model.StartDate.Value.Month;
-            int startYear = Model.StartDate.Value.Year;
+            DateTime start = Model.StartDate.Value;
+            DateTime subStart = Model.StartDate.Value.AddDays(-1);
+            DateTime preStart = Model.StartDate.Value.AddDays(+1);
 
-            DateTime subStart = new DateTime(startYear, startMonth, startDay - 1);
-            DateTime preStart = new DateTime(startYear, startMonth, startDay + 1);
-
-            int endDay = Model.EndDate.Value.Day;
-            int endtMonth = Model.EndDate.Value.Month;
-            int endYear = Model.EndDate.Value.Year;
-
-            DateTime subEnd = new DateTime(endYear, endtMonth, endDay - 1);
-            DateTime preEnd = new DateTime(endYear, endtMonth, endDay + 1);
+            DateTime end = Model.EndDate.Value;
+            DateTime subEnd = Model.EndDate.Value.AddDays(-1);
+            DateTime preEnd = Model.EndDate.Value.AddDays(+1);
         }
 
         <div style="display:flex;justify-content:space-around;margin-top:20px">
-            <div style=" background:;display:inline-block;padding:15px;">
+            <div style="display:inline-block;padding:15px;">
 
                 <div style="display:flex;justify-content:center;color:#e2e2e2; font-size:18px">
                     @subStart.Day @subStart.ToString("MMM") @subStart.Year
                 </div>
                 <div style=" font-size:25px;color:green">
-                    @startDay @Model.StartDate.Value.ToString("MMM") @startYear
+                    @start.Day @start.ToString("MMM") @start.Year
                 </div>
                 <div style="display:flex;justify-content:center;color:#e2e2e2; font-size:18px">
                     @preStart.Day @preStart.ToString("MMM") @preStart.Year
                 </div>
             </div>
 
-            <div style=" background:;display:inline-block;padding:15px">
+            <div style="display:inline-block;padding:15px;">
+
                 <div style="display:flex;justify-content:center;color:#e2e2e2; font-size:18px">
                     @subEnd.Day @subEnd.ToString("MMM") @subEnd.Year
                 </div>
-                <div style=" font-size:25px;color:#ea0404">
-                    @endDay @Model.EndDate.Value.ToString("MMM") @endYear
+                <div style=" font-size:25px;color:red">
+                    @end.Day @end.ToString("MMM") @end.Year
                 </div>
                 <div style="display:flex;justify-content:center;color:#e2e2e2; font-size:18px">
                     @preEnd.Day @preEnd.ToString("MMM") @preEnd.Year
                 </div>
-
             </div>
         </div>
 
-        <div style="display:flex; justify-content:space-between;margin-top:20px">
+        <div style="display:flex; justify-content:space-between;margin:20px 0 30px 0">
             <div class="prog" style="width:49%">
                 <div style="margin-bottom:5px;font-size:20px;display:flex;justify-content:center"><i class="fas fa-chart-line"></i>&nbsp Progress</div>
                 <div class="cont">
@@ -81,10 +75,23 @@
                 <div style="display:flex;justify-content:center" class="text-muted"> @Model.ActualDuration hours</div>
             </div>
         </div>
-      
 
-        <div style="margin-top:40px">
-            <textarea id="commentArea" class="col-12 " placeholder="Add Comment Here......"></textarea>
+
+        <div id="s @Model.Id" style="display:none;height:160px;border-width:1px 1px 0px 1px; border-style:solid;border-color:#9e9b9b;border-radius:3px 3px 0 0">
+            <button onclick="HiCommentSec(@Model.Id)" class="btn btn-sm" style="position:absolute;right: 38px;"><i class="fas fa-window-close"></i></button>
+            @if (Model.Comments != null)
+            {
+                <div>@Model.Comments.Count()</div>
+                @foreach (var item in Model.Comments)
+                {
+                    <partial name="_CommentPartial" model="item" />
+                }
+            }
+        </div>
+
+        <div style="">
+
+            <textarea onfocus="ExCommentSec(@Model.Id)" id="commentArea" class="col-12 " placeholder="Add Comment Here......"></textarea>
             <div style="display:flex;justify-content:flex-end">
                 <button class="btn btn-sm btn-outline-secondary mr-2" onclick="UploadFile(@Model.Id,@Model.FK_TaskId)"> Upload File <i class="fas fa-paperclip"></i></button>
                 <button class="btn btn-sm btn-outline-info float-sm-right" type="button" id="AddComment" onclick="AddComment(@Model.Id,@Model.FK_TaskId)">Comment</button>

@@ -5,11 +5,8 @@
 
 
 <div>
-    <div>
-        <h3 class="text-muted m-3">Engineers</h3>
-    </div>
-    <div class="row " style="border: 0px solid white; border-radius: 8px; background:white; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" >
-        <div class="col-3  innerleft pt-4" style="border-right:2px solid rgb(219, 219, 219);">
+    <div style="display:flex;justify-content:space-evenly">
+        <div class="innerleft slice" style="width:30%; padding:50px 15px 15px 20px">
             <table class="table table-hover text-center" id="teamTable">
                 <tbody>
                     @for (int i = 0; i < Model.Count(); i++)
@@ -25,15 +22,16 @@
                 </tbody>
             </table>
         </div>
-        <div class="col-9 innerright ">
-            <div style="">
-                <div class="row" style="margin:auto;" id="tasks">
-                    <h4 id="alertdiv" class="text-muted text-center mt-5" style="margin:auto;">Select Engineer to Show Data</h4>
-                    <div id="tableBody" class="table table-hover align-middle">
-                    </div>
+
+        <div class="innerright slice" style="width:67%;padding:15px">
+            <div class="row" id="tasks" style="margin:auto">
+                <h4 id="alertdiv" class="text-muted text-center mt-5" style="margin:auto;">Select Engineer to Show Data</h4>
+
+                <div id="tableBody" class="table table-hover">
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 
@@ -175,6 +173,16 @@
 
 @section Style{
     <style>
+        .container {
+            max-width: 1250px;
+        }
+
+        .slice {
+            border: 0px solid white;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
 
         body {
         background-color: #eef5f0;

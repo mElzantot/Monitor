@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ITI.CEI40.Monitor.Controllers
-{
+{ 
     public class TaskController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
@@ -129,7 +129,6 @@ namespace ITI.CEI40.Monitor.Controllers
             }
             return RedirectToAction(nameof(GetTask), new { taskId = taskId });
         }
-
 
 
         [HttpGet]

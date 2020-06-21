@@ -51,6 +51,9 @@ namespace ITI.CEI40.Monitor.Entities
         [Display(Name = "End Date")]
         public DateTime EndDate { get; set; }
 
+        [DataType(DataType.DateTime)]
+        public DateTime ActualEndDate { get; set; }
+
         //[DataType(DataType.DateTime)]
         //[Column("Estimated Duration")]
         [Display(Name = "Estimated Duration")]

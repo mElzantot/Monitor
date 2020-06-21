@@ -24,10 +24,19 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Where(t => t.FK_TeamId == teamId).Include(t => t.Project).ToList();
         }
 
+        public IEnumerable<Activity> GetTasksByTeamIDWithSubs(int teamId)
+        {
+            return set.Where(t => t.FK_TeamId == teamId).Include(t => t.SubTasks).ToList();
+        }
 
         public Activity GetTaskWithProject(int taskId)
         {
             return set.Where(t => t.Id == taskId).Include(t => t.Project).FirstOrDefault();
+        }
+
+        public IEnumerable<Activity> GetProjectTasksWithDep(int projId)
+        {
+            return set.Where(t => t.FK_ProjectId == projId).Include(t => t.Project).Include(t => t.Department).ToList();
         }
 
         public IEnumerable<Activity> GetAllTaskWithTheirProject(int teamId)
@@ -44,6 +53,12 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
                .Include(t => t.Project).Include(t => t.Team).ToList();
         }
 
+        public IEnumerable<Activity> GetProjectActivitiesWithDep(int projId)
+        {
+            return set.Where(p => p.FK_ProjectId == projId).Include(a => a.Project)
+                .Include(p => p.SubTasks);
+        }
+
 
         public IEnumerable<Activity> GetActivitiesFromProject(int projId)
         {
@@ -53,7 +68,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         public IEnumerable<Activity> GetDepartmentTasks(int depid)
         {
-            return set.Where(a => a.FK_DepID == depid).Include(a => a.Team).Include(a => a.Project).ToList();
+            return set.Where(a => a.FK_DepID == depid).OrderBy(a=>a.Team).Include(a => a.Team).Include(a => a.Project).ToList();
         }
         public IEnumerable<Activity> GetByProjectId(int id)
         {

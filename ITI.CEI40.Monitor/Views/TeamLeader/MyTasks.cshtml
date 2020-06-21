@@ -1,23 +1,35 @@
-﻿@model ActivityViewModel
+﻿@model List<Activity>
 @{
-    ViewData["Title"] = "Details";
-    Model.Tasks = Model.Tasks.ToList();
+    ViewData["Title"] = "MY Tasks";
 }
+
 
 <div>
     <div style="display:flex;justify-content:space-evenly">
-
         <div class="innerleft slice pt-4" style="width:35%;padding:20px">
-            <h4 style="margin-bottom:35px">@Model.Tasks[0].Project.Name</h4>
-
             <table class="table table-hover text-center" id="teamTable">
                 <tbody>
-                    @for (int i = 0; i < Model.Tasks.Count(); i++)
+                    @for (int i = 0; i < Model.Count(); i++)
                     {
-                        <tr id="@Model.Tasks[i]" onclick='displayTaskDetails("@Model.Tasks[i].Id")'>
-                            <td>@Model.Tasks[i].Name</td>
-                            <td>@Model.Tasks[i].Department.Name</td>
-                        </tr>
+                    <tr id="@Model[i]" onclick='displayTaskDetails("@Model[i].Id")'>
+                        <td>@Model[i].Name</td>
+
+                        @if (@Model[i].SubTasks.Count == 0)
+                        {
+                            <td>
+                                <div style="color:red" id="Assignedteam"> Not Assigned yet </div>
+                            </td>
+                        }
+                        else if (Model[i].Status == Status.OnHold)
+                        {
+                            <td><div class="btn btn-sm btn-warning">On Hold</div></td>
+                        }
+                        else
+                        {
+                            <td><div class="btn btn-sm btn-success">Active</div></td>
+                        }
+
+                    </tr>
                     }
                 </tbody>
             </table>
@@ -37,60 +49,11 @@
 </div>
 
 
-<!-- File Modal -->
-<div class="modal fade" id="FileModal" tabindex="-1" role="dialog" aria-labelledby="FileModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="FileModalLabel">Files</h5>
-            </div>
-            <form id="fileForm" enctype="multipart/form-data" method="post">
-                <div class="modal-body">
-                    <label>Upload File</label>
-                    <div class="custom-file">
-                        <input name="file" class="form-control custom-file-input" type="file" />
-                        <label class="custom-file-label">Choose File...</label>
-                    </div>
-                    <input id="task_Id" name="taskId" value="" hidden />
-                </div>
-                <div class="modal-footer">
-                    <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
-                    <button onclick="uploadFile()" type="button" class="btn btn-primary">Upload</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 
 
-<!-- Assign Team -->
-@if (User.IsInRole(Roles.DepartmentManager.ToString()))
-{
-    <div class="modal fade" id="AssignTeamModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Add Team</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body" id="teamList">
-                    <div class="form-group">
-                        <label asp-for="Team.Name"></label>
-                        <select id="teams" class="form-control" asp-for="Team.Id"
-                                asp-items="new SelectList(Model.Teams,nameof(Team.Id),nameof(Team.Name))"></select>
-                        <span asp-validation-for="Team.Id" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" onclick="assignTeams()">Submit</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-}
+
+
+
 
 
 <!-- #endregion -->
@@ -98,13 +61,21 @@
     <partial name="_ValidationScriptsPartial" />
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
+
     <script>
+        $(function () {
+            $('#toggle-two').bootstrapToggle({
+
+                on: 'Enabled',
+                off: 'Disabled'
+            });
+        })
 
         function displayTaskDetails(id) {
             $.ajax({
-                url: "/Task/GetTask?taskid=" + id,
+                url: "/TeamLeader/MyTaskPartial/",
                 type: "Get",
-                //data: { engId: `${id}` },
+                data: { taskid: `${id}` },
                 success: function (result) {
                     if (result) {
                         $('#alertdiv').hide();
@@ -117,15 +88,6 @@
                 }
             })
         }
-
-        $(function () {
-            $('#toggle-two').bootstrapToggle({
-
-                on: 'Enabled',
-                off: 'Disabled'
-            });
-        })
-
 
 
         function Submit(Id) {
@@ -201,12 +163,6 @@
                     data: data,
                     success: function (response) {
                         $("#FileModal").modal('hide');
-                        if (isHighLevel) {
-                            $("#HighLevel").prepend(response);
-                        }
-                        else {
-                            $("#MedLevel").prepend(response);
-                        }
                         console.log(response.msg);
                     }
                 })
@@ -233,12 +189,7 @@
                     },
                     success: function (res) {
                         $('#commentArea').val("");
-                        if (isHighLevel) {
-                            $("#HighLevel").prepend(res);
-                        }
-                        else {
-                            $("#MedLevel").prepend(res);
-                        }
+                        console.log(res);
                     },
                     error: function (x, y, err) {
                         console.log(err);
@@ -287,10 +238,8 @@
                 },
                 success: function (result) {
                     alert('Task assigned Successfully !');
-                    $("#Assignedteam").removeClass("btn-outline-danger");
-                    $("#Assignedteam").addClass("btn-info");
                     $("#Assignedteam").html(result.teamName);
-                    $("#Assignedteam").attr("disabled", true);
+                    $("#Assignedteam").css('color', 'black');
                     $('#AssignTeamModal').modal('hide');
                 },
                 error: function (x, y, err) {
@@ -313,8 +262,10 @@
             document.getElementById(`s ${id}`).style.display = "none"
         }
 
+
     </script>
 }
+
 
 @section Style{
 
@@ -341,17 +292,17 @@
             background: white;
             box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
         }
+
         .timeup {
             top: 4.4rem;
-            background: red;
+            background: rgb(179, 20, 20);     
             position: absolute;
             left: 51rem;
             font-size: 1.5rem;
-            padding: 5px 20px;
+            padding: 21px 20px 6px 20px;
             border: 0 solid;
             border-radius: 0 0 10px 10px;
         }
-
     </style>
     <link rel="stylesheet" href="~/css/circle.css" />
 }

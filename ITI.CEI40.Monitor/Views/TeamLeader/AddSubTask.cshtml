@@ -1,0 +1,267 @@
+﻿
+@{
+    ViewData["Title"] = "AddAubTask";
+}
+
+@model TaskViewModel
+
+<div id="subTaskView" style="padding:8px;border: 0px solid white; border-radius: 8px; background:white; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+
+    <div>
+        <div class="righthead">
+            <div class="ml-4 mb-3">
+                <input type="text" value="@Model.TaskId" id="taskID" hidden />
+                <div style="display:flex; justify-content:space-between">
+                    <button class="btn btn-light ">
+
+                        @Model.TaskName
+
+                    </button>
+                    <div style="margin:10px 10px 0 0">
+                        <a class="btn  btn-outline-info " href="/comment/activitylog?taskId=@Model.TaskId">Activitylog</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="" id="tasks">
+                <table class="table table-hover text-center table-sm ">
+                    <thead class="alert-info thead-dark">
+                        <tr>
+                            <th>Name</th>
+                            <th>Priority</th>
+                            <th>start</th>
+                            <th>Due</th>
+                            <th>Status</th>
+                            <th>Progress</th>
+                            <th>Assigned to</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    @if (Model.SubTasks != null)
+                    {
+                        <tbody id="tableBody">
+                            @for (int i = 0; i < Model.SubTasks.Count(); i++)
+                            {
+                                <tr id="@Model.SubTasks[i].Id">
+                                    <td>@Model.SubTasks[i].Name</td>
+                                    <td>@Model.SubTasks[i].Priority</td>
+                                    @{
+                                        DateTime start = @Model.SubTasks[i].StartDate.Value;
+                                        DateTime end = @Model.SubTasks[i].EndDate.Value;
+                                    }
+                                    <td>@start.Day @start.ToString("MMM") @start.Year</td>
+                                    <td>@end.Day @end.ToString("MMM") @end.Year</td>
+
+                                    <td>@Model.SubTasks[i].Status</td>
+
+                                    <td>
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" style="width:@Model.SubTasks[i].Progress%;"
+                                                 aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@Model.SubTasks[i].Progress%</div>
+                                            </div>
+                                        </td>
+                                        @if (@Model.SubTasks[i].Engineer != null)
+                                        {
+                                            <td>@Model.SubTasks[i].Engineer.UserName</td>
+                                        }
+                                        else
+                                        {
+                                            <td></td>
+                                        }
+                                        <td><button class="btn btn-sm btn-primary" onclick="getEditSubTaskModal(@Model.SubTasks[i].Id)"><i class="fas fa-edit"></i></button></td>
+                                    </tr>
+                                }
+                        </tbody>
+                    }
+                </table>
+            </div>
+            <hr />
+            <button onclick="getAddSubTaskModal(@Model.TaskId)" type="button" class="btn btn-outline-success">
+                Add SubTask
+            </button>
+            <button type="button" class="btn btn-outline-primary" onclick="BacktoList()">Back to Tasks</button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<!-- Add SubTask -->
+<div class="modal fade" id="addSubTaskModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" data-ajax-url="/SubTask/AddSubTask" data-ajax="true" data-ajax-method="Post" data-ajax-complete="addSubTask"
+                  data-ajax-update="#tableBody" data-ajax-mode="after" id="SubTaskForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add SubTask</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="addmodalBody">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                    <button type="reset" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- Edit SubTask -->
+<div class="modal fade" id="editSubTaskModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post" data-ajax-url="/SubTask/editSubTask" data-ajax="true" data-ajax-method="Post" data-ajax-complete="editSubTask"
+                  data-ajax-mode="replace" id="editSubTaskForm">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Update</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="editmodalBody">
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Update</button>
+                    <button type="reset" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts{ 
+<script>
+    //------Add SubTask
+
+    function getAddSubTaskModal(TaskId) {
+        $.ajax({
+            url: "/SubTask/AddSubTask",
+            type: "GET",
+            data: { taskId: TaskId, teamId: $('#teamId').val() },
+            success: function (res) {
+                $("#addmodalBody").append(res);
+                $('#addSubTaskModal').modal('show');
+            }
+        })
+    }
+
+    function addSubTask(result, status) {
+        if (status == "success") {
+            console.log(result);
+            $('#addSubTaskModal').modal('hide');
+            document.getElementById("SubTaskForm").reset();
+            alert("SubTask added Successfully");
+        }
+        else {
+            alert("Error While Adding SubTask");
+            document.getElementById("SubTaskForm").reset();
+        }
+    }
+
+
+    $('#addSubTaskModal').on('shown.bs.modal', function () {
+        $('#startDate').datepicker({
+            format: "dd/mm/yyyy",
+            daysOfWeekDisabled: "5,6",
+            todayHighlight: true,
+            autoclose: true,
+            clearBtn: true,
+            startDate: new Date(),
+            container: '#addSubTaskModal',
+            datesDisabled: []
+        }).on('changeDate', function (selected) {
+            var minDate = new Date(selected.date.valueOf());
+            $('#endDate').datepicker('setStartDate', minDate);
+        });
+
+        $('#endDate').datepicker({
+            format: "dd/mm/yyyy",
+            daysOfWeekDisabled: "5,6",
+            todayHighlight: true,
+            autoclose: true,
+            clearBtn: true,
+            startDate: $("#startDate").val(),
+            container: '#addSubTaskModal',
+            datesDisabled: []
+        }).on('changeDate', function (selected) {
+            var maxDate = new Date(selected.date.valueOf());
+            $('#startDate').datepicker('setEndDate', maxDate);
+        });
+    });
+
+    $('#addSubTaskModal').on('hidden.bs.modal', function () {
+        $("#addmodalBody").empty();
+    })
+
+
+    //-------Edit SubTask
+
+    function getEditSubTaskModal(subTaskId) {
+        $.ajax({
+            url: "/SubTask/EditSubTask",
+            type: "GET",
+            data: { subtaskId: subTaskId },
+            success: function (res) {
+                $("#editmodalBody").append(res);
+                $("#editSubTaskForm").attr("data-ajax-update", `#${subTaskId}`);
+                $('#editSubTaskModal').modal('show');
+            }
+        })
+    }
+
+    function editSubTask(result, status) {
+        if (status == "success") {
+            console.log(result);
+            $('#editSubTaskModal').modal('hide');
+            document.getElementById("editSubTaskForm").reset();
+            alert("SubTask Updated Successfully");
+        }
+        else {
+            alert("Error While updating SubTask");
+            document.getElementById("editSubTaskForm").reset();
+        }
+    }
+
+
+    $('#editSubTaskModal').on('shown.bs.modal', function () {
+        $('#startDate').datepicker({
+            format: "dd/mm/yyyy",
+            daysOfWeekDisabled: "5,6",
+            todayHighlight: true,
+            autoclose: true,
+            clearBtn: true,
+            startDate: new Date(),
+            container: '#editSubTaskModal',
+            datesDisabled: []
+        }).on('changeDate', function (selected) {
+            var minDate = new Date(selected.date.valueOf());
+            $('#endDate').datepicker('setStartDate', minDate);
+        });
+
+        $('#endDate').datepicker({
+            format: "dd/mm/yyyy",
+            daysOfWeekDisabled: "5,6",
+            todayHighlight: true,
+            autoclose: true,
+            clearBtn: true,
+            startDate: $("#startDate").val(),
+            container: '#editSubTaskModal',
+            datesDisabled: []
+        }).on('changeDate', function (selected) {
+            var maxDate = new Date(selected.date.valueOf());
+            $('#startDate').datepicker('setEndDate', maxDate);
+        });
+    });
+
+    $('#editSubTaskModal').on('hidden.bs.modal', function () {
+        $("#editmodalBody").empty();
+    })
+</script>
+}
