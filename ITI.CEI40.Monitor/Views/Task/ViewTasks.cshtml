@@ -5,9 +5,9 @@
 
 <div id="mainPage">
     @*<input id="startDate"  type="text" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>*@
-<div style="height:70px">
+    <div style="height:70px">
 
-</div>
+    </div>
 
     <input type="number" hidden id="teamId" value="@ViewBag.TeamId" />
     <div id="tasksView">
@@ -138,10 +138,10 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Comment</h5>
+                <h5 class="modal-title" id="exampleModalLabel">Hold Reasons</h5>
             </div>
             <div class="modal-body">
-                <input id="reason" type="text" class="form-control" />
+                <textarea id="reason" type="text" class="form-control" placeholder="Add Reasons Here..."></textarea>
             </div>
             <div class="modal-footer">
                 <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
@@ -229,6 +229,7 @@
                 autoclose: true,
                 clearBtn: true,
                 startDate: $("#startDate").val(),
+                endDate: $("#taskEndDate").val(),
                 container: '#addSubTaskModal',
                 datesDisabled: []
             }).on('changeDate', function (selected) {
@@ -293,6 +294,7 @@
                 autoclose: true,
                 clearBtn: true,
                 startDate: $("#startDate").val(),
+                endDate: $("#taskEndDate").val(),
                 container: '#editSubTaskModal',
                 datesDisabled: []
             }).on('changeDate', function (selected) {
