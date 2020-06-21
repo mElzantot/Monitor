@@ -32,8 +32,8 @@ namespace ITI.CEI40.Monitor.Controllers
         }
         public IActionResult TeamsView()
         {
-            int DepId = unitOfWork.Departments.GetDepartmentWithManagerID(userManager.GetUserId(HttpContext.User)).Id;
-            IEnumerable<Team> teams= unitOfWork.Teams.getTeamsinsideDept(DepId);
+            Department Dep = unitOfWork.Departments.GetDepartmentWithManagerID(userManager.GetUserId(HttpContext.User));
+            IEnumerable<Team> teams = unitOfWork.Teams.getTeamsinsideDept(Dep.Id);
             return View(teams);
         }
 

@@ -18,7 +18,7 @@
 }
 <hr />
 <div class="row">
-    <div class="col-12"  >
+    <div class="col-12">
         <table class="table table-sm">
             <thead class="thead-dark">
                 <tr>
@@ -74,7 +74,9 @@
                         @if (Model.HighComments[i].File != null)
                         {
                             <br>
-                            <a href="#" download="@Model.HighComments[i].File.FilePath">@Model.HighComments[i].File.FilePath</a>
+                            <a href="~/files/@Model.HighComments[i].File.FilePath" download="@Model.HighComments[i].File.FilePath.Split("_")[1]">
+                                @Model.HighComments[i].File.FilePath.Split("_")[1]
+                            </a>
                         }
                     </div>
                     <div class="message-time">@Model.HighComments[i].commentTime</div>
@@ -93,7 +95,9 @@
                         @if (Model.MedComments[i].File != null)
                         {
                             <br>
-                            <a href="#" download="@Model.MedComments[i].File.FilePath">@Model.MedComments[i].File.FilePath</a>
+                            <a href="~/files/@Model.MedComments[i].File.FilePath" download="@Model.MedComments[i].File.FilePath.Split("_")[1]">
+                                @Model.MedComments[i].File.FilePath.Split("_")[1]
+                            </a>
                         }
                     </div>
                     <div class="message-time">@Model.MedComments[i].commentTime</div>

@@ -6,8 +6,8 @@
             @if (Model.File != null)
             {
                 <br>
-                <a href="#" download="">@Model.File.FilePath</a>
+                <a href="~/files/@Model.File.FilePath" download="@Model.File.FilePath.Split("_")[1]" >@Model.File.FilePath.Split("_")[1]</a>
             }
-            <div class="message-time">@Model.commentTime</div>     
+            <div class="message-time">@Model.commentTime</div>      
     </div>
 </div>

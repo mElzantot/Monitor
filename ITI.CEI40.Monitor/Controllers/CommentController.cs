@@ -56,8 +56,30 @@ namespace ITI.CEI40.Monitor.Controllers
         public IActionResult ActivityLog(int taskId)
         {
             string userId = usermanager.GetUserId(HttpContext.User);
-            List<SubTask> subTasks = unitOfWork.SubTasks.GetAllSubTasksWithTask(taskId);
-            return View("ActivityLog", subTasks);
+            //-------Get All Comments for Team Leader
+            List<Comment> taskComments = unitOfWork.Comments.GetCommentsForTeamLeader(taskId).ToList();
+
+            //-------Get SubTasks with Task
+            List<SubTask> subtasks = unitOfWork.SubTasks.GetSubTasksByTaskId(taskId);
+            //--------Group Comments
+            var CommentsGroups = taskComments.GroupBy(c => c.FK_SubTaskId);
+            //-----------Task Comments
+            var comments = CommentsGroups.Where(c => c.Key == null).ToList();
+            if (comments.Count > 0)
+            {
+                subtasks[0].Task.Comments = comments[0].ToList();
+            }
+
+            //---------SubTasks Comments
+            foreach (SubTask subtask in subtasks)
+            {
+                comments = CommentsGroups.Where(c => c.Key == subtask.Id).ToList();
+                if (comments.Count > 0)
+                {
+                    subtask.Comments = comments[0].ToList() as List<Comment>;
+                }
+            }
+            return View("ActivityLog", subtasks);
         }
 
 
@@ -96,7 +118,7 @@ namespace ITI.CEI40.Monitor.Controllers
             //-----------Add File To DB
             Files newFile = new Files
             {
-                FilePath = filePath,
+                FilePath = uniqeFileName,
                 CommentID = fileComment.Id
             };
 
@@ -177,7 +199,7 @@ namespace ITI.CEI40.Monitor.Controllers
             string uniqeFileName = Guid.NewGuid().ToString() + "_" + addedFile.file.FileName;
 
             //---------The full path for File
-            string filePath = Path.Combine(uploaderFolder, addedFile.file.FileName);
+            string filePath = Path.Combine(uploaderFolder,uniqeFileName);
 
             //----------Copy File to server
             using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
@@ -188,7 +210,7 @@ namespace ITI.CEI40.Monitor.Controllers
             //-----------Add File To DB
             Files newFile = new Files
             {
-                FilePath = filePath,
+                FilePath = uniqeFileName,
                 CommentID = fileComment.Id
             };
             newFile = unitOfWork.Files.Add(newFile);
