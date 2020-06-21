@@ -23,6 +23,9 @@ body {
     overflow: auto;
 }
 
+tr{
+    padding:2000px;
+}
 .gantt-table thead tr {
     background-color: #009879;
     color: #ffffff;

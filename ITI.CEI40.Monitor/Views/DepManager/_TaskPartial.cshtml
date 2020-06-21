@@ -21,18 +21,34 @@
                 break;
         }
 
-        <div class="dropleft">
-            <button class="btn btn-sm btn-outline-info rounded-circle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i style="font-size:16px" class="fas fa-info mx-1"></i></button>
+        @if (DateTime.Now > Model.Task.EndDate)
+        {
+            <div class="timeup">
+                Time UP
+            </div>
+        }
 
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                @if (Model.Task.Description != null)
-                {
-                    <div class="text-muted p-2"><pre>@Model.Task.Description</pre></div>
-                }
-                else
-                {
-                    <div class="p-2" style="color:red">Please add desceiption .</div>
-                }
+
+
+        <div style="display:flex">
+            @if (Model.Task.Team == null)
+            {
+                <button class="btn btn-primary small mr-2" onclick="viewModal(@Model.Task.Id)">+ Assign to team</button>
+            }
+
+            <div class="dropleft">
+                <button class="btn btn-sm btn-outline-info rounded-circle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i style="font-size:16px" class="fas fa-info mx-1"></i></button>
+
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    @if (Model.Task.Description != null)
+                    {
+                        <div class="text-muted p-2"><pre>@Model.Task.Description</pre></div>
+                    }
+                    else
+                    {
+                        <div class="p-2" style="color:red">There is no discription .</div>
+                    }
+                </div>
             </div>
         </div>
     </div>
@@ -118,44 +134,36 @@
 
 
 
-    @if (Model.Task.Description != null)
-    {
-        <div style="padding:30px 30px 10px 30px">
-            <div id="s @Model.Task.Id" style="display:none;height:200px;border-width:1px 1px 0px 1px; border-style:solid;border-color:rgb(218, 217, 217);border-radius:3px 3px 0 0">
 
-                <button onclick="HiCommentSec(@Model.Task.Id)" class="btn btn-sm" style="position:absolute;right: 14.3em;"><i class="fas fa-window-close"></i></button>
-                @if (Model.Task.Comments != null)
+
+    <div style="padding:30px 30px 10px 30px">
+
+
+        <div class="mb-2">
+            <button id="toggleBtn" value="High" class="btn btn-sm btn-outline-warning" onclick="CommentsToggle()">Project Manager</button>
+        </div>
+
+        <div id="s @Model.Task.Id" style="display:none;height:200px;border-width:1px 1px 0px 1px; border-style:solid;border-color:rgb(218, 217, 217);border-radius:3px 3px 0 0">
+
+            <button onclick="HiCommentSec(@Model.Task.Id)" class="btn btn-sm" style="position:absolute;right: 14.3em;"><i class="fas fa-window-close"></i></button>
+            @if (Model.Task.Comments != null)
+            {
+
+                @foreach (var item in Model.Task.Comments)
                 {
-
-                    @foreach (var item in Model.Task.Comments)
-                    {
-                        <partial name="_CommentPartial" model="item" />
-                    }
+                    <partial name="_CommentPartial" model="item" />
                 }
+            }
 
-            </div>
-
-
-            <textarea onfocus="ExCommentSec(@Model.Task.Id)" id="commentArea" class=" form-control mb-2" placeholder="Add Comment Here......"></textarea>
-
-            <div style=" display:flex;justify-content:flex-end">
-                <button class="btn btn-sm btn-outline-secondary " type="button" id="AddFile" onclick="AddFile(@Model.Task.Id)"><i class="fas fa-paperclip"></i> Add File</button>
-                <button class="btn btn-sm btn-outline-info  ml-1" type="button" id="AddComment" onclick="AddComment(@Model.Task.Id)">Comment</button>
-            </div>
         </div>
 
-    }
-    else
-    {
 
-        <div style="padding:30px 30px 10px 30px">
-            <textarea asp-for="Task.Description" id="taskDesc" class="form-control mb-2" placeholder="Add Task Description ......"></textarea>
+        <textarea onfocus="ExCommentSec(@Model.Task.Id)" id="commentArea" class=" form-control mb-2" placeholder="Add Comment Here......"></textarea>
 
-            <div style="display:flex;justify-content:flex-end">
-                <button class="btn btn-sm btn-outline-info" type="button" id="taskDesc" onclick="updateDesc(@Model.Task.Id)">Add Description</button>
-            </div>
+        <div style=" display:flex;justify-content:flex-end">
+            <button class="btn btn-sm btn-outline-secondary " type="button" id="AddFile" onclick="AddFile(@Model.Task.Id)"><i class="fas fa-paperclip"></i> Add File</button>
+            <button class="btn btn-sm btn-outline-info  ml-1" type="button" id="AddComment" onclick="AddComment(@Model.Task.Id)">Comment</button>
         </div>
-
-    }
+    </div>
 
 </div>

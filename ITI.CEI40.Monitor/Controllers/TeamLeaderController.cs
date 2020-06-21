@@ -202,65 +202,41 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
 
-        //public JsonResult TryJson()
-        //{
-        //    string engId = userManager.GetUserId(HttpContext.User);
-        //    List<SubTask> subtasks = unitOfWork.SubTasks.GetEngineerComletedSubTasks(engId);
-
-        //    List<string> months = new List<string>();
-        //    List<float> quality = new List<float>();
-        //    List<float> complexity = new List<float>();
-        //    List<float> time = new List<float>();
-        //    List<int> subNo = new List<int>();
-        //    List<float> totalDuration = new List<float>();
-        //    List<float> tasksDuration = new List<float>();
-
-        //    string engName = subtasks[0].Engineer.UserName;
-        //    string month;
-        //    int i = -1;
+        public IActionResult MyTasks()
+        {
+            int teamID = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
+            var tasks = unitOfWork.Tasks.GetTasksByTeamIDWithSubs(teamID);
+            return View("MyTasks", tasks);
+        }
 
 
-        //    foreach (var item in subtasks)
-        //    {
-        //        month = item.EndDate.Value.ToString("MMMM");
-        //        if (!months.Contains(month))
-        //        {
-        //            months.Add(month);
-        //            complexity.Add(item.Complexity);
-        //            quality.Add(item.Quality * item.Complexity);
-        //            time.Add(item.TimeManagement * item.Complexity);
-        //            totalDuration.Add(item.ActualDuration);
-        //            subNo.Add(1);
-        //            i++;
-        //        }
-        //        else
-        //        {
-        //            complexity[i] += item.Complexity;
-        //            quality[i] += item.Quality * item.Complexity;
-        //            time[i] += item.TimeManagement * item.Complexity;
-        //            totalDuration[i] += item.ActualDuration;
-        //            subNo[i] += 1;
-        //        }
-        //    }
+        public PartialViewResult MyTaskPartial(int taskId)
+        {
+            ActDetailsViewModel ActDetailsVM = new ActDetailsViewModel
+            {
+                Task = unitOfWork.Tasks.GetTaskWithProjectAndTeam(taskId),
+                HighComments = unitOfWork.Comments.GetHighCommentforTask(taskId).ToList(),
+            };
+            ActDetailsVM.MedComments = unitOfWork.Comments.GetMedCommentforTask(taskId).ToList();
+            return PartialView("_MyTasksPartial", ActDetailsVM);
+        }
 
-        //    for (int j = 0; j < months.Count(); j++)
-        //    {
-        //        quality[j] = quality[j] / complexity[j];
-        //        time[j] = time[j] / complexity[j];
-        //    }
+        [Authorize(Roles = "TeamLeader")]
+        [HttpGet]
+        public IActionResult AddSubTask(int taskID)
+        {
+            var taskVM = new TaskViewModel
+            {
+                TaskId = taskID,
+                TaskName = unitOfWork.Tasks.GetById(taskID).Name,
+                taskDescription = unitOfWork.Tasks.GetById(taskID).Description,
+                SubTasks = unitOfWork.SubTasks.GetSubTasksByTaskId(taskID),
+            };
+            return View("AddSubTask", taskVM);
+        }
 
-        //    EngineerChrtViewModel engineerChrtView = new EngineerChrtViewModel
-        //    {
 
-        //        EngineerName = engName,
-        //        Months = months,
-        //        Quality = quality,
-        //        Time = time,
-        //        Complexity = complexity,
 
-        //    };
-        //    return Json(engineerChrtView);
-        //}
 
         [HttpGet]
         public IActionResult displayCancellesSubTasks(string engId)
@@ -269,6 +245,7 @@ namespace ITI.CEI40.Monitor.Controllers
 
             return PartialView(subtasks);
         }
+
 
         [HttpGet]
         public IActionResult displayAll()

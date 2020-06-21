@@ -49,9 +49,13 @@
 
                 @if (User.IsInRole(Roles.TeamLeader.ToString()))
                 {
+                    @*<li class="nav-item">
+                    <a class="nav-link px-3 py-1" asp-controller="task" asp-action="ViewTasks"><i id="i" class="fas fa-tasks"></i> Tasks |</a>
+                </li>*@
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-1" asp-controller="task" asp-action="ViewTasks"><i id="i" class="fas fa-tasks"></i> Tasks |</a>
+                        <a class="nav-link px-3 py-1  " asp-controller="TeamLeader" asp-action="MyTasks"><i id="i" class="fas fa-tasks"></i> Tasks |</a>
                     </li>
+
                     <li class="nav-item">
                         <a class="nav-link px-3 py-1  " asp-controller="TeamLeader" asp-action="EngineersView"><i class="fas fa-users"></i> Team |</a>
                     </li>
@@ -61,6 +65,7 @@
                     <li class="nav-item">
                         <a class="nav-link px-3 py-1  " asp-controller="TeamLeader" asp-action="DisplayAll"><i class="fas fa-stream"></i> Resources |</a>
                     </li>
+
                 }
                 @if (User.IsInRole(Roles.Engineer.ToString()))
                 {
@@ -102,10 +107,18 @@
                     <a id="log" class="nav-link px-3 py-0 " style="cursor: pointer;">Login</a>
                 </li>
             }
-            <li class="nav-item">
-            <a class="nav-link px-3 py-1  " asp-controller="Employee" asp-action="ViewEmployees"><i class="fas fa-users"></i> Employees |</a>
-        </li>
 
+
+
+            <li class="nav-item">
+                <a class="nav-link px-3 py-1  " asp-controller="Department" asp-action="ViewDepartments"><i class="fas fa-sitemap"></i> Organization |</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link px-3 py-1  " asp-controller="Employee" asp-action="ViewEmployees"><i class="fas fa-users"></i> Employees |</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link px-3 py-1  " asp-controller="Holiday" asp-action="Index"><i id="i" class="fas fa-chart-area"></i> Holidays |</a>
+            </li>
 
         </ul>
     </div>

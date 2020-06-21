@@ -5,49 +5,37 @@
 
 
 <div>
-    <div class="row">
-        <h3 class="text-muted m-3">Teams</h3>
-    </div>
-    <div class="row " style="border: 2px solid rgb(219, 219, 219) ; border-radius: 8px;">
-        <div class="col-3 innerleft pt-4 " style="border-right:2px solid rgb(219, 219, 219);">
-                <table class="table table-hover text-center " id="teamTable">
-                    <thead class="table-hover">
-                        <tr>
-                            <th scope="col">Name</th>
-                            <th scope="col">Leader</th>
+    <div style="display:flex;justify-content:space-evenly">
+        <div class="innerleft slice" style="width:30%; padding:50px 15px 15px 20px">
+            <table class="table table-hover text-center " id="teamTable">
+                <tbody>
+                    @for (int i = 0; i < Model.Count(); i++)
+                    {
+                        <tr id="@Model[i].Id" onclick="displayTasks(@Model[i].Id)">
+                            <td>@Model[i].Name</td>
+                            @if (Model[i].TeamLeader != null)
+                            {
+                                <td>@Model[i].TeamLeader.UserName</td>
+                            }
+                            else
+                            {
+                                <td style="color:red">No team leader</td>
+                            }
                         </tr>
-                    </thead>
-                    <tbody>
-                        @for (int i = 0; i < Model.Count(); i++)
-                        {
-
-                            <tr id="@Model[i].Id" onclick="displayTasks(@Model[i].Id)">
-                                <td>@Model[i].Name</td>
-                                @if (Model[i].TeamLeader != null)
-                                {
-                                    <td>@Model[i].TeamLeader.UserName</td>
-                                }
-                                else
-                                {
-                                    <td></td>
-                                }
-                                @*<td><button class="btn btn-info" onclick='displayCharts("@Model[i].Id")'>Charts</button></td>*@
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                    }
+                </tbody>
+            </table>
         </div>
-        
-        <div class="col-9 innerright " >
-            <div  padding: 15px; border-radius: 8px;" class="mt-4">               
-                
-                <div class="row" id="tasks" style="margin:auto">
-                    <h4 id="alertdiv" class="text-muted text-center mt-4" style= "margin:auto;">Select Team to Show Data</h4>
-                    <div id="tableBody" class="table table-hover">
-                    </div>
+
+        <div class="innerright slice" style="width:67%;padding:15px">
+            <div class="row" id="tasks" style="margin:auto">
+                <h4 id="alertdiv" class="text-muted text-center mt-5" style="margin:auto;">Select Team to Show Data</h4>
+
+                <div id="tableBody" class="table table-hover">
                 </div>
             </div>
         </div>
+
     </div>
 </div>
 
@@ -176,3 +164,25 @@
     </script>
 }
 
+
+@section Style{
+
+    <style>
+
+        .container {
+            max-width: 1250px;
+        }
+
+        body {
+            background-color: #eef5f0;
+        }
+
+        .slice {
+            border: 0px solid white;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+    </style>
+
+}

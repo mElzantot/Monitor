@@ -1,95 +1,79 @@
 ﻿@model ActivityViewModel
 @{
-    ViewData["Title"] = "AssignTasks";
+    ViewData["Title"] = "MY Tasks";
+    Model.Tasks = Model.Tasks.ToList();
 }
 
+<div>
+    <div style="display:flex;justify-content:space-evenly">
 
-@if (Model.Tasks.Count() == 0)
-{
-    <div class="row col-8" style="border: 2px solid rgb(219, 219, 219) ; border-radius: 8px; margin:auto;">
-        <h4 class="text-muted " style="margin:auto;margin-top:15px;margin-bottom:15px">No Tasks Assigned to Your Department</h4>
-    </div>
-}
-else
-{
-    <div id="MainView">
-        <div class="row">
-            <h3 class="text-muted m-3">Tasks</h3>
-        </div>
-        <div class="row " style="border: 2px solid rgb(219, 219, 219) ; border-radius: 8px;">
-            <div class="col-12  " style="border-right:2px solid rgb(219, 219, 219); margin-top:15px">
-                <table class="table table-hover" id="teamTable">
+        <div class="innerleft slice pt-4" style="width:35%;padding:20px">
+            <table class="table table-hover text-center" id="teamTable">
+                <tbody>
+                    @for (int i = 0; i < Model.Tasks.Count(); i++)
+                    {
+                        <tr id="@Model.Tasks[i]" onclick='displayTaskDetails("@Model.Tasks[i].Id")'>
+                            <td>@Model.Tasks[i].Name</td>
 
-                    <thead class="tableh alert-primary">
-                        <tr>
-                            <th>Name</th>
-                            <th>Project</th>
-                            <th>From </th>
-                            <th>To </th>
-                            <th>Priority</th>
-                            <th>Working Hours</th>
-                            <th></th>
-                            <th>Progress</th>
-                            <th>Assigned To</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        @foreach (var item in Model.Tasks)
-                        {
-                            <tr id="@item.Id">
-                                <td>@item.Name</td>
-                                <td>@item.Project.Name</td>
-                                <td>@item.StartDate.Date.ToShortDateString()</td>
-                                <td>@item.EndDate.Date.ToShortDateString()</td>
-                                <td>@item.Priority</td>
-                                <td>@item.ActualDuratoin Hours</td>
+                            @if (@Model.Tasks[i].Team == null)
+                            {
                                 <td>
-                                    <div class="btn-group dropleft">
-                                        <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-info"></i>
-                                        </button>
-                                        <div class="dropdown-menu">
-                                            @item.Description
-                                        </div>
-                                    </div>
+                                    <div style="color:red" id="Assignedteam"> Not assigned to team</div>
                                 </td>
-                                @if (item.Progress == 100)
-                                {
-                                    <td>
-                                        <button class="btn btn-success">
-                                            Submit
-                                        </button>
-                                    </td>
-                                }
-                                else
-                                {
-                                    <td>
-                                        <div class="progress">
-                                            <div class="progress-bar" role="progressbar" style="width: @item.Progress%; " aria-valuemin="0" aria-valuemax="100">@item.Progress%</div>
-                                        </div>
-                                    </td>
-                                }
-                                @if (item.FK_TeamId == null)
-                                {
-                                    <td id="chId"><button onclick="viewModal(@item.Id)" class="btn btn-secondary" type="submit">Assign</button></td>
-                                }
-                                else
-                                {
-                                    <td>@item.Team.Name</td>
-                                }
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                            }
+                            else
+                            {
+                                <td>@Model.Tasks[i].Team.Name</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="innerright  slice" style="width:60%">
+            <div style=" padding: 15px; border-radius: 8px;">
+                <div class="row" style="margin:auto;" id="tasks">
+                    <h4 id="alertdiv" class="text-muted text-center mt-5" style="margin:auto;">Select Task to Show Data</h4>
+                    <div id="tableBody" class="table table-hover align-middle">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+</div>
 
 
+<!-- File Modal -->
+<div class="modal fade" id="FileModal" tabindex="-1" role="dialog" aria-labelledby="FileModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="FileModalLabel">Files</h5>
+            </div>
+            <form id="fileForm" enctype="multipart/form-data" method="post">
+                <div class="modal-body">
+                    <label>Upload File</label>
+                    <div class="custom-file">
+                        <input name="file" class="form-control custom-file-input" type="file" />
+                        <label class="custom-file-label">Choose File...</label>
+                    </div>
+                    <input id="task_Id" name="taskId" value="" hidden />
+                </div>
+                <div class="modal-footer">
+                    <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
+                    <button onclick="uploadFile()" type="button" class="btn btn-primary">Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 
-    <!-- Assign Team -->
+<!-- Assign Team -->
+@if (User.IsInRole(Roles.DepartmentManager.ToString()))
+{
     <div class="modal fade" id="AssignTeamModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -114,20 +98,173 @@ else
             </div>
         </div>
     </div>
-
-    <div id="Board">
-    </div>
-
 }
 
 
-@section Scripts{
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-
+<!-- #endregion -->
+@section scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
     <script>
 
-        ////Assign Tasks
+        function displayTaskDetails(id) {
+            $.ajax({
+                url: "/DepManager/GetTask/",
+                type: "Get",
+                data: { taskid: `${id}` },
+                success: function (result) {
+                    if (result) {
+                        $('#alertdiv').hide();
+                        $('#tableBody').empty();
+                        $('#tableBody').append(result);
+                    }
+                },
+                error: function (x, y, err) {
+                    console.log(err);
+                }
+            })
+        }
+
+        $(function () {
+            $('#toggle-two').bootstrapToggle({
+                on: 'Enabled',
+                off: 'Disabled'
+            });
+        })
+
+
+
+        function Submit(Id) {
+            $("#togleBtn").trigger("click");
+            $('#Submit').click(function () {
+                $("#exampleModal").modal('toggle');
+                var complex = $('#complex').val();
+                var evaluation = $('#evaluation').val();
+
+                $.ajax({
+                    url: "/TeamLeader/SubmitSubTask",
+                    type: "Get",
+                    data: {
+                        id: Id,
+                        complexity: complex,
+                        evaluation: evaluation
+                    },
+                    success: function () {
+                        $(`#${Id}`).hide();
+                    }
+                })
+            })
+        }
+
+
+        //-----------Add Description
+        function updateDesc(taskId) {
+            $.ajax({
+                url: "/Task/AddTaskDesc",
+                type: "Post",
+                data: { taskId: taskId, taskDesc: $("#taskDesc").val() },
+                success: function (result) {
+                    $('#tableBody').empty();
+                    $('#tableBody').append(result);
+                },
+                error: function (x, y, err) {
+                    console.log(err);
+                }
+            })
+        }
+
+
+
+        //----------Add File----------//
+
+        function AddFile(taskId) {
+            isHighLevel = true;
+            console.log($("#toggleBtn").val());
+            console.log(isHighLevel);
+            if ($("#toggleBtn").val() == "Med")
+                isHighLevel = false
+            $('#task_Id').attr("value", taskId);
+            $('#isHighLevelBool').attr("value", isHighLevel);
+            $('#FileModal').modal('show');
+            console.log(isHighLevel);
+        }
+
+        $('input[type="file"]').change(function (e) {
+            fileName = e.target.files[0].name;
+            $(".custom-file-label").html(fileName);
+        });
+
+        function uploadFile() {
+            let form = $('#fileForm')[0];
+            let data = new FormData(form);
+            if (fileName) {
+                $.ajax({
+                    type: 'post',
+                    url: `/comment/AddFileForTask?isHighLevel=` + `${isHighLevel}`,
+                    processData: false,  // Important!
+                    contentType: false,
+                    cache: false,
+                    data: data,
+                    success: function (response) {
+                        $("#FileModal").modal('hide');
+                        console.log(response.msg);
+                    }
+                })
+            }
+        }
+
+
+
+        //----------Add Comment-----------//
+
+        function AddComment(taskId) {
+            let comment = $('#commentArea').val();
+            let isHighLevel = true;
+            if ($("#toggleBtn").val() == "Med")
+                isHighLevel = false
+            if (comment) {
+                $.ajax({
+                    type: "Post",
+                    url: `/Comment/AddCommentForTask/`,
+                    data: {
+                        comment: comment,
+                        taskId: taskId,
+                        isHighLevel: isHighLevel
+                    },
+                    success: function (res) {
+                        $('#commentArea').val("");
+                        console.log(res);
+                    },
+                    error: function (x, y, err) {
+                        console.log(err);
+                    }
+                })
+            }
+        }
+
+
+
+        function CommentsToggle() {
+            if ($("#toggleBtn").val() == "High") {
+                $("#toggleBtn").val("Med");
+                $("#toggleBtn").html("Team Leader");
+                $("#toggleBtn").removeClass("btn-outline-warning");
+                $("#toggleBtn").addClass("btn-outline-success");
+                $("#HighLevel").css("display", "none");
+                $("#MedLevel").css("display", "block");
+            }
+            else {
+                $("#toggleBtn").val("High");
+                $("#toggleBtn").html("Project Manager");
+                $("#toggleBtn").removeClass("btn-outline-success");
+                $("#toggleBtn").addClass("btn-outline-warning");
+                $("#MedLevel").css("display", "none");
+                $("#HighLevel").css("display", "block");
+            }
+        }
+
+        //---------Assign Task To Team
         var taskID;
         function viewModal(id) {
             taskID = id;
@@ -135,8 +272,8 @@ else
         }
 
         function assignTeams() {
+            debugger;
             var team = $('#teams').val();
-                
             $.post({
                 type: "POST",
                 url: `/DepManager/AssignTasks`,
@@ -144,13 +281,10 @@ else
                     taskId: taskID,
                     teamId: team
                 },
-
                 success: function (result) {
                     alert('Task assigned Successfully !');
-                    //$(`ch-${result.taskid}`).empty();
-                    //$(`ch-${result.taskid}`).append(result.teamName);
-                    $('#chId').empty();
-                    $('#chId').append(result.teamName);
+                    $("#Assignedteam").html(result.teamName);
+                    $("#Assignedteam").css('color', 'black');
                     $('#AssignTeamModal').modal('hide');
                 },
                 error: function (x, y, err) {
@@ -159,5 +293,61 @@ else
             })
         }
 
+        $('#FileModal').on('hidden.bs.modal', function (e) {
+            $(".custom-file-label").html("");
+        })
+
+
+
+        function ExCommentSec(id) {
+            document.getElementById(`s ${id}`).style.display = "block"
+        }
+
+        function HiCommentSec(id) {
+            document.getElementById(`s ${id}`).style.display = "none"
+        }
+
     </script>
 }
+
+@section Style{
+
+    <style>
+
+        .message-text {
+            padding: 20px, 14px;
+            font-size: 1rem;
+            margin-bottom: 0px;
+        }
+
+        .message-time {
+            font-size: .8rem;
+            color: #777;
+        }
+
+        body {
+            background-color: #eef5f0;
+        }
+
+        .slice {
+            border: 0px solid white;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        }
+
+        .timeup {
+            top: 4.4rem;
+            background: rgb(179, 20, 20);
+            
+            position: absolute;
+            left: 51rem;
+            font-size: 1.5rem;
+            padding: 21px 20px 6px 20px;
+            border: 0 solid;
+            border-radius: 0 0 10px 10px;
+        }
+    </style>
+    <link rel="stylesheet" href="~/css/circle.css" />
+}
+

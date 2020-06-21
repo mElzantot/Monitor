@@ -163,8 +163,8 @@ namespace ITI.CEI40.Monitor.Controllers
                 SubTasks = unitOfWork.SubTasks.GetSubTasksByTaskId(taskID),
             };
             return PartialView("_SubTaskDisplayPartial", taskVM);
-
         }
+
 
         [Authorize(Roles = "TeamLeader")]
         [HttpGet]

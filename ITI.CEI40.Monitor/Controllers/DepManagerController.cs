@@ -19,7 +19,7 @@ namespace ITI.CEI40.Monitor.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IHubContext<NotificationsHub> hubContext;
 
-        public DepManagerController(IUnitOfWork unitOfWork , UserManager<ApplicationUser> userManager , IHubContext<NotificationsHub> hubContext)
+        public DepManagerController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IHubContext<NotificationsHub> hubContext)
         {
             this.unitOfWork = unitOfWork;
             this.userManager = userManager;
@@ -33,7 +33,7 @@ namespace ITI.CEI40.Monitor.Controllers
         public IActionResult TeamsView()
         {
             int DepId = unitOfWork.Departments.GetDepartmentWithManagerID(userManager.GetUserId(HttpContext.User)).Id;
-            IEnumerable<Team> teams= unitOfWork.Teams.getTeamsinsideDept(DepId);
+            IEnumerable<Team> teams = unitOfWork.Teams.getTeamsinsideDept(DepId);
             return View(teams);
         }
 
@@ -52,13 +52,25 @@ namespace ITI.CEI40.Monitor.Controllers
             activityVM.Tasks = unitOfWork.Tasks.GetDepartmentTasks(DepId).ToList();
             activityVM.Teams = unitOfWork.Teams.getTeamsinsideDept(DepId).ToList();
 
-            return View("/Views/Project/Details.cshtml",activityVM);
+            return View("AssignTasks", activityVM);
         }
 
 
+        [HttpGet]
+        public PartialViewResult GetTask(int taskId)
+        {
+            ActDetailsViewModel ActDetailsVM = new ActDetailsViewModel
+            {
+                Task = unitOfWork.Tasks.GetTaskWithProjectAndTeam(taskId),
+                HighComments = unitOfWork.Comments.GetHighCommentforTask(taskId).ToList(),
+            };
+            ActDetailsVM.MedComments = unitOfWork.Comments.GetMedCommentforTask(taskId).ToList();
+            return PartialView("_TaskPartial", ActDetailsVM);
+        }
+
 
         [HttpPost]
-        public  JsonResult AssignTasks(int taskId,int teamId)
+        public JsonResult AssignTasks(int taskId, int teamId)
         {
             if (ModelState.IsValid)
             {
@@ -89,10 +101,10 @@ namespace ITI.CEI40.Monitor.Controllers
                 hubContext.Clients.User(notificationUsers.userID).SendAsync("newNotification", messege, false, Savednotification.Id);
 
 
-                return Json(new { teamName=team.Name});
+                return Json(new { teamName = team.Name });
             }
 
-            return Json(new {  });
+            return Json(new { });
         }
 
         //Omar to edit status if the Departement manager submit the subtask
@@ -119,7 +131,7 @@ namespace ITI.CEI40.Monitor.Controllers
         public IActionResult CancelledTasks(int depid)
         {
             var tasks = unitOfWork.Tasks.GetDepCancelledTasks(depid).ToList();
-            return View( tasks);
+            return View(tasks);
         }
 
         [HttpGet]

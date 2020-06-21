@@ -5,26 +5,23 @@
 }
 
 <div>
-    <div style="display:flex;justify-content:space-evenly">
+    <div style="height:70px">
 
-        <div class="innerleft slice pt-4" style="width:35%;padding:20px">
-            <h4 style="margin-bottom:35px">@Model.Tasks[0].Project.Name</h4>
-
+    </div>
+    <div class="row " style="border: 0px solid white; border-radius: 8px; background:white; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
+        <div class="col-3  innerleft pt-4" style="border-right:2px solid rgb(219, 219, 219);">
             <table class="table table-hover text-center" id="teamTable">
                 <tbody>
                     @for (int i = 0; i < Model.Tasks.Count(); i++)
                     {
                         <tr id="@Model.Tasks[i]" onclick='displayTaskDetails("@Model.Tasks[i].Id")'>
                             <td>@Model.Tasks[i].Name</td>
-                            <td>@Model.Tasks[i].Department.Name</td>
                         </tr>
                     }
                 </tbody>
             </table>
         </div>
-
-
-        <div class="innerright  slice" style="width:60%">
+        <div class="col-9 innerright ">
             <div style=" padding: 15px; border-radius: 8px;">
                 <div class="row" style="margin:auto;" id="tasks">
                     <h4 id="alertdiv" class="text-muted text-center mt-5" style="margin:auto;">Select Task to Show Data</h4>
@@ -293,15 +290,6 @@
         })
 
 
-
-        function ExCommentSec(id) {
-            document.getElementById(`s ${id}`).style.display = "block"
-        }
-
-        function HiCommentSec(id) {
-            document.getElementById(`s ${id}`).style.display = "none"
-        }
-
     </script>
 }
 
@@ -323,25 +311,8 @@
         body {
             background-color: #eef5f0;
         }
-
-        .slice {
-            border: 0px solid white;
-            border-radius: 8px;
-            background: white;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-        }
-        .timeup {
-            top: 4.4rem;
-            background: red;
-            position: absolute;
-            left: 51rem;
-            font-size: 1.5rem;
-            padding: 5px 20px;
-            border: 0 solid;
-            border-radius: 0 0 10px 10px;
-        }
-
     </style>
-    <link rel="stylesheet" href="~/css/circle.css" />
 }
+
+
 

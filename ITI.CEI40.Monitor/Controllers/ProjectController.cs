@@ -44,10 +44,10 @@ namespace ITI.CEI40.Monitor.Controllers
         public IActionResult Details(int Id)
         {
             ActivityViewModel activityVM = new ActivityViewModel();
-            activityVM.Tasks = unitofwork.Tasks.GetActivitiesFromProject(Id).ToList();
+            activityVM.Tasks = unitofwork.Tasks.GetProjectTasksWithDep(Id).ToList();
             return View(activityVM);
         }
-
+        
 
         [HttpPost]
         public JsonResult Add(Project project)
