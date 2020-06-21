@@ -16,8 +16,6 @@ namespace ITI.CEI40.Monitor.Entities.Enums
         [Display(Name = "Team Leader")]
         TeamLeader,
         Engineer,
-        [Display(Name = "Finance")]
         Finance
-
     }
 }
