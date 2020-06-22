@@ -162,6 +162,14 @@ namespace ITI.CEI40.Monitor.Controllers
         {
             int teamId = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
             List<ApplicationUser> teamMenmbers = unitOfWork.Engineers.GetEngineersInsideTeamWithSubTasks(teamId);
+
+            #region remove the DepManager
+            Team team = unitOfWork.Teams.GetById(teamId);
+            string depmanid = unitOfWork.Departments.GetDepManagerIdWithDepId(team.FK_DepartmentId);
+            ApplicationUser depmanager = userManager.Users.FirstOrDefault(u => u.Id == depmanid);
+            teamMenmbers.RemoveAll(e => e.UserName == depmanager.UserName);
+            #endregion
+            // remove the team leader
             teamMenmbers.RemoveAll(e => e.UserName == HttpContext.User.Identity.Name);
             List<string> Ids = new List<string>();
 

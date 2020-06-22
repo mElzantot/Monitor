@@ -126,7 +126,29 @@ namespace ITI.CEI40.Monitor.Controllers
             unitOfWork.Tasks.Edit(task);
         }
 
+        public void ChangeStatus(int Id, int Status)
+        {
+            var task = unitOfWork.Tasks.GetById(Id);
+            task.Status = (Status)Status;
+            if (Status == 2)
+            {
+                task.ActualEndDate = DateTime.Now;
+                #region notification
+                int teamID = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
+                Team team = unitOfWork.Teams.GetById(teamID);
+                ApplicationUser teammanager = userManager.Users.FirstOrDefault(u => u.Id == team.FK_TeamLeaderId);
+                Department dep = unitOfWork.Departments.GetById(team.FK_DepartmentId);
+                string messege = $"Congartulations *{teammanager.UserName}=*  the task *{task.Name}=*  at *{DateTime.Now}=*.";
+                SendNotification(messege, team.FK_TeamLeaderId);
+                #endregion
 
+            }
+            else
+            {
+
+            }
+            unitOfWork.Tasks.Edit(task);
+        }
 
         [HttpGet]
         public IActionResult CancelledTasks(int depid)
@@ -150,6 +172,29 @@ namespace ITI.CEI40.Monitor.Controllers
             return View("_DashBoardPartial", subtask);
         }
 
+        public void SendNotification(string messege, params string[] usersId)
+        {
+            Notification Notification = new Notification
+            {
+                messege = messege,
+                seen = false
+            };
+            Notification Savednotification = unitOfWork.Notification.Add(Notification);
+
+            for (int i = 0; i < usersId.Length; i++)
+            {
+                NotificationUsers notificationUsers = new NotificationUsers
+                {
+                    NotificationId = Savednotification.Id,
+                    userID = usersId[i]
+                };
+                unitOfWork.NotificationUsers.Add(notificationUsers);
+
+                //---------Send Notification to Employee
+                hubContext.Clients.User(usersId[i]).SendAsync("newNotification", messege, false, Savednotification.Id);
+            }
+
+        }
 
 
     }

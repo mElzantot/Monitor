@@ -21,11 +21,15 @@
                         }
                         else if (Model[i].Status == Status.OnHold)
                         {
-                            <td><div class="btn btn-sm btn-warning">On Hold</div></td>
+                            <td>
+                                <button id="hold-@Model[i].Id" class="btn btn-sm btn-warning" onclick="ChangeStatus(event,@Model[i].Id)">OnHold</button>
+                            </td>
                         }
                         else
                         {
-                            <td><div class="btn btn-sm btn-success">Active</div></td>
+                            <td>
+                                <button id="hold-@Model[i].Id" class="btn btn-sm btn-success" onclick="ChangeStatus(event,@Model[i].Id)">Active</button>
+                            </td>
                         }
 
                     </tr>
@@ -371,6 +375,67 @@
             document.getElementById(`s-${id}`).style.display = "none"
         }
 
+
+        //Change status
+        function ChangeStatus(event, Id) {
+            event.stopPropagation();
+            var element = event.target;
+            var txtValue = element.innerText;
+
+            if (txtValue == 'OnHold') {
+                if (confirm('Do you want to Active this task')) {
+                    AcceptStatus(Id, 0, '')
+                }
+            }
+            else {
+                $("#reasonModal").modal('show');
+                $("#reasonId").val(Id);
+            }
+        }
+
+
+        $('#send').click(function () {
+            let rID = $("#reasonId").val();
+            let rTxt = $("#reason").val();
+            if (rTxt) {
+                $("#reason").val('');
+                AcceptStatus(rID, 1, rTxt)
+                $("#reasonModal").modal('hide');
+            }
+        })
+
+
+        function AcceptStatus(Id, Status, Reason) {
+            switch (Status) {
+                case 0:
+                    $(`#hold-${Id}`).removeClass('btn-warning')
+                    $(`#hold-${Id}`).addClass('btn-success')
+                    $(`#hold-${Id}`).html('Active')
+
+                    break;
+                case 1:
+                    $(`#hold-${Id}`).removeClass('btn-success')
+                    $(`#hold-${Id}`).addClass('btn-warning')
+                    $(`#hold-${Id}`).html('OnHold')
+
+                    break;
+            }
+            $.ajax({
+                type: "GET",
+                url: `/Task/EditStatus`,
+                data: {
+                    id: Id,
+                    status: Status,
+                    reasen: Reason
+                },
+                success: function (response) {
+
+                },
+                error: function (x, y, err) {
+                    console.log(arguments)
+                }
+            })
+        }
 
     </script>
 }

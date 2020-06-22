@@ -22,7 +22,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         Department GetDepartmentWithManagerID(string managerId);
 
-
+        string GetDepManagerIdWithDepId(int departmentid);
 
     }
 

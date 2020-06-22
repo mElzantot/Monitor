@@ -6,26 +6,32 @@ using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
 using ITI.CEI40.Monitor.Entities.Enums;
+using ITI.CEI40.Monitor.Hubs;
 using ITI.CEI40.Monitor.Models.View_Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 namespace ITI.CEI40.Monitor.Controllers
-{ 
+{
     public class TaskController : Controller
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IHostingEnvironment hostingEnvironment;
+        private readonly IHubContext<NotificationsHub> hubContext;
 
-        public TaskController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
+
+        public TaskController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IHubContext<NotificationsHub> hubContext)
         {
             this.unitOfWork = unitOfWork;
             this.userManager = userManager;
             this.hostingEnvironment = hostingEnvironment;
+            this.hubContext = hubContext;
+
         }
 
         [Authorize(Roles = "TeamLeader")]
@@ -37,11 +43,28 @@ namespace ITI.CEI40.Monitor.Controllers
             return View(tasks);
         }
 
-        public void EditStatus(int id, int status)
+        [Authorize(Roles = "TeamLeader")]
+        public void EditStatus(int id, int status, string reasen)
         {
             Activity task = unitOfWork.Tasks.GetById(id);
             task.Status = (Status)status;
             unitOfWork.Tasks.Edit(task);
+            #region notification
+            int teamID = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
+            Team team = unitOfWork.Teams.GetById(teamID);
+            ApplicationUser teammanager = userManager.Users.FirstOrDefault(u => u.Id == team.FK_TeamLeaderId);
+            Department dep = unitOfWork.Departments.GetById(team.FK_DepartmentId);
+            string messege;
+            if (reasen == "" || reasen == null)
+            {
+                messege = $"*{teammanager.UserName}=* put the task *{task.Name}=* on Active status at *{DateTime.Now}=*.";
+            }
+            else
+            {
+                messege = $"*{teammanager.UserName}=* put the task *{task.Name}=* on Hold status because *{reasen}=* at *{DateTime.Now}=*.";
+            }
+            SendNotification(messege, dep.FK_ManagerID); 
+            #endregion
         }
 
         [HttpGet]
@@ -63,7 +86,7 @@ namespace ITI.CEI40.Monitor.Controllers
                 FK_sender = userId,
                 FK_TaskID = addedFile.taskId,
                 commentLevel = CommentLevels.High,
-                comment = HttpContext.User.Identity.Name.ToString() +  " uploaded File "
+                comment = HttpContext.User.Identity.Name.ToString() + " uploaded File "
             };
 
             fileComment = unitOfWork.Comments.Add(fileComment);
@@ -139,7 +162,33 @@ namespace ITI.CEI40.Monitor.Controllers
                 Task = unitOfWork.Tasks.GetTaskWithProjectAndTeam(taskId),
                 HighComments = unitOfWork.Comments.GetHighCommentforTask(taskId).ToList(),
             };
-            return PartialView("_TaskDetailsPartialView", ActDetailsVM); 
+            return PartialView("_TaskDetailsPartialView", ActDetailsVM);
         }
+
+        public void SendNotification(string messege, params string[] usersId)
+        {
+            Notification Notification = new Notification
+            {
+                messege = messege,
+                seen = false
+            };
+            Notification Savednotification = unitOfWork.Notification.Add(Notification);
+
+            for (int i = 0; i < usersId.Length; i++)
+            {
+                NotificationUsers notificationUsers = new NotificationUsers
+                {
+                    NotificationId = Savednotification.Id,
+                    userID = usersId[i]
+                };
+                unitOfWork.NotificationUsers.Add(notificationUsers);
+
+                //---------Send Notification to Employee
+                hubContext.Clients.User(usersId[i]).SendAsync("newNotification", messege, false, Savednotification.Id);
+            }
+
+        }
+
+
     }
 }

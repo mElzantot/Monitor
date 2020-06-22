@@ -31,7 +31,7 @@
                                 {
                                     <tr id="@item.Id" onclick="SelectRow(@item.Id)">
 
-                                        <td>
+                                        <td class="togg" onclick="ChangeISUnderWork(@item.Id, this)">
                                             <input onclick="ChangeISUnderWork(@item.Id)" id="sess-@item.Id" class="Ttime" asp-for="@item.IsUnderWork"  type="checkbox" data-toggle="toggle"
                                                    data-size="xs">
                                         </td>
@@ -214,10 +214,10 @@
 
 
 
-        function ChangeISUnderWork(e) {
+        function ChangeISUnderWork(id, td) {
             var g = document.getElementsByClassName("Ttime");
             cell = $(`#sess-${id}`);
-            cell.bootstrapToggle('toggle')
+            //cell.bootstrapToggle('toggle')
             $.ajax({
                 type: "Get",
                 url: `/Subtask/EditIsUnderWork`,
