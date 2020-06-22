@@ -18,28 +18,29 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 }
 <div class="buttons" style="display:flex;">
-    <input disabled id="submitBtn" type="button" class="btn btn-primary" onclick="submit()" value="submit project" />
-    <a style="width:130px; white-space: nowrap;" class="btn btn-light" href="/Project/Index">Back To List</a>
-    <a style="width:130px; white-space: nowrap;" class="btn btn-outline-secondary" href="/Project/Details/@Model.ProjectId">Project Details</a>
+    <input disabled id="submitBtn" type="button" class="btn" onclick="submit()" value="submit project" />
+    <a style="width:130px; white-space: nowrap;" class="btn" href="/Project/Index">Back To List</a>
+    <a style="width:130px; white-space: nowrap;" class="btn" href="/Project/Details/@Model.ProjectId">Project Details</a>
     <input hidden id="editBtn" type="button" class="btn btn-info" onclick="startEdit()" value="Edit project" />
-    <div class="viewmodes" style="margin-left:405px">
-        <span class="viewtext">View Mode : </span>
-        <button onclick="changeViewMode(1)" class="btn btn-outline-dark">Days</button>
-        <button onclick="changeViewMode(2)" class="btn btn-outline-dark">Weeks</button>
-        <button onclick="changeViewMode(3)" class="btn btn-outline-dark">Months</button>
+    <div class="viewmodes">
+        <span class="btn hbtn" >View Modes  . <i class="fas fa-street-view"></i> </span>
+        <button onclick="changeViewMode(1)" class="btn">Days</button>
+        <button onclick="changeViewMode(2)" class="btn">Weeks</button>
+        <button onclick="changeViewMode(3)" class="btn">Months</button>
     </div>
-    <button onclick="spliterTo(10)" class="btn btn-light">
-        <span class="ui-icon ui-icon-caret-1-w"></span>
+    <button onclick="spliterTo(10)" class="btn">
+        <i class="fas fa-chevron-left"></i>
     </button>
-    <button onclick="spliterTo(60)" class="btn btn-light">
-        <span class="ui-icon ui-icon-caret-2-e-w"></span>
+    <button onclick="spliterTo(60)" class="btn">
+        <i class="fas fa-chevron-left"></i>
+        <i class="fas fa-chevron-right"></i>
     </button>
-    <button onclick="spliterTo(90)" class="btn btn-light">
-        <span class="ui-icon ui-icon-caret-1-e"></span>
+    <button onclick="spliterTo(90)" class="btn">
+        <i class="fas fa-chevron-right"></i>
     </button>
 </div>
 <input id="proId" value="@Model.ProjectId" hidden="hidden" />
-<div class="splitview">
+<div class="splitview" >
     <div class="panel tablecontent">
         <table id="table" class="gantt-table">
             <thead calss="thead thead-dark">
@@ -249,7 +250,7 @@
              }
         }
 
-        fillHolidays(); // fill the arrayof disabled days 
+        fillHolidays(); // fill the arrayof disabled days
 
         //////////////////////////////////////
 
