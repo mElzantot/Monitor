@@ -113,21 +113,21 @@ namespace ITI.CEI40.Monitor.Controllers
 
             foreach (var item in subtasks)
             {
-                month = item.ActualEndDate.Value.ToString("MMMM");
-                if (!months.Contains(month))
-                {
-                    months.Add(month);
-                    complexity.Add(item.Complexity);
-                    quality.Add(item.Quality * item.Complexity);
-                    time.Add(item.TimeManagement * item.Complexity);
-                    i++;
-                }
-                else
-                {
-                    complexity[i] += item.Complexity;
-                    quality[i] += item.Quality * item.Complexity;
-                    time[i] += item.TimeManagement * item.Complexity;
-                }
+                    month = item.ActualEndDate.Value.ToString("MMMM");
+                    if (!months.Contains(month))
+                    {
+                        months.Add(month);
+                        complexity.Add(item.Complexity);
+                        quality.Add(item.Quality * item.Complexity);
+                        time.Add(item.TimeManagement * item.Complexity);
+                        i++;
+                    }
+                    else
+                    {
+                        complexity[i] += item.Complexity;
+                        quality[i] += item.Quality * item.Complexity;
+                        time[i] += item.TimeManagement * item.Complexity;
+                    }
             }
 
             for (int j = 0; j < months.Count(); j++)
@@ -138,7 +138,7 @@ namespace ITI.CEI40.Monitor.Controllers
 
             foreach (var item in subtasks)
             {
-                if (item.ActualEndDate.Value.Month == DateTime.Now.Month)
+                if (item.ActualEndDate.HasValue && item.ActualEndDate.Value.Month == DateTime.Now.Month)
                 {
                     subs.Add(item);
                 }
