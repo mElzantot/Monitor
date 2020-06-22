@@ -8,6 +8,8 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 {
     public interface ITaskManager : IRepository<Activity>
     {
+        Activity GetTaskWithTeamLeader(int taskId);
+        IEnumerable<Activity> GetDepartmentTasksIsCompleted(int depid);
         IEnumerable<Activity> GetAllWithAttributes();
         Activity GetTaskWithProject(int taskId);
         IEnumerable<Activity> GetAllTaskWithTheirProject(int teamId);

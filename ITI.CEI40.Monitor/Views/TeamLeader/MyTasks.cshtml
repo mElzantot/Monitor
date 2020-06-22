@@ -49,6 +49,30 @@
 </div>
 
 
+@*HoldModal*@
+<div class="modal" id="reasonModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Hold Reason</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+     
+            <div class="modal-body">
+                <input hidden id="reasonId" />
+                <input type="text" class="form-control" id="reason" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="send" class="btn btn-primary">Send</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 <!-- File Modal -->
 <div class="modal fade" id="FileModal" tabindex="-1" role="dialog" aria-labelledby="FileModalLabel" aria-hidden="true">
@@ -74,6 +98,8 @@
         </div>
     </div>
 </div>
+
+
 
 
 <!-- #endregion -->
@@ -245,6 +271,7 @@
 
         //Change status
         function ChangeStatus(event, Id) {
+
             event.stopPropagation();
             var element = event.target;
             var txtValue = element.innerText;
@@ -262,8 +289,10 @@
 
 
         $('#send').click(function () {
+
             let rID = $("#reasonId").val();
             let rTxt = $("#reason").val();
+            debugger
             if (rTxt) {
                 $("#reason").val('');
                 AcceptStatus(rID, 1, rTxt)
@@ -335,14 +364,13 @@
         }
 
         .timeup {
-            top: 4.4rem;
             background: rgb(179, 20, 20);
-            position: absolute;
-            left: 51rem;
             font-size: 1.5rem;
             padding: 21px 20px 6px 20px;
             border: 0 solid;
             border-radius: 0 0 10px 10px;
+            position: relative;
+            bottom: 15px;
         }
     </style>
     <link rel="stylesheet" href="~/css/circle.css" />

@@ -15,6 +15,7 @@ namespace ITI.CEI40.Monitor.Entities
             this.ActualDuratoin = 0;
             this.Complexity = 0;
             this.Comments = new HashSet<Comment>();
+            this.IsCompleted = false;
         }
         [Key]
         public int Id { get; set; }
@@ -82,6 +83,5 @@ namespace ITI.CEI40.Monitor.Entities
         public int? FK_DepID { get; set; }
 
         public Department Department { get; set; }
-
     }
 }

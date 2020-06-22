@@ -20,6 +20,8 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
                 .Include(t=>t.Engineers).Include(t => t.Tasks).ToList();
         }
 
+       
+
         public Team GetTeamWithAttributes(int id)
         {
             return set.Where(t => t.Id == id).Include(t => t.Department).Include(t => t.TeamLeader)
