@@ -40,7 +40,9 @@
                                         <div style="margin: 0 .3em 1em 1.5em;">
                                             <div class="">@comment.Sender.UserName</div>
                                             <div class="ml-2">
-                                                <a href="#" download="" class="">@comment.File.FilePath</a>
+                                                <a href="~/files/@comment.File.FilePath" download="@comment.File.FilePath.Split("_")[1]">
+                                                    @comment.File.FilePath.Split("_")[1]
+                                                </a>
                                             </div>
                                             <div class="message-time">@comment.commentTime</div>
                                         </div>
@@ -62,10 +64,7 @@
                                     <div id="depManComment">
                                         @foreach (var item in Model[0].Task.Comments)
                                         {
-                                            if (item.commentLevel == CommentLevels.Med)
-                                            {
-                                                <partial name="_CommentPartial" model="item" />
-                                            }
+                                            <partial name="_CommentPartial" model="item" />
                                         }
                                     </div>
                                 </div>
@@ -135,7 +134,7 @@
                                     <div class="rounded-circle" style="position: absolute; left: 22.2rem;top: 6.7rem;font-size:3em; width:1.5em;height:1.5em;background:white;display:flex;justify-content:center;align-items:center">
                                         @Model[i].ActualDuration <span class="text-muted" style="font-size:25px">h</span>
                                     </div>
-                                    
+
                                 </div>
                                 <div style="padding:.4em; display:flex; justify-content:space-between; background-color:var(--green) ;border: 0 solid var(--green);border-radius: 0 0 10px 10px;">
                                     <textarea class="form-control " placeholder="Add Comment Here..." id=@("subComment"+Model[i].Id)></textarea>

@@ -68,6 +68,13 @@ namespace ITI.CEI40.Monitor.Controllers
 
             if (Is)
             {
+                SubTaskSession opensubtaskSession = unitOfWork.SubTaskSessions.GetOpenSubTask(userManager.GetUserId(HttpContext.User));
+                if (opensubtaskSession != null)
+                {
+                    CloseOpenSubTasksession(opensubtaskSession, opensubtaskSession.SubTask);
+                    unitOfWork.SubTasks.Edit(opensubtaskSession.SubTask);
+                }
+
                 SubTaskSession subTaskSession = new SubTaskSession()
                 {
                     FK_SubTaskID = ID,
@@ -79,20 +86,7 @@ namespace ITI.CEI40.Monitor.Controllers
             else
             {
                 SubTaskSession subTaskSession = unitOfWork.SubTaskSessions.GetLastSessBySubTaskID(ID);
-                subTaskSession.SessEndtDate = DateTime.Now;
-                double hourDuration = (double)(subTaskSession.SessEndtDate - subTaskSession.SessStartDate).Value.TotalHours;
-                subTaskSession.SessDuration = (int)Math.Round(hourDuration, 0);
-                subTaskSession = unitOfWork.SubTaskSessions.Edit(subTaskSession);
-
-                subTask.ActualDuration += subTaskSession.SessDuration;
-
-                Activity task = unitOfWork.Tasks.GetById(subTask.FK_TaskId);
-                float LastTaskDuaration = task.ActualDuratoin;
-                task.ActualDuratoin += subTask.ActualDuration;
-                task = unitOfWork.Tasks.Edit(task);
-                Project project = unitOfWork.Projects.GetById(task.FK_ProjectId);
-                project.ActualDuration += task.ActualDuratoin - LastTaskDuaration;
-                unitOfWork.Projects.Edit(project);
+                CloseOpenSubTasksession(subTaskSession, subTask);
 
             }
             subTask = unitOfWork.SubTasks.Edit(subTask);
@@ -154,26 +148,29 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpGet]
         public IActionResult displaySubTasks(int taskID)
         {
-
+            Activity task = unitOfWork.Tasks.GetById(taskID);
             var taskVM = new TaskViewModel
             {
                 TaskId = taskID,
-                TaskName = unitOfWork.Tasks.GetById(taskID).Name,
-                taskDescription = unitOfWork.Tasks.GetById(taskID).Description,
+                TaskName = task.Name,
+                TaskEndDate = task.EndDate,
+                taskDescription = task.Description,
                 SubTasks = unitOfWork.SubTasks.GetSubTasksByTaskId(taskID),
             };
             return PartialView("_SubTaskDisplayPartial", taskVM);
-
         }
 
         [Authorize(Roles = "TeamLeader")]
         [HttpGet]
         public IActionResult AddSubTask(int taskID, int teamId)
         {
+            List<ApplicationUser> TeamMembers = unitOfWork.Engineers.GetEngineersInsideTeam(teamId).ToList();
+            TeamMembers.RemoveAll(e => e.UserName == HttpContext.User.Identity.Name);
+
             var subTask = new SubTaskViewModel
             {
                 FK_TaskId = taskID,
-                TeamMembers = unitOfWork.Engineers.GetEngineersInsideTeam(teamId).ToList()
+                TeamMembers = TeamMembers
             };
             return PartialView("_SubTaskModal", subTask);
         }
@@ -227,6 +224,9 @@ namespace ITI.CEI40.Monitor.Controllers
         {
             Team team = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User));
             SubTask subTask = unitOfWork.SubTasks.GetSubTaskWithEngineer(subtaskId);
+            List<ApplicationUser> TeamMembers = unitOfWork.Engineers.GetEngineersInsideTeam(team.Id).ToList();
+            TeamMembers.RemoveAll(e => e.UserName == HttpContext.User.Identity.Name);
+
             var subTaskVM = new SubTaskViewModel
             {
                 SubTaskId = subtaskId,
@@ -237,7 +237,7 @@ namespace ITI.CEI40.Monitor.Controllers
                 Assignee = subTask.Engineer.Id,
                 Status = subTask.Status,
                 Priority = subTask.Priority,
-                TeamMembers = unitOfWork.Engineers.GetEngineersInsideTeam(team.Id).ToList()
+                TeamMembers = TeamMembers
             };
 
             var index = subTaskVM.TeamMembers.FindIndex(x => x.Id == subTaskVM.Assignee.ToString());
@@ -295,7 +295,7 @@ namespace ITI.CEI40.Monitor.Controllers
                     string messege = $"Your Team Leader has updated *{originalSubTask.Name}=*'s details  at *{DateTime.Now}=* ";
 
                     SendNotification(messege, originalSubTask.FK_EngineerID);
-                   
+
                     #endregion
                 }
                 else
@@ -349,6 +349,9 @@ namespace ITI.CEI40.Monitor.Controllers
             }
 
         }
+
+        public void CloseOpenSubTasksession(SubTaskSession subTaskSession, SubTask subTask)        {            subTaskSession.SessEndtDate = DateTime.Now;            double hourDuration = (double)(subTaskSession.SessEndtDate - subTaskSession.SessStartDate).Value.TotalHours;            subTaskSession.SessDuration = (int)Math.Round(hourDuration, 0);            subTaskSession = unitOfWork.SubTaskSessions.Edit(subTaskSession);            subTask.ActualDuration += subTaskSession.SessDuration;            subTask.IsUnderWork = false;            Activity task = unitOfWork.Tasks.GetById(subTask.FK_TaskId);            float LastTaskDuaration = task.ActualDuratoin;            task.ActualDuratoin += subTask.ActualDuration;            task = unitOfWork.Tasks.Edit(task);            Project project = unitOfWork.Projects.GetById(task.FK_ProjectId);            project.ActualDuration += task.ActualDuratoin - LastTaskDuaration;            unitOfWork.Projects.Edit(project);        }
+
 
     }
 }

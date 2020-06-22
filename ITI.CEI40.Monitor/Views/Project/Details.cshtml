@@ -199,6 +199,12 @@
                     data: data,
                     success: function (response) {
                         $("#FileModal").modal('hide');
+                        if (isHighLevel) {
+                            $("#HighLevel").prepend(response);
+                        }
+                        else {
+                            $("#MedLevel").prepend(response);
+                        }
                         console.log(response.msg);
                     }
                 })
@@ -225,7 +231,12 @@
                     },
                     success: function (res) {
                         $('#commentArea').val("");
-                        console.log(res);
+                        if (isHighLevel) {
+                            $("#HighLevel").prepend(res);
+                        }
+                        else {
+                            $("#MedLevel").prepend(res);
+                        }
                     },
                     error: function (x, y, err) {
                         console.log(err);
@@ -308,7 +319,8 @@
             font-size: .8rem;
             color: #777;
         }
-          body {
+
+        body {
             background-color: #eef5f0;
         }
     </style>

@@ -43,5 +43,6 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
                 }).ToList();
             return applicationUsers;
         }
+
     }
 }

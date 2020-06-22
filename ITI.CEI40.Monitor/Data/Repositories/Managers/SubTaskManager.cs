@@ -21,10 +21,10 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         public List<SubTask> GetSubTasksByTaskId(int taskId)
         {
-            return set.Where(s => s.FK_TaskId == taskId).Include(s => s.Engineer).ToList();
+            return set.Where(s => s.FK_TaskId == taskId).Include(s=>s.Task).Include(s => s.Engineer).ToList();
         }
 
-        ///Must Edit include engineering subtask
+        //----------Must Edit include engineering subtask
         public IEnumerable<SubTask> GetSubTasksFromTask(int taskId)
         {
             return set.Where(st => st.FK_TaskId == taskId).Include(s => s.Task).Include(s => s.Engineer).Include(t => t.SubTaskSession).ToList();
@@ -85,9 +85,10 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
                 .Where(st => st.Status != Status.Cancelled).Include(s => s.Task).Include(s=>s.SubTaskSession).ToList();
         }
 
+        //----------Not Working
         public List<SubTask> GetAllSubTasksWithTask(int taskId)
         {
-            return set.Where(st => st.FK_TaskId == taskId).Include(s => s.Task).Include(s=>s.Comments).ToList();
+            return set.Where(st => st.FK_TaskId == taskId).Include(s=>s.Comments).ToList();
         }
 
 

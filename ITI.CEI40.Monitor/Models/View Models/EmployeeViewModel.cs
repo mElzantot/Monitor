@@ -12,10 +12,9 @@ namespace ITI.CEI40.Monitor.Models.View_Models
 {
     public class EmployeeViewModel
     {
-        private readonly IUnitOfWork unitOfWork;
 
         [Required]
-        [Display(Name = "Name")]
+        [Display(Name =  "Name")]
         public string UserName { get; set; }
 
         [Required]
@@ -23,14 +22,12 @@ namespace ITI.CEI40.Monitor.Models.View_Models
         [Display(Name = "Email")]
         public string Email { get; set; }
 
-        [Required]
-        public int DepId { get; set; }
+        public int? DepId { get; set; }
 
         [Display(Name = "Department Name")]
         public string DepName { get; set; }
 
-        [Required]
-        public int TeamId { get; set; }
+        public int? TeamId { get; set; }
         [Display(Name = "Team Name")]
         public string TeamName { get; set; }
 

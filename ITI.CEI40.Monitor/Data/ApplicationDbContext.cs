@@ -28,7 +28,6 @@ namespace ITI.CEI40.Monitor.Data
         public virtual DbSet<Notification> Notifications { get; set; }
         public virtual DbSet<Comment> Comments { get; set; }
         public virtual DbSet<Files> Files { get; set; }
-        
         public virtual DbSet<Holiday> Holidays { get; set; }  
 
 
@@ -149,36 +148,6 @@ namespace ITI.CEI40.Monitor.Data
             {
                 relationship.DeleteBehavior = DeleteBehavior.Restrict;
             }
-
-
-            //-------------Seeding Data------------//
-
-
-
-            //modelBuilder.Entity<Department>().HasData(
-            //    new Department { Id = 100, Name = "Project" },
-            //    new Department { Id = 200, Name = "Design" }
-            //    );
-
-
-            //modelBuilder.Entity<Team>().HasData(
-            //    new Team { Id = 1, Name = "Project Team", FK_DepartmentId = 100 },
-            //    new Team { Id = 2, Name = "DesignTeam1", FK_DepartmentId = 200 },
-            //    new Team { Id = 3, Name = "DesignTeam2", FK_DepartmentId = 200 });
-
-
-            //modelBuilder.Entity<ApplicationUser>().HasData(
-            //    new ApplicationUser { Id = "120", UserName = "Mohamed Shaker" },
-            //    new ApplicationUser { Id = "121", UserName = "Omar Elsafty" },
-            //    new ApplicationUser { Id = "131", UserName = "Mohamed Farag", FK_TeamID = 1 },
-            //    new ApplicationUser { Id = "141", UserName = "Mustafa Elaalem", FK_TeamID = 2 },
-
-            //new ApplicationUser { Id = "5", UserName = "Eslam", FK_TeamID = 3 },
-            //new ApplicationUser { Id = "6", UserName = "Khaled", FK_TeamID = 1 },
-            //new ApplicationUser { Id = "7", UserName = "Osama", FK_TeamID = 1 },
-            //new ApplicationUser { Id = "8", UserName = "Ibrahim", FK_TeamID = 2 },
-            //new ApplicationUser { Id = "8", UserName = "Marwa", FK_TeamID = 2 },
-            //new ApplicationUser { Id = "8", UserName = "Fathy", FK_TeamID = 3 });
 
 
             base.OnModelCreating(modelBuilder);

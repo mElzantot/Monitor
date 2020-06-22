@@ -4,44 +4,58 @@
 }
 
 @*<h4 class="btn btn-success">View Employees</h4>*@
-<br />
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-info btn-sm mb-3" data-toggle="modal" data-target="#addEmployeeModal">
-    Add Employee
-</button>
-<div style="text-align:center">
-    <table class="table table-sm">
-        <thead class="thead-dark">
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">E-Mail</th>
-                <th scope="col">Salary </th>
-                <th scope="col">Evaluation</th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
-
-        <tbody id="tableBody">
-            @for (int i = 0; i < Model.Employees.Count(); i++)
-            {
-                <tr id="@Model.Employees[i].Id">
-                    <th>@Model.Employees[i].UserName</th>
-                    <td class="email">@Model.Employees[i].Email</td>
-                    <td class="salary">@(Model.Employees[i].SalaryRate * 30 * 8)</td>
-                    <td>@Model.Employees[i].TotalEvaluation</td>
-                    <td>
-                        <div class="btn-group" role="group" aria-label="Basic example">
-                            <button type="button" class="btn btn-info btn-sm" onclick='UpdateEmpRoles("@Model.Employees[i].Id")'>Roles</button>
-                            <button type="button" class="btn btn-light btn-sm" onclick='EditEmployeeInfo("@Model.Employees[i].Id")'><i class="fas fa-edit"></i></button>
-                            <button type="button" class="btn btn-danger btn-sm " onclick='deleteTeam("@Model.Employees[i].Id")'><i class="far fa-trash-alt"></i></button>
-                        </div>
-                    </td>
+<div class="mt-5 pt-5">
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-info btn-sm mb-3" data-toggle="modal" data-target="#addEmployeeModal">
+        Add Employee
+    </button>
+    <div id="filterSection" class="row "> 
+        <form method="post" data-ajax-url="/Employee/GetTeamEmployees" data-ajax="true" data-ajax-method="Get" data-ajax-complete="displayEmployees"
+              data-ajax-update="#tableBody" data-ajax-mode="replace" id="filterForm" class="col-8 row">
+            <div id="AddDepartmentSection" class="col-9">
+                <div  id="DepartmentSection" class="row" >
+                    <div class="form-group col-6 ">
+                        <select class="form-control form-control-sm" id="DepartmentId" asp-for="DepId"
+                                asp-items="new SelectList(Model.Departments,nameof(Department.Id),nameof(Department.Name))" onchange="getTeams()">
+                            <option value="0">Select Department</option>
+                        </select>
+                        <span asp-validation-for="DepId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group col-6 ">
+                        <select class="form-control form-control-sm" id="teams" asp-for="TeamId"
+                                asp-items="new SelectList(string.Empty,nameof(Team.Id),nameof(Team.Name))">
+                        </select>
+                        <span asp-validation-for="TeamId" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+            <button type="submit" class="btn btn-outline-info btn-sm ">Filter</button>
+            </div>
+        </form>
+    </div>
+    <div style="text-align:center">
+        <table class="table table-sm">
+            <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">E-Mail</th>
+                    <th scope="col">Salary </th>
+                    <th scope="col">Evaluation</th>
+                    <th scope="col"></th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
+            </thead>
 
+            <tbody id="tableBody">
+
+                @for (int i = 0; i < Model.Employees.Count(); i++)
+                {
+                    <partial name="_EmployeePartialView" model="Model.Employees[i]" />
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
 
 
 <!-- Add Employee -->

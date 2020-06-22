@@ -98,7 +98,7 @@ namespace ITI.CEI40.Monitor.Entities
         //public ICollection<EngineerSubTasks> EngineerSubTasks { get; set; }
         [NoColumn]
         public virtual ICollection<SubTaskSession> SubTaskSession { get; set; }
-        [NoColumn]
+        //[NoColumn]
         public virtual ICollection<Comment> Comments { get; set; }
         [NoColumn]
         public ApplicationUser Engineer { get; set; }

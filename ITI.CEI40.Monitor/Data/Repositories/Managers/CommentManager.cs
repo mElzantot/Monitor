@@ -29,7 +29,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         public IEnumerable<Comment> GetCommentsForTeamLeader(int taskId)
         {
-            return set.Where(c => c.FK_TaskID == taskId && c.commentLevel == CommentLevels.Med).ToList();
+            return set.Where(c => c.FK_TaskID == taskId && c.commentLevel != CommentLevels.High).Include(c=>c.File).ToList();
         }
 
         public IEnumerable<Comment> GetCommentsForDepManager(int taskId)
@@ -56,5 +56,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         {
             return set.Where(c => c.FK_TaskID == taskId && c.commentLevel == CommentLevels.low).Include(s=>s.Sender).Include(c => c.File).ToList();
         }
+
+
     }
 }

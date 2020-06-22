@@ -36,8 +36,9 @@ namespace ITI.CEI40.Monitor.Controllers
         public IActionResult EngineersView()
         {
             int teamId = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
-            var engieers = unitOfWork.Engineers.GetEngineersInsideTeam(teamId);
-            return View(engieers);
+            List<ApplicationUser> TeamMembers = unitOfWork.Engineers.GetEngineersInsideTeam(teamId).ToList();
+            TeamMembers.RemoveAll(e => e.UserName == HttpContext.User.Identity.Name);
+            return View(TeamMembers);
         }
 
         [Authorize(Roles = "TeamLeader")]
@@ -153,14 +154,15 @@ namespace ITI.CEI40.Monitor.Controllers
         public IActionResult EngineersChart()
         {
             int teamId = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
-            List<ApplicationUser> team = unitOfWork.Engineers.GetEngineersInsideTeamWithSubTasks(teamId);
+            List<ApplicationUser> teamMenmbers = unitOfWork.Engineers.GetEngineersInsideTeamWithSubTasks(teamId);
+            teamMenmbers.RemoveAll(e => e.UserName == HttpContext.User.Identity.Name);
             List<string> Ids = new List<string>();
 
 
             List<string> names = new List<string>();
             List<List<float>> avg = new List<List<float>>();
 
-            foreach (var item in team)
+            foreach (var item in teamMenmbers)
             {
                 names.Add(item.UserName);
                 Ids.Add(item.Id);
@@ -275,6 +277,7 @@ namespace ITI.CEI40.Monitor.Controllers
         {
             Team team = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User));
             List<ApplicationUser> Engineers = unitOfWork.Engineers.GetEngineersWithSubtasks(team.Id).ToList();
+            Engineers.RemoveAll(e => e.UserName == HttpContext.User.Identity.Name);
             ResourceChartVM resourceChartVM = new ResourceChartVM
             {
                 Employees = Engineers,

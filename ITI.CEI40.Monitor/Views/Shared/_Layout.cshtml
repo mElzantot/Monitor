@@ -39,14 +39,14 @@
 
 </head>
 <body>
-    <header>
+    <header class="btn">
         <partial name="_LoginPartial.cshtml" />
     </header>
     <div class="container mb-4">
         <partial name="_CookieConsentPartial" />
         <main role="main" style="margin-top :45px;">
             <div id="main" style="position:relative">
-                
+
             </div>
             @RenderBody()
         </main>
@@ -71,6 +71,7 @@
     </environment>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/lib/signalr/dist/browser/signalr.js"></script>
+
     <script>
        @if (SignInManager.IsSignedIn(User)) {
            <text>

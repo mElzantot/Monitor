@@ -7,6 +7,7 @@ using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
 using ITI.CEI40.Monitor.Entities.Enums;
 using ITI.CEI40.Monitor.Models.View_Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -27,6 +28,7 @@ namespace ITI.CEI40.Monitor.Controllers
             this.hostingEnvironment = hostingEnvironment;
         }
 
+        [Authorize(Roles = "TeamLeader")]
         public IActionResult ViewTasks()
         {
             int teamID = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
@@ -40,8 +42,6 @@ namespace ITI.CEI40.Monitor.Controllers
             Activity task = unitOfWork.Tasks.GetById(id);
             task.Status = (Status)status;
             unitOfWork.Tasks.Edit(task);
-
-
         }
 
         [HttpGet]

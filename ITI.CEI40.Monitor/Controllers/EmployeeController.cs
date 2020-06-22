@@ -23,7 +23,7 @@ namespace ITI.CEI40.Monitor.Controllers
         private readonly IUnitOfWork unitofwork;
         private readonly UserManager<ApplicationUser> userManager;
 
-        public EmployeeController(RoleManager<IdentityRole> roleManager,IHubContext<NotificationsHub> hubContext,
+        public EmployeeController(RoleManager<IdentityRole> roleManager, IHubContext<NotificationsHub> hubContext,
            UserManager<ApplicationUser> userManager, IUnitOfWork unitofwork)
         {
             this.roleManager = roleManager;
@@ -35,12 +35,20 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpGet]
         public IActionResult ViewEmployees()
         {
-                var EmploeeVm = new EmployeeViewModel
-                {
-                    Departments = unitofwork.Departments.GetAll().ToList(),
-                    Employees = unitofwork.Engineers.GetAll().ToList()
-                };
-                return View(EmploeeVm);
+            var EmploeeVm = new EmployeeViewModel
+            {
+                Departments = unitofwork.Departments.GetAll().ToList(),
+                Employees = unitofwork.Engineers.GetAll().ToList()
+            };
+            return View(EmploeeVm);
+        }
+
+        [HttpGet]
+        public IActionResult ViewFilteredEmployees([FromForm]int teamId)
+        {
+            List<ApplicationUser> Employees = unitofwork.Engineers.GetEngineersInsideTeam(teamId).ToList();
+
+            return PartialView("_teamsEmployeePartialView", Employees);
         }
 
         [HttpPost]
@@ -107,13 +115,13 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpPost]
         public async Task<JsonResult> EditEmployeeRoles(EmpRolesViewModel EmpRolVM)
         {
+
             ApplicationUser Emp = await userManager.FindByIdAsync(EmpRolVM.EmpId);
             var EmpCurrentRoles = await userManager.GetRolesAsync(Emp);
             if (EmpCurrentRoles != null && EmpCurrentRoles.Count > 0)
             {
                 var removeFromRoles = await userManager.RemoveFromRolesAsync(Emp, EmpCurrentRoles);
             }
-
 
             foreach (var item in EmpRolVM.EmpRoles)
             {
@@ -122,6 +130,15 @@ namespace ITI.CEI40.Monitor.Controllers
                 {
                     var addedToRoles = await userManager.AddToRoleAsync(Emp, item.role.ToString());
                 }
+            }
+
+            var isDeptManager = userManager.IsInRoleAsync(Emp, Roles.DepartmentManager.ToString());
+
+            if (isDeptManager.Result)
+            {
+                Emp.FK_TeamID = null;
+                Emp.Team = null;
+                var result = await userManager.UpdateAsync(Emp);
             }
 
             return Json(Emp); ;
