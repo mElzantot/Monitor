@@ -30,8 +30,6 @@
                 </tbody>
             </table>
         </div>
-
-
         <div class="innerright  slice" style="width:60%">
             <div style=" padding: 15px; border-radius: 8px;">
                 <div class="row" style="margin:auto;" id="tasks">
@@ -180,20 +178,18 @@
 
         function AddFile(taskId) {
             isHighLevel = true;
-            console.log($("#toggleBtn").val());
-            console.log(isHighLevel);
             if ($("#toggleBtn").val() == "Med")
                 isHighLevel = false
             $('#task_Id').attr("value", taskId);
-            $('#isHighLevelBool').attr("value", isHighLevel);
+            //$('#isHighLevelBool').attr("value", isHighLevel);
             $('#FileModal').modal('show');
-            console.log(isHighLevel);
         }
 
         $('input[type="file"]').change(function (e) {
             fileName = e.target.files[0].name;
             $(".custom-file-label").html(fileName);
         });
+
 
         function uploadFile() {
             let form = $('#fileForm')[0];
@@ -206,9 +202,10 @@
                     contentType: false,
                     cache: false,
                     data: data,
-                    success: function (response) {
+                    success: function (res) {
                         $("#FileModal").modal('hide');
-                        console.log(response.msg);
+                        if ($("#toggleBtn").val() == "Med") { $("#SMed").append(res); }
+                        else { $("#SHigh").append(res); }
                     }
                 })
             }
@@ -234,7 +231,8 @@
                     },
                     success: function (res) {
                         $('#commentArea').val("");
-                        console.log(res);
+                        if ($("#toggleBtn").val() == "Med") { $("#SMed").append(res); }
+                        else { $("#SHigh").append(res); }
                     },
                     error: function (x, y, err) {
                         console.log(err);
@@ -243,7 +241,15 @@
             }
         }
 
+        function ExCommentSec() {
+            if ($("#toggleBtn").val() == "High") { document.getElementById("SHigh").style.display = "block" }
+            else { document.getElementById("SMed").style.display = "block" }
+        }
 
+        function HiCommentSec() {
+            document.getElementById("SHigh").style.display = "none"
+            document.getElementById("SMed").style.display = "none"
+        }
 
         function CommentsToggle() {
             if ($("#toggleBtn").val() == "High") {
@@ -251,16 +257,16 @@
                 $("#toggleBtn").html("Team Leader");
                 $("#toggleBtn").removeClass("btn-outline-warning");
                 $("#toggleBtn").addClass("btn-outline-success");
-                $("#HighLevel").css("display", "none");
-                $("#MedLevel").css("display", "block");
+                $("#SHigh").css("display", "none");
+                $("#SMed").css("display", "block");
             }
             else {
                 $("#toggleBtn").val("High");
                 $("#toggleBtn").html("Project Manager");
                 $("#toggleBtn").removeClass("btn-outline-success");
                 $("#toggleBtn").addClass("btn-outline-warning");
-                $("#MedLevel").css("display", "none");
-                $("#HighLevel").css("display", "block");
+                $("#SMed").css("display", "none");
+                $("#SHigh").css("display", "block");
             }
         }
 
@@ -299,13 +305,6 @@
 
 
 
-        function ExCommentSec(id) {
-            document.getElementById(`s ${id}`).style.display = "block"
-        }
-
-        function HiCommentSec(id) {
-            document.getElementById(`s ${id}`).style.display = "none"
-        }
 
     </script>
 }
@@ -337,15 +336,13 @@
         }
 
         .timeup {
-            top: 4.4rem;
             background: rgb(179, 20, 20);
-            
-            position: absolute;
-            left: 51rem;
             font-size: 1.5rem;
             padding: 21px 20px 6px 20px;
             border: 0 solid;
             border-radius: 0 0 10px 10px;
+            position: relative;
+            bottom: 15px;
         }
     </style>
     <link rel="stylesheet" href="~/css/circle.css" />

@@ -75,12 +75,8 @@
     </div>
 
 
-
-
-
-
     <div style="display:flex; margin-bottom:5px">
-        <section style="width:50em;margin-left:3em">
+        <section style="width:50em;margin-left:80px">
             <div class="single-chart">
                 <svg viewbox="0 0 36 36" class="circular-chart blue">
                     <path class="circle-bg"
@@ -96,31 +92,24 @@
                 </svg>
             </div>
         </section>
-
-
-        <div style="position:absolute;right: 7rem;top: 17rem;">
-            <img src="~/img/duration.png" width="60%" />
-        </div>
-
-
-        <div class="rounded-circle" style="position: absolute;     right: 17.1rem;
-    top: 20.2rem;
-    font-size: 3.5em; width:1.7em;height:1.7em;background:white;display:flex;justify-content:center;align-items:center">
-            @Model.Task.Progress <span class="text-muted" style="font-size:25px">h</span>
+        <div style="position:relative;right:55px;">
+            <div>
+                <img src="~/img/duration.png" width="80%" />
+            </div>
+            <div class="rounded-circle" style="position:relative;left:22px;bottom:86px;font-size:40px;
+                width:1.7em;height:1.7em;background:white;display:flex;justify-content:center;align-items:center">
+                @Model.Task.Progress <span class="text-muted" style="font-size:25px">h</span>
+            </div>
         </div>
     </div>
+    <div style="padding:0px 30px 10px 30px">
 
+        <div id="s-@Model.Task.Id" style="display:none;height:200px;border-width:1px 1px 0px 1px;
+            border-style:solid;border-color:rgb(218, 217, 217);border-radius:3px 3px 0 0;max-height:200px;overflow-y:scroll">
 
-
-
-
-
-
-    <div style="padding:30px 30px 10px 30px">
-
-        <div id="s @Model.Task.Id" style="display:none;height:200px;border-width:1px 1px 0px 1px; border-style:solid;border-color:rgb(218, 217, 217);border-radius:3px 3px 0 0">
-
-            <button onclick="HiCommentSec(@Model.Task.Id)" class="btn btn-sm" style="position:absolute;right: 14.3em;"><i class="fas fa-window-close"></i></button>
+            <div style="display:flex;justify-content:flex-end">
+                <button onclick="HiCommentSec(@Model.Task.Id)" class="btn btn-sm"><i class="fas fa-window-close"></i></button>
+            </div>
             @if (Model.Task.Comments != null)
             {
                 foreach (var item in Model.Task.Comments)
@@ -140,5 +129,4 @@
             </div>
         </div>
     </div>
-</div>
 

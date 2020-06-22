@@ -38,15 +38,20 @@ namespace ITI.CEI40.Monitor.Controllers
             int teamId = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
             List<ApplicationUser> TeamMembers = unitOfWork.Engineers.GetEngineersInsideTeam(teamId).ToList();
             TeamMembers.RemoveAll(e => e.UserName == HttpContext.User.Identity.Name);
-            return View(TeamMembers);
+            SubTaskSubmitVM subTaskSubmitVM = new SubTaskSubmitVM
+            {
+                teamMembers = TeamMembers
+            };
+            return View(subTaskSubmitVM);
         }
 
         [Authorize(Roles = "TeamLeader")]
         [HttpGet]
         public IActionResult displaySubTasks(string engId)
         {
-            List<SubTask> subtask = unitOfWork.SubTasks.GetEngineerSubTasks(engId);
-            return PartialView("_SubTaskPartialView", subtask);
+            List<SubTask> SubTasks = unitOfWork.SubTasks.GetEngineerSubTasks(engId);
+
+            return PartialView("_SubTaskPartialView", SubTasks);
         }
 
         [Authorize(Roles = "TeamLeader")]
@@ -63,7 +68,6 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [Authorize(Roles = "TeamLeader")]
-        //Omar 
         [HttpPost]
         public void SubmitSubTask(SubmitModal submitModal)
         {
@@ -73,7 +77,7 @@ namespace ITI.CEI40.Monitor.Controllers
             subtask.TimeManagement = submitModal.TimeManagement;
             subtask.Quality = submitModal.Quality;
             unitOfWork.SubTasks.Edit(subtask);
-            
+
             // notification
             string messege = $"Congratulations Your Team Leader Submitted *{subtask.Name}=* at *{DateTime.Now}=*";
             SendNotification(messege, subtask.FK_EngineerID);
@@ -318,7 +322,7 @@ namespace ITI.CEI40.Monitor.Controllers
             SubTask newSubTask = new SubTask
             {
                 Complexity = complexity,
-                ActualDuration= Duration
+                ActualDuration = Duration
             };
 
             PredictedQuality predictedQuality = MLClass.PredictQualityBasedonDurationandCompl(subTasks, newSubTask);

@@ -1,4 +1,4 @@
-﻿@model List<ApplicationUser>
+﻿@model SubTaskSubmitVM
 @{
     ViewData["Title"] = "EngineersView";
 }
@@ -7,13 +7,12 @@
         <div class="innerleft slice" style="width:30%; padding:50px 15px 15px 20px">
             <table class="table table-hover text-center" id="teamTable">
                 <tbody>
-                    @for (int i = 0; i < Model.Count(); i++)
+                    @for (int i = 0; i < Model.teamMembers.Count(); i++)
                     {
-                        if (Model[i].Id != Model.FirstOrDefault().Team.FK_TeamLeaderId && Model[i].Id != Model.FirstOrDefault().Team.Department.FK_ManagerID)
+                        if (Model.teamMembers[i].Id != Model.teamMembers.FirstOrDefault().Team.FK_TeamLeaderId && Model.teamMembers[i].Id != Model.teamMembers.FirstOrDefault().Team.Department.FK_ManagerID)
                         {
-
-                            <tr id="@Model[i].Id" onclick='displaySubTasks("@Model[i].Id")'>
-                                <td>@Model[i].UserName</td>
+                            <tr id="@Model.teamMembers[i].Id" onclick='displaySubTasks("@Model.teamMembers[i].Id")'>
+                                <td>@Model.teamMembers[i].UserName</td>
                             </tr>
                         }
                     }
@@ -32,12 +31,46 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="SubmitModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-muted" id="exampleModalLabel">SubTask submittion</h5>
+            </div>
+            <div class="modal-body">
+                <input id="subTaskid" hidden value="" name="ID" class="form-control" />
+                <div class="form-group">
+                    <label asp-for="Complexity"></label>
+                    <input id="complex" name="Complexity" type="number" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="Quality"></label>
+                    <input id="quality" type="number" name="Quality" class="form-control" />
+                </div>
+                <div class="form-group">
+                    <label asp-for="TimeMangment"></label>
+                    <input id="time" type="number" name="TimeMangment" class="form-control" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="Button" onclick="AcceptSubmit()" class="btn btn-primary btn-sm">Submit</button>
+                <button type="reset" class="btn btn-secondary btn-sm" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 
 
 <!-- #endregion -->
 @*<script src="script.js"></script>*@
 @section scripts{
+    <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive-ajax/dist/jquery.unobtrusive-ajax.js"></script>
+
 
     <script>
 
@@ -127,31 +160,39 @@
 
         function SubmitModal(Id) {
             $("#SubmitModal").modal('show');
-            $("#id").val(Id);
+            $("#subTaskid").attr("value", Id)
+            subTaskid = Id;
         }
 
-        function AcceptSubmit() {
-            $("#id").val();
-            let time= $("#time").val();
-            let quality = $("#quality").val();
-            let complexity = $("#complex").val();
-            $.ajax({
-                url: ,
-                type: get,
-                    data:{
 
-                },
-                success: function () {
-                    $("#time").val('');
-                    $("#quality").val('');
-                    $("#complex").val('');
-                    $("#SubmitModal").modal('hide');
-                }
-            })
-
+        function submitSubTask() {
+            console.log("Yes");
             $("#SubmitModal").modal('hide');
         }
 
+
+        function AcceptSubmit() {
+            let time = $("#time").val();
+            let quality = $("#quality").val();
+            let complexity = $("#complex").val();
+            console.log(time);
+            console.log(quality);
+            console.log(complexity);
+            $.ajax({
+                url: "/teamleader/SubmitSubTask",
+                type: "Post",
+                data: {
+                    ID: subTaskid,
+                    Complexity: complexity,
+                    Quality: quality,
+                    TimeManagement: time
+                },
+                success: function (res) {
+                    $("#SubmitModal").modal('hide');
+                    $(`#${subTaskid}`).remove();
+                }
+            })
+        }
 
 
         function Cancele(Id) {
@@ -185,7 +226,7 @@
         }
 
         body {
-        background-color: #eef5f0;
+            background-color: #eef5f0;
         }
     </style>
 }

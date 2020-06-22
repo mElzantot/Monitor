@@ -1,5 +1,4 @@
-﻿
-@model List<SubTask>
+﻿@model List<SubTask>
 
 @if (Model.Count == 0)
 {
@@ -55,14 +54,15 @@ else
                     <td><div class="progress"><div class="progress-bar" role="progressbar" style="width: @Model[i].Progress%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">@Model[i].Progress%</div></div></td>
                     <td>@Model[i].ActualDuration hours</td>
                     <td>@Model[i].Status</td>
-
                     <td>
-
                         @if (@Model[i].Progress == 100)
                         {
-                            <button onclick="ChangeStatus(@Model[i].Id,2)" class="btn btn-success " style="padding:1px 6px"><i class="fas fa-check"></i></button>
+                            <button onclick="SubmitModal(@Model[i].Id)" class="btn btn-success " style="padding:1px 6px"><i class="fas fa-check"></i></button>
                         }
-                        <button onclick="ChangeStatus(@Model[i].Id,3)" class="btn btn-danger " style="padding:1px 6px"><i class="fas fa-trash-alt"></i></button>
+                        else
+                        {
+                            <button onclick="Cancele(@Model[i].Id)" class="btn btn-danger " style="padding:1px 6px"><i class="fas fa-trash-alt"></i></button>
+                        }
                     </td>
                 </tr>
             }
@@ -88,13 +88,14 @@ else
                     <td>@Model[i].Status</td>
 
                     <td>
-
-
                         @if (@Model[i].Progress == 100)
                         {
-                            <button onclick="SubmitModal(@Model[i].Id,2)" class="btn btn-success " style="padding:1px 6px"><i class="fas fa-check"></i></button>
+                            <button onclick="SubmitModal(@Model[i].Id)" class="btn btn-success " style="padding:1px 6px"><i class="fas fa-check"></i></button>
                         }
-                        <button onclick="Cancele(@Model[i].Id,3)" class="btn btn-danger " style="padding:1px 6px"><i class="fas fa-trash-alt"></i></button>
+                        else
+                        {
+                            <button onclick="Cancele(@Model[i].Id)" class="btn btn-danger " style="padding:1px 6px"><i class="fas fa-trash-alt"></i></button>
+                        }
                     </td>
                 </tr>
             }
@@ -102,40 +103,6 @@ else
     </table>
 
 
-
-
-    <!-- Modal -->
-    <div class="modal fade" id="SubmitModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-muted" id="exampleModalLabel">Task submittion</h5>
-                </div>
-
-                <div class="modal-body">
-                    <input id="id" hidden asp-for="@Model[0].Id" />
-                    <div class="form-group">
-                        <label asp-for="@Model[0].Complexity"></label>
-                        <input id="complex" asp-for="@Model[0].Complexity" type="number" class="form-control" />
-                    </div>
-
-                    <div class="form-group">
-                        <label asp-for="@Model[0].Quality"></label>
-                        <input id="quality" asp-for="@Model[0].Quality" type="number" class="form-control" />
-                    </div>
-
-                    <div class="form-group">
-                        <label asp-for="@Model[0].TimeManagement"></label>
-                        <input id="time" asp-for="@Model[0].TimeManagement" type="number" class="form-control" />
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
-                    <button id="Submit" onclick="AcceptSubmit()" type="button" class="btn btn-primary">Submit</button>
-                </div>
-            </div>
-        </div>
-    </div>
 
 }
 

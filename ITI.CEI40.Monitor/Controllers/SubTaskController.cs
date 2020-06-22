@@ -163,9 +163,10 @@ namespace ITI.CEI40.Monitor.Controllers
 
         [Authorize(Roles = "TeamLeader")]
         [HttpGet]
-        public IActionResult AddSubTask(int taskID, int teamId)
+        public IActionResult AddSubTask(int taskID)
         {
-            List<ApplicationUser> TeamMembers = unitOfWork.Engineers.GetEngineersInsideTeam(teamId).ToList();
+            Team team = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User));
+            List<ApplicationUser> TeamMembers = unitOfWork.Engineers.GetEngineersInsideTeam(team.Id).ToList();
             TeamMembers.RemoveAll(e => e.UserName == HttpContext.User.Identity.Name);
 
             var subTask = new SubTaskViewModel
@@ -198,6 +199,7 @@ namespace ITI.CEI40.Monitor.Controllers
                 };
 
                 newSubTask = unitOfWork.SubTasks.Add(newSubTask);
+                //Activity task = unitOfWork.Tasks.GetById(subTask.FK_TaskId);
                 newSubTask.Engineer = unitOfWork.Engineers.GetById(subTask.Assignee);
 
                 #region notification

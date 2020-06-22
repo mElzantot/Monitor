@@ -4,12 +4,12 @@
 }
 
 
-    <div style="display:flex;justify-content:space-evenly">
-        <div class="innerleft slice pt-4" style="width:35%;padding:20px">
-            <table class="table table-hover text-center" id="teamTable">
-                <tbody>
-                    @for (int i = 0; i < Model.Count(); i++)
-                    {
+<div style="display:flex;justify-content:space-evenly">
+    <div class="innerleft slice pt-4" style="width:35%;padding:20px">
+        <table class="table table-hover text-center" id="teamTable">
+            <tbody>
+                @for (int i = 0; i < Model.Count(); i++)
+                {
                     <tr id="@Model[i]" onclick='displayTaskDetails("@Model[i].Id")'>
                         <td>@Model[i].Name</td>
 
@@ -29,30 +29,47 @@
                         }
 
                     </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-
-
-        <div class="innerright  slice" style="width:60%">
-            <div style=" padding: 15px; border-radius: 8px;">
-                <div class="row" style="margin:auto;" id="tasks">
-                    <h4 id="alertdiv" class="text-muted text-center mt-5" style="margin:auto;">Select Task to Show Data</h4>
-                    <div id="tableBody" class="table table-hover align-middle">
-                    </div>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="innerright  slice" style="width:60%">
+        <div style=" padding: 15px; border-radius: 8px;">
+            <div class="row" style="margin:auto;" id="tasks">
+                <h4 id="alertdiv" class="text-muted text-center mt-5" style="margin:auto;">Select Task to Show Data</h4>
+                <div id="tableBody" class="table table-hover align-middle">
                 </div>
             </div>
         </div>
     </div>
+</div>
 
 
 
-
-
-
-
-
+<!-- File Modal -->
+<div class="modal fade" id="FileModal" tabindex="-1" role="dialog" aria-labelledby="FileModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="FileModalLabel">Files</h5>
+            </div>
+            <form id="fileForm" enctype="multipart/form-data" method="post">
+                <div class="modal-body">
+                    <label>Upload File</label>
+                    <div class="custom-file">
+                        <input name="file" class="form-control custom-file-input" type="file" />
+                        <label class="custom-file-label">Choose File...</label>
+                    </div>
+                    <input id="task_Id" name="taskId" value="" hidden />
+                </div>
+                <div class="modal-footer">
+                    <button id="close" type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Close">Close</button>
+                    <button onclick="uploadFile()" type="button" class="btn btn-primary">Upload</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 
 <!-- #endregion -->
@@ -130,72 +147,71 @@
 
 
 
-        //----------Add File----------//
+        //----------Add File for Team Leader----------//
 
-        function AddFile(taskId) {
-            isHighLevel = true;
-            console.log($("#toggleBtn").val());
-            console.log(isHighLevel);
-            if ($("#toggleBtn").val() == "Med")
-                isHighLevel = false
-            $('#task_Id').attr("value", taskId);
-            $('#isHighLevelBool').attr("value", isHighLevel);
-            $('#FileModal').modal('show');
-            console.log(isHighLevel);
-        }
+        //function AddFile(taskId) {
+        //    isHighLevel = true;
+        //    console.log($("#toggleBtn").val());
+        //    console.log(isHighLevel);
+        //    if ($("#toggleBtn").val() == "Med")
+        //        isHighLevel = false
+        //    $('#task_Id').attr("value", taskId);
+        //    $('#isHighLevelBool').attr("value", isHighLevel);
+        //    $('#FileModal').modal('show');
+        //    console.log(isHighLevel);
+        //}
 
-        $('input[type="file"]').change(function (e) {
-            fileName = e.target.files[0].name;
-            $(".custom-file-label").html(fileName);
-        });
+        //$('input[type="file"]').change(function (e) {
+        //    fileName = e.target.files[0].name;
+        //    $(".custom-file-label").html(fileName);
+        //});
 
-        function uploadFile() {
-            let form = $('#fileForm')[0];
-            let data = new FormData(form);
-            if (fileName) {
-                $.ajax({
-                    type: 'post',
-                    url: `/comment/AddFileForTask?isHighLevel=` + `${isHighLevel}`,
-                    processData: false,  // Important!
-                    contentType: false,
-                    cache: false,
-                    data: data,
-                    success: function (response) {
-                        $("#FileModal").modal('hide');
-                        console.log(response.msg);
-                    }
-                })
-            }
-        }
+        //function uploadFile() {
+        //    let form = $('#fileForm')[0];
+        //    let data = new FormData(form);
+        //    if (fileName) {
+        //        $.ajax({
+        //            type: 'post',
+        //            url: `/comment/AddFileForTask?isHighLevel=` + `${isHighLevel}`,
+        //            processData: false,  // Important!
+        //            contentType: false,
+        //            cache: false,
+        //            data: data,
+        //            success: function (response) {
+        //                $("#FileModal").modal('hide');
+        //                console.log(response.msg);
+        //            }
+        //        })
+        //    }
+        //}
 
 
 
         //----------Add Comment-----------//
-
-        function AddComment(taskId) {
-            let comment = $('#commentArea').val();
-            let isHighLevel = true;
-            if ($("#toggleBtn").val() == "Med")
-                isHighLevel = false
-            if (comment) {
-                $.ajax({
-                    type: "Post",
-                    url: `/Comment/AddCommentForTask/`,
-                    data: {
-                        comment: comment,
-                        taskId: taskId,
-                        isHighLevel: isHighLevel
-                    },
-                    success: function (res) {
-                        $('#commentArea').val("");
-                        console.log(res);
-                    },
-                    error: function (x, y, err) {
-                        console.log(err);
-                    }
-                })
-            }
-        }
+        //function AddComment(taskId) {
+        //    let comment = $('#commentArea').val();
+        //    let isHighLevel = true;
+        //    if ($("#toggleBtn").val() == "Med")
+        //        isHighLevel = false
+        //    if (comment) {
+        //        $.ajax({
+        //            type: "Post",
+        //            url: `/Comment/AddCommentForTask/`,
+        //            data: {
+        //                comment: comment,
+        //                taskId: taskId,
+        //                isHighLevel: isHighLevel
+        //            },
+        //            success: function (res) {
+        //                $('#commentArea').val("");
+        //                console.log(res);
+        //            },
+        //            error: function (x, y, err) {
+        //                console.log(err);
+        //            }
+        //        })
+        //    }
+        //}
 
 
 
@@ -251,14 +267,108 @@
             $(".custom-file-label").html("");
         })
 
+        //--------Team Leader Comments to Dept Manager
 
+        function AddComment(taskId) {
+            targetDiv = $(`#s-${taskId}`);
+            console.log(targetDiv);
+            debugger;
+            let comment = $('#commentArea').val();
+            isHighLevel = false
+            console.log(isHighLevel);
+            if (comment) {
+                $.ajax({
+                    type: "Post",
+                    url: `/Comment/AddCommentForTask/`,
+                    data: {
+                        comment: comment,
+                        taskId: taskId,
+                        isHighLevel: isHighLevel
+                    },
+                    success: function (res) {
+                        $('#commentArea').val("");
+                        targetDiv.append(res);
+                    },
+                    error: function (x, y, err) {
+                        console.log(err);
+                    }
+                })
+            }
+        }
+
+        function AddFile(taskId) {
+            targetDiv = $(`#s-${taskId}`);
+            $('#task_Id').attr("value", taskId);
+            isHighLevel = false
+            $('#FileModal').modal('show');
+        }
+
+        $('input[type="file"]').change(function (e) {
+            fileName = e.target.files[0].name;
+            $(".custom-file-label").html(fileName);
+        });
+
+        function uploadFile() {
+            let URL;
+            let form = $('#fileForm')[0];
+            let data = new FormData(form);
+            if (fileName) {
+                $.ajax({
+                    type: 'post',
+                    url: "/comment/AddFileForTask?isHighLevel=false",
+                    processData: false,  // Important!
+                    contentType: false,
+                    cache: false,
+                    data: data,
+                    success: function (response) {
+                        $("#FileModal").modal('hide');
+                        targetDiv.append(response);
+                    }
+                })
+            }
+        }
+
+
+        $('#FileModal').on('hidden.bs.modal', function (e) {
+            $(".custom-file-label").html("");
+        });
+
+
+        function AddComment(taskId, divId) {
+            targetDiv = $(`#${divId}`);
+            console.log(targetDiv);
+            let comment = $('#commentArea').val();
+            isHighLevel = false
+            console.log(isHighLevel);
+            if (comment) {
+                $.ajax({
+                    type: "Post",
+                    url: `/Comment/AddCommentForTask/`,
+                    data: {
+                        comment: comment,
+                        taskId: taskId,
+                        isHighLevel: isHighLevel
+                    },
+                    success: function (res) {
+                        $('#commentArea').val("");
+                        targetDiv.prepend(res);
+                        console.log(res);
+                    },
+                    error: function (x, y, err) {
+                        console.log(err);
+                    }
+                })
+            }
+        }
+
+        //---------------------------
 
         function ExCommentSec(id) {
-            document.getElementById(`s ${id}`).style.display = "block"
+            document.getElementById(`s-${id}`).style.display = "block"
         }
 
         function HiCommentSec(id) {
-            document.getElementById(`s ${id}`).style.display = "none"
+            document.getElementById(`s-${id}`).style.display = "none"
         }
 
 
@@ -294,7 +404,7 @@
 
         .timeup {
             top: 4.4rem;
-            background: rgb(179, 20, 20);     
+            background: rgb(179, 20, 20);
             position: absolute;
             left: 51rem;
             font-size: 1.5rem;

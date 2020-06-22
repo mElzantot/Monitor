@@ -1,41 +1,41 @@
 ﻿@model ActDetailsViewModel
 
-    <div style=" display:flex;justify-content:space-between">
+<div style=" display:flex;justify-content:space-between">
 
-        @switch (Model.Task.Status)
-        {
-            case Status.Active:
-                <button class="btn-light btn btn-lg">
-                    @Model.Task.Name
-                </button>
-                break;
-            case Status.OnHold:
-                <button class="btn-warning btn btn-lg">
-                    @Model.Task.Name
-                </button>
-                break;
-            case Status.Completed:
-                <button class="btn-success btn btn-lg">
-                    @Model.Task.Name
-                </button>
-                break;
-        }
+    @switch (Model.Task.Status)
+    {
+        case Status.Active:
+            <button class="btn-light btn btn-lg">
+                @Model.Task.Name
+            </button>
+            break;
+        case Status.OnHold:
+            <button class="btn-warning btn btn-lg">
+                @Model.Task.Name
+            </button>
+            break;
+        case Status.Completed:
+            <button class="btn-success btn btn-lg">
+                @Model.Task.Name
+            </button>
+            break;
+    }
 
-        <div class="dropleft">
-            <button class="btn btn-sm btn-outline-info rounded-circle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i style="font-size:16px" class="fas fa-info mx-1"></i></button>
+    <div class="dropleft">
+        <button class="btn btn-sm btn-outline-info rounded-circle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i style="font-size:16px" class="fas fa-info mx-1"></i></button>
 
-            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                @if (Model.Task.Description != null)
-                {
-                    <div class="text-muted p-2"><pre>@Model.Task.Description</pre></div>
-                }
-                else
-                {
-                    <div class="p-2" style="color:red">Please add desceiption .</div>
-                }
-            </div>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            @if (Model.Task.Description != null)
+            {
+                <div class="text-muted p-2"><pre>@Model.Task.Description</pre></div>
+            }
+            else
+            {
+                <div class="p-2" style="color:red">Please add desceiption .</div>
+            }
         </div>
     </div>
+</div>
 
 
 @{
@@ -84,7 +84,7 @@
 
 
     <div style="display:flex; margin-bottom:5px">
-        <section style="width:50em;margin-left:3em">
+        <section style="width:50em;margin-left:80px">
             <div class="single-chart">
                 <svg viewbox="0 0 36 36" class="circular-chart blue">
                     <path class="circle-bg"
@@ -100,17 +100,14 @@
                 </svg>
             </div>
         </section>
-
-
-        <div style="position:absolute;right: 7rem;top: 17rem;">
-            <img src="~/img/duration.png" width="60%" />
-        </div>
-
-
-        <div class="rounded-circle" style="position: absolute;     right: 17.1rem;
-    top: 20.2rem;
-    font-size: 3.5em; width:1.7em;height:1.7em;background:white;display:flex;justify-content:center;align-items:center">
-            @Model.Task.Progress <span class="text-muted" style="font-size:25px">h</span>
+        <div style="position:relative;right:55px;">
+            <div>
+                <img src="~/img/duration.png" width="80%" />
+            </div>
+            <div class="rounded-circle" style="position:relative;left:22px;bottom:86px;font-size:40px;
+                width:1.7em;height:1.7em;background:white;display:flex;justify-content:center;align-items:center">
+                @Model.Task.Progress <span class="text-muted" style="font-size:25px">h</span>
+            </div>
         </div>
     </div>
 
@@ -120,19 +117,20 @@
 
     @if (Model.Task.Description != null)
     {
-        <div style="padding:30px 30px 10px 30px">
-            <div id="s @Model.Task.Id" style="display:none;height:200px;border-width:1px 1px 0px 1px; border-style:solid;border-color:rgb(218, 217, 217);border-radius:3px 3px 0 0">
-
-                <button onclick="HiCommentSec(@Model.Task.Id)" class="btn btn-sm" style="position:absolute;right: 14.3em;"><i class="fas fa-window-close"></i></button>
+        <div style="padding:0 30px 10px 30px">
+            <div id="SHigh" style="display:none;height:200px;border-width:1px 1px 0px 1px;
+            border-style:solid;border-color:rgb(218, 217, 217);border-radius:3px 3px 0 0;max-height:200px;overflow-y:scroll">
+                <div style="display:flex;justify-content:flex-end">
+                    <button onclick="HiCommentSec(@Model.Task.Id)" class="btn btn-sm"><i class="fas fa-window-close"></i></button>
+                </div>
                 @if (Model.Task.Comments != null)
                 {
 
                     @foreach (var item in Model.Task.Comments)
                     {
-                        <partial name="_CommentPartial" model="item" />
+                        <partial name="~/Views/Comment/_CommentPartial.cshtml" model="item" />
                     }
                 }
-
             </div>
 
 
@@ -147,15 +145,12 @@
     }
     else
     {
-
-        <div style="padding:30px 30px 10px 30px">
+        <div style="padding:0 30px 10px 30px">
             <textarea asp-for="Task.Description" id="taskDesc" class="form-control mb-2" placeholder="Add Task Description ......"></textarea>
-
             <div style="display:flex;justify-content:flex-end">
                 <button class="btn btn-sm btn-outline-info" type="button" id="taskDesc" onclick="updateDesc(@Model.Task.Id)">Add Description</button>
             </div>
         </div>
-
     }
 
 </div>

@@ -63,8 +63,9 @@ namespace ITI.CEI40.Monitor.Controllers
             {
                 Task = unitOfWork.Tasks.GetTaskWithProjectAndTeam(taskId),
                 HighComments = unitOfWork.Comments.GetHighCommentforTask(taskId).ToList(),
+                MedComments = unitOfWork.Comments.GetMedCommentforTask(taskId).ToList()
+
             };
-            ActDetailsVM.MedComments = unitOfWork.Comments.GetMedCommentforTask(taskId).ToList();
             return PartialView("_TaskPartial", ActDetailsVM);
         }
 

@@ -11,7 +11,7 @@
                 <tbody>
                     @for (int i = 0; i < Model.Count(); i++)
                     {
-                        <tr id="@Model[i].Id" onclick="displayTasks(@Model[i].Id)">
+                        <tr id="team-@Model[i].Id" onclick="displayTasks(@Model[i].Id)">
                             <td>@Model[i].Name</td>
                             @if (Model[i].TeamLeader != null)
                             {
@@ -145,7 +145,7 @@
                     meassage = 'Do you want to cancel this task';
                     break;
             }
-
+            debugger
             if (confirm(meassage)) {
                 $.ajax({
                     url: "/DepManager/EditStatus",
@@ -155,7 +155,7 @@
                         status: value
                     },
                     success: function () {
-                        $(`#${Id}`).hide();
+                        $(`#task-${Id}`).hide();
                     }
                 })
             }

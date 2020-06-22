@@ -107,8 +107,7 @@
                                         }
                                     </div>
                                 </div>
-
-                                <div id="@Model[i].Id" class="d-none">
+                                @*<div id="@Model[i].Id" class="d-none">
                                     <section>
                                         <div class="single-chart">
                                             <svg viewbox="0 0 36 36" class="circular-chart blue">
@@ -126,16 +125,18 @@
                                         </div>
                                     </section>
 
-                                    <div style="position:absolute; left:20rem; top:4rem">
-                                        <img src="~/img/duration.png" width="58%" />
+                                    <div style="position:relative;bottom:169px;left:370px ">
+                                        <div style="">
+                                            <img src="~/img/duration.png" width="25%" />
+                                        </div>
+
+
+                                        <div class="rounded-circle" style="position: relative; left:31px;bottom:96px;font-size:3em; width:1.5em;height:1.5em;background:white;display:flex;justify-content:center;align-items:center">
+                                            @Model[i].ActualDuration <span class="text-muted" style="font-size:25px">h</span>
+                                        </div>
                                     </div>
+                                </div>*@
 
-
-                                    <div class="rounded-circle" style="position: absolute; left: 22.2rem;top: 6.7rem;font-size:3em; width:1.5em;height:1.5em;background:white;display:flex;justify-content:center;align-items:center">
-                                        @Model[i].ActualDuration <span class="text-muted" style="font-size:25px">h</span>
-                                    </div>
-
-                                </div>
                                 <div style="padding:.4em; display:flex; justify-content:space-between; background-color:var(--green) ;border: 0 solid var(--green);border-radius: 0 0 10px 10px;">
                                     <textarea class="form-control " placeholder="Add Comment Here..." id=@("subComment"+Model[i].Id)></textarea>
                                     <div style="align-items:center; display:flex; justify-content:space-between">
@@ -448,7 +449,6 @@
                             width: 17.7rem;
                             overflow-y: auto;
                         }
-
                     </style>
                     <link rel="stylesheet" href="~/css/circle.css" />
                 }

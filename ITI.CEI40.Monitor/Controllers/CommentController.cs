@@ -84,7 +84,7 @@ namespace ITI.CEI40.Monitor.Controllers
 
 
         [HttpPost]
-        public IActionResult AddFileForSubTask(FileViewModel addedFile)
+        public async Task<IActionResult> AddFileForSubTask(FileViewModel addedFile)
         {
             string userId = usermanager.GetUserId(HttpContext.User);
 
@@ -125,12 +125,13 @@ namespace ITI.CEI40.Monitor.Controllers
             newFile = unitOfWork.Files.Add(newFile);
 
             fileComment.File = newFile;
+            fileComment.Sender = await usermanager.FindByIdAsync(fileComment.FK_sender);
             return PartialView("_CommentPartial", fileComment);
         }
 
         //-----------Link Between Engineer and Team Leader
         [HttpPost]
-        public IActionResult AddCommentForSubTask(string comment, int subTaskId, int taskId)
+        public async Task<IActionResult> AddCommentForSubTask(string comment, int subTaskId, int taskId)
         {
             if (ModelState.IsValid)
             {
@@ -147,6 +148,7 @@ namespace ITI.CEI40.Monitor.Controllers
                 };
 
                 Comment = unitOfWork.Comments.Add(Comment);
+                Comment.Sender = await usermanager.FindByIdAsync(Comment.FK_sender);
                 return PartialView("_CommentPartial", Comment);
             }
             return null;
@@ -154,18 +156,20 @@ namespace ITI.CEI40.Monitor.Controllers
 
         //--------Comments That invisible for Engineers
         [HttpPost]
-        public IActionResult AddCommentForTask(string comment, int taskId, bool isHighLevel)
+        public async Task<IActionResult> AddCommentForTask(string comment, int taskId, bool isHighLevel)
         {
             if (ModelState.IsValid)
             {
                 string userId = usermanager.GetUserId(HttpContext.User);
+                ApplicationUser user = await usermanager.FindByIdAsync(userId);
 
                 Comment Comment = new Comment
                 {
                     commentTime = DateTime.Now,
                     FK_sender = userId,
                     FK_TaskID = taskId,
-                    comment = comment
+                    comment = comment,
+                    Sender= user
                 };
                 if (isHighLevel) { Comment.commentLevel = CommentLevels.High; }
                 else { Comment.commentLevel = CommentLevels.Med; }
@@ -177,7 +181,7 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddFileForTask([FromForm]FileViewModel addedFile, [FromQuery]bool isHighLevel)
+        public async Task<IActionResult> AddFileForTask([FromForm]FileViewModel addedFile, [FromQuery]bool isHighLevel)
         {
             string userId = usermanager.GetUserId(HttpContext.User);
 
@@ -215,6 +219,7 @@ namespace ITI.CEI40.Monitor.Controllers
             };
             newFile = unitOfWork.Files.Add(newFile);
             fileComment.File = newFile;
+            fileComment.Sender = await usermanager.FindByIdAsync(fileComment.FK_sender);
 
             return PartialView("_CommentPartial", fileComment);
 

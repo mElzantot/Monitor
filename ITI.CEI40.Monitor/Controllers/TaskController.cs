@@ -139,8 +139,6 @@ namespace ITI.CEI40.Monitor.Controllers
                 Task = unitOfWork.Tasks.GetTaskWithProjectAndTeam(taskId),
                 HighComments = unitOfWork.Comments.GetHighCommentforTask(taskId).ToList(),
             };
-            if (HttpContext.User.IsInRole(Roles.DepartmentManager.ToString()))
-                ActDetailsVM.MedComments = unitOfWork.Comments.GetMedCommentforTask(taskId).ToList();
             return PartialView("_TaskDetailsPartialView", ActDetailsVM); 
         }
     }

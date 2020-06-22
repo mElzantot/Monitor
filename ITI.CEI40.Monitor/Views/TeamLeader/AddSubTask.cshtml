@@ -1,9 +1,8 @@
-﻿
+﻿@model TaskViewModel
+
 @{
     ViewData["Title"] = "AddAubTask";
 }
-
-@model TaskViewModel
 
 <div id="subTaskView" style="padding:8px;border: 0px solid white; border-radius: 8px; background:white; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
 
@@ -79,7 +78,6 @@
             <button onclick="getAddSubTaskModal(@Model.TaskId)" type="button" class="btn btn-outline-success">
                 Add SubTask
             </button>
-            <button type="button" class="btn btn-outline-primary" onclick="BacktoList()">Back to Tasks</button>
         </div>
     </div>
 </div>
@@ -136,132 +134,137 @@
 </div>
 
 
-@section Scripts{ 
-<script>
-    //------Add SubTask
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive-ajax/dist/jquery.unobtrusive-ajax.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script>
 
-    function getAddSubTaskModal(TaskId) {
-        $.ajax({
-            url: "/SubTask/AddSubTask",
-            type: "GET",
-            data: { taskId: TaskId, teamId: $('#teamId').val() },
-            success: function (res) {
-                $("#addmodalBody").append(res);
-                $('#addSubTaskModal').modal('show');
+        //------Add SubTask
+
+        function getAddSubTaskModal(TaskId) {
+            $.ajax({
+                url: "/SubTask/AddSubTask",
+                type: "GET",
+                data: { taskId: TaskId, teamId: $('#teamId').val() },
+                success: function (res) {
+                    $("#addmodalBody").append(res);
+                    $('#addSubTaskModal').modal('show');
+                }
+            })
+        }
+
+        function addSubTask(result, status) {
+            if (status == "success") {
+                console.log(result);
+                $('#addSubTaskModal').modal('hide');
+                document.getElementById("SubTaskForm").reset();
+                alert("SubTask added Successfully");
             }
-        })
-    }
-
-    function addSubTask(result, status) {
-        if (status == "success") {
-            console.log(result);
-            $('#addSubTaskModal').modal('hide');
-            document.getElementById("SubTaskForm").reset();
-            alert("SubTask added Successfully");
-        }
-        else {
-            alert("Error While Adding SubTask");
-            document.getElementById("SubTaskForm").reset();
-        }
-    }
-
-
-    $('#addSubTaskModal').on('shown.bs.modal', function () {
-        $('#startDate').datepicker({
-            format: "dd/mm/yyyy",
-            daysOfWeekDisabled: "5,6",
-            todayHighlight: true,
-            autoclose: true,
-            clearBtn: true,
-            startDate: new Date(),
-            container: '#addSubTaskModal',
-            datesDisabled: []
-        }).on('changeDate', function (selected) {
-            var minDate = new Date(selected.date.valueOf());
-            $('#endDate').datepicker('setStartDate', minDate);
-        });
-
-        $('#endDate').datepicker({
-            format: "dd/mm/yyyy",
-            daysOfWeekDisabled: "5,6",
-            todayHighlight: true,
-            autoclose: true,
-            clearBtn: true,
-            startDate: $("#startDate").val(),
-            container: '#addSubTaskModal',
-            datesDisabled: []
-        }).on('changeDate', function (selected) {
-            var maxDate = new Date(selected.date.valueOf());
-            $('#startDate').datepicker('setEndDate', maxDate);
-        });
-    });
-
-    $('#addSubTaskModal').on('hidden.bs.modal', function () {
-        $("#addmodalBody").empty();
-    })
-
-
-    //-------Edit SubTask
-
-    function getEditSubTaskModal(subTaskId) {
-        $.ajax({
-            url: "/SubTask/EditSubTask",
-            type: "GET",
-            data: { subtaskId: subTaskId },
-            success: function (res) {
-                $("#editmodalBody").append(res);
-                $("#editSubTaskForm").attr("data-ajax-update", `#${subTaskId}`);
-                $('#editSubTaskModal').modal('show');
+            else {
+                alert("Error While Adding SubTask");
+                document.getElementById("SubTaskForm").reset();
             }
+        }
+
+
+        $('#addSubTaskModal').on('shown.bs.modal', function () {
+            $('#startDate').datepicker({
+                format: "dd/mm/yyyy",
+                daysOfWeekDisabled: "5,6",
+                todayHighlight: true,
+                autoclose: true,
+                clearBtn: true,
+                startDate: new Date(),
+                container: '#addSubTaskModal',
+                datesDisabled: []
+            }).on('changeDate', function (selected) {
+                var minDate = new Date(selected.date.valueOf());
+                $('#endDate').datepicker('setStartDate', minDate);
+            });
+
+            $('#endDate').datepicker({
+                format: "dd/mm/yyyy",
+                daysOfWeekDisabled: "5,6",
+                todayHighlight: true,
+                autoclose: true,
+                clearBtn: true,
+                startDate: $("#startDate").val(),
+                container: '#addSubTaskModal',
+                datesDisabled: []
+            }).on('changeDate', function (selected) {
+                var maxDate = new Date(selected.date.valueOf());
+                $('#startDate').datepicker('setEndDate', maxDate);
+            });
+        });
+
+        $('#addSubTaskModal').on('hidden.bs.modal', function () {
+            $("#addmodalBody").empty();
         })
-    }
 
-    function editSubTask(result, status) {
-        if (status == "success") {
-            console.log(result);
-            $('#editSubTaskModal').modal('hide');
-            document.getElementById("editSubTaskForm").reset();
-            alert("SubTask Updated Successfully");
+
+        //-------Edit SubTask
+
+        function getEditSubTaskModal(subTaskId) {
+            $.ajax({
+                url: "/SubTask/EditSubTask",
+                type: "GET",
+                data: { subtaskId: subTaskId },
+                success: function (res) {
+                    $("#editmodalBody").append(res);
+                    $("#editSubTaskForm").attr("data-ajax-update", `#${subTaskId}`);
+                    $('#editSubTaskModal').modal('show');
+                }
+            })
         }
-        else {
-            alert("Error While updating SubTask");
-            document.getElementById("editSubTaskForm").reset();
+
+        function editSubTask(result, status) {
+            if (status == "success") {
+                console.log(result);
+                $('#editSubTaskModal').modal('hide');
+                document.getElementById("editSubTaskForm").reset();
+                alert("SubTask Updated Successfully");
+            }
+            else {
+                alert("Error While updating SubTask");
+                document.getElementById("editSubTaskForm").reset();
+            }
         }
-    }
 
 
-    $('#editSubTaskModal').on('shown.bs.modal', function () {
-        $('#startDate').datepicker({
-            format: "dd/mm/yyyy",
-            daysOfWeekDisabled: "5,6",
-            todayHighlight: true,
-            autoclose: true,
-            clearBtn: true,
-            startDate: new Date(),
-            container: '#editSubTaskModal',
-            datesDisabled: []
-        }).on('changeDate', function (selected) {
-            var minDate = new Date(selected.date.valueOf());
-            $('#endDate').datepicker('setStartDate', minDate);
+        $('#editSubTaskModal').on('shown.bs.modal', function () {
+            $('#startDate').datepicker({
+                format: "dd/mm/yyyy",
+                daysOfWeekDisabled: "5,6",
+                todayHighlight: true,
+                autoclose: true,
+                clearBtn: true,
+                startDate: new Date(),
+                container: '#editSubTaskModal',
+                datesDisabled: []
+            }).on('changeDate', function (selected) {
+                var minDate = new Date(selected.date.valueOf());
+                $('#endDate').datepicker('setStartDate', minDate);
+            });
+
+            $('#endDate').datepicker({
+                format: "dd/mm/yyyy",
+                daysOfWeekDisabled: "5,6",
+                todayHighlight: true,
+                autoclose: true,
+                clearBtn: true,
+                startDate: $("#startDate").val(),
+                container: '#editSubTaskModal',
+                datesDisabled: []
+            }).on('changeDate', function (selected) {
+                var maxDate = new Date(selected.date.valueOf());
+                $('#startDate').datepicker('setEndDate', maxDate);
+            });
         });
 
-        $('#endDate').datepicker({
-            format: "dd/mm/yyyy",
-            daysOfWeekDisabled: "5,6",
-            todayHighlight: true,
-            autoclose: true,
-            clearBtn: true,
-            startDate: $("#startDate").val(),
-            container: '#editSubTaskModal',
-            datesDisabled: []
-        }).on('changeDate', function (selected) {
-            var maxDate = new Date(selected.date.valueOf());
-            $('#startDate').datepicker('setEndDate', maxDate);
-        });
-    });
-
-    $('#editSubTaskModal').on('hidden.bs.modal', function () {
-        $("#editmodalBody").empty();
-    })
-</script>
+        $('#editSubTaskModal').on('hidden.bs.modal', function () {
+            $("#editmodalBody").empty();
+        })
+    </script>
 }
