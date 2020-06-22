@@ -43,6 +43,9 @@
                         <a class="nav-link px-3 py-1  " asp-controller="DepManager" asp-action="teamsview"><i class="fas fa-users"></i> Teams |</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link px-3 py-1  " asp-controller="DepManager" asp-action="TeamsDashboard"><i class="fas fa-chart-area"></i> Dashboard |</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link px-3 py-0  " asp-controller="DepManager" asp-action="ArchivedTasks"><i class="fas fa-archive"></i> Archive</a>
                     </li>
                 }
@@ -65,13 +68,16 @@
                 @if (User.IsInRole(Roles.Engineer.ToString()))
                 {
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-1  " asp-controller="SubTask" asp-action="Index"><i id="i" class="fas fa-id-badge"></i> Tasks |</a>
+                        <a class="nav-link px-3 py-1  " asp-controller="SubTask" asp-action="Index"><i id="i" class="fas fa-id-badge"></i>Tasks | </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-1  " asp-controller="Employee" asp-action="EmployeeTimeSheet"><i class="fas fa-user-clock"></i> TimeSheet |</a>
+                        <a class="nav-link px-3 py-1  " asp-controller="Employee" asp-action="EmployeeTimeSheet"><i class="fas fa-user-clock"></i>TimeSheet | </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-1 " asp-controller="TeamLeader" asp-action="ArchivedSubTasks"><i class="fas fa-archive"></i> Archive |</a>
+                        <a class="nav-link px-3 py-1  " asp-controller="TeamLeader" asp-action="EngineerChart"><i class="fas fa-chart-area"></i>Dashboard | </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link px-3 py-1 " asp-controller="TeamLeader" asp-action="ArchivedSubTasks"><i class="fas fa-archive"></i>Archive | </a>
                     </li>
                 }
                 @if (User.IsInRole(Roles.Finance.ToString()))
