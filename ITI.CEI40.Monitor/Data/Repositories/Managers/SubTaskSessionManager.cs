@@ -28,5 +28,9 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Where(st => st.SessStartDate.Date == date).Include(e=>e.Employee);
         }
 
+        public SubTaskSession GetOpenSubTask(string empId)
+        {
+            return set.Where(st => st.EmpId == empId && st.SessEndtDate == null).FirstOrDefault();
+        }
     }
 }

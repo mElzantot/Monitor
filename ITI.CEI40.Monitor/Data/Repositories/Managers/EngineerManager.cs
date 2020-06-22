@@ -39,7 +39,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             List<ApplicationUser> applicationUsers= set.Where(e => e.FK_TeamID == teamId).Include(e=>e.SubTasks)
                 .Include(s=>s.SubTasks).Select(e=>new ApplicationUser{
                 UserName=e.UserName,
-                SubTasks=e.SubTasks.Where(s=>s.Status==Status.Completed && s.ActualEndDate.Value.Month==DateTime.Now.Month).ToList()
+                SubTasks=e.SubTasks.Where(s=>s.Status==Status.Completed).ToList()
                 }).ToList();
             return applicationUsers;
         }

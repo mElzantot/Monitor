@@ -84,7 +84,7 @@ namespace ITI.CEI40.Monitor.Controllers
                     {
                         #region notifications 
                         string DepmanagerId = unitOfWork.Departments.GetById(act.assignee).FK_ManagerID;
-                        string messege = $"{HttpContext.User.Identity.Name}* -Project Manager- has assigned a new task -*{act.name}*- to your department at *{DateTime.Now.Date}";
+                        string messege = $"*{HttpContext.User.Identity.Name}=* -Project Manager- has assigned a new task -*{act.name}=*- to your department at *{DateTime.Now}=*";
 
                         //--------Add Notification to DataBase
                         Notification Notification = new Notification
@@ -150,7 +150,7 @@ namespace ITI.CEI40.Monitor.Controllers
                     {
                         #region  notifications 
                         string DepmanagerId = unitOfWork.Departments.GetById(act.assignee).FK_ManagerID;
-                        string messege = $"{HttpContext.User.Identity.Name} -Project Manager- has assigned a new task -{act.name}- to your department at {DateTime.Now.Date}";
+                        string messege = $"*{HttpContext.User.Identity.Name}=* -Project Manager- has assigned a new task *{act.name}=* to your department at *{DateTime.Now}=*";
 
                         //--------Add Notification to DataBase
                         Notification Notification = new Notification

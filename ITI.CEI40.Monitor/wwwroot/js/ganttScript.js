@@ -627,7 +627,7 @@ function dependency(cell) {
         var lag = computeLag(startDate, targetEndDate);
         //console.log("lag = " + lag);
         if (lag < 0) {
-            if (targetLag) { lag = lag - targetLag - 1; }
+            if (targetLag) { lag = lag - targetLag; }
             shiftTaskDate(startDate, preDurat.value, lag, depTaskId);
             lag = 0; // this is now
         }
@@ -708,15 +708,21 @@ function computeLag(startDate, targetEndDate) {
     var lag = Math.ceil((startDate - targetEndDate) / 86400000);
 
     var sDay = new Date(startDate);
-    while (sDay.getDate() != targetEndDate.getDate() && lag < 0) {
+    while (!checkEqlDate(sDay, targetEndDate) && lag < 0) {
         sDay.setDate(sDay.getDate() + 1);
         if (isHoliday(sDay)) { lag++; }
     } // remove holidays from the abslute lag when lag <0
-    while (sDay.getDate() != targetEndDate.getDate() && lag > 0) {
+    while (!checkEqlDate(sDay, targetEndDate) && lag > 0) {
         sDay.setDate(sDay.getDate() - 1);
         if (isHoliday(sDay)) { lag--; }
     } // remove holidays from the abslute lag when lag <0
     return lag;
+}
+
+function checkEqlDate(date1, date2) {
+    if (date1.getDate() == date2.getDate() && date1.getMonth() == date2.getMonth() && date1.getFullYear() == date2.getFullYear()) {
+        return true;
+    } return false;
 }
 
 /* #region  task asigning */
@@ -923,6 +929,7 @@ function submit() {
         },
         error: function (x, y, err) {
             console.log(arguments);
+            console.log(err);
         }
     });
 }
@@ -956,7 +963,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
     });
 
+
 });
+    
 function spliterTo(ratio) {
     // Move the handle.
     handle.style.left = ratio + '%';
@@ -967,6 +976,11 @@ function spliterTo(ratio) {
 }
 // default view ratio
 spliterTo(60);
+
+
+
+
+
 
 const observer = new MutationObserver(function (mutations) {
     mutations.forEach(function (mutation) {

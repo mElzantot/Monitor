@@ -44,7 +44,7 @@
     </header>
     <div class="container mb-4">
         <partial name="_CookieConsentPartial" />
-        <main role="main" style="margin-top :45px;">
+        <main role="main" style="margin-top :70px;">
             <div id="main" style="position:relative">
                 
             </div>
@@ -101,9 +101,9 @@
 
             //invoked by the server
             connection.on("newNotification", function (msg, seen, id) {
-                console.log("1?"+msg);
-                console.log("1?"+seen);
-                console.log("1?"+id);
+                //console.log("1?"+msg);
+                //console.log("1?"+seen);
+                //console.log("1?"+id);
                 var li = document.createElement('li');
                 li.setAttribute('id', `${id}`);
                 if (seen == false || seen == undefined) {
@@ -197,10 +197,6 @@
             });
         });
 
-
-        $(document).ready(function(){
-    $("#MsgButton").toast('show');
-});
 
 
     </script>
