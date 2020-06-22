@@ -1,41 +1,36 @@
 ﻿@model ActDetailsViewModel
 
-<div style=" display:flex;justify-content:space-between">
+    <div style=" display:flex;justify-content:space-between">
 
-    @switch (Model.Task.Status)
-    {
-        case Status.Active:
-            <button class="btn-light btn btn-lg">
-                @Model.Task.Name
-            </button>
-            break;
-        case Status.OnHold:
-            <button class="btn-warning btn btn-lg">
-                @Model.Task.Name
-            </button>
-            break;
-        case Status.Completed:
+        @if (Model.Task.IsCompleted)
+        {
             <button class="btn-success btn btn-lg">
                 @Model.Task.Name
             </button>
-            break;
-    }
+        }
+        else
+        {
+            <button class="btn-light btn btn-lg">
+                @Model.Task.Name
+            </button>
+        }
 
-    <div class="dropleft">
-        <button class="btn btn-sm btn-outline-info rounded-circle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i style="font-size:16px" class="fas fa-info mx-1"></i></button>
 
-        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            @if (Model.Task.Description != null)
-            {
-                <div class="text-muted p-2"><pre>@Model.Task.Description</pre></div>
-            }
-            else
-            {
-                <div class="p-2" style="color:red">Please add desceiption .</div>
-            }
+        <div class="dropleft">
+            <button class="btn btn-sm btn-outline-info rounded-circle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i style="font-size:16px" class="fas fa-info mx-1"></i></button>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                @if (Model.Task.Description != null)
+                {
+                    <div style="" class="text-muted p-2"><pre>@Model.Task.Description</pre></div>
+                }
+                else
+                {
+                    <div class="p-2" style="color:red">Please add desceiption .</div>
+                }
+            </div>
         </div>
     </div>
-</div>
 
 
 @{
@@ -92,11 +87,11 @@
                                     a 15.9155 15.9155 0 0 1 0 31.831
                                     a 15.9155 15.9155 0 0 1 0 -31.831" />
                     <path class="circle"
-                          stroke-dasharray="@Model.Task.ActualDuratoin, 100"
+                          stroke-dasharray="@Model.Task.Progress, 100"
                           d="M18 2.0845
                                   a 15.9155 15.9155 0 0 1 0 31.831
                                   a 15.9155 15.9155 0 0 1 0 -31.831" />
-                    <text x="18" y="20.35" class="percentage">@Model.Task.ActualDuratoin%</text>
+                    <text x="18" y="20.35" class="percentage">@Model.Task.Progress%</text>
                 </svg>
             </div>
         </section>
@@ -106,7 +101,7 @@
             </div>
             <div class="rounded-circle" style="position:relative;left:22px;bottom:86px;font-size:40px;
                 width:1.7em;height:1.7em;background:white;display:flex;justify-content:center;align-items:center">
-                @Model.Task.Progress <span class="text-muted" style="font-size:25px">h</span>
+                @Model.Task.ActualDuratoin <span class="text-muted" style="font-size:25px">h</span>
             </div>
         </div>
     </div>

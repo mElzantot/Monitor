@@ -28,6 +28,15 @@ namespace ITI.CEI40.Monitor.Controllers
             this.userManager = userManager;
         }
 
+        [HttpGet]
+        public JsonResult Owner(int projectId)
+        {
+                Project project = unitofwork.Projects.GetById(projectId);
+                project = unitofwork.Projects.Edit(project);
+                string ownerName = project.Owner;
+                return Json(ownerName);
+        }
+
         public IActionResult Index()
         {
 

@@ -1,0 +1,51 @@
+1-Reperesent Progress (on/ ahead / behind)
+2-Actual Time for tasks
+3-Taks Status 
+4-Project Dead Line  - Remaining time
+//5-Invoices
+
+
+taskprogress=sum(subtaskprogress*(subtaskduration/taskduration))/count
+
+-------------
+Cost:
+{
+------planned cost------
+
+subtask cost = subtask duration(day) * salary rate(LE / day)
+
+Task cost = sum (subtasks cost) + team leader (cost (avg)) * Task duration 
+
+Project Cost = sum of tasks cost + departement Manager (cost (avg)) * Task duration + project manager cost (avg) * project duration
+
+------Actual cost-------
+
+subtask actual cost = subtask duration(hr) / 8 * salary rate (LE/day) 
+
+Task cost = sum (subtasks cost) + team leader (cost (avg)) * Task duration 
+
+Project Cost = sum of tasks cost + departement Manager (cost (avg)) * Task duration + project manager cost (avg) * project duration
+
+--------------------------------
+Added feature
+Algorism for calc the avg
+
+}
+
+-----------------------------------
+-----------------------------------
+Actual duration for project [not mapped].
+much queries in edit progress and edit duration in subtask conrolloer.
+add total task duration when create a subtask.
+delete project progress.
+what is total budget for project.
+add fk-manager for project.
+null for project.
+File system.
+on/off Button.
+Session.
+Add depId to task.
+--------------
+text for presentation
+https://www.zoho.com/projects/blog/just-in-resource-utilization-editable-gantt.html
+-----------------------
