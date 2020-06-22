@@ -16,7 +16,8 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         
         public List<Team> getTeamsinsideDept(int deptID)
         {
-            return set.Where(e => e.FK_DepartmentId == deptID).Include(t => t.TeamLeader).ToList();
+            return set.Where(e => e.FK_DepartmentId == deptID).Include(t => t.TeamLeader)
+                .Include(t=>t.Engineers).Include(t => t.Tasks).ToList();
         }
 
         public Team GetTeamWithAttributes(int id)

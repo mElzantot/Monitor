@@ -1,0 +1,201 @@
+﻿
+@model TeamChartViewModel
+
+@for (int i = 0; i < Model.Names.Count; i++)
+{
+    <input class="tname" id="t-@i" value="@Model.Names[i]" hidden="hidden" />
+    @*<input class="actasks" id="a-@i" value="@Model[i].Tasks.Count(e=>e.Status==Status.Active||e.Status==Status.OnHold)" hidden="hidden" />
+        <input class="comptasks" id="c-@i" value="@Model[i].Tasks.Count(e=>e.Status==Status.Completed)" hidden="hidden" />*@
+    @*<input class="tname" id="t-@i" value="@Model[i].Tasks" hidden="hidden" />*@
+}
+@for (int i = 0; i < Model.Values.Count; i++)
+{
+    <input class="tcount" id="t-@i" value="@Model.Values[i][2]" hidden="hidden" />
+    <input class="comp" id="c-@i" value="@Model.Values[i][1]" hidden="hidden" />
+    <input class="actdur" id="a-@i" value="@Model.Values[i][0]" hidden="hidden" />
+
+
+}
+
+
+<div class="slice" style="display:flex; justify-content:flex-end">
+    <div style="width:40%">
+        <h4 class="font-weight-bold">Complexity</h4>
+        <h5 class="font-weight-light">
+            the sum of the complexity measure for each of your team's total tasks
+        </h5>
+    </div>
+    <div id="Complexity" style="height:350px; width:60%"></div>
+</div>
+<div class="slice" style="display:flex; justify-content:flex-start">
+    <div id="donutchart" style="height:350px; width:60%"></div>
+
+    <div style="width:40%">
+        <h4 class="font-weight-bold">Time Measure</h4>
+        <h5 class="font-weight-light">
+            the number of hours each of your teams spent working on their tasks
+        </h5>
+    </div>
+</div>
+
+<div class="slice" style="display:flex; justify-content:flex-end">
+    <div style="width:40%">
+        <h4 class="font-weight-bold">Work Load</h4>
+        <h5 class="font-weight-light">
+            the number of tasks that each of your teams are working on
+        </h5>
+    </div>
+
+    <div id="count" style=" height:350px; width:60%"></div>
+    
+</div>
+
+
+@section Scripts{
+
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['bar'] });
+        google.charts.load("current", { packages: ["corechart"] });
+        google.charts.setOnLoadCallback(drawChart);
+
+
+        var Tname = [];
+        var Count = [];
+        var Complex = [];
+        var Duration = [];
+
+        var Teamname = $('.tname');
+        var cou = $('.tcount');
+        var com = $('.comp');
+        var dur = $('.actdur');
+
+
+        for (var i = 0; i < Teamname.length; i++) {
+            Tname.push(Teamname[i].defaultValue)
+            Count.push(cou[i].defaultValue)
+            Complex.push(com[i].defaultValue)
+            Duration.push(dur[i].defaultValue)
+        }
+
+        console.log(Tname)
+        console.log(Count)
+        console.log(Complex)
+        console.log(Duration)
+
+
+        function drawChart() {
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Team');
+            data.addColumn('number', 'Complexity');
+
+            data.addRows([
+                [`${Tname[0]}`, Number(Complex[0])]
+            ]);
+
+            for (let j = 1; j < Tname.length; j++) {
+                data.addRows([
+                    [`${Tname[j]}`, Number(Complex[j])]
+                ]);
+            }
+
+            var options = {
+
+                //title: 'Tasks Complexity',
+                hAxis: { textStyle: { bold: true } },
+                animation: {
+                    startup: true,
+                    duration: 2500,
+                    easing: 'in',
+                },
+                bar: { groupWidth: "70%" },
+                legend: { position: "none" },
+                chartArea: { width: '78%', height: '78%' }
+
+            };
+            var chartcomp = new google.visualization.ColumnChart(document.getElementById("Complexity"));
+            chartcomp.draw(data, options);
+
+            /////////////////////////////
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Team');
+            data.addColumn('number', 'Tasks');
+
+            data.addRows([
+                [`${Tname[0]}`, Number(Count[0])]
+            ]);
+
+            for (let j = 1; j < Tname.length; j++) {
+                data.addRows([
+                    [`${Tname[j]}`, Number(Count[j])]
+                ]);
+            }
+
+            var optionsComp = {
+                //title: 'Number of tasks for each employee',
+                hAxis: { textStyle: { bold: true } },
+                bar: { groupWidth: "70%" },
+                legend: { position: "none" },
+                animation: {
+                    startup: 'true',
+                    duration: 2500,
+                    easing: 'in',
+                },
+                chartArea: { width: '78%', height: '78%' }
+
+            };
+            var chartcomp = new google.visualization.ColumnChart(document.getElementById("count"));
+            chartcomp.draw(data, optionsComp);
+
+            /////////////////////////////
+            var datadonut = new google.visualization.DataTable();
+            datadonut.addColumn('string', 'Team');
+            datadonut.addColumn('number', 'Hrs');
+
+            datadonut.addRows([
+                [`${Tname[0]} Tasks`, Number(Duration[0])]
+            ]);
+
+            for (let j = 1; j < Tname.length; j++) {
+                datadonut.addRows([
+                    [`${Tname[j]} Tasks`, Number(Duration[j])]
+                ]);
+            }
+
+            var optionsDonut = {
+                title: 'Tasks Duration (Hours)',
+                pieHole: 0.4,
+                //chartArea: { width: 370, height: 360 }
+                chartArea: { width: '78%', height: '78%', left: '17%' }
+            };
+
+            var chartdonut = new google.visualization.PieChart(document.getElementById('donutchart'));
+            chartdonut.draw(datadonut, optionsDonut);
+
+
+        }
+
+    </script>
+
+}
+
+
+
+
+@section Style{
+    <style>
+        body {
+            background-color: #e6f5ea;
+        }
+
+        .slice {
+            border: 1px solid white;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0 0px 0;
+            background: white;
+        }
+    </style>
+}

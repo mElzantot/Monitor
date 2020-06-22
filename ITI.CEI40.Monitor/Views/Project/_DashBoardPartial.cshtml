@@ -35,7 +35,7 @@
     <div class="d-flex">
         <div class="dropdown">
             <a href="#" class="dropdown-toggle nav-link px-2 py-2 btn btn-outline-info mr-2" data-toggle="dropdown" role="button"
-               aria-haspopup="true" aria-expanded="false"><i class="fas fa-clock"></i> </a>
+               aria-haspopup="true" aria-expanded="false"><i class="fas fa-clock"></i></a>
 
             <table class="dropdown-menu px-3 " style="min-width:23rem ;  border-collapse: separate; border-spacing: 5px 10px;">
                 <tbody>
@@ -117,8 +117,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td id="invo-btns">
-                        </td>
+                        <td id="invo-btns"></td>
                     </tr>
                 </tbod>
             </table>
@@ -243,7 +242,7 @@
         </div>
 
         @* Cost Chart *@
-        <div  class="slice" style="width:80.5%;margin-left:5px">
+        <div class="slice" style="width:80.5%;margin-left:5px">
             <div id="chart_div" style="padding-left:30px; padding-top:30px;"></div>
         </div>
 
@@ -256,3 +255,18 @@
 </script>
 
 
+@section Style{
+    <style>
+        body {
+            background-color: #e6f5ea;
+        }
+
+        .slice {
+            border: 1px solid white;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0 0px 0;
+            background: white;
+        }
+    </style>
+}

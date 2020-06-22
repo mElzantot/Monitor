@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ITI.CEI40.Monitor.Data;
 using ITI.CEI40.Monitor.Entities;
 using ITI.CEI40.Monitor.Hubs;
+using ITI.CEI40.Monitor.Models;
 using ITI.CEI40.Monitor.Models.View_Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -150,7 +151,49 @@ namespace ITI.CEI40.Monitor.Controllers
             return View("_DashBoardPartial", subtask);
         }
 
+        [HttpGet]
+        public IActionResult TeamsDashboard()
+        {
+            int DepId = unitOfWork.Departments.GetDepartmentWithManagerID(userManager.GetUserId(HttpContext.User)).Id;
+            var teams = unitOfWork.Teams.getTeamsinsideDept(DepId).ToList();
 
+            List<string> names = new List<string>();
+            List<List<float>> avg = new List<List<float>>();
+
+            foreach (var item in teams)
+            {
+                names.Add(item.Name);
+                if (item.Tasks!=null)
+                {
+                    avg.Add(TeamPerformence(item.Tasks.ToList()));
+                }
+                else
+                {
+                    avg.Add(null);
+                }
+            }
+            TeamChartViewModel team = new TeamChartViewModel {
+                Names=names,
+                Values=avg
+            };
+
+            return View(team);
+        }
+
+
+        private List<float> TeamPerformence(List<Activity> task)
+        {
+            List<float> result = new List<float>() { 0, 0,0 };
+            foreach (var item in task)
+            {
+                result[0] += item.ActualDuratoin;
+                result[1] += item.Complexity;
+                result[2] += 1;
+                
+            }
+
+            return result;
+        }
 
     }
 }

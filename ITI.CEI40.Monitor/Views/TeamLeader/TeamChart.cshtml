@@ -18,222 +18,263 @@
 
 
 
-
-<div class="py-2" style="display:flex; justify-content:space-between">
-
-    <div class="slice" style="width:49%">
-        <div id="Complexity" style="height:400px;"></div>
+<div class="slice" style="display:flex; justify-content:flex-end">
+    <div style="width:40%">
+        <h4 class="font-weight-bold">Complexity</h4>
+        <h5 class="font-weight-light">
+            the sum of the complexity measure per sub task for each engineer in your team
+        </h5>
     </div>
-    <div class="slice" style="width:50%">
-        <div id="Time_Quality" style=" height:400px;"></div>
+    <div id="Complexity" style="height:350px; width:60%"></div>
+</div>
+
+<div class="slice" style="display:flex; justify-content:flex-start">
+    <div id="Time_Quality" style=" height:350px; width:60%"></div>
+    <div style="width:40%">
+        <h4 class="font-weight-bold">Performance</h4>
+        <h5 class="font-weight-light">
+            each engineer's performance by comparing the complexity vs time management
+            measures for his sub tasks
+        </h5>
     </div>
 </div>
 
-
-<div style="display:flex; justify-content:space-between">
-
-    <div class="slice" style="width:49%">
-        <div id="donutchart" style=" height: 400px;"></div>
+<div class="slice" style="display:flex; justify-content:flex-end">
+    <div style="width:40%">
+        <h4 class="font-weight-bold">Work Load</h4>
+        <h5 class="font-weight-light">
+            the number of sub tasks that each engineer has worked on
+        </h5>
     </div>
+    <div id="count" style="height:350px; width:60%"></div>
+</div>
 
-    <div class="slice" style="width:50%">
-        <div id="count" style="height:400px;"></div>
+<div class="slice" style="display:flex; justify-content:flex-start">
+    <div id="donutchart" style=" height: 350px; width:60%"></div>
+    <div style="width:40%">
+        <h4 class="font-weight-bold">Time Measure</h4>
+        <h5 class="font-weight-light">
+            the number of hours that each engineer has worked on all of his sub tasks
+        </h5>
     </div>
 
 </div>
 
+@*<div class="py-2" style="display:flex; justify-content:space-between">
+
+        <div class="slice" style="width:49%">
+            <div id="Complexity" style="height:400px;"></div>
+        </div>
+        <div class="slice" style="width:50%">
+            <div id="Time_Quality" style=" height:400px;"></div>
+        </div>
+    </div>*@
+
+
+@*<div style="display:flex; justify-content:space-between">
+
+        <div class="slice" style="width:49%">
+            <div id="donutchart" style=" height: 400px;"></div>
+        </div>
+
+        <div class="slice" style="width:50%">
+            <div id="count" style="height:400px;"></div>
+        </div>
+
+    </div>*@
 
 
 
-    @section Scripts{
 
-        <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-        <script type="text/javascript">
-            google.charts.load('current', { 'packages': ['bar'] });
-            google.charts.load("current", { packages: ["corechart"] });
-            google.charts.setOnLoadCallback(drawChart);
+@section Scripts{
 
-
-            var Eng = [];
-            var Comp = [];
-            var Qual = [];
-            var TM = [];
-            var ActDur = [];
-            var TasksCou = [];
-
-            var en = $('.engname');
-            var co = $('.comp');
-            var qu = $('.qual');
-            var tm = $('.time');
-            var ad = $('.actdur');
-            var tc = $('.stcount');
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['bar'] });
+        google.charts.load("current", { packages: ["corechart"] });
+        google.charts.setOnLoadCallback(drawChart);
 
 
-            for (var i = 0; i < en.length; i++) {
-                Eng.push(en[i].defaultValue)
-                Comp.push(co[i].defaultValue)
-                Qual.push(qu[i].defaultValue)
-                TM.push(tm[i].defaultValue)
-                ActDur.push(ad[i].defaultValue)
-                TasksCou.push(tc[i].defaultValue)
-            }
+        var Eng = [];
+        var Comp = [];
+        var Qual = [];
+        var TM = [];
+        var ActDur = [];
+        var TasksCou = [];
+
+        var en = $('.engname');
+        var co = $('.comp');
+        var qu = $('.qual');
+        var tm = $('.time');
+        var ad = $('.actdur');
+        var tc = $('.stcount');
+
+
+        for (var i = 0; i < en.length; i++) {
+            Eng.push(en[i].defaultValue)
+            Comp.push(co[i].defaultValue)
+            Qual.push(qu[i].defaultValue)
+            TM.push(tm[i].defaultValue)
+            ActDur.push(ad[i].defaultValue)
+            TasksCou.push(tc[i].defaultValue)
+        }
 
 
 
-            function drawChart() {
-                var dataTime = new google.visualization.DataTable();
-                dataTime.addColumn('string', 'Engineer');
-                dataTime.addColumn('number', 'Qulaity');
-                dataTime.addColumn('number', 'Time Management');
+        function drawChart() {
+            var dataTime = new google.visualization.DataTable();
+            dataTime.addColumn('string', 'Engineer');
+            dataTime.addColumn('number', 'Qulaity');
+            dataTime.addColumn('number', 'Time Management');
 
+            dataTime.addRows([
+                [`${Eng[0]}`, Number(Qual[0]), Number(TM[0])]
+            ]);
+
+            for (let j = 1; j < Eng.length; j++) {
                 dataTime.addRows([
-                    [`${Eng[0]}`, Number(Qual[0]), Number(TM[0])]
+                    [`${Eng[j]}`, Number(Qual[j]), Number(TM[j])]
                 ]);
+            }
 
-                for (let j = 1; j < Eng.length; j++) {
-                    dataTime.addRows([
-                        [`${Eng[j]}`, Number(Qual[j]), Number(TM[j])]
-                    ]);
-                }
+            var options = {
+                //title: 'Performance',
+                hAxis: { textStyle: { bold: true } },
+                // vAxis: { minValue: 0, maxValue: 100 },
+                animation: {
+                    startup: true,
+                    duration: 2500,
+                    easing: 'in',
+                },
+                bar: { groupWidth: "70%" },
+                legend: { position: "top" },
+                chartArea: { width: '78%', height: '78%' }
 
-                var options = {
-                        title: 'Performance',
-                        hAxis: { textStyle: { bold: true } },
-                       // vAxis: { minValue: 0, maxValue: 100 },
-                        animation: {
-                            startup: true,
-                            duration: 2500,
-                            easing: 'in',
-                        },
-                        bar: { groupWidth: "70%" },
-                    legend: { position: "top" },
-                    chartArea: {  width: '78%', height: '78%' }
-                    
-                };
+            };
 
-                var chart = new google.visualization.ColumnChart(document.getElementById('Time_Quality'));
+            var chart = new google.visualization.ColumnChart(document.getElementById('Time_Quality'));
 
-                chart.draw(dataTime, options);
+            chart.draw(dataTime, options);
 
-                //    /**------------------------------------ */
-                //    /**------------------------------------ */
+            //    /**------------------------------------ */
+            //    /**------------------------------------ */
 
-                var data = new google.visualization.DataTable();
-                data.addColumn('string', 'Engineer');
-                data.addColumn('number', 'Complexity');
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Engineer');
+            data.addColumn('number', 'Complexity');
 
+            data.addRows([
+                [`${Eng[0]}`, Number(Comp[0])]
+            ]);
+
+            for (let j = 1; j < Eng.length; j++) {
                 data.addRows([
-                    [`${Eng[0]}`, Number(Comp[0])]
+                    [`${Eng[j]}`, Number(Comp[j])]
                 ]);
+            }
 
-                for (let j = 1; j < Eng.length; j++) {
-                    data.addRows([
-                        [`${Eng[j]}`, Number(Comp[j])]
-                    ]);
-                }
+            var options = {
 
-                var options = {
-                    
-                        title: 'Tasks Complexity',
-                        hAxis: { textStyle: { bold: true } },
-                        animation: {
-                            startup: true,
-                            duration: 2500,
-                            easing: 'in',
-                        },
-                        bar: { groupWidth: "70%" },
-                    legend: { position: "none" },
-                    chartArea: { width: '78%', height: '78%' }
-                    
-                };
-                var chartcomp = new google.visualization.ColumnChart(document.getElementById("Complexity"));
-                chartcomp.draw(data, options);
+                //title: 'Tasks Complexity',
+                hAxis: { textStyle: { bold: true } },
+                animation: {
+                    startup: true,
+                    duration: 2500,
+                    easing: 'in',
+                },
+                bar: { groupWidth: "70%" },
+                legend: { position: "none" },
+                chartArea: { width: '78%', height: '78%' }
+
+            };
+            var chartcomp = new google.visualization.ColumnChart(document.getElementById("Complexity"));
+            chartcomp.draw(data, options);
 
 
 
-                //    /**------------------------------------ */
-                //    /**------------------------------------ */
+            //    /**------------------------------------ */
+            //    /**------------------------------------ */
 
 
 
-                var datadonut = new google.visualization.DataTable();
-                datadonut.addColumn('string', 'Task');
-                datadonut.addColumn('number', 'Hrs');
+            var datadonut = new google.visualization.DataTable();
+            datadonut.addColumn('string', 'Task');
+            datadonut.addColumn('number', 'Hrs');
 
+            datadonut.addRows([
+                [`${Eng[0]} Tasks`, Number(ActDur[0])]
+            ]);
+
+            for (let j = 1; j < Eng.length; j++) {
                 datadonut.addRows([
-                    [`${Eng[0]} Tasks`, Number(ActDur[0])]
+                    [`${Eng[j]} Tasks`, Number(ActDur[j])]
                 ]);
+            }
 
-                for (let j = 1; j < Eng.length; j++) {
-                    datadonut.addRows([
-                        [`${Eng[j]} Tasks`, Number(ActDur[j])]
-                    ]);
-                }
+            var optionsDonut = {
+                title: 'Tasks Duration (Hours)',
+                pieHole: 0.4,
+                //chartArea: { width: 370, height: 360 }
+                chartArea: { width: '78%', height: '78%', left: '17%' }
+            };
 
-                var optionsDonut = {
-                    title: 'Tasks Duration (Hours)',
-                    pieHole: 0.4,
-                    //chartArea: { width: 370, height: 360 }
-                    chartArea: { width: '78%', height: '78%' ,left:'25%'}
-                };
+            var chartdonut = new google.visualization.PieChart(document.getElementById('donutchart'));
+            chartdonut.draw(datadonut, optionsDonut);
 
-                var chartdonut = new google.visualization.PieChart(document.getElementById('donutchart'));
-                chartdonut.draw(datadonut, optionsDonut);
+            //    /**------------------------------------ */
+            //    /**------------------------------------ */
 
-                //    /**------------------------------------ */
-                //    /**------------------------------------ */
+            var data = new google.visualization.DataTable();
+            data.addColumn('string', 'Engineer');
+            data.addColumn('number', 'Tasks');
 
-                var data = new google.visualization.DataTable();
-                data.addColumn('string', 'Engineer');
-                data.addColumn('number', 'Tasks');
+            data.addRows([
+                [`${Eng[0]}`, Number(TasksCou[0])]
+            ]);
 
+            for (let j = 1; j < Eng.length; j++) {
                 data.addRows([
-                    [`${Eng[0]}`, Number(TasksCou[0])]
+                    [`${Eng[j]}`, Number(TasksCou[j])]
                 ]);
-
-                for (let j = 1; j < Eng.length; j++) {
-                    data.addRows([
-                        [`${Eng[j]}`, Number(TasksCou[j])]
-                    ]);
-                }
-
-                var optionsComp = {
-                        title: 'Number of tasks for each employee',
-                        hAxis: { textStyle: { bold: true } },                      
-                        bar: { groupWidth: "70%"},
-                        legend: { position: "none" },
-                        animation: {
-                            startup: 'true',
-                            duration: 2500,
-                            easing: 'in',
-                    },
-                    chartArea: { width: '78%', height: '78%' }
-                   
-                };
-                var chartcomp = new google.visualization.ColumnChart(document.getElementById("count"));
-                chartcomp.draw(data,optionsComp);
-
-
             }
 
-        </script>
+            var optionsComp = {
+                //title: 'Number of tasks for each employee',
+                hAxis: { textStyle: { bold: true } },
+                bar: { groupWidth: "70%" },
+                legend: { position: "none" },
+                animation: {
+                    startup: 'true',
+                    duration: 2500,
+                    easing: 'in',
+                },
+                chartArea: { width: '78%', height: '78%' }
+
+            };
+            var chartcomp = new google.visualization.ColumnChart(document.getElementById("count"));
+            chartcomp.draw(data, optionsComp);
 
 
-    }
+        }
+
+    </script>
 
 
-    @section Style{
-        <style>
-            body {
-                background-color: #e6f5ea;
-            }
+}
 
-            .slice {
-                border: 1px solid white;
-                border-radius: 10px;
-                padding: 10px;
-                margin: 10px 0 0px 0;
-                background: white;
-            }
-        </style>
-    }
+
+@section Style{
+    <style>
+        body {
+            background-color: #e6f5ea;
+        }
+
+        .slice {
+            border: 1px solid white;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0 0px 0;
+            background: white;
+        }
+    </style>
+}

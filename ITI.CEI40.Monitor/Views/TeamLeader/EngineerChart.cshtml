@@ -30,27 +30,73 @@
 }
 
 
-<div class="py-2" style="display:flex; justify-content:space-between">
-
-    <div class="slice" style="width:49%">
-        <div id="Complexity" style="height:400px;"></div>
+<div class="slice" style="display:flex; justify-content:flex-end">
+    <div style="width:40%">
+        <h4 class="font-weight-bold">Complexity</h4>
+        <h5 class="font-weight-light">
+            the sum of the complexity measure per sub task for your
+            sub tasks over months
+        </h5>
     </div>
-    <div class="slice" style="width:50%">
-        <div id="Time_Quality" style=" height:400px;"></div>
+    <div id="Complexity" style="height:350px; width:60%"></div>
+</div>
+
+<div class="slice" style="display:flex; justify-content:flex-start">
+    <div id="Time_Quality" style=" height:350px; width:60%"></div>
+    <div style="width:40%">
+        <h4 class="font-weight-bold">Performance Over Months</h4>
+        <h5 class="font-weight-light">
+            your performance by comparing the complexity vs time management
+            measures for your sub tasks over months
+        </h5>
     </div>
 </div>
 
-
-<div style="display:flex; justify-content:space-between">
-
-    <div class="slice" style="width:49%">
-        <div id="hrs" style="height:400px;"></div>
+<div class="slice" style="display:flex; justify-content:flex-end">
+    <div style="width:40%">
+        <h4 class="font-weight-bold">Time Measure</h4>
+        <h5 class="font-weight-light">
+            @*your performance by comparing the complexity vs time management
+            measures for each of your sub tasks*@
+            the number of hours that you spent working on each of your sub tasks
+        </h5>
     </div>
-
-    <div class="slice" style="width:50%">
-        <div id="donutchart" style=" height: 400px;"></div>
-    </div>
+    <div id="hrs" style="height:350px; width:60%"></div>
 </div>
+
+<div class="slice" style="display: none; justify-content:flex-start">
+    <div id="donutchart" style=" height: 350px; width:60%"></div>
+    <div style="width:40%">
+        <h4 class="font-weight-bold">Time Measure</h4>
+        <h5 class="font-weight-light">
+            the number of hours that you spent working on each of your sub tasks
+        </h5>
+    </div>
+
+</div>
+
+
+@*<div class="py-2" style="display:flex; justify-content:space-between">
+
+        <div class="slice" style="width:49%">
+            <div id="Complexity" style="height:400px;"></div>
+        </div>
+        <div class="slice" style="width:50%">
+            <div id="Time_Quality" style=" height:400px;"></div>
+        </div>
+    </div>
+
+
+    <div style="display:flex; justify-content:space-between">
+
+        <div class="slice" style="width:49%">
+            <div id="hrs" style="height:400px;"></div>
+        </div>
+
+        <div class="slice" style="width:50%">
+            <div id="donutchart" style=" height: 400px;"></div>
+        </div>
+    </div>*@
 
 
 
@@ -117,22 +163,22 @@
 
             var options = {
 
-                    title: 'Performance',
-                    hAxis: { textStyle: { bold: true } },
-                    //vAxis: { minValue: 0, maxValue: 100 },
-                    animation: {
-                        startup: true,
-                        duration: 2500,
-                        easing: 'in',
-                    },
-                    bar: { groupWidth: "70%" },
-                    legend: { position: "none" },
-                    chartArea: { width: '78%', height: '78%' }
+                //title: 'Performance',
+                hAxis: { textStyle: { bold: true } },
+                //vAxis: { minValue: 0, maxValue: 100 },
+                animation: {
+                    startup: true,
+                    duration: 2500,
+                    easing: 'in',
+                },
+                bar: { groupWidth: "70%" },
+                legend: { position: "top" },
+                chartArea: { width: '78%', height: '78%' }
             };
 
             var chart = new google.visualization.ColumnChart(document.getElementById('Time_Quality'));
 
-            chart.draw(dataTime,options);
+            chart.draw(dataTime, options);
 
             /**------------------------------------ */
             /**------------------------------------ */
@@ -152,21 +198,21 @@
             }
 
             var optionsComp = {
-              
-                    title: 'Tasks Complexity',
-                    hAxis: { textStyle: { bold: true } },
-                    animation: {
-                        startup: true,
-                        duration: 2500,
-                        easing: 'in',
-                    },
-                    bar: { groupWidth: "70%" },
+
+                //title: 'Tasks Complexity',
+                hAxis: { textStyle: { bold: true } },
+                animation: {
+                    startup: true,
+                    duration: 2500,
+                    easing: 'in',
+                },
+                bar: { groupWidth: "70%" },
                 legend: { position: "none" },
                 chartArea: { width: '78%', height: '78%' }
-                 
+
             };
             var chartcomp = new google.visualization.ColumnChart(document.getElementById('Complexity'));
-            chartcomp.draw(data,optionsComp);
+            chartcomp.draw(data, optionsComp);
 
 
 
@@ -174,36 +220,48 @@
             /**------------------------------------ */
 
             var datahrs = new google.visualization.DataTable();
+            //datahrs.addColumn('string', 'Task');
+            //datahrs.addColumn('number', 'Quality');
+            //datahrs.addColumn('number', 'Time Management');
+
+            //datahrs.addRows([
+            //    [`${TaskName[0]}`, Number(TaskQulaity[0]), Number(TaskTime[0])]
+            //]);
+
+            //for (let j = 1; j < TaskName.length; j++) {
+            //    datahrs.addRows([
+            //        [`${TaskName[j]}`, Number(TaskQulaity[j]), Number(TaskTime[j])]
+            //    ]);
+            //}
             datahrs.addColumn('string', 'Task');
-            datahrs.addColumn('number', 'Quality');
-            datahrs.addColumn('number', 'Time Management');
+            datahrs.addColumn('number', 'Hrs');
 
             datahrs.addRows([
-                [`${TaskName[0]}`, Number(TaskQulaity[0]), Number(TaskTime[0])]
+                [`${TaskName[0]}`, Number(TaskDuration[0])]
             ]);
 
             for (let j = 1; j < TaskName.length; j++) {
                 datahrs.addRows([
-                    [`${TaskName[j]}`, Number(TaskQulaity[j]), Number(TaskTime[j])]
+                    [`${TaskName[j]}`, Number(TaskDuration[j])]
                 ]);
             }
 
             var optionsComp = {
-               
-                    title: 'Month Tasks',
-                    hAxis: { textStyle: { bold: true } },
-                    //vAxis: { minValue: 0, maxValue: 100 },
-                    animation: {
-                        startup: true,
-                        duration: 2500,
-                        easing: 'in',
-                }, legend: { position: "top" },
+
+                //title: 'Month Tasks',
+                hAxis: { textStyle: { bold: true } },
+                //vAxis: { minValue: 0, maxValue: 100 },
+                animation: {
+                    startup: true,
+                    duration: 2500,
+                    easing: 'in',
+                }, legend: { position: "none" },
                 chartArea: { width: '75%', height: '75%' }
 
-                
+
             };
             var chartcomp = new google.visualization.ColumnChart(document.getElementById('hrs'));
-            chartcomp.draw(datahrs,optionsComp);
+            chartcomp.draw(datahrs, optionsComp);
 
             /*----------------------------------*/
             /*----------------------------------*/
@@ -226,8 +284,8 @@
             var optionsDonut = {
                 title: 'TaskDuration',
                 pieHole: 0.4,
-                
-                chartArea: { width: '78%', height: '78%', left: '25%' }
+
+                chartArea: { width: '78%', height: '78%', left: '17%' }
             };
 
             var chartdonut = new google.visualization.PieChart(document.getElementById('donutchart'));
@@ -235,7 +293,7 @@
 
         }
 
-        
+
     </script>
 
 
