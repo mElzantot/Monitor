@@ -24,19 +24,6 @@
     <textarea asp-for="Description" class="form-control"></textarea>
     <span asp-validation-for="Description" class="text-danger"></span>
 </div>
-@*<div class="row">
-    <div class="form-group col-12">
-        <label asp-for="Status"></label>
-        <select asp-for="Status" asp-items="Html.GetEnumSelectList<Status>()" class="form-control">
-        </select>
-        <span asp-validation-for="Status" class="text-danger"></span>
-    </div>
-    <div class="form-group col-6" hidden>
-        <label asp-for="Priority"></label>
-        <select asp-for="Priority" asp-items="Html.GetEnumSelectList<Priority>()" class="form-control"></select>
-        <span asp-validation-for="Priority" class="text-danger"></span>
-    </div>
-</div>*@
 <div class="row">
     <div class="form-group col-6">
         <label asp-for="StartDate"></label>

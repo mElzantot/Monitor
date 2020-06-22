@@ -22,6 +22,9 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers.Interfaces
         IEnumerable<Comment> GetMedCommentforTask(int taskId);
         IEnumerable<Comment> GetHighCommentforTask(int taskId);
 
+        IEnumerable<Comment> GetCommentsForSubTask(int subTaskId);
+
+
 
 
     }

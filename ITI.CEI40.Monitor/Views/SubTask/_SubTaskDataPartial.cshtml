@@ -87,7 +87,7 @@
             {
                 @foreach (var item in Model.Comments)
                 {
-                    <partial name="_CommentPartial" model="item" />
+                    <partial name="/Views/comment/_CommentPartial.cshtml" model="item" />
                 }
             }
         </div>

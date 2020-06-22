@@ -37,7 +37,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         public SubTask GetSubTaskIncludingTask(int subTaskId)
         {
-            return set.Where(sub => sub.Id == subTaskId).Include(sub => sub.Task).FirstOrDefault();
+            return set.Where(sub => sub.Id == subTaskId).Include(sub=> sub.Comments).Include(sub => sub.Task).FirstOrDefault();
         }
 
         public SubTask GetSubTaskIncludingProject(int subTaskId)

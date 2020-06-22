@@ -2,13 +2,13 @@
 
 <div style="margin: 0 .3em 1em .5em; ">
     <div class="message-text">
-         @Model.Sender.UserName
-            @Model.comment
-            @if (Model.File != null)
-            {
-                <br>
-                <a href="~/files/@Model.File.FilePath" download="@Model.File.FilePath.Split("_")[1]" >@Model.File.FilePath.Split("_")[1]</a>
-            }
-            <div class="message-time">@Model.commentTime</div>      
+        @Model.Sender.UserName
+          @Model.comment
+        @if (Model.File != null)
+        {
+            <br>
+            <a href="~/files/@Model.File.FilePath" download="@Model.File.FilePath.Split("_")[1]">@Model.File.FilePath.Split("_")[1]</a>
+        }
+        <div class="message-time">@Model.commentTime</div>
     </div>
 </div>

@@ -45,6 +45,8 @@ namespace ITI.CEI40.Monitor.Controllers
         public IActionResult DisplayRow(int ID)
         {
             SubTask subTask = unitOfWork.SubTasks.GetSubTaskIncludingTask(ID);
+            subTask.Comments = unitOfWork.Comments.GetCommentsForSubTask(ID).ToList();
+
             return PartialView("_SubTaskDataPartial", subTask);
         }
 
