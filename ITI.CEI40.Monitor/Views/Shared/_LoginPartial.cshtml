@@ -73,16 +73,16 @@
                 @if (User.IsInRole(Roles.Engineer.ToString()))
                 {
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-1  " asp-controller="SubTask" asp-action="Index"><i id="i" class="fas fa-id-badge"></i>Tasks | </a>
+                        <a class="nav-link px-3 py-1  " asp-controller="SubTask" asp-action="Index"><i id="i" class="fas fa-id-badge"></i> Tasks | </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-1  " asp-controller="Employee" asp-action="EmployeeTimeSheet"><i class="fas fa-user-clock"></i>TimeSheet | </a>
+                        <a class="nav-link px-3 py-1  " asp-controller="Employee" asp-action="EmployeeTimeSheet"><i class="fas fa-user-clock"></i> TimeSheet | </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-1  " asp-controller="TeamLeader" asp-action="EngineerChart"><i class="fas fa-chart-area"></i>Dashboard | </a>
+                        <a class="nav-link px-3 py-1  " asp-controller="TeamLeader" asp-action="EngineerChart"><i class="fas fa-chart-area"></i> Dashboard | </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link px-3 py-1 " asp-controller="TeamLeader" asp-action="ArchivedSubTasks"><i class="fas fa-archive"></i>Archive | </a>
+                        <a class="nav-link px-3 py-1 " asp-controller="TeamLeader" asp-action="ArchivedSubTasks"><i class="fas fa-archive"></i> Archive | </a>
                     </li>
                 }
                 @if (User.IsInRole(Roles.Finance.ToString()))
@@ -114,17 +114,6 @@
                 </li>
             }
 
-
-
-            <li class="nav-item">
-                <a class="nav-link px-3 py-1  " asp-controller="Department" asp-action="ViewDepartments"><i class="fas fa-sitemap"></i> Organization |</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link px-3 py-1  " asp-controller="Employee" asp-action="ViewEmployees"><i class="fas fa-users"></i> Employees |</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link px-3 py-1  " asp-controller="Holiday" asp-action="Index"><i id="i" class="fas fa-chart-area"></i> Holidays |</a>
-            </li>
 
         </ul>
     </div>
