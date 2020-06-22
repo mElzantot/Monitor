@@ -12,7 +12,7 @@
     <!--#region Add project  -->
     <div class="d-flex mb-3">
         <span id="search" style="width:20% ; margin-right:1%;">
-            <input class="form-control" type="search" placeholder="Search">
+            <input class="form-control" type="text" id="Search" placeholder="Search">
         </span>
         <span>
             <button class="btn btn-success " id="addproject">Add project</button>
@@ -56,7 +56,7 @@
                         <tbody id="tablebody">
                             @foreach (var item in Model.Projects)
                             {
-                                <tr id="@item.ID" onclick="OpenEditSec(@item.ID)">
+                                <tr id="@item.ID" onclick="OpenEditSec(@item.ID)" class="Search">
                                     <td class="text-center font-weight-bold">@item.Name</td>
                                     <td style="text-align:right">
                                         <a href="/Project/Details/@item.ID" class="btn btn-outline-info"><i id="i" class="fas fa-chart-area"></i> Details</a>
@@ -64,7 +64,7 @@
 
                                         @if (item.EndDate != null)
                                         {
-                                            <button onclick="Dashboard(@item.ID)" type="button" class="btn alert-warning">Dashboard</button>
+                                            <a  href="/project/dashboard?projid=@item.ID" class="btn alert-warning">Dashboard</a>
                                         }
                                         else
                                         {
@@ -118,6 +118,24 @@
 
     <script>
 
+        $(document).ready(function () {
+            function Contains(textOne, textTwo) {
+                if (textOne.indexOf(textTwo) != -1)
+                    return true;                
+            }
+            $('#Search').keyup(function () {
+                var searchText = $('#Search').val().toLowerCase();
+                $('.Search').each(function () {
+                    if (!Contains($(this).text().toLowerCase(), searchText)) {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
+                })
+            });
+        })
+
+
         //open form for add name of project
         var btn = $('#addproject').click(function () {
             $('#addproject').hide();
@@ -153,19 +171,19 @@
                     success: function (response) {
                         $('#tablebody').append(
                             `<tr id="${response.id}" onclick="Edit(${response.id})">
-                                                                                                                                                                    <td class="text-center font-weight-bold">${response.name}</td>
-                                                                                                                                                                    <td style="text-align:right">
-                                                                                                                                                                    <a href="/Project/Details/${response.id}" class="btn btn-outline-info"><i id="i" class="fas fa-chart-area"></i> Details</a>
-                                                                                                                                                                    <a href="/Activity/Index/${response.id}" class="btn alert-info" ><i id="i" class="fas fa-chart-area"></i> Chart</a>
-                                                                                                                                                                    <div class="btn-group dropleft">
-                                                                                                                                        <button type="button" class="btn alert-warning " data-toggle="dropdown" >
-                                                                                                                                            Dashboard
-                                                                                                                                        </button>
-                                                                                                                                        <div class="dropdown-menu px-2 alert-danger">
-                                                                                                                                            Lets goto charts and create tasks
+                                                                                                                                                                        <td class="text-center font-weight-bold">${response.name}</td>
+                                                                                                                                                                        <td style="text-align:right">
+                                                                                                                                                                        <a href="/Project/Details/${response.id}" class="btn btn-outline-info"><i id="i" class="fas fa-chart-area"></i> Details</a>
+                                                                                                                                                                        <a href="/Activity/Index/${response.id}" class="btn alert-info" ><i id="i" class="fas fa-chart-area"></i> Chart</a>
+                                                                                                                                                                        <div class="btn-group dropleft">
+                                                                                                                                            <button type="button" class="btn alert-warning " data-toggle="dropdown" >
+                                                                                                                                                Dashboard
+                                                                                                                                            </button>
+                                                                                                                                            <div class="dropdown-menu px-2 alert-danger">
+                                                                                                                                                Lets goto charts and create tasks
+                                                                                                                                            </div>
                                                                                                                                         </div>
-                                                                                                                                    </div>
-                                                                                                                                                            </tr>`
+                                                                                                                                                                </tr>`
                         );
                         //For first time if there is no project in the table (Hide the sec of No Project is created)
                         $('#noProject').hide();
@@ -222,168 +240,7 @@
 
 
 
-        //-----------Dash-------------//
-
-        function Dashboard(id) {
-            $.ajax({
-                type: "GET",
-                url: `/Project/DashBoard`,
-                data: { projId: id },
-                success: function (response) {
-                    $('#MainView').hide();
-                    $('#Board').prepend(response);
-                    $('#invo-btns').append(`<a href="/Invoice/Index_Income/${id}" class="btn btn-outline-primary">Income</a>
-                                                <a href="/Invoice/Index_Expense/${id}" class="btn btn-outline-info">Outcome</a>`)
-                    LoadData();
-
-                    //$('#Board').show();
-                },
-                error: function (x, y, err) {
-                    console.log(arguments)
-                }
-            })
-        }
-
-        function BackToList() {
-            $('#DashBoard').remove();
-            //$('#Board').hide();
-            $('#MainView').show();
-        }
-
-
-
-        ////
-        function LoadData() {
-            console.log(modelInvoices);
-
-
-            var ns = [];
-            var ps = [];
-            var dur = [];
-            var names = $('.staskname')
-            var progress = $('.staskprog')
-            var durations = $('.staskdur')
-            for (var i = 0; i < names.length; i++) {
-                //console.log(names[i].defaultValue)
-                ns.push(names[i].defaultValue)
-            }
-            for (var i = 0; i < progress.length; i++) {
-                //console.log(progress[i].defaultValue)
-                ps.push(progress[i].defaultValue)
-            }
-            for (var i = 0; i < durations.length; i++) {
-                //console.log(progress[i].defaultValue)
-                dur.push(durations[i].defaultValue)
-            }
-            //console.log(ns);
-            //console.log(ps);
-            //console.log(dur);
-
-
-            google.charts.load('current', { packages: ['corechart', 'line'] });
-            google.charts.setOnLoadCallback(drawChart);
-            google.charts.setOnLoadCallback(drawChart2);
-            google.charts.setOnLoadCallback(drawChart3);
-
-
-            function drawChart() {
-
-                var data = new google.visualization.DataTable();
-                data.addColumn('string', 'Name');
-                data.addColumn('number', 'Progress');
-                data.addColumn({ role: "style" });
-                data.addRows([
-                    [`${ns[0]}`, parseInt(ps[0]), "#4da76b"],
-                ]);
-
-                for (let j = 1; j < ns.length; j++) {
-                    data.addRows([
-                        [`${ns[j]}`, parseInt(ps[j]), "#4da76b"],
-                    ]);
-                }
-
-                var options = {
-                    title: "Tasks Progress",
-                    hAxis: { textStyle: { bold: true } },
-                    vAxis: { minValue: 0, maxValue: 100 },
-                    animation: {
-                        startup: true,
-                        duration: 2500,
-                        easing: 'in',
-                    },
-                    bar: { groupWidth: "70%" },
-                    legend: { position: "none" },
-                };
-                var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
-                chart.draw(data, options);
-            }
-
-            function drawChart2() {
-                var data = new google.visualization.DataTable();
-                data.addColumn('string', 'Name');
-                data.addColumn('number', 'Time Spent');
-
-                data.addRows([
-                    [`${ns[0]}`, parseInt(dur[0])],
-                ]);
-
-                for (let j = 1; j < ns.length; j++) {
-                    data.addRows([
-                        [`${ns[j]}`, parseInt(dur[j])],
-                    ]);
-                }
-
-                var options = {
-                    title: 'Tasks Actual Durations',
-                    pieHole: 0.4,
-                    //chartArea: { left: 20, top: 0, width: '50%', height: '75%' }
-                    chartArea: { left: 150, height: '80%' }
-                };
-
-                var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
-                chart.draw(data, options);
-            }
-
-            //modelInvoices
-            function drawChart3() {
-                var data = new google.visualization.DataTable();
-                data.addColumn('string', 'Month');
-                data.addColumn('number', 'Sales');
-                data.addColumn('number', 'Expenses');
-                data.addColumn('number', 'Net');
-                // initial value
-                var month = modelInvoices[0].month;
-                var sales = modelInvoices[0].sales;
-                var expenses = modelInvoices[0].expenses;
-                var net = expenses - sales;
-                data.addRows([[`${month}`, sales, expenses, net]]);
-                // add the invices data
-                for (var i = 1; i < modelInvoices.length; i++) {
-                    sales += modelInvoices[i].sales;
-                    expenses = modelInvoices[i].expenses;
-                    net = expenses - sales;
-                    data.addRows([[`${modelInvoices[i].month}`, sales, expenses, net]]);
-                }
-
-
-                var options = {
-                    chart: {
-                        title: 'Project Financial Status',
-                        subtitle: 'in thousand of poundds (LE)'
-                    },
-                    hAxis: { title: 'Months', titleTextStyle: { color: 'green' } },
-                    vAxis: { title: 'Money' },
-                    legend: { position: 'bottom' },
-                    colors: ['#a52714', '#097138', '#003366'],
-                    width: 800,
-                    height: 300
-                };
-
-                //var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
-                var chart = new google.charts.Line(document.getElementById('chart_div'));
-                chart.draw(data, options);
-            }
-        }
+        
         function Show(divName) {
             $(`#${divName}`).removeClass('d-none');
         }
@@ -394,3 +251,18 @@
 }
 
 
+@section Style{
+    <style>
+        /*body {
+            background-color: #e6f5ea;
+        }*/
+
+        .slice {
+            border: 1px solid white;
+            border-radius: 10px;
+            padding: 10px;
+            margin: 10px 0 0px 0;
+            background: white;
+        }
+    </style>
+}
