@@ -2,12 +2,8 @@
 @if (Model != null && Model.Count() > 0)
 {
     <div id="Task">
-
         <div class="row ">
-
             <div id="leftSec" class="col-7">
-
-
                 <div style="padding:10px;border: 0px solid white; border-radius: 8px; background:white; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
                     <div class="table-responsive">
                         <table class="table table-hover text-center " id="Tasktable">
@@ -33,28 +29,6 @@
                                         </td>
                                         <td>@item.Name</td>
                                         <td>@item.Task.Project.Name</td>
-
-
-                                        @*@if (item.Status == Status.OnHold)
-                                            {
-                                                <td>
-                                                    <button class="btn btn-sm btn-warning" onclick="ChangeStatus(event,@item.Id)"
-                                                            onmouseover="StatusColor(event.target)"
-                                                            onmouseout="StatusColor(event.target)">
-                                                        OnHold
-                                                    </button>
-                                                </td>
-                                            }
-                                            else
-                                            {
-                                                <td>
-                                                    <button class="btn btn-sm btn-success" onclick="ChangeStatus(event,@item.Id)"
-                                                            onmouseover="StatusColor(event.target)"
-                                                            onmouseout="StatusColor(event.target)">
-                                                        Active
-                                                    </button>
-                                                </td>
-                                            }*@
 
                                         <td>
                                             <select asp-for="@item.Status" class="form-control">
@@ -91,6 +65,7 @@ else
 }
 
 
+
 @*<div id="dashboard">
         <div class="py-2" style="display:flex; justify-content:space-between">
 
@@ -102,7 +77,8 @@ else
             </div>
 
         </div>
-    </div>*@
+    </div>
+    *@
 
 
 
@@ -160,8 +136,8 @@ else
 
 
 
-<!-- #endregion -->
 
+<!-- #endregion -->
 @section Scripts{
     <partial name="_ValidationScriptsPartial" />
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">

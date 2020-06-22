@@ -1,6 +1,6 @@
 ﻿@model Project
 
-<div id="formSec" class="col-6">
+<div id="formSec" class="col-5">
     <div style="border: 2px solid rgb(219, 219, 219) ; padding: 20px; border-radius: 8px;">
 
         <form method="post" data-ajax-url="/project/Edit" data-ajax="true" data-ajax-method="Post" data-ajax-complete="EditName"
@@ -17,8 +17,8 @@
                 </div>
             </div>
             <hr />
-            <div class="row">
-                <div class="form-group col-lg-6">
+            <div style="display:flex;justify-content:center">
+                <div class="form-group " style="width:100%">
                     <label asp-for="@Model.Priority">Priority</label>
                     @Html.DropDownList("Priority",
                     new SelectList(Enum.GetValues(typeof(Priority))),

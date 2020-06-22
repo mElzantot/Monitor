@@ -28,14 +28,7 @@ namespace ITI.CEI40.Monitor.Controllers
             this.userManager = userManager;
         }
 
-        [HttpGet]
-        public JsonResult Owner(int projectId)
-        {
-                Project project = unitofwork.Projects.GetById(projectId);
-                project = unitofwork.Projects.Edit(project);
-                string ownerName = project.Owner;
-                return Json(ownerName);
-        }
+
 
         public IActionResult Index()
         {
@@ -56,7 +49,13 @@ namespace ITI.CEI40.Monitor.Controllers
             activityVM.Tasks = unitofwork.Tasks.GetProjectTasksWithDep(Id).ToList();
             return View(activityVM);
         }
-        
+
+        public void Arcive(int PrjId,int status)
+        {
+            Project project = unitofwork.Projects.GetById(PrjId);
+            project.Status = (Status)status;
+            unitofwork.Projects.Edit(project);
+        }
 
         [HttpPost]
         public JsonResult Add(Project project)
