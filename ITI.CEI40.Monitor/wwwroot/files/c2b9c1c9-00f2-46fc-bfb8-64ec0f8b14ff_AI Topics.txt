@@ -1,0 +1,15 @@
+Dear All
+
+please prepare : 
+
+1- a presentation in a published paper about one of the following topics 
+         * Reinforcement Neural network
+         *Radial basis function neural network
+         * Fuzzy logic solution
+         * Genetic Algorithm
+          * PSO
+2- fuzzy example in  matlab code (and attach the result to your slides)
+
+to upload it next Saturday   21/3/2020  before presenting it online next week (will arrange the date with eng A Mohy)
+
+Thanks

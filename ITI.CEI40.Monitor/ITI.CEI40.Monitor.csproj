@@ -22,35 +22,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Migrations\20200611102057_IFile.cs" />
-    <Compile Remove="Migrations\20200611102057_IFile.Designer.cs" />
-    <Compile Remove="Migrations\20200613024525_AddCommentLevels.cs" />
-    <Compile Remove="Migrations\20200613024525_AddCommentLevels.Designer.cs" />
-    <Compile Remove="Migrations\20200614172620_Test.cs" />
-    <Compile Remove="Migrations\20200614172620_Test.Designer.cs" />
-    <Compile Remove="Migrations\20200614174053_addEvaluation.cs" />
-    <Compile Remove="Migrations\20200614174053_addEvaluation.Designer.cs" />
-    <Compile Remove="Migrations\20200614174402_addEvaluation2.cs" />
-    <Compile Remove="Migrations\20200614174402_addEvaluation2.Designer.cs" />
-    <Compile Remove="Migrations\20200615192928_enddata.cs" />
-    <Compile Remove="Migrations\20200615192928_enddata.Designer.cs" />
-    <Compile Remove="Migrations\20200615195050_subenddata.cs" />
-    <Compile Remove="Migrations\20200615195050_subenddata.Designer.cs" />
-    <Compile Remove="Migrations\20200615195138_subenddata.cs" />
-    <Compile Remove="Migrations\20200615195138_subenddata.Designer.cs" />
-    <Compile Remove="Migrations\20200616182729_firstt.cs" />
-    <Compile Remove="Migrations\20200616182729_firstt.Designer.cs" />
-    <Compile Remove="Migrations\20200618195504_RolesUpdate.cs" />
-    <Compile Remove="Migrations\20200618195504_RolesUpdate.Designer.cs" />
-    <Compile Remove="Migrations\20200620043726_displayTeam.cs" />
-    <Compile Remove="Migrations\20200620043726_displayTeam.Designer.cs" />
-    <Compile Remove="Migrations\20200620055838_BefreEngMohey2.cs" />
-    <Compile Remove="Migrations\20200620055838_BefreEngMohey2.Designer.cs" />
-    <Compile Remove="Migrations\20200621113825_Allem.cs" />
-    <Compile Remove="Migrations\20200621113825_Allem.Designer.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Content Remove="wwwroot\lib\signalr\dist\browser\signalr.js" />
     <Content Remove="wwwroot\lib\signalr\dist\browser\signalr.min.js" />
   </ItemGroup>

@@ -196,6 +196,12 @@ namespace ITI.CEI40.Monitor.Controllers
             }
 
         }
+        
+        [HttpGet]
+        public IActionResult TeamsDashboard()
+        {
+            int DepId = unitOfWork.Departments.GetDepartmentWithManagerID(userManager.GetUserId(HttpContext.User)).Id;
+            var teams = unitOfWork.Teams.getTeamsinsideDept(DepId).ToList();
 
             List<string> names = new List<string>();
             List<List<float>> avg = new List<List<float>>();
@@ -203,7 +209,7 @@ namespace ITI.CEI40.Monitor.Controllers
             foreach (var item in teams)
             {
                 names.Add(item.Name);
-                if (item.Tasks!=null)
+                if (item.Tasks != null)
                 {
                     avg.Add(TeamPerformence(item.Tasks.ToList()));
                 }
@@ -212,9 +218,10 @@ namespace ITI.CEI40.Monitor.Controllers
                     avg.Add(null);
                 }
             }
-            TeamChartViewModel team = new TeamChartViewModel {
-                Names=names,
-                Values=avg
+            TeamChartViewModel team = new TeamChartViewModel
+            {
+                Names = names,
+                Values = avg
             };
 
             return View(team);
