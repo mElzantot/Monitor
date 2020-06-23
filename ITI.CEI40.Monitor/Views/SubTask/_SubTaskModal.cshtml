@@ -2,7 +2,7 @@
 
 <input hidden type="text" asp-for="FK_TaskId" value="@Model.FK_TaskId" />
 <input hidden type="number" asp-for="SubTaskId" value="@Model.SubTaskId" />
-<input hidden type="number" asp-for="PlannedDuration" value="" id="Duration" />
+<input hidden type="number" asp-for="PlannedDuration" value="@Model.PlannedDuration" id="Duration" />
 <div class="row">
     <div class="form-group col-6">
         <label asp-for="Name"></label>

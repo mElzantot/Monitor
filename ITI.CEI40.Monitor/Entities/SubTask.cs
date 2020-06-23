@@ -65,7 +65,7 @@ namespace ITI.CEI40.Monitor.Entities
         public DateTime? ActualEndDate { get; set; }
 
         //----------Actual Working Hours
-        [LoadColumn(2)]
+        [LoadColumn(0)]
         public float ActualDuration { get; set; }
 
         [NoColumn]
@@ -91,18 +91,18 @@ namespace ITI.CEI40.Monitor.Entities
 
         [Range(0, 100)]
         [Required]
-        [LoadColumn(0)]
+        [LoadColumn(1)]
         public float Complexity { get; set; }
 
         [Range(0, 100)]
         [Required]
-        [LoadColumn(1)]
+        [LoadColumn(2)]
         public float Quality { get; set; }
 
         //public ICollection<EngineerSubTasks> EngineerSubTasks { get; set; }
         [NoColumn]
         public virtual ICollection<SubTaskSession> SubTaskSession { get; set; }
-        //[NoColumn]
+        [NoColumn]
         public virtual ICollection<Comment> Comments { get; set; }
         [NoColumn]
         public ApplicationUser Engineer { get; set; }
