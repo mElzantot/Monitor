@@ -71,6 +71,11 @@ function table(dataArray, noData) {
 
 }
 
+// reverse parsedate
+function ReparseDate(s) {
+    var b = s.split(/\D/);
+    return new Date(b[0], --b[1], b[2]);
+}
 
 
 // s is format y-m-d
