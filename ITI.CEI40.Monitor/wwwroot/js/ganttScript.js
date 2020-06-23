@@ -71,6 +71,11 @@ function table(dataArray, noData) {
 
 }
 
+// reverse parsedate
+function ReparseDate(s) {
+    var b = s.split(/\D/);
+    return new Date(b[0], --b[1], b[2]);
+}
 
 
 // s is format y-m-d
@@ -112,6 +117,7 @@ function computeEndFromDuration(date1, Duration) {
         }
         d.setDate(d.getDate() + 1);
     }
+    while (isHoliday(d)) { d.setDate(d.getDate() + 1); } //in case of stopping at thursday (114)
     return d;
 }
 

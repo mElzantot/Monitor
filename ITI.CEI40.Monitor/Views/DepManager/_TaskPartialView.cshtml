@@ -29,7 +29,7 @@ else
 
         @for (int i = 0; i < Model.Count(); i++)
         {
-            <tr id="@Model[i].Id" onclick="getid(this.id)">
+            <tr id="task-@Model[i].Id" onclick="getid(this.id)">
                 <td>
                     @Model[i].Name
                     <div class="btn-group dropright">

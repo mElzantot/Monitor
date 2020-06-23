@@ -126,7 +126,8 @@
     <script>
         // fill the array of the departments assignee
         fillAssignees();
-
+        var model = @Html.Raw(Json.Serialize(Model));
+        console.log(model);
         var dataArray = [];
         var editonece = true;
         var noData = ($('#checkdata').val() === 'false');
@@ -140,9 +141,9 @@
                     label = parseInt(label) - 1;
                     var name = $(`#n-${i}`)[0].value;
                     var start = $(`#s-${i}`)[0].value;
-                    start = parseDate(start);
+                    start = ReparseDate(model.activities[i].startDate); //parseDate(start); 
                     var end = $(`#e-${i}`)[0].value;
-                    end = parseDate(end);
+                    end = ReparseDate(model.activities[i].endDate); //parseDate(end); 
                     var duration = $(`#d-${i}`)[0].value;
                     var dbid = $(`#dbid-${i}`)[0].value;
                     var dependsId = $(`#dep-${i}`)[0].value - 1;

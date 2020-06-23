@@ -4,33 +4,33 @@
     ViewData["Title"] = "Create Project";
 }
 
-
 <div id="MainView">
 
     <h3 class="text-muted">Projects</h3>
     <br>
     <!--#region Add project  -->
     <div class="d-flex mb-3">
-        <span id="search" style="width:20% ; margin-right:1%;">
+        <span id="search" style="width:28% ; margin-right:1%;">
             <input class="form-control" type="search" placeholder="Search">
         </span>
         <span>
-            <button class="btn btn-success " id="addproject">Add project</button>
+            <button class="btn btn-success" id="addproject">Add project</button>
             <button class="btn btn-light "><i class="fas fa-filter"></i>Filter</button>
-            <button class="btn btn-light "><i class="fas fa-arrow-circle-up"></i> Archive</button>
         </span>
     </div>
     <!--#endregion   -->
 
     <div class="row">
-        <div class="col-6">
+        <div class="col-7">
 
             <!--#region Create Section  -->
             <div class=" d-none mb-3" id="createsection">
-                <div style="width:50%; margin-right:2%">
-                    <input asp-for="@Model.Project.Name" class="form-control"
-                           type="text" id="projectName" placeholder="Enter the name of new project">
-                    <span asp-validation-for="@Model.Project.Name" class="text-danger"></span>
+                <div style="width:63%; display:flex; margin-right:2%">
+                    <input asp-for="@Model.Project.Name" class="form-control mr-2"
+                           type="text" id="projectName" placeholder="project name">
+
+                    <input asp-for="@Model.Project.Owner" class=" form-control"
+                           type="text" id="owner" placeholder="Owner name">
                 </div>
                 <div>
                     <button class="btn btn-success" id="Createprojrct"> create new project </button>
@@ -59,44 +59,53 @@
                                 <tr id="@item.ID" onclick="OpenEditSec(@item.ID)">
                                     <td class="text-center font-weight-bold">@item.Name</td>
                                     <td style="text-align:right">
-                                        <a href="/Project/Details/@item.ID" class="btn btn-outline-info"><i id="i" class="fas fa-chart-area"></i> Details</a>
-                                        <a href="/Activity/Index/@item.ID" class="btn alert-info"><i id="i" class="fas fa-chart-area"></i> Chart</a>
-
                                         @if (item.EndDate != null)
                                         {
-                                            <button onclick="Dashboard(@item.ID)" type="button" class="btn alert-warning">Dashboard</button>
+                                            <button onclick="Dashboard(@item.ID)" type="button" class="btn btn-outline-warning">Dashboard</button>
+                                            <a href="/Project/Details/@item.ID" class="btn btn-outline-info"><i id="i" class="fas fa-chart-area"></i> Details</a>
                                         }
                                         else
                                         {
                                             <div class="btn-group dropleft">
-                                                <button type="button" class="btn alert-warning " data-toggle="dropdown">
+                                                <button type="button" class="btn btn-outline-warning" data-toggle="dropdown">
                                                     Dashboard
                                                 </button>
                                                 <div class="dropdown-menu px-2 mx-1 alert-danger">
                                                     Lets goto charts and create tasks
                                                 </div>
                                             </div>
-                                        }
 
+                                            <div class="btn-group dropleft">
+                                                <button type="button" class="btn btn-outline-info" data-toggle="dropdown">
+                                                    <i id="i" class="fas fa-chart-area"></i> Details
+                                                </button>
+                                                <div class="dropdown-menu px-2 mx-1 alert-danger">
+                                                    Lets goto charts and create tasks
+                                                </div>
+                                            </div>
+                                        }
+                                        <a href="/Activity/Index/@item.ID" class="btn alert-info"><i id="i" class="fas fa-chart-area"></i> Chart</a>
+                                        <button class="btn btn-light" onclick="arcive(@item.ID,2)"><i class="fas fa-arrow-circle-up"></i> Archive</button>
+                                        <button class="btn btn-danger btn-sm" onclick="arcive(@item.ID,3)"><i class="fas fa-trash-alt"></i></button>
+                                   
                                     </td>
                                 </tr>
                             }
                         </tbody>
                     </table>
                 }
-
                 <!--#endregion -->
             </div>
-
         </div>
 
-        <div id="formSec" class="col-6">
+        <div id="formSec" class="col-5">
             <!--#region Form Section  -->
             <div style="border: 2px solid rgb(219, 219, 219) ; padding: 50px 25px;  border-radius: 8px;">
-                <h4 class="text-muted text-center">Choose project to edit</h4>
+                <h4 class="text-muted text-center">Choose project to show data</h4>
             </div>
             <!--#endregion -->
         </div>
+
     </div>
 </div>
 
@@ -117,7 +126,6 @@
 
 
     <script>
-
         //open form for add name of project
         var btn = $('#addproject').click(function () {
             $('#addproject').hide();
@@ -133,7 +141,6 @@
         }
         $('#cancel').click(CloseProjrctNameSec)
 
-
         //Add Ajax
         $('#projectName').keypress(function (event) {
             var keyCode = (event.keyCode ? event.keyCode : event.which);
@@ -145,27 +152,43 @@
         $('#Createprojrct').click(Add);
         function Add() {
             var pName = $('#projectName').val();
+            var owner = $('#owner').val();
             if (pName) {
                 $.ajax({
                     type: "POST",
                     url: `/Project/Add`,
-                    data: { Name: pName },
+                    data: {
+                        Name: pName,
+                        Owner: owner
+                    },
                     success: function (response) {
                         $('#tablebody').append(
                             `<tr id="${response.id}" onclick="Edit(${response.id})">
-                                                                                                                                                                    <td class="text-center font-weight-bold">${response.name}</td>
-                                                                                                                                                                    <td style="text-align:right">
-                                                                                                                                                                    <a href="/Project/Details/${response.id}" class="btn btn-outline-info"><i id="i" class="fas fa-chart-area"></i> Details</a>
-                                                                                                                                                                    <a href="/Activity/Index/${response.id}" class="btn alert-info" ><i id="i" class="fas fa-chart-area"></i> Chart</a>
-                                                                                                                                                                    <div class="btn-group dropleft">
-                                                                                                                                        <button type="button" class="btn alert-warning " data-toggle="dropdown" >
-                                                                                                                                            Dashboard
-                                                                                                                                        </button>
-                                                                                                                                        <div class="dropdown-menu px-2 alert-danger">
-                                                                                                                                            Lets goto charts and create tasks
-                                                                                                                                        </div>
-                                                                                                                                    </div>
-                                                                                                                                                            </tr>`
+                                                                                                                                                                            <td class="text-center font-weight-bold">${response.name}</td>
+                                                                                                                                                                            <td style="text-align:right">
+
+
+                                                                                                                                                                            <div class="btn-group dropleft">
+                                                                                                                                                <button type="button" class="btn btn-outline-warning" data-toggle="dropdown" >
+                                                                                                                                                    Dashboard
+                                                                                                                                                </button>
+                                                                                                                                                <div class="dropdown-menu px-2 alert-danger">
+                                                                                                                                                    Lets goto charts and create tasks
+                                                                                                                                                </div>
+                                                                                                                                            </div>
+
+<div class="btn-group dropleft">
+                                                        <button type="button" class="btn btn-outline-info" data-toggle="dropdown">
+                                                            <i id="i" class="fas fa-chart-area"></i> Details
+                                                        </button>
+                                                        <div class="dropdown-menu px-2 mx-1 btn-outline-warning">
+                                                            Lets goto charts and create tasks
+                                                        </div>
+                                                    </div>
+     <a href="/Activity/Index/${response.id}" class="btn alert-info" ><i id="i" class="fas fa-chart-area"></i> Chart</a>
+<button class="btn btn-light" onclick="arcive(${response.id},2)"><i class="fas fa-arrow-circle-up"></i> Archive</button>
+                                        <button class="btn btn-danger btn-sm" onclick="arcive(${response.id},3)"><i class="fas fa-trash-alt"></i></button>
+                                                                                                                                                                    </tr>`
                         );
                         //For first time if there is no project in the table (Hide the sec of No Project is created)
                         $('#noProject').hide();
@@ -198,7 +221,6 @@
         };
 
 
-
         //Submit form ajax
         function SubmitForm(event) {
             event.preventDefault();
@@ -221,6 +243,36 @@
         }
 
 
+        function arcive(id, value) {
+            var message;
+            if (value == 2) {
+                message = 'Do you want to archive this project'
+            }
+            else {
+                message = 'Do you want to cancel this project'
+            }
+
+            if (confirm(message)) {
+                $.ajax({
+                    type: 'GET',
+                    url: `/project/Arcive/`,
+                    data:
+                    {
+                        PrjId: id,
+                        status:value,
+                    },
+                    success: function (data) {
+
+                        $(`#${id}`).hide();
+                    },
+                    error: function (x, y, err) {
+                        alert("Project name must be entered")
+                    },
+                });
+            }
+        }
+
+
 
         //-----------Dash-------------//
 
@@ -233,7 +285,7 @@
                     $('#MainView').hide();
                     $('#Board').prepend(response);
                     $('#invo-btns').append(`<a href="/Invoice/Index_Income/${id}" class="btn btn-outline-primary">Income</a>
-                                                <a href="/Invoice/Index_Expense/${id}" class="btn btn-outline-info">Outcome</a>`)
+                                                        <a href="/Invoice/Index_Expense/${id}" class="btn btn-outline-info">Outcome</a>`)
                     LoadData();
 
                     //$('#Board').show();
@@ -390,6 +442,8 @@
         function Hide(divName) {
             $(`#${divName}`).addClass('d-none');
         }
+
+
     </script>
 }
 

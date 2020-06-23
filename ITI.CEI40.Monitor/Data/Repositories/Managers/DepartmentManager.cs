@@ -51,7 +51,10 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Where(e => e.FK_ManagerID == managerId).FirstOrDefault();
         }
 
-
+        public string GetDepManagerIdWithDepId (int departmentid)
+        {
+            return set.Where(d => d.Id == departmentid).Select(f => f.FK_ManagerID).FirstOrDefault();
+        }
 
     }
 }

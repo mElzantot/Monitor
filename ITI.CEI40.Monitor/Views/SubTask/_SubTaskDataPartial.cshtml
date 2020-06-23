@@ -6,16 +6,16 @@
         border-radius: 8px;
         background: white;
         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
-        
+
         <div style=" display:flex;justify-content:space-between">
             <button class="btn-light btn btn-lg">
                 @Model.Name
             </button>
 
             <div class="dropleft">
-              
-                    <button class="btn btn-sm btn-outline-info rounded-circle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i style="font-size:16px" class="fas fa-info mx-1"></i></button>
-                
+
+                <button class="btn btn-sm btn-outline-info rounded-circle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><i style="font-size:16px" class="fas fa-info mx-1"></i></button>
+
 
                 <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <div class="text-muted p-2"><pre>@Model.Description</pre></div>
@@ -77,20 +77,21 @@
         </div>
 
 
-        <div id="s @Model.Id" style="display:none;height:160px;border-width:1px 1px 0px 1px; border-style:solid;border-color:#9e9b9b;border-radius:3px 3px 0 0">
-            <button onclick="HiCommentSec(@Model.Id)" class="btn btn-sm" style="position:absolute;right: 38px;"><i class="fas fa-window-close"></i></button>
+        <div id="SLow" style="display:none;height:200px;border-width:1px 1px 0px 1px;
+            border-style:solid;border-color:rgb(218, 217, 217);border-radius:3px 3px 0 0;max-height:200px;overflow-y:scroll">
+
+            <div style="display:flex;justify-content:flex-end">
+                <button onclick="HiCommentSec(@Model.Task.Id)" class="btn btn-sm"><i class="fas fa-window-close"></i></button>
+            </div>
             @if (Model.Comments != null)
             {
-                <div>@Model.Comments.Count()</div>
                 @foreach (var item in Model.Comments)
                 {
-                    <partial name="_CommentPartial" model="item" />
+                    <partial name="/Views/comment/_CommentPartial.cshtml" model="item" />
                 }
             }
         </div>
-
         <div style="">
-
             <textarea onfocus="ExCommentSec(@Model.Id)" id="commentArea" class="col-12 " placeholder="Add Comment Here......"></textarea>
             <div style="display:flex;justify-content:flex-end">
                 <button class="btn btn-sm btn-outline-secondary mr-2" onclick="UploadFile(@Model.Id,@Model.FK_TaskId)"> Upload File <i class="fas fa-paperclip"></i></button>

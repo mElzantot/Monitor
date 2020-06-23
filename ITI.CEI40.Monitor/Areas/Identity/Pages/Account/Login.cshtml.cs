@@ -88,9 +88,9 @@ namespace ITI.CEI40.Monitor.Areas.Identity.Pages.Account
                         if (await _userManager.IsInRoleAsync(user, Roles.ProjectManager.ToString()))
                             returnUrl = Url.Content("~/Project/Index");
                         else if (await _userManager.IsInRoleAsync(user, Roles.DepartmentManager.ToString()))
-                            returnUrl = Url.Content("~/DepManager/TeamsView");
+                            returnUrl = Url.Content("~/DepManager/AssignTasks");
                         else if (await _userManager.IsInRoleAsync(user, Roles.TeamLeader.ToString()))
-                            returnUrl = Url.Content("~/TeamLeader/EngineersView");
+                            returnUrl = Url.Content("~/TeamLeader/MyTasks");
                         else if (await _userManager.IsInRoleAsync(user, Roles.Engineer.ToString()))
                             returnUrl = Url.Content("~/SubTask/Index");
                         else if (await _userManager.IsInRoleAsync(user, Roles.Admin.ToString()))

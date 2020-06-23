@@ -9,20 +9,20 @@
     <button type="button" class="btn btn-info btn-sm mb-3" data-toggle="modal" data-target="#addEmployeeModal">
         Add Employee
     </button>
-    <div id="filterSection" class="row "> 
-        <form method="post" data-ajax-url="/Employee/GetTeamEmployees" data-ajax="true" data-ajax-method="Get" data-ajax-complete="displayEmployees"
+    <div id="filterSection" class="row ">
+        <form method="post" data-ajax-url="/Employee/ViewFilteredEmployees" data-ajax="true" data-ajax-method="Get" data-ajax-complete="displayEmployees"
               data-ajax-update="#tableBody" data-ajax-mode="replace" id="filterForm" class="col-8 row">
             <div id="AddDepartmentSection" class="col-9">
-                <div  id="DepartmentSection" class="row" >
+                <div id="DepartmentSection" class="row">
                     <div class="form-group col-6 ">
-                        <select class="form-control form-control-sm" id="DepartmentId" asp-for="DepId"
-                                asp-items="new SelectList(Model.Departments,nameof(Department.Id),nameof(Department.Name))" onchange="getTeams()">
+                        <select class="form-control form-control-sm" id="DepartmentId2" asp-for="DepId"
+                                asp-items="new SelectList(Model.Departments,nameof(Department.Id),nameof(Department.Name))" onchange="getTeams2()">
                             <option value="0">Select Department</option>
                         </select>
                         <span asp-validation-for="DepId" class="text-danger"></span>
                     </div>
                     <div class="form-group col-6 ">
-                        <select class="form-control form-control-sm" id="teams" asp-for="TeamId"
+                        <select class="form-control form-control-sm" id="teams2" asp-for="TeamId" name="teamId"
                                 asp-items="new SelectList(string.Empty,nameof(Team.Id),nameof(Team.Name))">
                         </select>
                         <span asp-validation-for="TeamId" class="text-danger"></span>
@@ -30,7 +30,7 @@
                 </div>
             </div>
             <div class="col-3">
-            <button type="submit" class="btn btn-outline-info btn-sm ">Filter</button>
+                <button type="submit" class="btn btn-outline-info btn-sm ">Filter</button>
             </div>
         </form>
     </div>
@@ -244,9 +244,7 @@
 
         //----------Get Teams after Selecting Department
         function getTeams() {
-            console.log($("#DepartmentId").val());
             var DepId = $("#DepartmentId").val();
-            console.log(DepId);
             $.ajax({
                 url: "/Employee/GetTeamsforEdit/" + DepId,
                 url: "/Employee/GetTeamsforEdit/" + DepId,
@@ -263,6 +261,34 @@
                 }
             })
         }
+
+
+        function getTeams2() {
+            var DepId = $("#DepartmentId2").val();
+            $.ajax({
+                url: "/Employee/GetTeamsforEdit/" + DepId,
+                url: "/Employee/GetTeamsforEdit/" + DepId,
+                type: "GET",
+                success: function (result, status) {
+                    if (result && status == "success") {
+                        console.log(result);
+                        $("#teams2").empty();
+                        $("#teams2").append("<option value='0'>Select Team</option>");
+                        for (var i = 0; i < result.length; i++) {
+                            $("#teams2").append(`<option value='${result[i].id}'>${result[i].name}</option>`);
+                        }
+                    }
+                }
+            })
+        }
+
+
+
+
+
+
+
+
 
         function EditEmployee() {
             $('#EditEmployeeModal').modal('hide');

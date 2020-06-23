@@ -9,7 +9,7 @@
 @if (Model.Employees != null)
 {
     <div style="padding:10px;border: 0px solid white; border-radius: 8px; background:white;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);height:350px;max-height:500px;margin-top:80px" >
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);height:500px;max-height:500px;margin-top:80px" >
         <h5><strong>Resouces Utilization Chart</strong></h5>
         <hr />
         <div id="timeline">
@@ -49,7 +49,7 @@ box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" c
             <h5><strong>Result</strong></h5>
             <div style="display:flex" class="my-2">
                 <label style="width:20rem">Approximate Duration (Hrs)</label>
-                <input disabled value="" id="approxDuration" />
+                <input readonly value="" id="approxDuration" />
             </div>
             @*<div style="display:flex" class="my-2">
                     <label style="width:20rem">Result accuracy </label>
@@ -81,7 +81,7 @@ box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" c
             <h5><strong>Result</strong></h5>
             <div style="display:flex" class="my-2">
                 <label style="width:20rem">Approximate Quality (%)</label>
-                <input disabled value="" id="approxQuality" />
+                <input readonly value="" id="approxQuality" />
             </div>
             @*<div style="display:flex" class="my-2">
                     <label style="width:20rem">Result accuracy </label>
@@ -168,9 +168,8 @@ box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" c
                         Quality: Qual
                     },
                     success: function (res) {
-                        console.log("Hrllo")
                         console.log(res.duration);
-                        $("approxDuration").attr("value", `${res.duration}`);
+                        $("#approxDuration").val(`${res.duration}`);
                     }
                 });
             }
@@ -194,10 +193,9 @@ box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" c
                         Duration: Dura
                     },
                     success: function (res, status) {
-                        console.log("Hrllo")
                         if (status == "success") {
                             console.log(res);
-                            $("approxQuality").text(`${res.quality}`);
+                            $("#approxQuality").val(`${res.quality}`);
                         }
                     }
                 });

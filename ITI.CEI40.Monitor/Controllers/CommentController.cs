@@ -107,7 +107,7 @@ namespace ITI.CEI40.Monitor.Controllers
             string uniqeFileName = Guid.NewGuid().ToString() + "_" + addedFile.file.FileName;
 
             //---------The full path for File
-            string filePath = Path.Combine(uploaderFolder, addedFile.file.FileName);
+            string filePath = Path.Combine(uploaderFolder, uniqeFileName);
 
             //----------Copy File to server
             using (FileStream fileStream = new FileStream(filePath, FileMode.Create))

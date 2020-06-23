@@ -2,6 +2,7 @@
 
 <input hidden type="text" asp-for="FK_TaskId" value="@Model.FK_TaskId" />
 <input hidden type="number" asp-for="SubTaskId" value="@Model.SubTaskId" />
+<input hidden type="number" asp-for="PlannedDuration" value="@Model.PlannedDuration" id="Duration" />
 <div class="row">
     <div class="form-group col-6">
         <label asp-for="Name"></label>
@@ -24,29 +25,16 @@
     <textarea asp-for="Description" class="form-control"></textarea>
     <span asp-validation-for="Description" class="text-danger"></span>
 </div>
-@*<div class="row">
-    <div class="form-group col-12">
-        <label asp-for="Status"></label>
-        <select asp-for="Status" asp-items="Html.GetEnumSelectList<Status>()" class="form-control">
-        </select>
-        <span asp-validation-for="Status" class="text-danger"></span>
-    </div>
-    <div class="form-group col-6" hidden>
-        <label asp-for="Priority"></label>
-        <select asp-for="Priority" asp-items="Html.GetEnumSelectList<Priority>()" class="form-control"></select>
-        <span asp-validation-for="Priority" class="text-danger"></span>
-    </div>
-</div>*@
 <div class="row">
     <div class="form-group col-6">
         <label asp-for="StartDate"></label>
-        <input id="startDate" asp-for="StartDate" type="text" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+        <input id="startDate" asp-for="StartDate" type="text" class="form-control plannedDate"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
         <span asp-validation-for="StartDate" class="text-danger"></span>
     </div>
     <div class="form-group col-6">
         <label asp-for="EndDate"></label>
         <div class="input-group date">
-            <input id="endDate" asp-for="EndDate" type="text" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+            <input  id="endDate" asp-for="EndDate" type="text" class="form-control plannedDate"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
         </div>
         <span asp-validation-for="EndDate" class="text-danger"></span>
     </div>
