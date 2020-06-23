@@ -29,6 +29,7 @@ namespace ITI.CEI40.Monitor.Models.View_Models
         public string StartDate { get; set; }
 
         [Display(Name ="Due Date") ]
+        [Required]
         public string EndDate { get; set; }
         public int Progress { get; set; }
 
@@ -41,6 +42,8 @@ namespace ITI.CEI40.Monitor.Models.View_Models
 
         [Display(Name = "Assigned to")]
         public string Assignee { get; set; }
+
+        public int PlannedDuration { get; set; }
 
     }
 }

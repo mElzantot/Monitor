@@ -40,7 +40,7 @@ namespace ITI.CEI40.Monitor.Controllers
         public IActionResult AddActivities(int id, List<Act> Acts, List<int> reDbId, List<DeletedDependecy> reDep)
         {
             // to convert from js date object to c# date object
-            DateTime _jan1st1970 = new DateTime(1970, 1, 1, 23, 59, 59);
+            DateTime _jan1st1970 = new DateTime(1970, 1, 1, 23, 59, 59,DateTimeKind.Utc);
 
             // (1)deleting the deleted dependencies (before editing the tasks)
             foreach (var deleted in reDep)

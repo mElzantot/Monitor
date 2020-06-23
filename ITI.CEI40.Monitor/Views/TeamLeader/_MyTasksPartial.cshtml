@@ -30,6 +30,7 @@
                     <div class="p-2" style="color:red">There is no discription .</div>
                 }
             </div>
+
         </div>
     </div>
 </div>
@@ -44,7 +45,6 @@
     DateTime subEnd = Model.Task.EndDate.AddDays(-1);
     DateTime preEnd = Model.Task.EndDate.AddDays(+1);
 }
-
 <div class="container">
     <div style="display:flex;justify-content:space-around;margin-top:20px">
         <div style="display:inline-block;padding:15px;">
@@ -74,6 +74,7 @@
         </div>
     </div>
 
+
     <div style="display:flex; margin-bottom:5px">
         <section style="width:50em;margin-left:80px">
             <div class="single-chart">
@@ -83,11 +84,11 @@
                                     a 15.9155 15.9155 0 0 1 0 31.831
                                     a 15.9155 15.9155 0 0 1 0 -31.831" />
                     <path class="circle"
-                          stroke-dasharray="@Model.Task.Progress, 100"
+                          stroke-dasharray="@Model.Task.ActualDuratoin, 100"
                           d="M18 2.0845
                                   a 15.9155 15.9155 0 0 1 0 31.831
                                   a 15.9155 15.9155 0 0 1 0 -31.831" />
-                    <text x="18" y="20.35" class="percentage">@Model.Task.Progress%</text>
+                    <text x="18" y="20.35" class="percentage">@Model.Task.ActualDuratoin%</text>
                 </svg>
             </div>
         </section>
@@ -97,31 +98,34 @@
             </div>
             <div class="rounded-circle" style="position:relative;left:22px;bottom:86px;font-size:40px;
                 width:1.7em;height:1.7em;background:white;display:flex;justify-content:center;align-items:center">
-                @Model.Task.ActualDuratoin <span class="text-muted" style="font-size:25px">h</span>
+                @Model.Task.Progress <span class="text-muted" style="font-size:25px">h</span>
             </div>
         </div>
     </div>
     <div style="padding:0px 30px 10px 30px">
+
         <div id="SMed" style="display:none;height:200px;border-width:1px 1px 0px 1px;
             border-style:solid;border-color:rgb(218, 217, 217);border-radius:3px 3px 0 0;max-height:200px;overflow-y:scroll">
 
             <div style="display:flex;justify-content:flex-end">
                 <button onclick="HiCommentSec(@Model.Task.Id)" class="btn btn-sm"><i class="fas fa-window-close"></i></button>
             </div>
-            @if (Model.MedComments != null)
+            @if (Model.Task.Comments != null)
             {
                 foreach (var item in Model.Task.Comments)
                 {
                     <partial name="~/Views/Comment/_CommentPartial.cshtml" model="item" />
                 }
             }
-            <textarea onfocus="ExCommentSec(@Model.Task.Id)" id="commentArea" class=" form-control mb-2" placeholder="Add Comment Here......"></textarea>
-            <div style=" display:flex;justify-content:flex-end">
-                <div>
-                    <button class="btn btn-sm btn-outline-secondary " type="button" id="AddFile" onclick="AddFile(@Model.Task.Id)"><i class="fas fa-paperclip"></i> Add File</button>
-                    <button class="btn btn-sm btn-outline-info  ml-1" type="button" id="AddComment" onclick="AddComment(@Model.Task.Id)">Comment</button>
-                </div>
+        </div>
+
+        <textarea onfocus="ExCommentSec(@Model.Task.Id)" id="commentArea" class=" form-control mb-2" placeholder="Add Comment Here......"></textarea>
+
+        <div style=" display:flex;justify-content:flex-end">
+
+            <div>
+                <button class="btn btn-sm btn-outline-secondary " type="button" id="AddFile" onclick="AddFile(@Model.Task.Id)"><i class="fas fa-paperclip"></i> Add File</button>
+                <button class="btn btn-sm btn-outline-info  ml-1" type="button" id="AddComment" onclick="AddComment(@Model.Task.Id)">Comment</button>
             </div>
         </div>
     </div>
-

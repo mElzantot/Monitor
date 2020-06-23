@@ -72,13 +72,17 @@ namespace ITI.CEI40.Monitor.Entities
         public bool IsUnderWork { get; set; }
 
         [NoColumn]
-        public int Progress { get; set; }
+        public float Progress { get; set; }
 
         [NoColumn]
         public Status Status { get; set; }
 
         [NoColumn]
         public Priority Priority { get; set; }
+
+        [Required]
+        [NoColumn]
+        public float PlannedDurationInHours { get; set; }
 
         [Range(0, 100)]
         [Required]

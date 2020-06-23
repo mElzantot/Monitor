@@ -2,6 +2,7 @@
 
 <input hidden type="text" asp-for="FK_TaskId" value="@Model.FK_TaskId" />
 <input hidden type="number" asp-for="SubTaskId" value="@Model.SubTaskId" />
+<input hidden type="number" asp-for="PlannedDuration" value="" id="Duration" />
 <div class="row">
     <div class="form-group col-6">
         <label asp-for="Name"></label>
@@ -27,13 +28,13 @@
 <div class="row">
     <div class="form-group col-6">
         <label asp-for="StartDate"></label>
-        <input id="startDate" asp-for="StartDate" type="text" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+        <input id="startDate" asp-for="StartDate" type="text" class="form-control plannedDate"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
         <span asp-validation-for="StartDate" class="text-danger"></span>
     </div>
     <div class="form-group col-6">
         <label asp-for="EndDate"></label>
         <div class="input-group date">
-            <input id="endDate" asp-for="EndDate" type="text" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+            <input  id="endDate" asp-for="EndDate" type="text" class="form-control plannedDate"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
         </div>
         <span asp-validation-for="EndDate" class="text-danger"></span>
     </div>

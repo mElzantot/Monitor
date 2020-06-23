@@ -51,15 +51,14 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [Authorize(Roles = "Engineer")]
-        public void EditProgress(int ID, int progress)        {            SubTask subTask = unitOfWork.SubTasks.GetSubTaskIncludingTask(ID);
+        public void EditProgress(int ID, float progress)        {            SubTask subTask = unitOfWork.SubTasks.GetSubTaskIncludingTask(ID);
 
-            int subTaskLastProgress = subTask.Progress;
+            float subTaskLastProgress = subTask.Progress;
 
             //Shaker
-            //Activity task = unitOfWork.Tasks.GetById(subTask.FK_TaskId);
-            Activity task = subTask.Task;
+            Activity task = unitOfWork.Tasks.GetById(subTask.FK_TaskId);
 
-            List<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByTaskId(subTask.FK_TaskId);            int totalSubTaskDuration = 0;            foreach (var item in subTasks)            {                totalSubTaskDuration += (int)(item.EndDate - item.StartDate).Value.TotalDays;            }            int subtaskDuration = (int)(subTask.EndDate - subTask.StartDate).Value.TotalDays;            task.Progress += ((progress - subTaskLastProgress) * (subtaskDuration)) / (totalSubTaskDuration);            task = unitOfWork.Tasks.Edit(task);
+            float subtaskDuration = (subTask.PlannedDurationInHours);            task.Progress += ((progress - subTaskLastProgress) * (subtaskDuration)) / task.SumOfSubTasksDurations;            task = unitOfWork.Tasks.Edit(task);
             subTask.Progress = progress;            subTask = unitOfWork.SubTasks.Edit(subTask);        }
 
         [Authorize(Roles = "Engineer")]
@@ -197,10 +196,15 @@ namespace ITI.CEI40.Monitor.Controllers
                     Priority = subTask.Priority,
                     Status = subTask.Status,
                     StartDate = new DateTime(startDate[2], startDate[1], startDate[0]),
-                    EndDate = new DateTime(endDate[2], endDate[1], endDate[0])
+                    EndDate = new DateTime(endDate[2], endDate[1], endDate[0]),
+                    PlannedDurationInHours = subTask.PlannedDuration
                 };
 
+
                 newSubTask = unitOfWork.SubTasks.Add(newSubTask);
+                Activity task = unitOfWork.Tasks.GetById(subTask.FK_TaskId);
+                task.SumOfSubTasksDurations += subTask.PlannedDuration;
+                task = unitOfWork.Tasks.Edit(task);
                 //Activity task = unitOfWork.Tasks.GetById(subTask.FK_TaskId);
                 newSubTask.Engineer = unitOfWork.Engineers.GetById(subTask.Assignee);
 
@@ -266,6 +270,9 @@ namespace ITI.CEI40.Monitor.Controllers
                 int[] endDate = new int[3];
                 bool ChangeAssign = false;
                 SubTask originalSubTask = unitOfWork.SubTasks.GetSubTaskWithEngineer(newSubTask.SubTaskId);
+                Activity task = unitOfWork.Tasks.GetById(originalSubTask.FK_TaskId);
+                task.SumOfSubTasksDurations -= originalSubTask.PlannedDurationInHours;
+
                 // check if the assigneed engineer had been changed
                 string oldAssigneeId = originalSubTask.FK_EngineerID;
                 if (originalSubTask.FK_EngineerID != newSubTask.Assignee)
@@ -278,6 +285,7 @@ namespace ITI.CEI40.Monitor.Controllers
                 originalSubTask.Description = newSubTask.Description;
                 originalSubTask.Priority = newSubTask.Priority;
                 originalSubTask.Status = newSubTask.Status;
+                originalSubTask.PlannedDurationInHours = newSubTask.PlannedDuration;
 
                 if (newSubTask.StartDate.Contains('/'))
                 {
@@ -290,6 +298,9 @@ namespace ITI.CEI40.Monitor.Controllers
                     originalSubTask.EndDate = new DateTime(endDate[2], endDate[1], endDate[0]);
                 }
                 originalSubTask = unitOfWork.SubTasks.Edit(originalSubTask);
+
+                task.SumOfSubTasksDurations += newSubTask.PlannedDuration;
+                task = unitOfWork.Tasks.Edit(task);
 
                 // check if the subtask had been changed
                 if (!ChangeAssign)

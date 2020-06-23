@@ -66,7 +66,7 @@ namespace ITI.CEI40.Monitor.Entities
 
         public bool IsCompleted { get; set; }
 
-        public int Progress { get; set; }
+        public float Progress { get; set; }
         public float ActualDuratoin { get; set; }
         public float SumOfSubTasksDurations { get; set; }
 
