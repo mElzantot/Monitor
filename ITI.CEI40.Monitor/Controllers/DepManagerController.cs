@@ -45,14 +45,14 @@ namespace ITI.CEI40.Monitor.Controllers
             return PartialView("_TaskPartialView", tasks);
         }
 
+
         [HttpGet]
         public IActionResult AssignTasks()
         {
             int DepId = unitOfWork.Departments.GetDepartmentWithManagerID(userManager.GetUserId(HttpContext.User)).Id;
             var activityVM = new ActivityViewModel();
-            activityVM.Tasks = unitOfWork.Tasks.GetDepartmentTasks(DepId).ToList();
+            activityVM.Tasks = unitOfWork.Tasks.GetDepartmentTasksIsCompleted(DepId).ToList();
             activityVM.Teams = unitOfWork.Teams.getTeamsinsideDept(DepId).ToList();
-
             return View("AssignTasks", activityVM);
         }
 
@@ -63,9 +63,9 @@ namespace ITI.CEI40.Monitor.Controllers
             ActDetailsViewModel ActDetailsVM = new ActDetailsViewModel
             {
                 Task = unitOfWork.Tasks.GetTaskWithProjectAndTeam(taskId),
+
                 HighComments = unitOfWork.Comments.GetHighCommentforTask(taskId).ToList(),
                 MedComments = unitOfWork.Comments.GetMedCommentforTask(taskId).ToList()
-
             };
             return PartialView("_TaskPartial", ActDetailsVM);
         }
@@ -109,6 +109,7 @@ namespace ITI.CEI40.Monitor.Controllers
             return Json(new { });
         }
 
+
         //Omar to edit status if the Departement manager submit the subtask
         public void EditStatus(int id, int status)
         {
@@ -127,26 +128,29 @@ namespace ITI.CEI40.Monitor.Controllers
             unitOfWork.Tasks.Edit(task);
         }
 
+
         public void ChangeStatus(int Id, int Status)
         {
-            var task = unitOfWork.Tasks.GetById(Id);
+            var task = unitOfWork.Tasks.GetTaskWithTeamLeader(Id);
             task.Status = (Status)Status;
             if (Status == 2)
             {
                 task.ActualEndDate = DateTime.Now;
-                #region notification
-                int teamID = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
-                Team team = unitOfWork.Teams.GetById(teamID);
-                ApplicationUser teammanager = userManager.Users.FirstOrDefault(u => u.Id == team.FK_TeamLeaderId);
-                Department dep = unitOfWork.Departments.GetById(team.FK_DepartmentId);
-                string messege = $"Congartulations *{teammanager.UserName}=*  the task *{task.Name}=*  at *{DateTime.Now}=*.";
-                SendNotification(messege, team.FK_TeamLeaderId);
-                #endregion
+                task.IsCompleted = true;
 
+                #region notification
+                ApplicationUser teammanager = task.Team.TeamLeader;
+                string messege = $"Congartulations *{teammanager.UserName}=*  the task *{task.Name}=*  at *{DateTime.Now}=*.";
+                SendNotification(messege,teammanager.Id);
+                #endregion
             }
             else
             {
-
+                #region notification
+                ApplicationUser teammanager = task.Team.TeamLeader;
+                string messege = $"Your Departement Manager has cancelled this task : *{task.Name}=*  at *{DateTime.Now}=*.";
+                SendNotification(messege, teammanager.Id);
+                #endregion
             }
             unitOfWork.Tasks.Edit(task);
         }
@@ -172,6 +176,7 @@ namespace ITI.CEI40.Monitor.Controllers
             var subtask = unitOfWork.SubTasks.GetSubTasksFromTask(taskId);
             return View("_DashBoardPartial", subtask);
         }
+
 
         public void SendNotification(string messege, params string[] usersId)
         {

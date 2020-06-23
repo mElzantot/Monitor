@@ -18,6 +18,10 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
             return set.Include(t => t.Project).Include(t => t.Team);
         }
 
+        public Activity GetTaskWithTeamLeader(int taskId)
+        {
+            return set.Where(t => t.Id == taskId).Include(t => t.Team).ThenInclude(t=>t.TeamLeader).FirstOrDefault();
+        }
 
         public IEnumerable<Activity> GetTasksByTeamID(int teamId)
         {
@@ -64,6 +68,11 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
         {
             return set.Where(p => p.FK_ProjectId == projId).Include(a => a.Project)
                 .Include(p => p.SubTasks);
+        }
+
+        public IEnumerable<Activity> GetDepartmentTasksIsCompleted(int depid)
+        {
+            return set.Where(a => a.FK_DepID == depid && a.IsCompleted==false).OrderBy(a => a.Team).Include(a => a.Team).Include(a => a.Project).ToList();
         }
 
         public IEnumerable<Activity> GetDepartmentTasks(int depid)
