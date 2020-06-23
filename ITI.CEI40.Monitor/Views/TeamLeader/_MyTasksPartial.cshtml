@@ -102,29 +102,25 @@
         </div>
     </div>
     <div style="padding:0px 30px 10px 30px">
-
         <div id="SMed" style="display:none;height:200px;border-width:1px 1px 0px 1px;
             border-style:solid;border-color:rgb(218, 217, 217);border-radius:3px 3px 0 0;max-height:200px;overflow-y:scroll">
 
             <div style="display:flex;justify-content:flex-end">
                 <button onclick="HiCommentSec(@Model.Task.Id)" class="btn btn-sm"><i class="fas fa-window-close"></i></button>
             </div>
-            @if (Model.Task.Comments != null)
+            @if (Model.MedComments != null)
             {
                 foreach (var item in Model.Task.Comments)
                 {
                     <partial name="~/Views/Comment/_CommentPartial.cshtml" model="item" />
                 }
             }
-        </div>
-
-        <textarea onfocus="ExCommentSec(@Model.Task.Id)" id="commentArea" class=" form-control mb-2" placeholder="Add Comment Here......"></textarea>
-
-        <div style=" display:flex;justify-content:flex-end">
-
-            <div>
-                <button class="btn btn-sm btn-outline-secondary " type="button" id="AddFile" onclick="AddFile(@Model.Task.Id)"><i class="fas fa-paperclip"></i> Add File</button>
-                <button class="btn btn-sm btn-outline-info  ml-1" type="button" id="AddComment" onclick="AddComment(@Model.Task.Id)">Comment</button>
+            <textarea onfocus="ExCommentSec(@Model.Task.Id)" id="commentArea" class=" form-control mb-2" placeholder="Add Comment Here......"></textarea>
+            <div style=" display:flex;justify-content:flex-end">
+                <div>
+                    <button class="btn btn-sm btn-outline-secondary " type="button" id="AddFile" onclick="AddFile(@Model.Task.Id)"><i class="fas fa-paperclip"></i> Add File</button>
+                    <button class="btn btn-sm btn-outline-info  ml-1" type="button" id="AddComment" onclick="AddComment(@Model.Task.Id)">Comment</button>
+                </div>
             </div>
         </div>
     </div>
