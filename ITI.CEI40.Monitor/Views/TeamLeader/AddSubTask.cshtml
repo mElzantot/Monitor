@@ -308,6 +308,18 @@
         }
         )
 
+        $("#editmodalBody").on("change", ".plannedDate", function () {
+            let startDate = $("#startDate").val();
+            let endDate = $("#endDate").val();
+            if (startDate && endDate) {
+                let duration = computeDuration(parseDate(startDate), parseDate(endDate));
+                durationInHours = duration * 8;
+                $("#Duration").val(durationInHours);
+            }
+        }
+        )
+
+
 
 
 

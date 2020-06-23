@@ -246,7 +246,8 @@ namespace ITI.CEI40.Monitor.Controllers
                 Assignee = subTask.Engineer.Id,
                 Status = subTask.Status,
                 Priority = subTask.Priority,
-                TeamMembers = TeamMembers
+                TeamMembers = TeamMembers,
+                PlannedDuration = subTask.PlannedDurationInHours
             };
 
             var index = subTaskVM.TeamMembers.FindIndex(x => x.Id == subTaskVM.Assignee.ToString());

@@ -43,7 +43,7 @@ namespace ITI.CEI40.Monitor.Models.View_Models
         [Display(Name = "Assigned to")]
         public string Assignee { get; set; }
 
-        public int PlannedDuration { get; set; }
+        public float PlannedDuration { get; set; }
 
     }
 }
