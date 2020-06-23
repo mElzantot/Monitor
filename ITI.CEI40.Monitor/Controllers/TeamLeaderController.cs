@@ -106,7 +106,15 @@ namespace ITI.CEI40.Monitor.Controllers
             List<float> complexity = new List<float>();
             List<float> time = new List<float>();
             List<SubTask> subs = new List<SubTask>();
-            string engName = subtasks[0].Engineer.UserName;
+            string engName;
+            if (subtasks.Count>0)
+            {
+                 engName = subtasks[0].Engineer.UserName;
+            }
+            else
+            {
+                engName = "";
+            }
             string month;
             int i = -1;
 
@@ -223,6 +231,8 @@ namespace ITI.CEI40.Monitor.Controllers
         {
             int teamID = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
             var tasks = unitOfWork.Tasks.GetTasksByTeamIDWithSubs(teamID);
+
+
             return View("MyTasks", tasks);
         }
 

@@ -131,7 +131,7 @@ namespace ITI.CEI40.Monitor.Controllers
                 Tasks = unitofwork.Tasks.GetActivitiesFromProject(projId).ToList(),
                 TotalInvoices = TotalInvoices(projId)
             };
-            return PartialView("_DashBoardPartial", dashboard);
+            return View("DashBoard", dashboard);
             //return View("DashBoard", dashboard);
         }
 

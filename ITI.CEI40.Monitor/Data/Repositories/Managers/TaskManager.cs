@@ -30,7 +30,7 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         public IEnumerable<Activity> GetTasksByTeamIDWithSubs(int teamId)
         {
-            return set.Where(t => t.FK_TeamId == teamId).Include(t => t.SubTasks).ToList();
+            return set.Where(t => t.FK_TeamId == teamId && (t.Status==Status.OnHold ||t.Status==Status.Active)).Include(t => t.SubTasks).ToList();
         }
 
         public Activity GetTaskWithProject(int taskId)
@@ -72,21 +72,24 @@ namespace ITI.CEI40.Monitor.Data.Repositories.Managers
 
         public IEnumerable<Activity> GetDepartmentTasksIsCompleted(int depid)
         {
-            return set.Where(a => a.FK_DepID == depid && a.IsCompleted==false).OrderBy(a => a.Team).Include(a => a.Team).Include(a => a.Project).ToList();
+            return set.Where(a => a.FK_DepID == depid && a.IsCompleted==false && a.Status!=Status.Cancelled).OrderBy(a => a.Team).Include(a => a.Team).Include(a => a.Project).ToList();
         }
 
         public IEnumerable<Activity> GetDepartmentTasks(int depid)
         {
             return set.Where(a => a.FK_DepID == depid).OrderBy(a=>a.Team).Include(a => a.Team).Include(a => a.Project).ToList();
         }
+
         public IEnumerable<Activity> GetByProjectId(int id)
         {
             return set.Where(t => t.FK_ProjectId == id).Where(t => t.Status != Status.Cancelled).Include(t=>t.FollowingActivities).Include(t => t.ActivitiesToFollow);
         }
+
         public IEnumerable<Activity> GetByProIdAndViewOrder(int proId, int viewOrder)
         {
             return set.Where(t => t.FK_ProjectId == proId).Where(t => t.ViewOrder == viewOrder);
         }
+
         public IEnumerable<Activity> GetDepCancelledTasks(int depid)
         {
             return set.Where(a => a.FK_DepID == depid).Where(s => s.Status == Status.Cancelled)
