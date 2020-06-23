@@ -23,6 +23,7 @@ namespace ITI.CEI40.Monitor.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IHubContext<NotificationsHub> hubContext;
 
+
         public SubTaskController(IUnitOfWork unitOfWork, UserManager<ApplicationUser> userManager, IHubContext<NotificationsHub> hubContext)
         {
             this.unitOfWork = unitOfWork;
@@ -59,8 +60,12 @@ namespace ITI.CEI40.Monitor.Controllers
             //Activity task = unitOfWork.Tasks.GetById(subTask.FK_TaskId);
             Activity task = subTask.Task;
 
-            List<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByTaskId(subTask.FK_TaskId);            int totalSubTaskDuration = 0;            foreach (var item in subTasks)            {                totalSubTaskDuration += (int)(item.EndDate - item.StartDate).Value.TotalDays;            }            int subtaskDuration = (int)(subTask.EndDate - subTask.StartDate).Value.TotalDays;            task.Progress += ((progress - subTaskLastProgress) * (subtaskDuration)) / (totalSubTaskDuration);            task = unitOfWork.Tasks.Edit(task);
+            
+
+            List<SubTask> subTasks = unitOfWork.SubTasks.GetSubTasksByTaskId(subTask.FK_TaskId);            int totalSubTaskDuration = 0;            foreach (var item in subTasks)            {                totalSubTaskDuration += (int)(item.EndDate - item.StartDate).Value.TotalDays;            }            int subtaskDuration = (int)(subTask.EndDate - subTask.StartDate).Value.TotalDays;            task.Progress += ((progress - subTaskLastProgress) * (subtaskDuration)) / (totalSubTaskDuration);            task = unitOfWork.Tasks.Edit(task);
             subTask.Progress = progress;            subTask = unitOfWork.SubTasks.Edit(subTask);        }
+
+
 
         [Authorize(Roles = "Engineer")]
         public void EditIsUnderWork(int ID, bool Is)
@@ -89,7 +94,6 @@ namespace ITI.CEI40.Monitor.Controllers
             {
                 SubTaskSession subTaskSession = unitOfWork.SubTaskSessions.GetLastSessBySubTaskID(ID);
                 CloseOpenSubTasksession(subTaskSession, subTask);
-
             }
             subTask = unitOfWork.SubTasks.Edit(subTask);
         }

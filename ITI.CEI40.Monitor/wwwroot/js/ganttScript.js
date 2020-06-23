@@ -112,6 +112,7 @@ function computeEndFromDuration(date1, Duration) {
         }
         d.setDate(d.getDate() + 1);
     }
+    while (isHoliday(d)) { d.setDate(d.getDate() + 1); } //in case of stopping at thursday (114)
     return d;
 }
 

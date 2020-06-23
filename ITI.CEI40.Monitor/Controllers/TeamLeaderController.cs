@@ -113,21 +113,21 @@ namespace ITI.CEI40.Monitor.Controllers
 
             foreach (var item in subtasks)
             {
-                    month = item.ActualEndDate.Value.ToString("MMMM");
-                    if (!months.Contains(month))
-                    {
-                        months.Add(month);
-                        complexity.Add(item.Complexity);
-                        quality.Add(item.Quality * item.Complexity);
-                        time.Add(item.TimeManagement * item.Complexity);
-                        i++;
-                    }
-                    else
-                    {
-                        complexity[i] += item.Complexity;
-                        quality[i] += item.Quality * item.Complexity;
-                        time[i] += item.TimeManagement * item.Complexity;
-                    }
+                month = item.ActualEndDate.Value.ToString("MMMM");
+                if (!months.Contains(month))
+                {
+                    months.Add(month);
+                    complexity.Add(item.Complexity);
+                    quality.Add(item.Quality * item.Complexity);
+                    time.Add(item.TimeManagement * item.Complexity);
+                    i++;
+                }
+                else
+                {
+                    complexity[i] += item.Complexity;
+                    quality[i] += item.Quality * item.Complexity;
+                    time[i] += item.TimeManagement * item.Complexity;
+                }
             }
 
             for (int j = 0; j < months.Count(); j++)
@@ -232,9 +232,8 @@ namespace ITI.CEI40.Monitor.Controllers
             ActDetailsViewModel ActDetailsVM = new ActDetailsViewModel
             {
                 Task = unitOfWork.Tasks.GetTaskWithProjectAndTeam(taskId),
-                HighComments = unitOfWork.Comments.GetHighCommentforTask(taskId).ToList(),
+                MedComments = unitOfWork.Comments.GetMedCommentforTask(taskId).ToList()
             };
-            ActDetailsVM.MedComments = unitOfWork.Comments.GetMedCommentforTask(taskId).ToList();
             return PartialView("_MyTasksPartial", ActDetailsVM);
         }
 
