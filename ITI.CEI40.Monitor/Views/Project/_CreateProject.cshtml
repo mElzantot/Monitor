@@ -56,7 +56,7 @@
                         <tbody id="tablebody">
                             @foreach (var item in Model.Projects)
                             {
-                                <tr id="@item.ID" onclick="OpenEditSec(@item.ID)">
+                                <tr id="@item.ID" onclick="OpenEditSec(@item.ID)" class="Search">
                                     <td class="text-center font-weight-bold">@item.Name</td>
                                     <td style="text-align:right">
                                         @if (item.EndDate != null)
