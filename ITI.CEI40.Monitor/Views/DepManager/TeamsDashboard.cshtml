@@ -4,9 +4,7 @@
 @for (int i = 0; i < Model.Names.Count; i++)
 {
     <input class="tname" id="t-@i" value="@Model.Names[i]" hidden="hidden" />
-    @*<input class="actasks" id="a-@i" value="@Model[i].Tasks.Count(e=>e.Status==Status.Active||e.Status==Status.OnHold)" hidden="hidden" />
-        <input class="comptasks" id="c-@i" value="@Model[i].Tasks.Count(e=>e.Status==Status.Completed)" hidden="hidden" />*@
-    @*<input class="tname" id="t-@i" value="@Model[i].Tasks" hidden="hidden" />*@
+
 }
 @for (int i = 0; i < Model.Values.Count; i++)
 {
@@ -31,9 +29,9 @@
     <div id="donutchart" style="height:350px; width:60%"></div>
 
     <div style="width:40%">
-        <h4 class="font-weight-bold">Time Measure</h4>
+        <h4 class="font-weight-bold">Participation Percentage</h4>
         <h5 class="font-weight-light">
-            the number of hours each of your teams spent working on their tasks
+            the participation percentage for each team using the complexity measure
         </h5>
     </div>
 </div>
@@ -47,7 +45,7 @@
     </div>
 
     <div id="count" style=" height:350px; width:60%"></div>
-    
+
 </div>
 
 
@@ -155,17 +153,17 @@
             datadonut.addColumn('number', 'Hrs');
 
             datadonut.addRows([
-                [`${Tname[0]} Tasks`, Number(Duration[0])]
+                [`${Tname[0]} Tasks`, Number(Complex[0])]
             ]);
 
             for (let j = 1; j < Tname.length; j++) {
                 datadonut.addRows([
-                    [`${Tname[j]} Tasks`, Number(Duration[j])]
+                    [`${Tname[j]} Tasks`, Number(Complex[j])]
                 ]);
             }
 
             var optionsDonut = {
-                title: 'Tasks Duration (Hours)',
+                title: 'Tasks Complexity',
                 pieHole: 0.4,
                 //chartArea: { width: 370, height: 360 }
                 chartArea: { width: '78%', height: '78%', left: '17%' }

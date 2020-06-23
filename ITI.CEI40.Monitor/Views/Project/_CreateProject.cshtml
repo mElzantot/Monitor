@@ -15,7 +15,7 @@
         </span>
         <span>
             <button class="btn btn-success" id="addproject">Add project</button>
-            <button class="btn btn-light "><i class="fas fa-filter"></i>Filter</button>
+            <button class="btn btn-light " id="Search"><i class="fas fa-filter"></i>Filter</button>
         </span>
     </div>
     <!--#endregion   -->
@@ -61,7 +61,9 @@
                                     <td style="text-align:right">
                                         @if (item.EndDate != null)
                                         {
-                                            <button onclick="Dashboard(@item.ID)" type="button" class="btn btn-outline-warning">Dashboard</button>
+                                            <a href="/project/dashboard?projid=@item.ID" class="btn btn-outline-warning">Dashboard</a>
+
+                                            @*<button onclick="Dashboard(@item.ID)" type="button" class="btn btn-outline-warning">Dashboard</button>*@
                                             <a href="/Project/Details/@item.ID" class="btn btn-outline-info"><i id="i" class="fas fa-chart-area"></i> Details</a>
                                         }
                                         else
@@ -87,7 +89,7 @@
                                         <a href="/Activity/Index/@item.ID" class="btn alert-info"><i id="i" class="fas fa-chart-area"></i> Chart</a>
                                         <button class="btn btn-light" onclick="arcive(@item.ID,2)"><i class="fas fa-arrow-circle-up"></i> Archive</button>
                                         <button class="btn btn-danger btn-sm" onclick="arcive(@item.ID,3)"><i class="fas fa-trash-alt"></i></button>
-                                   
+
                                     </td>
                                 </tr>
                             }
@@ -302,7 +304,22 @@
             $('#MainView').show();
         }
 
-
+        $(document).ready(function () {
+            function Contains(textOne, textTwo) {
+                if (textOne.indexOf(textTwo) != -1)
+                    return true;
+            }
+            $('#Search').keyup(function () {
+                var searchText = $('#Search').val().toLowerCase();
+                $('.Search').each(function () {
+                    if (!Contains($(this).text().toLowerCase(), searchText)) {
+                        $(this).hide();
+                    } else {
+                        $(this).show();
+                    }
+                })
+            });
+        })
 
         ////
         function LoadData() {
