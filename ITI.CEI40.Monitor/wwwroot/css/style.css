@@ -346,3 +346,10 @@ body {
 
 /*******************/
 
+
+/*border for hloiday input*/
+#HolidayForm {
+    border: 1px solid #000000;
+    border-radius: 2px;
+}
+/**************/

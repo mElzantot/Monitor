@@ -20,8 +20,8 @@
                                 @foreach (var item in Model)
                                 {
                                     <tr id="@item.Id" onclick="SelectRow(@item.Id)">
-                                        <td>
-                                            <input onclick="ChangeISUnderWork(@item.Id)" id="sess-@item.Id" class="Ttime" asp-for="@item.IsUnderWork" type="checkbox" data-toggle="toggle"
+                                        <td onclick="ChangeISUnderWork(@item.Id, this)">
+                                            <input  id="sess-@item.Id" class="Ttime" asp-for="@item.IsUnderWork" type="checkbox" data-toggle="toggle"
                                                    data-size="xs">
                                         </td>
                                         <td>@item.Name</td>
@@ -165,23 +165,25 @@ else
             var g = document.getElementsByClassName("Ttime");
             cell = $(`#sess-${id}`);
             //cell.bootstrapToggle('toggle')
+            //console.log(!cell[0].checked);
+            //console.log(cell[0].id);
+            //console.log(g);
             $.ajax({
                 type: "Get",
                 url: `/Subtask/EditIsUnderWork`,
                 data: {
                     ID: id,
-                    Is: cell[0].checked
+                    Is: !cell[0].checked
                 },
                 success: function (response) {
+                    $(g).each(function (i, ele) {
+                        console.log(ele);
+                        if (cell[0].id != ele.id) {
+                            $(ele).prop("checked", false);
+                            $(ele).bootstrapToggle('off');
+                        }
+                    });
                     if (cell[0].checked) {
-                        $(g).each(function (i, ele) {
-                            console.log(ele);
-                            debugger;
-                            if (cell[0].id != ele.id) {
-                                $(ele).prop("checked", false);
-                                $(ele).bootstrapToggle('off');
-                            }
-                        });
                     }
                 },
                 error: function (x, y, err) {
@@ -190,7 +192,6 @@ else
             });
 
         }
-
 
         function UploadFile(subTaskId, taskId) {
             $('#fileTaskId').attr("value", taskId);
