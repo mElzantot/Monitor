@@ -1,5 +1,4 @@
-﻿
-@model TeamChartViewModel
+﻿@model TeamChartViewModel
 
 
 @for (int i = 0; i < Model.Names.Count; i++)
@@ -52,9 +51,9 @@
 <div class="slice" style="display:flex; justify-content:flex-start">
     <div id="donutchart" style=" height: 350px; width:60%"></div>
     <div style="width:40%">
-        <h4 class="font-weight-bold">Time Measure</h4>
+        <h4 class="font-weight-bold">Participation Percentage</h4>
         <h5 class="font-weight-light">
-            the number of hours that each engineer has worked on all of his sub tasks
+            the participation percentage for each engineer using the complexity measure
         </h5>
     </div>
 
@@ -199,20 +198,20 @@
 
             var datadonut = new google.visualization.DataTable();
             datadonut.addColumn('string', 'Task');
-            datadonut.addColumn('number', 'Hrs');
+            datadonut.addColumn('number', 'Complexity');
 
             datadonut.addRows([
-                [`${Eng[0]} Tasks`, Number(ActDur[0])]
+                [`${Eng[0]} Tasks`, Number(Comp[0])]
             ]);
 
             for (let j = 1; j < Eng.length; j++) {
                 datadonut.addRows([
-                    [`${Eng[j]} Tasks`, Number(ActDur[j])]
+                    [`${Eng[j]} Tasks`, Number(Comp[j])]
                 ]);
             }
 
             var optionsDonut = {
-                title: 'Tasks Duration (Hours)',
+                title: 'Tasks Complexity',
                 pieHole: 0.4,
                 //chartArea: { width: 370, height: 360 }
                 chartArea: { width: '78%', height: '78%', left: '17%' }
@@ -265,6 +264,7 @@
 
 @section Style{
     <style>
+
         body {
             background-color: #e6f5ea;
         }

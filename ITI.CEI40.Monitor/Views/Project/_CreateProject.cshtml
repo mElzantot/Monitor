@@ -61,7 +61,8 @@
                                     <td style="text-align:right">
                                         @if (item.EndDate != null)
                                         {
-                                            <button onclick="Dashboard(@item.ID)" type="button" class="btn btn-outline-warning">Dashboard</button>
+                                           
+                                            <a href="/project/dashboard?projid=@item.ID" class="btn btn-outline-warning">Dashboard</a>
                                             <a href="/Project/Details/@item.ID" class="btn btn-outline-info"><i id="i" class="fas fa-chart-area"></i> Details</a>
                                         }
                                         else
