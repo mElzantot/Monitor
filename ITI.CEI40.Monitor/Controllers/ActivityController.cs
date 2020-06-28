@@ -106,21 +106,11 @@ namespace ITI.CEI40.Monitor.Controllers
                     }
                     unitOfWork.Tasks.Edit(oldAct);
                 }
-                //else if (act.dbId != 0 && reDbId.Exists(d => d == act.dbId))
-                //{
-                //    Activity oldAct = unitOfWork.Tasks.GetById(act.dbId);
-                //    oldAct.ViewOrder = -1; // to avoid conflict when getting the dependent task
-                //}
             }
 
-            // (3)Cancelling/Deleting the deleted activities
+            // (3)Deleting the deleted activities (the nonasigned ones)
             foreach (var actId in reDbId)
             {
-                //Activity activity = unitOfWork.Tasks.GetById(actId);
-                //activity.Status = Status.Cancelled;
-                //activity.ViewOrder = -1;  //to resolve the conflict in getting the tasks back
-                //unitOfWork.Tasks.Edit(activity);
-
                 unitOfWork.Tasks.Delete(actId);
             }
 
@@ -177,25 +167,6 @@ namespace ITI.CEI40.Monitor.Controllers
             // (5)managing the related dependencies
             foreach (Act act in Acts)
             {
-                #region oldWay
-                // adding all the new dependencies related to the new activities (from the independent view)
-                //if (act.Dependecies != null && act.dbId == 0)
-                //{
-                //    foreach (var dep in act.Dependecies)
-                //    {
-                //        Activity actToFollow = unitOfWork.Tasks.GetByProIdAndViewOrder(id, act.id);
-                //        Activity followingAct = unitOfWork.Tasks.GetByProIdAndViewOrder(id, dep.id);
-                //        Dependencies dependency = new Dependencies
-                //        {
-                //            ActivityToFollowId = actToFollow.Id,
-                //            FollowingActivityId = followingAct.Id,
-                //            Lag = dep.lag
-                //        };
-                //        unitOfWork.Dependency.Add(dependency);
-
-                //    }
-                //} 
-                #endregion
                 // add the dependencies related to activities (from the dependent view)
                 if (act.Dependecy != null && (act.dbId == 0 || !reDep.Exists(d => d.following == act.dbId)))
                 {
@@ -260,6 +231,7 @@ namespace ITI.CEI40.Monitor.Controllers
             return null;
         }
 
+        // helper methods to get the right tasks (from the dependent view)
         public Activity GetFollowedActivity(List<Activity> activities, List<DeletedDependecy> reDep)
         {
             if (activities.Count == 1)

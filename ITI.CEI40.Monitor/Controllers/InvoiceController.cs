@@ -29,12 +29,14 @@ namespace ITI.CEI40.Monitor.Controllers
 
         public IActionResult ControlInvoice()
         {
+            // for showing the projects that will controll the incomming and outcomming invoices
             List<Project> projects = unitOfWork.Projects.GetAll().ToList();
             return View(projects);
         }
 
         public IActionResult Index_Income(int id)
         {
+            // showing the income invoices and the related project and user(financer) info and 
             InvoiceViewModel invoiceVM = new InvoiceViewModel
             {
                 Invoices = unitOfWork.Invoices.GetIncomeByProjectId(id).ToList(),
@@ -48,6 +50,7 @@ namespace ITI.CEI40.Monitor.Controllers
 
         public IActionResult Index_Expense(int id)
         {
+            // showing the outcome invoices and the related project and user(financer) info and 
             InvoiceViewModel invoiceVM = new InvoiceViewModel
             {
                 Invoices = unitOfWork.Invoices.GetExpensesByProjectId(id).ToList(),
@@ -59,6 +62,7 @@ namespace ITI.CEI40.Monitor.Controllers
             return View("Index", invoiceVM);
         }
 
+        // add new invoice to the related project and update the income/outcome values 
         [HttpPost]
         public IActionResult AddInvoice(Invoice invoice, List<InvoiceItem> invoiceItems)
         {
@@ -91,6 +95,7 @@ namespace ITI.CEI40.Monitor.Controllers
             return null;
         }
 
+        // show invoice details
         [HttpGet]
         public IActionResult GetInvoiceWithItems(int id)
         {
@@ -98,6 +103,7 @@ namespace ITI.CEI40.Monitor.Controllers
             return PartialView("_InvoiceModal", d);
         }
 
+        // delete the invoice and the related items then update the income/outcome values for the related project 
         [HttpPost]
         public bool Delete(int id)
         {
@@ -129,7 +135,7 @@ namespace ITI.CEI40.Monitor.Controllers
             }
         }
 
-
+        // helper method to update the project income values
         public bool SetProjectIncome(int id)
         {
             float totalincome = 0;
@@ -148,6 +154,7 @@ namespace ITI.CEI40.Monitor.Controllers
             else { return false; }
         }
 
+        // helper method to update the project outcome values
         public bool SetProjectOutcome(int id)
         {
             float totaloutcome = 0;
@@ -169,6 +176,7 @@ namespace ITI.CEI40.Monitor.Controllers
             }
         }
 
+        // helper method to send the notification to specific user
         public void SendNotification(string messege, params string[] usersId)
         {
             Notification Notification = new Notification
