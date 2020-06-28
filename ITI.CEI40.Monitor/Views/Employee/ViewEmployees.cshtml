@@ -9,7 +9,8 @@
     <button type="button" class="btn btn-info btn-sm mb-3" data-toggle="modal" data-target="#addEmployeeModal">
         Add Employee
     </button>
-    <div id="filterSection" class="row ">
+    @*Filter Employees*@
+    @*<div id="filterSection" class="row ">
         <form method="post" data-ajax-url="/Employee/ViewFilteredEmployees" data-ajax="true" data-ajax-method="Get" data-ajax-complete="displayEmployees"
               data-ajax-update="#tableBody" data-ajax-mode="replace" id="filterForm" class="col-8 row">
             <div id="AddDepartmentSection" class="col-9">
@@ -33,7 +34,7 @@
                 <button type="submit" class="btn btn-outline-info btn-sm ">Filter</button>
             </div>
         </form>
-    </div>
+    </div>*@
     <div style="text-align:center">
         <table class="table table-sm">
             <thead class="thead-dark">
@@ -47,7 +48,6 @@
             </thead>
 
             <tbody id="tableBody">
-
                 @for (int i = 0; i < Model.Employees.Count(); i++)
                 {
                     <partial name="_EmployeePartialView" model="Model.Employees[i]" />

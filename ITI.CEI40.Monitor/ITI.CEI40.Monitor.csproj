@@ -22,6 +22,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20200628151927_LastUpdates.cs" />
+    <Compile Remove="Migrations\20200628151927_LastUpdates.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Content Remove="wwwroot\lib\signalr\dist\browser\signalr.js" />
     <Content Remove="wwwroot\lib\signalr\dist\browser\signalr.min.js" />
   </ItemGroup>

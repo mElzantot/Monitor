@@ -34,21 +34,36 @@ namespace ITI.CEI40.Monitor.Controllers
 
         }
 
+
+        //Views the tasks assigned to the team leader's team
+
         [Authorize(Roles = "TeamLeader")]
         public IActionResult ViewTasks()
         {
+            //gets the team id using the logged in team leader id
             int teamID = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
+            //gets the tasks assigned to this team
             var tasks = unitOfWork.Tasks.GetTasksByTeamID(teamID);
+
             ViewBag.TeamId = teamID;
             return View(tasks);
         }
 
+        //Allows the team leader to change the status of a task
+
         [Authorize(Roles = "TeamLeader")]
         public void EditStatus(int id, int status, string reasen)
         {
+            //gets the task from database by its id
             Activity task = unitOfWork.Tasks.GetById(id);
+
+            //changes the status of this task
             task.Status = (Status)status;
+
+            //apply changes to data base
             unitOfWork.Tasks.Edit(task);
+
+            //sends a notification to the department manager with the change of the task's status
             #region notification
             int teamID = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
             Team team = unitOfWork.Teams.GetById(teamID);
@@ -67,13 +82,21 @@ namespace ITI.CEI40.Monitor.Controllers
             #endregion
         }
 
+
+        //Shows the dashboard of each task
+
         [HttpGet]
         public IActionResult Dashboard(int taskId)
         {
+            //gets the list of sub tasks inside a task by its id
             var subtask = unitOfWork.SubTasks.GetSubTasksFromTask(taskId);
+
             return View("_DashboardPartial", subtask);
         }
 
+
+
+        //Uploads a file to the files hub
 
         [HttpPost]
         public IActionResult AddFile(FileViewModel addedFile)
@@ -119,6 +142,9 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
 
+
+        //Adds a comment to the comments hub
+
         [HttpPost]
         public JsonResult AddComment(string comment, int taskId, int? subTaskId = null)
         {
@@ -141,10 +167,17 @@ namespace ITI.CEI40.Monitor.Controllers
 
         }
 
+
+
+        //adds description to a certain task
+
         [HttpPost]
         public IActionResult AddTaskDesc(int taskId, string taskDesc)
         {
+
+            //gets the task from database by its id
             Activity task = unitOfWork.Tasks.GetById(taskId);
+
             if (taskDesc != null)
             {
                 task.Description = taskDesc;
@@ -154,16 +187,28 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
 
+
+
+        //gets each task with its comments from the comments hub
+
         [HttpGet]
         public PartialViewResult GetTask(int taskId)
         {
             ActDetailsViewModel ActDetailsVM = new ActDetailsViewModel
             {
+                //gets the task from database by its id
                 Task = unitOfWork.Tasks.GetTaskWithProjectAndTeam(taskId),
+
+                //gets this task comments 
                 HighComments = unitOfWork.Comments.GetHighCommentforTask(taskId).ToList(),
             };
             return PartialView("_TaskDetailsPartialView", ActDetailsVM);
         }
+
+
+
+
+        //function to send notifications to a certain user
 
         public void SendNotification(string messege, params string[] usersId)
         {

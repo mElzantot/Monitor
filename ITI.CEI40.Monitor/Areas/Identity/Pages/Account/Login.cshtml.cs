@@ -95,6 +95,8 @@ namespace ITI.CEI40.Monitor.Areas.Identity.Pages.Account
                             returnUrl = Url.Content("~/SubTask/Index");
                         else if (await _userManager.IsInRoleAsync(user, Roles.Admin.ToString()))
                             returnUrl = Url.Content("~/Department/ViewDepartments");
+                        else if (await _userManager.IsInRoleAsync(user, Roles.Finance.ToString()))
+                            returnUrl = Url.Content("~/Invoice/ControlInvoice");
                         return LocalRedirect(returnUrl);
                     }
                     if (result.RequiresTwoFactor)

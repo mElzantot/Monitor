@@ -76,10 +76,7 @@
             Duration.push(dur[i].defaultValue)
         }
 
-        console.log(Tname)
-        console.log(Count)
-        console.log(Complex)
-        console.log(Duration)
+        
 
 
         function drawChart() {
@@ -99,7 +96,6 @@
 
             var options = {
 
-                //title: 'Tasks Complexity',
                 hAxis: { textStyle: { bold: true } },
                 animation: {
                     startup: true,
@@ -131,7 +127,6 @@
             }
 
             var optionsComp = {
-                //title: 'Number of tasks for each employee',
                 hAxis: { textStyle: { bold: true } },
                 bar: { groupWidth: "70%" },
                 legend: { position: "none" },
@@ -164,7 +159,6 @@
             var optionsDonut = {
                 title: 'Tasks Complexity',
                 pieHole: 0.4,
-                //chartArea: { width: 370, height: 360 }
                 chartArea: { width: '78%', height: '78%', left: '17%' }
             };
 

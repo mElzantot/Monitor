@@ -32,12 +32,22 @@ namespace ITI.CEI40.Monitor.Controllers
             return View();
         }
 
+
+        //Shows the list of engineers inside every team leader's team
+
         [Authorize(Roles = "TeamLeader")]
         public IActionResult EngineersView()
         {
+            // to get the team id from the id of the logged in team leader
             int teamId = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
+
+            //to get the list of engineers inside of this team
             List<ApplicationUser> TeamMembers = unitOfWork.Engineers.GetEngineersInsideTeam(teamId).ToList();
+
+            //to exclude the team leader of this list 
             TeamMembers.RemoveAll(e => e.UserName == HttpContext.User.Identity.Name);
+
+
             SubTaskSubmitVM subTaskSubmitVM = new SubTaskSubmitVM
             {
                 teamMembers = TeamMembers
@@ -45,66 +55,109 @@ namespace ITI.CEI40.Monitor.Controllers
             return View(subTaskSubmitVM);
         }
 
+
+        //Shows the sub tasks for each engineer
+
         [Authorize(Roles = "TeamLeader")]
         [HttpGet]
         public IActionResult displaySubTasks(string engId)
         {
+
+            //to get the list of sub tasks assigned to this engineer
             List<SubTask> SubTasks = unitOfWork.SubTasks.GetEngineerSubTasks(engId);
 
             return PartialView("_SubTaskPartialView", SubTasks);
         }
 
+
+        //allows the team leader to cancel a sub task
         [Authorize(Roles = "TeamLeader")]
-        //Omar 
         public void CancelSubTask(int id)
         {
+            //gets the sub task you want to cancel by its id
             var subtask = unitOfWork.SubTasks.GetById(id);
+
+            //changes the status of the sub task to cancelled
             subtask.Status = Status.Cancelled;
+
+            //apply changes to data base
             unitOfWork.SubTasks.Edit(subtask);
 
-            // notification
+            //sends a notificatin to the engineer that his sub task is cancelled
             string messege = $"Your Team Leader has cancelled *{subtask.Name}=* at *{DateTime.Now}=*";
             SendNotification(messege, subtask.FK_EngineerID);
         }
 
+
+        //allows the team leader to recieve a completed sub task and evaluates it
         [Authorize(Roles = "TeamLeader")]
         [HttpPost]
         public void SubmitSubTask(SubmitModal submitModal)
         {
+            //gets the sub task that a certain engineer submitted
             var subtask = unitOfWork.SubTasks.GetSubTaskWithEngineer(submitModal.ID);
+
+            //changes the status of the sub task to completed
             subtask.Status = Status.Completed;
+
+            //evaluates the complexity measure for this sub task
             subtask.Complexity = submitModal.Complexity;
+
+            //evaluates the time management measure for this sub task
             subtask.TimeManagement = submitModal.TimeManagement;
+
+            //evaluates the quality measure for this sub task
             subtask.Quality = submitModal.Quality;
+
+            //apply changes to data base
             unitOfWork.SubTasks.Edit(subtask);
 
-            // notification
+            //sends a notificatin to the engineer that his sub task is successfully submitted
             string messege = $"Congratulations Your Team Leader Submitted *{subtask.Name}=* at *{DateTime.Now}=*";
             SendNotification(messege, subtask.FK_EngineerID);
         }
 
+
+        //Shows the completed or cancelled sub task for each engineer
         [Authorize(Roles = "Engineer")]
         [HttpGet]
         public IActionResult ArchivedSubTasks()
         {
+
+            //gets the logged in engineer id
             string engId = userManager.GetUserId(HttpContext.User);
+
+            //gets this engineer completed or cancelled sub tasks
             var subtasks = unitOfWork.SubTasks.Archive(engId).ToList();
+
             return View("ArchivedSubTasks", subtasks);
         }
 
-        //omar
+
+
+        //Shows the dashboard of each engineer's performance
+
         [Authorize(Roles = "Engineer")]
         public IActionResult EngineerChart()
         {
-
+            //gets the logged in engineer id
             string engId = userManager.GetUserId(HttpContext.User);
+
+            //get the list of completed sub tasks assigned to this engineer
             List<SubTask> subtasks = unitOfWork.SubTasks.GetEngineerComletedSubTasks(engId);
 
 
             List<string> months = new List<string>();
+
+            //list of the quality measure for this engineer
             List<float> quality = new List<float>();
+
+            //list of the complexity measure for this engineer
             List<float> complexity = new List<float>();
+
+            //list of the time measure for this engineer
             List<float> time = new List<float>();
+
             List<SubTask> subs = new List<SubTask>();
             string engName;
             if (subtasks.Count>0)
@@ -121,6 +174,8 @@ namespace ITI.CEI40.Monitor.Controllers
 
             foreach (var item in subtasks)
             {
+
+                //gets the sub tasks completed in this month
                 month = item.ActualEndDate.Value.ToString("MMMM");
                 if (!months.Contains(month))
                 {
@@ -165,10 +220,18 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
 
+
+        //Shows the dashboard of the team leader's team engineers
+
         [Authorize(Roles = "TeamLeader")]
         public IActionResult EngineersChart()
         {
+
+            //gets the team's id from the logged in team leader's id
             int teamId = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
+            
+
+            //gets the list of engineers inside this team
             List<ApplicationUser> teamMenmbers = unitOfWork.Engineers.GetEngineersInsideTeamWithSubTasks(teamId);
 
             #region remove the DepManager
@@ -177,12 +240,16 @@ namespace ITI.CEI40.Monitor.Controllers
             ApplicationUser depmanager = userManager.Users.FirstOrDefault(u => u.Id == depmanid);
             teamMenmbers.RemoveAll(e => e.UserName == depmanager.UserName);
             #endregion
-            // remove the team leader
+            // remove the team leader from this list
             teamMenmbers.RemoveAll(e => e.UserName == HttpContext.User.Identity.Name);
+
+            //list of each engineer's id
             List<string> Ids = new List<string>();
 
-
+            //list of the engineers names
             List<string> names = new List<string>();
+
+            //list of engineers performance measures
             List<List<float>> avg = new List<List<float>>();
 
             foreach (var item in teamMenmbers)
@@ -209,6 +276,7 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
 
+        //function to return each engineer's performance measures
 
         private List<float> EngineerPerformence(List<SubTask> subTasks)
         {
@@ -227,15 +295,24 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
 
+
+        //shows the tasks assigned to the team leader's team
+
         public IActionResult MyTasks()
         {
+            //gets the team id using the logged in team leader's id
             int teamID = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User)).Id;
+
+            //gets the tasks assigned to this team
             var tasks = unitOfWork.Tasks.GetTasksByTeamIDWithSubs(teamID);
 
 
             return View("MyTasks", tasks);
         }
 
+
+
+        //Shows the tasks with all its details like comments
 
         public PartialViewResult MyTaskPartial(int taskId)
         {
@@ -246,6 +323,10 @@ namespace ITI.CEI40.Monitor.Controllers
             };
             return PartialView("_MyTasksPartial", ActDetailsVM);
         }
+
+
+
+        //Allows the team leader to add a new sub task
 
         [Authorize(Roles = "TeamLeader")]
         [HttpGet]
@@ -264,20 +345,32 @@ namespace ITI.CEI40.Monitor.Controllers
 
 
 
+        //shows the cancelled sub tasks assigned to a certain engineer
+
         [HttpGet]
         public IActionResult displayCancellesSubTasks(string engId)
         {
+
+            //gets the list of cancelled sub tasks assigned to this engineer
             List<SubTask> subtasks = unitOfWork.SubTasks.GetEngineerSubTasks(engId);
 
             return PartialView(subtasks);
         }
 
 
+
+        //displays the resources utilization chart
+
         [HttpGet]
         public IActionResult displayAll()
         {
+            //gets the team using the logged in team leader's id
             Team team = unitOfWork.Teams.GetTeamWithTeamLeaderId(userManager.GetUserId(HttpContext.User));
+
+            //gets the engineers inside this team
             List<ApplicationUser> Engineers = unitOfWork.Engineers.GetEngineersWithSubtasks(team.Id).ToList();
+
+            //removes the team leader from this list
             Engineers.RemoveAll(e => e.UserName == HttpContext.User.Identity.Name);
             ResourceChartVM resourceChartVM = new ResourceChartVM
             {
@@ -287,12 +380,8 @@ namespace ITI.CEI40.Monitor.Controllers
             return View(resourceChartVM);
         }
 
-        [HttpGet]
-        public IActionResult displayCharts(string engId)
-        {
-            var subtask = unitOfWork.SubTasks.GetSubTasksByEngineerId(engId).ToList();
-            return PartialView("_ChartsPartialView", subtask);
-        }
+
+        //function to send notifications to a certain user
 
         public void SendNotification(string messege, params string[] usersId)
         {
@@ -319,9 +408,14 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
 
+        //Gets the approximate duration measure each engineer will spend doing each sub task
+
         public JsonResult GetApproximateDuration(string engineerId, int complexity, int Quality)
         {
+
+            //gets the list of completed sub tasks assigned to this engineer 
             IEnumerable<SubTask> subTasks = unitOfWork.SubTasks.GetEngineerComletedSubTasks(engineerId);
+
             SubTask newSubTask = new SubTask
             {
                 Complexity = complexity,
@@ -333,9 +427,14 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
 
+        //Gets the approximate quality measure for  each engineer sub task
+
         public JsonResult GetApproximateQuaity(string engineerId, int complexity, int Duration)
         {
+
+            //gets the list of completed sub tasks assigned to this engineer 
             IEnumerable<SubTask> subTasks = unitOfWork.SubTasks.GetEngineerComletedSubTasks(engineerId);
+
             SubTask newSubTask = new SubTask
             {
                 Complexity = complexity,

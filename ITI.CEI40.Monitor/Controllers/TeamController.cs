@@ -24,17 +24,24 @@ namespace ITI.CEI40.Monitor.Controllers
             this.userManager = userManager;
         }
 
+
+        //Shows the list of teams inside the department
+
         [HttpGet]
         public IActionResult ViewTeams(int id,string Name)
         {
             TeamViewModel TeamVm = new TeamViewModel
             {
+                //gets the list of teams inside the department
                 teams = unitOfWork.Teams.getTeamsinsideDept(id).ToList(),
                 FK_DepartmentId = id,
                 DepName = Name
             };
             return PartialView("_ViewTeamsPartial",TeamVm);
         }
+
+
+        //Allows the admin to add a new team inside a certain department
 
         [HttpPost]
         public IActionResult AddTeam(Team team)
@@ -46,6 +53,8 @@ namespace ITI.CEI40.Monitor.Controllers
                     Name = team.Name,
                     FK_DepartmentId = team.FK_DepartmentId
                 };
+
+                //adds the team to the data base
                 newTeam = unitOfWork.Teams.Add(newTeam);
                 newTeam = unitOfWork.Teams.GetTeamWithEngineersandLeader(newTeam.Id);
                 return PartialView("_TeamPartialView", newTeam);
@@ -55,12 +64,18 @@ namespace ITI.CEI40.Monitor.Controllers
             return null;
         }
 
+
+        //Allows the admin to delete a team inside a certain department
+
         [HttpPost]
         public bool DeleteTeam(int id)
         {
+            //gets the team that the admin wants to delete
             var team = unitOfWork.Teams.GetTeamWithTasksAndEngineers(id);
+
             if (team != null && team.Engineers.Count() == 0 && team.Tasks.Count() == 0)
             {
+                //deletes the team from the database
                 return unitOfWork.Teams.Delete(id);
             }
             return false;
