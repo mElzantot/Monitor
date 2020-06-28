@@ -6,16 +6,15 @@
 
 <div id="MainView">
 
-    <h3 class="text-muted">Projects</h3>
-    <br>
+   
     <!--#region Add project  -->
     <div class="d-flex mb-3">
-        <span id="search" style="width:28% ; margin-right:1%;">
+        <span id="search" style="width:17.5% ; margin-right:1%;">
             <input class="form-control" type="search" placeholder="Search">
         </span>
         <span>
             <button class="btn btn-success" id="addproject">Add project</button>
-            <button class="btn btn-light " id="Search"><i class="fas fa-filter"></i>Filter</button>
+ 
         </span>
     </div>
     <!--#endregion   -->
@@ -63,7 +62,7 @@
                                         {
                                            
                                             <a href="/project/dashboard?projid=@item.ID" class="btn btn-outline-warning">Dashboard</a>
-                                            <a href="/Project/Details/@item.ID" class="btn btn-outline-info"><i id="i" class="fas fa-chart-area"></i> Details</a>
+                                            <a href="/Project/Details/@item.ID" class="btn btn-outline-info">Details</a>
                                         }
                                         else
                                         {
@@ -78,7 +77,7 @@
 
                                             <div class="btn-group dropleft">
                                                 <button type="button" class="btn btn-outline-info" data-toggle="dropdown">
-                                                    <i id="i" class="fas fa-chart-area"></i> Details
+                                                     Details
                                                 </button>
                                                 <div class="dropdown-menu px-2 mx-1 alert-danger">
                                                     Lets goto charts and create tasks
@@ -88,7 +87,6 @@
                                         <a href="/Activity/Index/@item.ID" class="btn alert-info"><i id="i" class="fas fa-chart-area"></i> Chart</a>
                                         <button class="btn btn-light" onclick="arcive(@item.ID,2)"><i class="fas fa-arrow-circle-up"></i> Archive</button>
                                         <button class="btn btn-danger btn-sm" onclick="arcive(@item.ID,3)"><i class="fas fa-trash-alt"></i></button>
-
                                     </td>
                                 </tr>
                             }
@@ -131,14 +129,12 @@
         var btn = $('#addproject').click(function () {
             $('#addproject').hide();
             $('#createsection').addClass("d-flex");
-            $('#search').css('width', '30%');
         })
 
         //this function is called after add new project also
         function CloseProjrctNameSec() {
             $('#addproject').show();
             $('#createsection').removeClass("d-flex");
-            $('#search').css('width', '20%');
         }
         $('#cancel').click(CloseProjrctNameSec)
 
@@ -180,7 +176,7 @@
 
 <div class="btn-group dropleft">
                                                         <button type="button" class="btn btn-outline-info" data-toggle="dropdown">
-                                                            <i id="i" class="fas fa-chart-area"></i> Details
+                                                             Details
                                                         </button>
                                                         <div class="dropdown-menu px-2 mx-1 btn-outline-warning">
                                                             Lets goto charts and create tasks

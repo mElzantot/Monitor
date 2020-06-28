@@ -29,19 +29,18 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
 
-
+        //  return view which contain list of projects which managed by projrct manager
+        //  in this view the project manager can also create new project , delete and archive one.
         public IActionResult Index()
         {
-
             ProjectViewModel projectView = new ProjectViewModel
             {
                 Projects = unitofwork.Projects.GetRunningProjects(userManager.GetUserId(HttpContext.User)),
-                
             };
-
             return View("_CreateProject", projectView);
         }
 
+        // View contains details of each Project (List of tasks in the project)
         [HttpGet]
         public IActionResult Details(int Id)
         {
@@ -50,6 +49,7 @@ namespace ITI.CEI40.Monitor.Controllers
             return View(activityVM);
         }
 
+        // Submit the project when it finished
         public void Arcive(int PrjId,int status)
         {
             Project project = unitofwork.Projects.GetById(PrjId);
@@ -57,6 +57,7 @@ namespace ITI.CEI40.Monitor.Controllers
             unitofwork.Projects.Edit(project);
         }
 
+        // Add new project
         [HttpPost]
         public JsonResult Add(Project project)
         {
@@ -72,6 +73,7 @@ namespace ITI.CEI40.Monitor.Controllers
             }
         }
 
+        // open right section to see the details of the project
         [HttpGet]
         public IActionResult Edit(int id)
         {
@@ -86,21 +88,21 @@ namespace ITI.CEI40.Monitor.Controllers
             }
         }
 
-        [HttpPost]
-        public JsonResult Edit(Project project)
-        {
-            if (ModelState.IsValid)
-            {
-                unitofwork.Projects.Edit(project);
-                return Json(project);
-            }
-            else
-            {
-                return Json(project);
-            }
-        }
+        //[HttpPost]
+        //public JsonResult Edit(Project project)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        unitofwork.Projects.Edit(project);
+        //        return Json(project);
+        //    }
+        //    else
+        //    {
+        //        return Json(project);
+        //    }
+        //}
 
-        //shaker
+        //Get completed projects as archive 
         [HttpGet]
         public IActionResult CompletedProjects()
         {
@@ -116,36 +118,40 @@ namespace ITI.CEI40.Monitor.Controllers
             return View(CompletedProjectsVM);
         }
 
+
         public IActionResult DisplayProjects()
         {
             var project = unitofwork.Projects.GetAllProjects().ToList();
             return View(project);
         }
 
+        // open dashboard for the project
         [HttpGet]
         public IActionResult DashBoard(int projId)
         {
-            //Project project = unitofwork.Projects.GetProjectWithTasks(projId);
             DashboardViewModel dashboard = new DashboardViewModel
             {
                 Tasks = unitofwork.Tasks.GetActivitiesFromProject(projId).ToList(),
                 TotalInvoices = TotalInvoices(projId)
             };
             return View("DashBoard", dashboard);
-            //return View("DashBoard", dashboard);
         }
 
+
+        //Get Project daily report
         public IActionResult ProjectDailyReport(int Id)
         {
             Project project = unitofwork.Projects.GetProjectForReport(Id);
             return View(project);
         }
 
+
         public IActionResult Archive()
         {
             var projects = unitofwork.Projects.Archive().ToList();
             return View(projects);
         }
+
 
         // create invoices data for the chart
         public List<TotalInvoicesViewModel> TotalInvoices(int id)

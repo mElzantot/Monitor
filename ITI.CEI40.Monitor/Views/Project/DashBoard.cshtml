@@ -220,19 +220,19 @@
         data.addColumn('string', 'Month');
         data.addColumn('number', 'Sales');
         data.addColumn('number', 'Expenses');
-        data.addColumn('number', 'Net');
+        //data.addColumn('number', 'Net');
         // initial value
         var month = modelInvoices[0].month;
         var sales = modelInvoices[0].sales;
         var expenses = modelInvoices[0].expenses;
-        var net = expenses - sales;
-        data.addRows([[`${month}`, sales, expenses, net]]);
+        var net = sales- expenses;
+        data.addRows([[`${month}`, sales, expenses]]);
         // add the invices data
         for (var i = 1; i < modelInvoices.length; i++) {
             sales += modelInvoices[i].sales;
             expenses = modelInvoices[i].expenses;
             net = expenses - sales;
-            data.addRows([[`${modelInvoices[i].month}`, sales, expenses, net]]);
+            data.addRows([[`${modelInvoices[i].month}`, sales, expenses]]);
         }
 
 

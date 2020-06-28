@@ -31,6 +31,7 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
 
+        //Get subtasks which managed by engineer
         [Authorize(Roles = "Engineer")]
         public IActionResult Index()
         {
@@ -41,6 +42,7 @@ namespace ITI.CEI40.Monitor.Controllers
             return View("Engineer", subTasks);
         }
 
+        //Display Each subtask details
         [Authorize(Roles = "Engineer")]
         public IActionResult DisplayRow(int ID)
         {
@@ -50,17 +52,16 @@ namespace ITI.CEI40.Monitor.Controllers
             return PartialView("_SubTaskDataPartial", subTask);
         }
 
+        //Edit progress for each subtask
         [Authorize(Roles = "Engineer")]
         public void EditProgress(int ID, float progress)        {            SubTask subTask = unitOfWork.SubTasks.GetSubTaskIncludingTask(ID);
 
             float subTaskLastProgress = subTask.Progress;
-
-            //Shaker
             Activity task = unitOfWork.Tasks.GetById(subTask.FK_TaskId);
-
             float subtaskDuration = (subTask.PlannedDurationInHours);            task.Progress += ((progress - subTaskLastProgress) * (subtaskDuration)) / task.SumOfSubTasksDurations;            task = unitOfWork.Tasks.Edit(task);
             subTask.Progress = progress;            subTask = unitOfWork.SubTasks.Edit(subTask);        }
 
+        //Related to (On/Off) Button on the view which represent which subtask is under work
         [Authorize(Roles = "Engineer")]
         public void EditIsUnderWork(int ID, bool Is)
         {
@@ -93,6 +94,8 @@ namespace ITI.CEI40.Monitor.Controllers
             subTask = unitOfWork.SubTasks.Edit(subTask);
         }
 
+
+        // Change status (Hold - Active) for subtask from engineer and send notificayion to leader
         [Authorize(Roles = "Engineer")]
         public void EditStatus(int id, int status, string reason)
         {
@@ -122,7 +125,6 @@ namespace ITI.CEI40.Monitor.Controllers
             hubContext.Clients.User(subTask.Task.Team.FK_TeamLeaderId).SendAsync("newNotification", messege, false, Savednotification.Id);
             #endregion
 
-
             Comment comment = new Comment
             {
                 FK_sender = userManager.GetUserId(HttpContext.User),
@@ -132,19 +134,10 @@ namespace ITI.CEI40.Monitor.Controllers
             comment.comment = $"{subTask.Name} status has changed to {subTask.Status.ToString()}";
             comment.comment += reason;
             comment = unitOfWork.Comments.Add(comment);
-
-            //hubContext.Clients.User(subTask.Task.Team.FK_TeamLeaderId).SendAsync("newNotification",
-            // $"");
         }
 
-        [Authorize(Roles = "Engineer")]
-        public void EditPriority(int ID, Priority priority)
-        {
-            Activity task = unitOfWork.Tasks.GetById(ID);
-            task.Priority = priority;
-            unitOfWork.Tasks.Edit(task);
-        }
 
+        //Display all Subtask in specific task
         [Authorize(Roles = "TeamLeader")]
         [HttpGet]
         public IActionResult displaySubTasks(int taskID)
@@ -162,6 +155,7 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
 
+        // Open section which contain form to create new subtask
         [Authorize(Roles = "TeamLeader")]
         [HttpGet]
         public IActionResult AddSubTask(int taskID)
@@ -178,6 +172,9 @@ namespace ITI.CEI40.Monitor.Controllers
             return PartialView("_SubTaskModal", subTask);
         }
 
+
+        // create new subtask for a specific taks  and assign it to an engineer
+        // and send notification to this engineer
         [Authorize(Roles = "TeamLeader")]
         [HttpPost]
         public IActionResult AddSubTask(SubTaskViewModel subTask)
@@ -227,6 +224,7 @@ namespace ITI.CEI40.Monitor.Controllers
             }
         }
 
+        // Open section which contain form to edit subtask
         [Authorize(Roles = "TeamLeader")]
         [HttpGet]
         public IActionResult EditSubTask(int subtaskId)
@@ -260,6 +258,7 @@ namespace ITI.CEI40.Monitor.Controllers
             return PartialView("_SubTaskModal", subTaskVM);
         }
 
+        //Edit subtask details
         [Authorize(Roles = "TeamLeader")]
         [HttpPost]
         public IActionResult EditSubTask(SubTaskViewModel newSubTask)
@@ -343,6 +342,7 @@ namespace ITI.CEI40.Monitor.Controllers
             }
         }
 
+        
         public void SendNotification(string messege, params string[] usersId)
         {
             Notification Notification = new Notification
@@ -367,6 +367,7 @@ namespace ITI.CEI40.Monitor.Controllers
 
         }
 
+        //Function to open a session when engineer click button (on - off)
         public void CloseOpenSubTasksession(SubTaskSession subTaskSession, SubTask subTask)        {            subTaskSession.SessEndtDate = DateTime.Now;            double hourDuration = (double)(subTaskSession.SessEndtDate - subTaskSession.SessStartDate).Value.TotalHours;            subTaskSession.SessDuration = (int)Math.Round(hourDuration, 0);            subTaskSession = unitOfWork.SubTaskSessions.Edit(subTaskSession);            subTask.ActualDuration += subTaskSession.SessDuration;            subTask.IsUnderWork = false;            Activity task = unitOfWork.Tasks.GetById(subTask.FK_TaskId);            float LastTaskDuaration = task.ActualDuratoin;            task.ActualDuratoin += subTask.ActualDuration;            task = unitOfWork.Tasks.Edit(task);            Project project = unitOfWork.Projects.GetById(task.FK_ProjectId);            project.ActualDuration += task.ActualDuratoin - LastTaskDuaration;            unitOfWork.Projects.Edit(project);        }
 
 
