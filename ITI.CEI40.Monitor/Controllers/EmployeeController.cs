@@ -125,14 +125,15 @@ namespace ITI.CEI40.Monitor.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<JsonResult> EditEmployeeRoles(EmpRolesViewModel EmpRolVM)
         {
-            //---------
             ApplicationUser Emp = await userManager.FindByIdAsync(EmpRolVM.EmpId);
             var EmpCurrentRoles = await userManager.GetRolesAsync(Emp);
+            //-----------Remove the Roles attached to Employee
             if (EmpCurrentRoles != null && EmpCurrentRoles.Count > 0)
             {
                 var removeFromRoles = await userManager.RemoveFromRolesAsync(Emp, EmpCurrentRoles);
             }
 
+            //---------Create The New Relations between Emp and Roles
             foreach (var item in EmpRolVM.EmpRoles)
             {
                 string roleName = item.role.ToString();
@@ -142,8 +143,10 @@ namespace ITI.CEI40.Monitor.Controllers
                 }
             }
 
+            //------------Check if the Employee Became Department Manager
             var isDeptManager = userManager.IsInRoleAsync(Emp, Roles.DepartmentManager.ToString());
 
+            //--------Cancell The Relation between Employee and Team
             if (isDeptManager.Result)
             {
                 Emp.FK_TeamID = null;

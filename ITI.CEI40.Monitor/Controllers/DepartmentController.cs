@@ -26,7 +26,7 @@ namespace ITI.CEI40.Monitor.Controllers
             this.hubContext = hubContext;
         }
 
-
+        [Authorize(Roles ="Admin")]
         public IActionResult ViewDepartments()
         {
             //------------Get Departments to Display them
@@ -40,6 +40,7 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public bool DeleteDepartment(int id)
         {
             var department = unitOfWork.Departments.GetDeptWithTeamsAndProjects(id);
@@ -53,6 +54,7 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public IActionResult AddDepartment(string name)
         {
             //-----------Check that the Name of the Department isn`t exist
