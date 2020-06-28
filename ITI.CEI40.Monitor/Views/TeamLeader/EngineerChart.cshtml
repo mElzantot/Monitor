@@ -56,8 +56,6 @@
     <div style="width:40%">
         <h4 class="font-weight-bold">Time Measure</h4>
         <h5 class="font-weight-light">
-            @*your performance by comparing the complexity vs time management
-                measures for each of your sub tasks*@
             the number of hours that you spent working on each of your sub tasks
         </h5>
     </div>
@@ -75,28 +73,6 @@
 
 </div>
 
-
-@*<div class="py-2" style="display:flex; justify-content:space-between">
-
-        <div class="slice" style="width:49%">
-            <div id="Complexity" style="height:400px;"></div>
-        </div>
-        <div class="slice" style="width:50%">
-            <div id="Time_Quality" style=" height:400px;"></div>
-        </div>
-    </div>
-
-
-    <div style="display:flex; justify-content:space-between">
-
-        <div class="slice" style="width:49%">
-            <div id="hrs" style="height:400px;"></div>
-        </div>
-
-        <div class="slice" style="width:50%">
-            <div id="donutchart" style=" height: 400px;"></div>
-        </div>
-    </div>*@
 
 
 
@@ -163,9 +139,7 @@
 
             var options = {
 
-                //title: 'Performance',
                 hAxis: { textStyle: { bold: true } },
-                //vAxis: { minValue: 0, maxValue: 100 },
                 animation: {
                     startup: true,
                     duration: 2500,
@@ -199,7 +173,6 @@
 
             var optionsComp = {
 
-                //title: 'Tasks Complexity',
                 hAxis: { textStyle: { bold: true } },
                 animation: {
                     startup: true,
@@ -219,20 +192,7 @@
             /**------------------------------------ */
             /**------------------------------------ */
 
-            var datahrs = new google.visualization.DataTable();
-            //datahrs.addColumn('string', 'Task');
-            //datahrs.addColumn('number', 'Quality');
-            //datahrs.addColumn('number', 'Time Management');
-
-            //datahrs.addRows([
-            //    [`${TaskName[0]}`, Number(TaskQulaity[0]), Number(TaskTime[0])]
-            //]);
-
-            //for (let j = 1; j < TaskName.length; j++) {
-            //    datahrs.addRows([
-            //        [`${TaskName[j]}`, Number(TaskQulaity[j]), Number(TaskTime[j])]
-            //    ]);
-            //}
+            var datahrs = new google.visualization.DataTable();        
             datahrs.addColumn('string', 'Task');
             datahrs.addColumn('number', 'Hrs');
 
@@ -247,10 +207,7 @@
             }
 
             var optionsComp = {
-
-                //title: 'Month Tasks',
                 hAxis: { textStyle: { bold: true } },
-                //vAxis: { minValue: 0, maxValue: 100 },
                 animation: {
                     startup: true,
                     duration: 2500,

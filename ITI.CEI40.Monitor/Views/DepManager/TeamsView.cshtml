@@ -90,34 +90,7 @@
             })
         }
 
-        //function displayCharts(id) {
-        //    $.ajax({
-        //        url: "/DepManager/displayCharts",
-        //        type: "Get",
-        //        data: { teamId: id },
-        //        success: function (result) {
-        //            if (flag) {
-        //                $('#barchart_values').empty();
-        //                $('#barchart_values').append(result);
-        //                var names = $('.taskname')
-        //                var progress = $('.taskprog')
-        //                for (var i = 0; i < names.length; i++) {
-        //                    //console.log(names[i].defaultValue)
-        //                    ns.push(names[i].defaultValue)
-        //                }
-        //                for (var i = 0; i < progress.length; i++) {
-        //                    //console.log(progress[i].defaultValue)
-        //                    ps.push(progress[i].defaultValue)
-        //                }
-        //                drawChart();
-
-        //                flag = false;
-
-        //            }
-        //        }
-        //    })
-        //}
-
+        
         function displayTasks(id) {
             $.ajax({
                 url: "/DepManager/displayTasks",
@@ -143,8 +116,7 @@
                 case 3:
                     meassage = 'Do you want to cancel this task';
                     break;
-            }
-            debugger
+            }            
             if (confirm(meassage)) {
                 $.ajax({
                     url: "/DepManager/ChangeStatus",
