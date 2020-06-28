@@ -65,7 +65,6 @@
 
 
 <!-- #endregion -->
-@*<script src="script.js"></script>*@
 @section scripts{
     <partial name="_ValidationScriptsPartial" />
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -122,11 +121,9 @@
                             var names = $('.staskname')
                             var progress = $('.staskprog')
                             for (var i = 0; i < names.length; i++) {
-                                //console.log(names[i].defaultValue)
                                 ns.push(names[i].defaultValue)
                             }
                             for (var i = 0; i < progress.length; i++) {
-                                //console.log(progress[i].defaultValue)
                                 ps.push(progress[i].defaultValue)
                             }
                             console.log(result)

@@ -5,8 +5,6 @@
 }
 
 <div id="mainPage">
-    @*<input id="startDate"  type="text" class="form-control"><span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>*@
-
     <input type="number" hidden id="teamId" value="@ViewBag.TeamId" />
     <div id="tasksView">
         <div style="padding:8px;border: 0px solid white; border-radius: 8px; background:white; box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);">
@@ -193,7 +191,6 @@
 
         function addSubTask(result, status) {
             if (status == "success") {
-                console.log(result);
                 $('#addSubTaskModal').modal('hide');
                 document.getElementById("SubTaskForm").reset();
                 alert("SubTask added Successfully");
@@ -258,7 +255,6 @@
 
         function editSubTask(result, status) {
             if (status == "success") {
-                console.log(result);
                 $('#editSubTaskModal').modal('hide');
                 document.getElementById("editSubTaskForm").reset();
                 alert("SubTask Updated Successfully");
@@ -319,7 +315,6 @@
                 //console.log(text)//send reason in notification
                 text.value = '';
                 $("#exampleModal").modal('toggle');
-                debugger
                 switch (txtValue) {
                     case 'Active':
                         value = 0;
@@ -379,12 +374,9 @@
                 url: `/Task/Dashboard`,
                 data: { taskId: id },
                 success: function (response) {
-                    //console.log(response)
                     $('#subTaskView').hide();
                     $('#Board').prepend(response);
                     LoadData();
-
-                    //$('#Board').show();
                 },
                 error: function (x, y, err) {
                     console.log(arguments)
@@ -393,7 +385,6 @@
         }
 
         function LoadData() {
-            //debugger;
             var ns = [];
             var ps = [];
             var dur = [];
@@ -407,35 +398,24 @@
             var startdates = $('.ststartdate')
             var enddates = $('.stenddate')
             for (var i = 0; i < names.length; i++) {
-                //console.log(names[i].defaultValue)
                 ns.push(names[i].defaultValue)
             }
             for (var i = 0; i < progress.length; i++) {
-                //console.log(progress[i].defaultValue)
                 ps.push(progress[i].defaultValue)
             }
             for (var i = 0; i < durations.length; i++) {
-                //console.log(progress[i].defaultValue)
                 dur.push(durations[i].defaultValue)
             }
             for (var i = 0; i < engineers.length; i++) {
-                //console.log(names[i].defaultValue)
                 eng.push(engineers[i].defaultValue)
             }
             for (var i = 0; i < startdates.length; i++) {
-                //console.log(names[i].defaultValue)
                 st.push(startdates[i].defaultValue)
             }
             for (var i = 0; i < enddates.length; i++) {
-                //console.log(names[i].defaultValue)
                 ed.push(enddates[i].defaultValue)
             }
-            //console.log(ns);
-            //console.log(ps);
-            //console.log(dur);
-            //console.log(eng);
-            //console.log(st);
-            //console.log(ed);
+
 
             google.charts.load("current", { packages: ['corechart'] });
             google.charts.load("current", { packages: ["timeline"] });
@@ -495,7 +475,6 @@
                 var options = {
                     title: 'Tasks Actual Durations',
                     pieHole: 0.4,
-                    //chartArea: { left: 20, top: 0, width: '50%', height: '75%' }
                     chartArea: { left: 150, height: '80%' }
 
                 };
@@ -553,13 +532,11 @@
 
         function BackToList3() {
             $('#DashBoard').remove();
-            //$('#Board').hide();
             $('#subTaskView').show();
         }
 
         function BackToList2() {
             $('#notasks').remove();
-            //$('#Board').hide();
             $('#subTaskView').show();
         }
 

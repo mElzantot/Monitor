@@ -73,17 +73,11 @@
         var names = $('.staskname')
         var progress = $('.staskprog')
         for (var i = 0; i < names.length; i++) {
-            //console.log(names[i].defaultValue)
             ns.push(names[i].defaultValue)
         }
         for (var i = 0; i < progress.length; i++) {
-            //console.log(progress[i].defaultValue)
             ps.push(progress[i].defaultValue)
         }
-        console.log(ns);
-        console.log(ps);
-
-        //$('#columnchart_values').append(ns,ps);
 
 
         google.charts.load("current", { packages: ['corechart'] });
@@ -106,8 +100,6 @@
 
             var options = {
                 title: "Progress of each Task inside the Project",
-                //width: 600,
-                //height: 400,
                 bar: { groupWidth: "70%" },
                 legend: { position: "none" },
                 annotations: {startup:true}
