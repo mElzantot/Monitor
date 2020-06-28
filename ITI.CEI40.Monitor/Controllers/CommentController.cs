@@ -86,8 +86,10 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpPost]
         public async Task<IActionResult> AddFileForSubTask(FileViewModel addedFile)
         {
+            //-----------Get The File Uploader
             string userId = usermanager.GetUserId(HttpContext.User);
 
+            //------------Create Comment To include File in it
             Comment fileComment = new Comment
             {
                 commentTime = DateTime.Now,
@@ -129,14 +131,17 @@ namespace ITI.CEI40.Monitor.Controllers
             return PartialView("_CommentPartial", fileComment);
         }
 
+
         //-----------Link Between Engineer and Team Leader
         [HttpPost]
         public async Task<IActionResult> AddCommentForSubTask(string comment, int subTaskId, int taskId)
         {
             if (ModelState.IsValid)
             {
+                //----------Get The Comment Sender
                 string userId = usermanager.GetUserId(HttpContext.User);
 
+                //-----------Create The Comment 
                 Comment Comment = new Comment
                 {
                     commentTime = DateTime.Now,
@@ -147,8 +152,10 @@ namespace ITI.CEI40.Monitor.Controllers
                     comment = comment
                 };
 
+                //-----------Add Comment To DB
                 Comment = unitOfWork.Comments.Add(Comment);
                 Comment.Sender = await usermanager.FindByIdAsync(Comment.FK_sender);
+                //-----------Return The Comment To Append it in the View
                 return PartialView("_CommentPartial", Comment);
             }
             return null;
@@ -160,9 +167,11 @@ namespace ITI.CEI40.Monitor.Controllers
         {
             if (ModelState.IsValid)
             {
+                //-------------Get The Comment Sender
                 string userId = usermanager.GetUserId(HttpContext.User);
                 ApplicationUser user = await usermanager.FindByIdAsync(userId);
 
+                //---------Create The Comment
                 Comment Comment = new Comment
                 {
                     commentTime = DateTime.Now,
@@ -171,9 +180,12 @@ namespace ITI.CEI40.Monitor.Controllers
                     comment = comment,
                     Sender= user
                 };
+                //---------Check the Level of Comment 
                 if (isHighLevel) { Comment.commentLevel = CommentLevels.High; }
                 else { Comment.commentLevel = CommentLevels.Med; }
+                //-----------Add Comment to DB
                 Comment = unitOfWork.Comments.Add(Comment);
+                //-----------Return The Comment To Append it in the View
                 return PartialView("_CommentPartial", Comment);
 
             }
@@ -183,8 +195,10 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpPost]
         public async Task<IActionResult> AddFileForTask([FromForm]FileViewModel addedFile, [FromQuery]bool isHighLevel)
         {
+            //-------------Get The Comment Sender
             string userId = usermanager.GetUserId(HttpContext.User);
 
+            //--------Create Comment To attach File to IT
             Comment fileComment = new Comment
             {
                 commentTime = DateTime.Now,
@@ -192,8 +206,10 @@ namespace ITI.CEI40.Monitor.Controllers
                 FK_TaskID = addedFile.taskId,
                 comment = HttpContext.User.Identity.Name.ToString() + " uploaded File "
             };
+            //-----------Check the Level of The Comment
             if (isHighLevel) { fileComment.commentLevel = CommentLevels.High; }
             else { fileComment.commentLevel = CommentLevels.Med; }
+            //-----------Add the Comment to DB
             fileComment = unitOfWork.Comments.Add(fileComment);
 
             //---------------- Add File---------------------//
@@ -219,11 +235,10 @@ namespace ITI.CEI40.Monitor.Controllers
             };
             newFile = unitOfWork.Files.Add(newFile);
             fileComment.File = newFile;
+            //----------Attach The Sender To the Comment
             fileComment.Sender = await usermanager.FindByIdAsync(fileComment.FK_sender);
-
+            //-----------Return The Comment To Append it in the View
             return PartialView("_CommentPartial", fileComment);
-
-
         }
 
     }

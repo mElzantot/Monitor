@@ -69,7 +69,6 @@ else
 <script>
     var id;
     function getid(value) {
-        //debugger;
         id = value;
     }
 
@@ -82,13 +81,11 @@ else
 
             previous = this.value;
 
-            // console.log(previous);
 
         }).change(function () {
 
             var value = this.value;
-            console.log(value);
-            //console.log(id);
+
             switch (value) {
                 case '0': //critial
                     if (confirm('Do you want to change priority to critical?')) {

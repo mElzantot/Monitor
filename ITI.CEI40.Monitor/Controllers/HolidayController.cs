@@ -20,6 +20,8 @@ namespace ITI.CEI40.Monitor.Controllers
             this.userManager = userManager;
         }
 
+
+        // display the holidays for the company 
         public IActionResult Index()
         {
             HolidayViewModel holidayViewModel = new HolidayViewModel
@@ -29,6 +31,7 @@ namespace ITI.CEI40.Monitor.Controllers
             return View(holidayViewModel);
         }
 
+        // add new hloiday to the system
         [HttpPost]
         public IActionResult AddHoliday (Holiday holiday)
         {
@@ -36,6 +39,7 @@ namespace ITI.CEI40.Monitor.Controllers
             return PartialView("_HolidayPartialView", newholiday);
         }
 
+        // delete exisiting holiday from the system
         [HttpPost]
         public bool DeleteHoliday(int id)
         {

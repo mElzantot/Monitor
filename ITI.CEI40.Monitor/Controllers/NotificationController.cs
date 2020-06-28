@@ -30,6 +30,8 @@ namespace ITI.CEI40.Monitor.Controllers
             return View();
         }
 
+
+        // change the seen prop for the notification to be true
         [HttpPost]
         public bool SeeMessege(int id)
         {
@@ -43,6 +45,8 @@ namespace ITI.CEI40.Monitor.Controllers
             return false;
         }
 
+
+        // load more notification from the database for the user
         public JsonResult LoadMore(int c)
         {
             string userId = userManager.GetUserId(User);

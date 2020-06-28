@@ -984,19 +984,3 @@ function spliterTo(ratio) {
 spliterTo(60);
 
 
-
-
-
-
-const observer = new MutationObserver(function (mutations) {
-    mutations.forEach(function (mutation) {
-        if (mutation.attributeName === "value") {
-            console.log("mnmn");
-        }
-    });
-});
-
-const dates = document.querySelector('.datepicker');
-observer.observe(dates, {
-    attributes: true
-});

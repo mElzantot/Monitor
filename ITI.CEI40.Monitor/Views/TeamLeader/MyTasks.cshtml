@@ -168,7 +168,6 @@
         }
 
         function assignTeams() {
-            debugger;
             var team = $('#teams').val();
             $.post({
                 type: "POST",
@@ -292,7 +291,6 @@
 
             let rID = $("#reasonId").val();
             let rTxt = $("#reason").val();
-            debugger
             if (rTxt) {
                 $("#reason").val('');
                 AcceptStatus(rID, 1, rTxt)
