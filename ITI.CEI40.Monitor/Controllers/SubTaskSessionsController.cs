@@ -26,13 +26,11 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpGet]
         public IActionResult EmployeeTimeSheet()
         {
+            //-------------Get SubTask Seesions for Current Employee to Display TimeSheet
             List<SubTaskSession> EmpSessions = unitOfWork.SubTaskSessions.GetTimeSheetForEmp(userManager.GetUserId(HttpContext.User)).ToList();
 
             return View(EmpSessions);
         }
-
-        //---------Daily Report for Team Leader
-
 
 
     }

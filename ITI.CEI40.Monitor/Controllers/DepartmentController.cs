@@ -29,6 +29,7 @@ namespace ITI.CEI40.Monitor.Controllers
 
         public IActionResult ViewDepartments()
         {
+            //------------Get Departments to Display them
             DepartmentViewModel DeptVm = new DepartmentViewModel
             {
                 Departments = unitOfWork.Departments.GetAllDeptWithTeamsandManagers()
@@ -42,6 +43,8 @@ namespace ITI.CEI40.Monitor.Controllers
         public bool DeleteDepartment(int id)
         {
             var department = unitOfWork.Departments.GetDeptWithTeamsAndProjects(id);
+            //--------------Check if the Department has any Teams inside it
+            //-------------check if the department has assigned projects
             if (department != null && department.Teams.Count() == 0 && department.DepartmentProjects.Count() == 0)
             {
                 return unitOfWork.Departments.Delete(id);
@@ -52,13 +55,16 @@ namespace ITI.CEI40.Monitor.Controllers
         [HttpPost]
         public IActionResult AddDepartment(string name)
         {
+            //-----------Check that the Name of the Department isn`t exist
             Department ExistingDept = unitOfWork.Departments.FindByName(name);
+            //------If the Name is unique Create New Department
             if (ExistingDept == null)
             {
                 var newDept = new Department
                 {
                     Name = name
                 };
+                //----------Add Dept to DB
                 newDept = unitOfWork.Departments.Add(newDept);
 
                 #region notification test

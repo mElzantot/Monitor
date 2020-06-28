@@ -33,8 +33,10 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public IActionResult ViewEmployees()
         {
+            //------------Display All Employees in the Organization to the Admin
             var EmploeeVm = new EmployeeViewModel
             {
                 Departments = unitofwork.Departments.GetAll().ToList(),
@@ -44,6 +46,8 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
+        //---------Fiter Employees by their Teams
         public IActionResult ViewFilteredEmployees([FromForm]int teamId)
         {
             List<ApplicationUser> Employees = unitofwork.Engineers.GetEngineersInsideTeam(teamId).ToList();
@@ -52,10 +56,12 @@ namespace ITI.CEI40.Monitor.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddEmployee(EmployeeViewModel employee)
         {
             if (ModelState.IsValid)
             {
+                //-------------Add new Employee to the Organization
                 var newEmp = new ApplicationUser
                 {
                     UserName = employee.UserName,
@@ -64,10 +70,12 @@ namespace ITI.CEI40.Monitor.Controllers
                     SalaryRate = employee.Salary / (30 * 8)
                 };
 
+                //------------Sync the Employee with the Passwoed
                 var result = await userManager.CreateAsync(newEmp, employee.Password);
 
                 if (result.Succeeded)
                 {
+                    //----------update The Current View
                     return PartialView("_EmployeePartialView", newEmp);
                 }
             }
@@ -78,16 +86,20 @@ namespace ITI.CEI40.Monitor.Controllers
         #region Edit Roles for Employees
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> EditEmployeeRoles(string id)
         {
             if (ModelState.IsValid)
             {
+                //-----------Find The Employee
                 ApplicationUser Emp = await userManager.FindByIdAsync(id);
                 //---------Get The Roles before Updating
                 var EmpCurrentRoles = await userManager.GetRolesAsync(Emp);
+                //-------------Get the Roles from DB
                 List<IdentityRole> ExistingRoles = roleManager.Roles.ToList();
                 EmpRolesViewModel EmpRolVM = new EmpRolesViewModel() { EmpId = id };
                 bool checkFlag = false;
+                //----------Check the Existing Role to Display it in the View
                 foreach (IdentityRole item in ExistingRoles)
                 {
                     checkFlag = false;
@@ -109,11 +121,11 @@ namespace ITI.CEI40.Monitor.Controllers
             return null;
         }
 
-        [ValidateAntiForgeryToken]
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         public async Task<JsonResult> EditEmployeeRoles(EmpRolesViewModel EmpRolVM)
         {
-
+            //---------
             ApplicationUser Emp = await userManager.FindByIdAsync(EmpRolVM.EmpId);
             var EmpCurrentRoles = await userManager.GetRolesAsync(Emp);
             if (EmpCurrentRoles != null && EmpCurrentRoles.Count > 0)
@@ -215,16 +227,19 @@ namespace ITI.CEI40.Monitor.Controllers
         #endregion
 
         [HttpGet]
+        [Authorize(Roles = "Admin")]
         public async Task<JsonResult> AssignManager(string role)
         {
+            //-----------Get the users they have Manager Role
             var Employees = await userManager.GetUsersInRoleAsync(role);
             return Json(Employees);
         }
 
 
         [HttpPost]
+        [Authorize(Roles = "Admin")]
         //------Id ----> the Department or team Id 
-        //-------EmpID is ---> Manager or Leader Id
+        //-------EmpId is ---> Manager or Leader Id
         //----Bool is to differ between Department and Team 
         //------True == Department & False == Team
         public async Task<JsonResult> AssignManager(int id, string EmpId, bool IsDept)
@@ -234,20 +249,24 @@ namespace ITI.CEI40.Monitor.Controllers
                 ApplicationUser Employee = await userManager.FindByIdAsync(EmpId);
                 if (IsDept)
                 {
+                    //-----------Get The Department to Update its Manager
                     Department dept = unitofwork.Departments.GetById(id);
                     dept.FK_ManagerID = EmpId;
                     unitofwork.Complete();
-                    // notifications
+                    //------------ notifications
+                    //-----------  Send Notification to The Employee
                     string messege = $"Congartulations you have been assigned as a Department manager to *{dept.Name}=* Department at *{DateTime.Now}=*";
                     SendNotification(messege, EmpId);
                     return Json(new { complete = true, DeptId = id, ManagerName = Employee.UserName });
                 }
                 else
                 {
+                    //-----------Get The Team to Update its Leader
                     Team team = unitofwork.Teams.GetById(id);
                     team.FK_TeamLeaderId = EmpId;
                     int NoOfRows = unitofwork.Complete();
-                    // notifications
+                    //------------ notifications
+                    //-----------  Send Notification to The Employee
                     string messege = $"Congartulations you have been assigned as a Leader to *{team.Name}=* Team at *{DateTime.Now}=*";
                     SendNotification(messege, EmpId);
                     return Json(new { complete = true, teamtId = id, ManagerName = Employee.UserName });
@@ -259,16 +278,17 @@ namespace ITI.CEI40.Monitor.Controllers
 
 
         //-----------Employee TimeSheet
-        [Authorize(Roles = "Engineer")]
         [HttpGet]
+        [Authorize(Roles = "Engineer")]
         public IActionResult EmployeeTimeSheet()
         {
+            //------------Get The Employee TimeSheet to Display
             List<SubTaskSession> EmpSessions = unitofwork.SubTaskSessions.GetTimeSheetForEmp(userManager.GetUserId(HttpContext.User)).Reverse().ToList();
-
             return View(EmpSessions);
         }
 
 
+        //------------Send Notification Function
         public void SendNotification(string messege, params string[] usersId)
         {
             Notification Notification = new Notification
